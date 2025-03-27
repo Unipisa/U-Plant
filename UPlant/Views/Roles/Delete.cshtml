@@ -1,0 +1,29 @@
+﻿@model UPlant.Models.DB.Roles
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<div class="card card-outline card-primary">
+    <div class="card-header with-border">
+        <h3 class="card-title">Cancella Ruolo</h3>
+    </div>
+    <dl class="row m-3 col-sm-6  ">
+        <dt class="col-sm-2 ">
+            Descrizione
+        </dt>
+        <dd class = "col-sm-3">
+            @Html.DisplayFor(model => model.Descr)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="Cancella" class="btn btn-danger m-3" />
+    </form>
+</div>
+
+<div>
+    <a asp-action="Index" class="btn btn-secondary">Torna Indietro</a>
+
+</div>

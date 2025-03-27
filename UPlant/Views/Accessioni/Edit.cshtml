@@ -1,0 +1,513 @@
+﻿@model UPlant.Models.DB.Accessioni
+
+@{
+    ViewData["Title"] = "Edit";
+
+}
+
+ @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+    <div class="col-lg-12">
+    <div class="form-group">
+        <input type="submit"  value="Salva" class="btn btn-success" /> <span> </span>   @Html.ActionLink("Torna all'elenco", "Index", null, null, new { @class = "btn btn-info" })
+
+
+    </div>
+        <div class="card card-primary">
+            <div class="card-header with-border">
+                <h3 class="card-title"> Modifica </h3>
+            </div>
+           
+                <div class="card-body">
+                   
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    @Html.HiddenFor(model => model.id)
+
+                    <table style="height: 30px; width: 100% " class=" table-striped table-bordered ">
+                        <tbody>
+                            <tr style="height: 12px;">
+                                <th style="width: 100% ; font: xx-large" colspan="5" rowspan="2" class="bg-light-blue-active">Dati Principali</th>
+                            </tr>
+                            <tr style="height: 0px;">
+                                <th style="width: 100% " colspan="5">@Html.HiddenFor(model => model.id)</th>
+                            </tr>
+                            <tr style="height: 23px;">
+                                <th style="width: 20% ">Numero Progressivo</th>
+                                <th style="width: 20% ">Ipen</th>
+                                <th style="width: 20%">Organizzazione</th>
+                                <th style="width: 20% ">Data acquisizione</th>
+                                <th style="width: 20% ">Data ultima modifica</th>
+                            </tr>
+                            <tr style="height: 23px;">
+                                <td style="width: 478px; height: 23px;">@Html.DisplayFor(model => model.progressivo)</td>
+                                <td style="width: 239px; height: 23px;">
+                                    @Html.EditorFor(model => model.ipen, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.ipen, "", new { @class = "text-danger" })
+                                </td>
+                                @* modifica campo ipen editabile  <td style="width: 239px; height: 23px;">@Html.DisplayFor(model => model.ipen)</td>*@
+                                <td style="width: 239px; height: 23px;">@Html.DisplayFor(model => model.organizzazioneNavigation.descrizione)</td>
+                                <td style="width: 239px; height: 23px;">@Convert.ToDateTime(Model.dataAcquisizione).ToString("dd/MM/yyyy")</td>
+                                <td style="width: 239px; height: 23px;">@Convert.ToDateTime(Model.dataUltimaModifica).ToString("dd/MM/yyyy")</td>
+                            </tr>
+                            <tr style="height: 12px;">
+                                <th style="width: 1195px; height: 12px; " colspan="5" rowspan="2" class="bg-light-blue-active">Dettagli</th>
+                            </tr>
+                            <tr style="height: 0px;">
+                                <th style="width: 1195px; height: 0px;" colspan="5"></th>
+                            </tr>
+                            <tr style="height: 23px;">
+
+                                <th style="width: 239px; height: 23px;">Specie</th>
+                                <th style="width: 239px; height: 23px;">Tipo di materiale</th>
+                                <th style="width: 239px; height: 23px;">Stato del materiale</th>
+                                <th style="width: 239px; height: 23px;">Origine del materiale</th>
+                                <th style="width: 239px; height: 23px;">Modalità acquisizione</th>
+
+                            </tr>
+                            <tr style="height: 23px;">
+                                <td style="width: 139px; height: 23px;">
+
+                                    @Html.DropDownList("specie", null, htmlAttributes: new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.specie, "", new { @class = "text-danger" })
+                                </td>
+                                <td style="width: 239px; height: 23px;">
+                                    @Html.DropDownList("tipoMateriale", null, htmlAttributes: new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.tipoMateriale, "", new { @class = "text-danger" })
+                                </td>
+                                <td style="width: 239px; height: 23px;">
+                                    @Html.DropDownList("statoMateriale", null, htmlAttributes: new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.statoMateriale, "", new { @class = "text-danger" })
+                                </td>
+                                <td style="width: 239px; height: 23px;">
+                                    @Html.DropDownList("provenienza", null, htmlAttributes: new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.provenienza, "", new { @class = "text-danger" })
+                                </td>
+                                <td style="width: 139px; height: 23px;">
+                                    @Html.DropDownList("tipoAcquisizione", null, htmlAttributes: new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.tipoAcquisizione, "", new { @class = "text-danger" })
+                                </td>
+
+                            </tr>
+
+                            <tr style="height: 23px;">
+                                <th style="width: 239px; height: 23px;">Quantit&agrave;</th>
+                                <th style="width: 239px; height: 23px;">Incertezza Tassonomica</th>
+                                <th style="width: 239px; height: 23px;">Erbario Associato</th>
+                                <th style="width: 239px; height: 23px;">Vecchio Progressivo</th>
+                                <th style="width: 239px; height: 23px;">&nbsp;</th>
+                            </tr>
+                            <tr style="height: 23px;">
+                                <td style="width: 239px; height: 23px;">
+                                    @Html.EditorFor(model => model.numeroEsemplari, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.numeroEsemplari, "", new { @class = "text-danger" })
+                                </td>
+                                <td style="width: 239px; height: 23px;">
+                                    @Html.DropDownList("gradoIncertezza", null, htmlAttributes: new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.gradoIncertezza, "", new { @class = "text-danger" })
+                                </td>
+                                <td style="width: 239px; height: 23px;" align="center">
+
+                                    @Html.CheckBoxFor(model => model.associatoErbario, new { @style = "margin-left: 0px" })
+                                    @Html.ValidationMessageFor(model => model.associatoErbario, "", new { @class = "text-danger" })
+
+
+                                </td>
+                                <td style="width: 239px; height: 23px;">
+                                    @Html.EditorFor(model => model.vecchioprogressivo, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.vecchioprogressivo, "", new { @class = "text-danger" })
+                                </td>
+                                <td style="width: 239px; height: 23px;">
+                                    @*   @Html.EditorFor(model => model.ipendiprovenienza, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.ipendiprovenienza, "", new { @class = "text-danger" })*@ &nbsp;
+                                </td>
+                            </tr>
+                            <tr style="height: 12px;">
+                                <th style="width: 1195px; height: 12px; " colspan="5" rowspan="2" class="bg-light-blue-active">Provenienza</th>
+                            </tr>
+                            <tr style="height: 0px;">
+                                <th style="width: 1195px; height: 0px;" colspan="5"></th>
+                            </tr>
+
+                            <tr style="height: 23px;">
+                                <th style="width: 239px; height: 23px;">Nazione</th>
+                                <td style="width: 239px; height: 23px;" colspan="2">
+                                    @Html.DropDownList("nazione", null, "Seleziona Nazione", htmlAttributes: new { @Id = "nazione", @class = "form-control", required = "Seleziona una Nazione" })
+                                    @*   @Html.DropDownList("nazione", null, htmlAttributes: new { @class = "form-control" })*@
+                                    @Html.ValidationMessageFor(model => model.nazione, "", new { @class = "text-danger" })
+                                </td>
+                                <th style="width: 239px; height: 23px;">Longitudine</th>
+                                <td style="width: 239px; height: 23px;">
+                                    @Html.EditorFor(model => model.longitudine, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.longitudine, "", new { @class = "text-danger" })
+
+                                </td>
+                            </tr>
+                            <tr style="height: 23px;">
+                                <th style="width: 239px; height: 23px;">Regione</th>
+                                <td style="width: 239px; height: 23px;" colspan="2">
+                                    @Html.DropDownList("regione", null, "Seleziona Regione", htmlAttributes: new { @Id = "regione", @class = "form-control" })
+                                    @*  @Html.DropDownList("regione", null, htmlAttributes: new { @class = "form-control" }))*@
+                                    @Html.ValidationMessageFor(model => model.regione, "", new { @class = "text-danger" })
+                                </td>
+                                <th style="width: 239px; height: 23px;">Latitudine</th>
+                                <td style="width: 239px; height: 23px;">
+                                    @Html.EditorFor(model => model.latitudine, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.latitudine, "", new { @class = "text-danger" })
+
+                                </td>
+                            </tr>
+
+                            <tr style="height: 23px;">
+                                <th style="width: 239px; height: 23px;">Provincia</th>
+                                <td style="width: 239px; height: 23px;" colspan="2">
+                                    @Html.DropDownList("provincia", null, "Seleziona Provincia", htmlAttributes: new { @Id = "provincia", @class = "form-control" })
+                                    @*     @Html.DropDownList("provincia", null, htmlAttributes: new { @class = "form-control" })*@
+                                    @Html.ValidationMessageFor(model => model.provincia, "", new { @class = "text-danger" })
+                                </td>
+                                <th style="width: 239px; height: 23px;">Altitudine</th>
+                                <td style="width: 239px; height: 23px;">
+                                    @Html.EditorFor(model => model.altitudine, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.altitudine, "", new { @class = "text-danger" })
+                                </td>
+                            <tr style="height: 23px;">
+                                <th style="width: 239px; height: 23px;">Localit&agrave;</th>
+                                <td style="width: 239px; height: 23px;" colspan="2">
+                                        @Html.EditorFor(model => model.localita, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.localita, "", new { @class = "text-danger" })
+                                </td>
+                                <th style="width: 239px; height: 23px;">Habitat</th>
+                                <td style="width: 239px; height: 23px;">
+                                        @Html.EditorFor(model => model.habitat, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.habitat, "", new { @class = "text-danger" })
+                                </td>
+                            </tr>
+                            <tr style="height: 23px;">
+                                <th style="width: 239px; height: 23px;">Data Raccolta</th>
+                                <td style="width: 239px; height: 23px;" colspan="2">
+                                    <div id="labeldataraccolta" class="form-group  col-md-6">
+                                        <span id="labeldata">
+                                                @Html.DisplayFor(model => model.dataraccolta, new { htmlAttributes = new { @class = "form-control" } })
+                                        </span>
+                                        <button id="bottonecalendario" type="button" class="btn btn-primary btn-xs" onclick="moddata();">
+                                            <span class="fa-regular fa-calendar-days" aria-hidden="true"></span>
+                                        </button>
+                                    </div>
+                                    <div id="insdataraccolta" class="form-group  col-md-6" style="display:none">
+                                            @Html.LabelFor(model => model.dataraccolta, htmlAttributes: null)-- modifica e salva -- <br />
+
+                                            @Html.EditorFor(model => model.dataraccolta, "{0:dd/MM/yyyy}", new { htmlAttributes = new { @type = "date" } })
+                                        <button id="bottonecalendario" type="button" class="btn btn-success btn-xs" onclick="savedata();">
+                                            <span class="fa-regular fa-save" aria-hidden="true"></span>
+                                        </button>
+                                        <button id="bottonecalendario" type="button" class="btn btn-danger btn-xs" onclick="rollback();">
+                                            <span class="fa-regular fa-remove" aria-hidden="true"></span>
+                                        </button>
+                                            @*@Html.TextBoxFor(model => model.propagatoData, "{0:dd/MM/yyyy}", new { htmlAttributes = new { @class = "form-control", @type="datepicker" } })*@
+                                            @Html.ValidationMessageFor(model => model.dataraccolta, "", new { @class = "text-danger" })
+                                    </div>
+                                </td>
+
+
+
+                                <th style="width: 239px; height: 23px;"> </th>
+                                <td style="width: 239px; height: 23px;"> </td>
+                            </tr>
+                            <tr><td colspan="5"><div id="myMap"></div></td></tr>
+
+
+
+                            <tr style="height: 12px;">
+                                <th style="width: 1195px; height: 12px; " colspan="5" rowspan="2" class="bg-light-blue-active">Identit&agrave;&nbsp;</th>
+                            </tr>
+                            <tr style="height: 0px;">
+                                <th style="width: 1195px; height: 0px;" colspan="5"></th>
+                            </tr>
+
+                            <tr style="height: 23px;">
+                                <th style="width: 239px; height: 23px;">Donatore/Fornitore</th>
+                                <th style="width: 239px; height: 23px;">Raccoglitore</th>
+                                <th style="width: 239px; height: 23px;">Identificato da</th>
+                                <th style="width: 239px; height: 23px;">Operatore inserimento</th>
+                                <th style="width: 239px; height: 23px;">Operatore ultima modifica</th>
+                            </tr>
+                            <tr style="height: 23px;">
+                                <td style="width: 239px; height: 23px;">
+                                        @Html.DropDownList("fornitore", null, htmlAttributes: new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.fornitore, "", new { @class = "text-danger" })
+                                </td>
+                                <td style="width: 239px; height: 23px;">
+                                        @Html.DropDownList("raccoglitore", null, htmlAttributes: new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.raccoglitore, "", new { @class = "text-danger" })
+                                </td>
+                                <td style="width: 239px; height: 23px;">
+                                        @Html.DropDownList("identificatore", null, htmlAttributes: new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.identificatore, "", new { @class = "text-danger" })
+                                </td>
+                                <td style="width: 239px; height: 23px;">@Html.DisplayFor(model => model.utenteAcquisizioneNavigation.NomeCognome)</td>
+                                <td style="width: 239px; height: 23px;">@Html.DisplayFor(model => model.utenteUltimaModificaNavigation.NomeCognome)</td> @*Utenti1 è l'utente di modifica*@
+                            </tr>
+                            <tr style="height: 12px;">
+                                <th style="width: 1195px; height: 12px; " colspan="5" rowspan="2" class="bg-light-blue-active">Dati accessori</th>
+                            </tr>
+                            <tr style="height: 0px;">
+                                <th style="width: 1195px; height: 0px;" colspan="5"></th>
+                            </tr>
+
+                            <tr style="height: 23px;">
+                                <th style="width: 239px; height: 23px;">Note</th>
+                                <td style="width: 239px; height: 23px;" colspan="4">
+                                        @Html.EditorFor(model => model.note, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.note, "", new { @class = "text-danger" })
+                                </td>
+                            </tr>
+                       
+                        </tbody>
+                    </table>
+                    <div> &nbsp;</div>
+                <div class="form-group">
+                    <input type="submit" value="Salva" class="btn btn-success" /> <span> </span>   @Html.ActionLink("Torna all'elenco", "Index", null, null, new { @class = "btn btn-info" })
+
+
+                </div>
+
+
+                </div>
+
+            
+
+        </div>
+    </div>
+}
+
+
+@section Styles {
+    <link href="~/css/select2.min.css" rel="stylesheet" />
+    <link href="~/css/accessioni.min.css" rel="stylesheet" />
+
+}
+@section CustomStyles {
+    <style>
+        #myMap {
+            height: 250px;
+            width: 100%;
+        }
+
+        .bg-light-blue-active {
+            background-color: #357CA5;
+            color: #FFFFFF
+        }
+    </style>
+}
+@section Scripts {
+
+   
+    <script src="@AppSettings.Value.GoogleMap.Url@AppSettings.Value.GoogleMap.Key"></script>
+    <script src="~/js/select2.min.js"></script>
+    <script src="~/js/jquery.validation.min.js"></script>
+   
+}
+
+@section CustomScripts {
+    <script type="text/javascript">
+        var map;
+        var marker;
+        //  if ($('#latitudine').length > 0 && $('#longitudine').length > 0) {
+        if (document.getElementById("latitudine").value != '' && document.getElementById("longitudine").value != '') {
+            var myLatlng = new google.maps.LatLng(document.getElementById("latitudine").value, document.getElementById("longitudine").value);
+        } else {
+            var myLatlng = new google.maps.LatLng(43.71944963861506, 10.396344067111961);
+        }
+
+        var geocoder = new google.maps.Geocoder();
+        var infowindow = new google.maps.InfoWindow();
+        function initialize() {
+            var mapOptions = {
+                zoom: 6,
+                center: myLatlng,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            };
+
+            map = new google.maps.Map(document.getElementById("myMap"), mapOptions);
+
+            marker = new google.maps.Marker({
+                map: map,
+                position: myLatlng,
+                draggable: true
+            });
+
+
+
+            function placeMarker(location) {
+                if (marker) {
+                    marker.setPosition(location);
+                } else {
+                    marker = new google.maps.Marker({
+                        position: location,
+                        map: map,
+                        title: 'move and pin exact point of your property'
+                    });
+                }
+            }
+
+            google.maps.event.addListener(map, 'click', function (event) {
+                placeMarker(event.latLng);
+
+
+                $('#latitudine').val(event.latLng.lat());
+                $('#longitudine').val(event.latLng.lng());
+
+            });
+
+
+
+            google.maps.event.addListener(marker, 'dragend', function () {
+
+                $('#latitudine').val(marker.getPosition().lat());
+                $('#longitudine').val(marker.getPosition().lng());
+
+            });
+
+        }
+        google.maps.event.addDomListener(window, 'load', initialize);
+    </script>
+    <script type="text/javascript">
+
+        var labelvalue = document.getElementById("labeldata").innerText;
+        function moddata() {
+
+            if (document.getElementById("insdataraccolta").style.display == 'none') {
+                document.getElementById("labeldataraccolta").style.display = 'none';
+                document.getElementById("insdataraccolta").style.display = 'inline';
+
+            }
+
+        }
+        function savedata() {
+            if (document.getElementById("insdataraccolta").style.display == 'inline')
+                document.getElementById("insdataraccolta").style.display = 'none';
+            document.getElementById("labeldataraccolta").style.display = 'inline';
+            $('#labeldata').html(convertDate(document.getElementById("dataraccolta").value));
+
+        }
+        function rollback() {
+            if (document.getElementById("insdataraccolta").style.display == 'inline')
+                document.getElementById("insdataraccolta").style.display = 'none';
+            document.getElementById("labeldataraccolta").style.display = 'inline';
+            $('#dataraccolta').value = labelvalue;
+        }
+        function convertDate(inputFormat) {
+            function pad(s) { return (s < 10) ? '0' + s : s; }
+            var d = new Date(inputFormat)
+            return [pad(d.getDate()), pad(d.getMonth() + 1), d.getFullYear()].join('/')
+        }
+    </script>
+    <script>
+        var baseUrlNazioni = '@Url.Action("GetNazioni", "Common")';
+        var baseUrlRegioni = '@Url.Action("GetRegioni", "Common")';
+        var baseUrlProvince = '@Url.Action("GetProvince", "Common")';
+    </script>
+    <script type="text/javascript">
+
+        var country = $('#nazione').val();
+        if (country != "IT") {
+            $('#regione').val('0');
+            $('#provincia').val('0');
+            $('#regione').prop('disabled', 'disabled');
+            $('#provincia').prop('disabled', 'disabled');
+        }
+$('#nazione').on("change", function () {
+    $('#regione').val('0');
+    $('#provincia').val('0');
+    var country = $('#nazione').val();
+    if (country != "IT") {
+        /*  $('#regione')
+              .empty()
+              .append('<option selected="selected" value="99"> NON DEFINITA</option>')
+              ;
+  */
+        $('#regione').val('99');
+        $('#provincia')
+            .empty()
+            .append('<option selected="selected" value="999"> NON DEFINITA</option>')
+            ;
+
+        $('#regione').prop('disabled', 'disabled');
+
+        $('#provincia').prop('disabled', 'disabled');
+    } else {
+        $("#regione").removeAttr("disabled");
+
+        $.ajax({
+            type: "GET",
+            url: baseUrlRegioni,
+            data: "{}",
+            success: function (data) {
+                var s = '<option value="-1">Seleziona Regione</option>';
+                for (var i = 0; i < data.length; i++) {
+                    s += '<option value="' + data[i].codiceregione + '">' + data[i].descrizioneregione + '</option>';
+                }
+                $("#regione").html(s);
+            }
+        });
+
+    }
+});
+$('#regione').on("change", function () {
+    var codregionesel = $('#regione :selected').val();
+    $("#provincia").removeAttr("disabled");
+    $('#provincia').val('0');
+    $.ajax({
+        type: "GET",
+        //                url: "getProvincie?codiceregione=" + codregionesel,
+        url: baseUrlProvince,
+        data: {
+            'codiceregione': codregionesel
+        },
+        success: function (data) {
+            var s = '<option value="-1">Selezione Provincia</option>';
+            for (var i = 0; i < data.length; i++) {
+                s += '<option value="' + data[i].codiceprovincia + '">' + data[i].descrizioneprovincia + '</option>';
+            }
+            $("#provincia").html(s);
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            alert('Error during process: \n' + xhr.responseText);
+        }
+    });
+
+});
+$('#provincia').on("change", function () {
+    var codprovinciasel = $('#provincia :selected').val();
+
+    $.ajax({
+        type: "GET",
+        //                url: "getProvincie?codiceregione=" + codregionesel,
+        url: baseUrlProvince,
+        data: {
+            'codiceprovincia': codprovinciasel
+        },
+        success: function (data) {
+            var s = '<option value="-1">Selezione Comune</option>';
+            for (var i = 0; i < data.length; i++) {
+                s += '<option value="' + data[i].codicecomune + '">' + data[i].descrizionecomune + '</option>';
+            }
+            $("#comune").html(s);
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            alert('Error during process: \n' + xhr.responseText);
+        }
+    });
+
+});
+    </script>
+
+
+
+
+}
+
+
+
+
+

@@ -1,0 +1,580 @@
+﻿@model Home
+@{
+    ViewData["Title"] = "Index";
+}
+@inject LanguageService language
+
+<div class="box-container p-3 mb-2  bloccoricerca">
+    <div class="" id="bloccoricerca">
+        <form method="get" id="ricerca" action="#">
+            <p class="h3 box-container-title">
+                <div class="capt formricerca">
+                    <span>&nbsp;</span> <span class="fields small"><b>@language.Getkey("titolo")</b></span>  
+                    <div class="form-check form-check-inline">
+                    <input class="form-check-input small" type="radio" name="tiporicerca" id="tiporicerca" value="s" checked>
+                     <span class="form-check-label small" for="inlineRadio1 ">@language.Getkey("nomescientifico")</span>
+                    </div>
+                    <div class="form-check form-check-inline">
+                    <input class="form-check-input small" type="radio" name="tiporicerca" id="tiporicerca" value="c">
+                    <span class="form-check-label small" for="inlineRadio2 sm">@language.Getkey("nomecomune")</span>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4 autocomplete">
+                            <span>&nbsp;&nbsp;</span><input class="form-group" id="specie" name="specie" type="text" placeholder="@language.Getkey("specie")" value="">
+                             
+                            <input type="hidden" id="lingua"  name="lingua" value="@ViewBag.bandiera">
+                        </div>
+                        
+                        <div class="col-md-offset-0">
+                            &nbsp;
+                        </div>
+                        <div class="col-md-1" id="sub1">
+                            &nbsp;  <button type="submit" tabindex="0" class="pbSubmit btn  btn-success btn-rounded btn-sm">@language.Getkey("cerca")</button>
+                        </div>
+                        <div class="col-md-2 mx-lg-2" id="piufiltri"><span><a href="#">&nbsp;&nbsp;<b>@language.Getkey("avanzata")</b></a></span></div>
+                        <div class="col-md-2 mx-lg-2" id="menofiltri" style="display:none"><span><a href="#">&nbsp;&nbsp;<b>@language.Getkey("base")</b></a></span></div>
+                    </div>
+                    <div class="row" id="rigavuota"> <span>&nbsp;</span></div>
+                    <div style="display:none" id="morefilter">
+                        <hr style="height:1px;border:none;color:#333;background-color:#808080;">
+
+
+                        <div class="row">
+                            <div class="col-md-2 ">
+                                <label id="LabelFamiglia"><b>@language.Getkey("famiglia")</b></label>
+                                <span>&nbsp;&nbsp;</span><select id="famiglia" name="famiglia"
+                                                                 class="form-select"
+                                                                 asp-items="@(new SelectList(ViewBag.famiglie,"Value", "Text"))">
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <label id="LabelRegni"><b>@language.Getkey("regno")</b></label>
+                                <span>
+                                    <select id="regno" name="regno"
+                                            class="form-select"
+                                            asp-items="@(new SelectList(ViewBag.regni,"Value", "Text"))">
+                                    </select>
+                                </span>
+                            </div>
+                            <div class="col-md-2">
+                                <label id="LabelSettori"><b>@language.Getkey("settore")</b></label>
+                                <span>
+                                    <select id="settore" name="settore"
+                                            class="form-select"
+                                            asp-items="@(new SelectList(ViewBag.settori,"Value", "Text"))">
+                                    </select>
+                                </span>
+                            </div>
+                            <div class="col-md-2">
+                                <label id="LabelCollezioni"><b>@language.Getkey("collezione")</b></label>
+                                <span>
+                                    <select id="collezione" name="collezione"
+                                            class="form-select"
+                                            asp-items="@(new SelectList(ViewBag.collezioni,"Value", "Text"))">
+                                    </select>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            &nbsp;
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3" id="sub1">
+                                &nbsp; <button type="submit" tabindex="0" class="pbSubmit btn  btn-success btn-rounded btn-sm">@language.Getkey("cerca")</button>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </p>
+        </form>
+    </div>
+    <div class="row my-5">
+        <div id="risultato" class="col-lg-9"></div>
+        <div class="col-lg-3">
+            <div id="map" name="map" style="position: relative; overflow: hidden;"></div>
+
+
+        </div>
+    </div>
+    <div>
+        <h2 class="mb-4 display-6 lh-1 fw-bold">@language.Getkey("ultimo")</h2>
+        <div class="row ultimi " id="ultimi" name="ultimi">
+
+        </div>
+    </div>
+    
+    <div class="row row-cols-1 row-cols-lg-1 align-items-stretch g-4 py-5">
+        <div class="col-12 col-md-6 col-lg-6 text-white mb-4">
+            <div id="ultimoimg" style="        background-image: url('@Context.Request.PathBase/bst-master/images/ricercaatema.png');
+        background-size: cover;" class="square square50">
+                <div class="text-white text-shadow-1 fw-bold">
+                    <a href="@Context.Request.PathBase/Percorsi" class="text-decoration-none">
+                        <h2 class="mb-4 display-7 lh-1 text-white text-shadow-1 fw-bold">
+                            @language.Getkey("percorsi")
+                        </h2>
+                    </a>
+
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-md-6 col-lg-6 text-white mb-4">
+            <div id="ultimoimg" style="background-image: url('@Context.Request.PathBase/bst-master/images/mappa.png'); background-size: cover; " class="square square50">
+                <div class="text-white text-shadow-1 fw-bold">
+                    <a class="text-decoration-none" href="@Context.Request.PathBase/bst-master/images/mappa.png" target="_blank">
+                        <h2 class="mb-4 display-7 lh-1 text-white text-shadow-1 fw-bold">@language.Getkey("mappa")</h2>
+                    </a>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+    @section scripts {
+
+
+
+        <script>
+            $('#piufiltri').on("click", function () {
+                if (document.getElementById("morefilter").style.display == "none") {
+                    document.getElementById("morefilter").style.display = "block";
+                    document.getElementById("menofiltri").style.display = "block";
+                    document.getElementById("piufiltri").style.display = "none";
+                    document.getElementById("sub1").style.display = "none";
+                    document.getElementById("rigavuota").style.display = "none";
+
+                }
+            });
+            $('#menofiltri').on("click", function () {
+                if (document.getElementById("morefilter").style.display == "block") {
+                    document.getElementById("morefilter").style.display = "none";
+                    document.getElementById("menofiltri").style.display = "none";
+                    document.getElementById("piufiltri").style.display = "block";
+                    document.getElementById("sub1").style.display = "block";
+                    document.getElementById("rigavuota").style.display = "block";
+                }
+            });
+
+        </script>
+    <script src="@ViewBag.GoogleMapUrl@ViewBag.GoogleMapKey">
+        </script>
+        <script type="text/javascript">
+
+            function initialize() {
+                var geocoder = new google.maps.Geocoder();
+                var infowindow = new google.maps.InfoWindow();
+                var myLatlng = new google.maps.LatLng(43.71944963861506, 10.396344067111961);
+                var mapOptions = {
+                    zoom: 13,
+                    center: myLatlng,
+                    mapTypeId: google.maps.MapTypeId.ROADMAP
+                };
+                var map = new google.maps.Map(document.getElementById("map"), mapOptions);
+                 // Add controls to the map, allowing users to hide/show features.
+               
+
+                return map;
+
+            }
+            //  google.maps.event.addDomListener(window, 'load', initialize);
+
+        </script>
+        <script>
+        var scripttabella = "";
+        var nomescientifico = '@language.Getkey("nomescientifico")';
+        var nomecomune = '@language.Getkey("nomecomune")';
+        var det = '@language.Getkey("dettaglio")';
+        var bandiera = '@language.Getkey("bandiera")';
+
+        function generatabella(data) {
+            if (data.length != 0) {
+                var pathimg = '';
+                var map = initialize();
+                var bounds = new google.maps.LatLngBounds();
+                var s = '';
+                var numerorisultato = 0;
+
+                s += '<table id="ristabella" class="table table-bordered table-striped dataTable">'
+
+                    + '<tbody>'
+
+
+                for (var i = 0; i < data.length; i++) {
+
+                    var iconBase = '@ViewBag.GoogleMapIcons';
+                    var icons;
+                                   
+                    switch (data[i].Ordinamento) {
+                         case "1":
+                                icons = iconBase + 'grey-pushpin.png';
+                                break;
+                            case "2":
+                                icons = iconBase + 'ylw-pushpin.png';
+                                break;
+                            case "3":
+                                icons = iconBase + 'purple-pushpin.png';
+                                break;
+                            case "4":
+                                icons = iconBase + 'blue-pushpin.png';
+                                break;
+                            case "5":
+                                icons = iconBase + 'red-pushpin.png';
+                                break;
+                            case "6":
+                                icons = iconBase + 'ltblu-pushpin.png';
+                                break;
+                            case "7":
+                                icons = iconBase + 'grn-pushpin.png';
+                                break;
+                            case "8":
+                                icons = iconBase + 'orange-pushpin.png';
+                                break;
+                            case "9":
+                                icons = iconBase + 'pink-pushpin.png';
+                                break;
+                             case "10":
+                                icons = iconBase + 'lily-pushpin.png';
+                                break;
+                            default:
+                            icons = iconBase + 'grey-pushpin.png'
+                    }
+                    if (data[i].Latitudine == "" || data[i].Longitudine == "") {
+                        var latitudine = "43.71944963861506";
+                        var longitudine = "10.396344067111961";
+                        var icona = iconBase + 'question.png';
+                    } else {
+                        var latitudine = data[i].Latitudine;
+                        var longitudine = data[i].Longitudine;
+                        var icona = icons;
+                    }
+                    var marker = new google.maps.Marker({
+                        position: new google.maps.LatLng(latitudine, longitudine),
+                        title: data[i].Indentitatassonomica,
+                        icon: icona
+                    });
+
+                    marker.setMap(map);
+
+
+                    bounds.extend(marker.getPosition());
+                    google.maps.event.addListener(marker, 'click', (function (marker, i) {
+                            return function () {
+                                window.location.href = "@Url.Action("Details", "Home")?id=" + data[i].Individuo;
+                            }
+                    })(marker, i));
+
+                    s += '<tr><td id ="immagine' + i + '" data-label="Immagine" >'
+                        + '<input type="hidden" id="longitudine' + i + '" name="longitudine' + i + '" value="' + data[i].Longitudine + '">'
+                        + '<input type="hidden" id="latitudine' + i + '" name="latitudine' + i + '" value="' + data[i].Latitudine + '">'
+                        +'<a href ="@Url.Action("Details", "Home")?id='+data[i].Individuo+'">'
+                    if (data[i].Immagine.length > 3) {
+
+                        s += '<img src="' + data[i].Immagine + '"  class="img-fluid preview-specie md-2" alt="" loading ="lazy">';
+                    } else {
+
+                        s += '<img src="@Context.Request.PathBase/bst-master/images/noimageb.jpg"  class="img-fluid preview-specie md-2" alt="" loading ="lazy">';
+                    }
+                    var nm ="";
+                    if (bandiera == "it"){
+                        nm = data[i].Nomecomune;
+                    } else {
+                        nm = data[i].Nomecomuneen;
+                    }
+                    s += '</a></td>'
+                        + '<td data-label="dati" id="dati"><b>IPEN</b>: ' + data[i].Ipen + ' <br><b>' + nomescientifico + '</b>: ' + data[i].Indentitatassonomica + ' <br><b>' + nomecomune + '</b>: ' + nm + '<br><b>@language.Getkey("settore")</b>: ' + data[i].Settore + '<br><b>@language.Getkey("collezione")</b>:  ' + data[i].Collezione + '<br> ';
+                     if (parseInt(data[i].Propagatodata.substring(6,10)) < 1950) {
+                        s += '<b>@language.Getkey("propagatodata")</b>: ' + data[i].Propagatodata.substring(6, 10)+ ' <br>';
+                    }
+
+                    s += '<a href ="@Url.Action("Details", "Home")?id=' + data[i].Individuo + '" class="link-success text-decoration-none fw-bold">' + det +' <i class="bi bi-zoom-in"></i></a></td></tr>';
+
+
+                    numerorisultato = data.length;
+
+                }
+                s += '</tbody></table>';
+                marker.setMap(map);
+                bounds.extend(marker.getPosition());
+                map.setCenter(bounds.getCenter());
+
+                //map.setCenter(bounds.getCenter());
+                if (numerorisultato != 1) {
+                    map.fitBounds(bounds);
+                }
+                map.setZoom(17);
+                document.getElementById('map').style.width = '100%';
+                document.getElementById('map').style.height = "600px";
+                var noPoi = [
+                    {
+                        featureType: "poi.business",
+                        stylers: [
+                            { visibility: "off" }
+                        ]
+                    }
+                ];
+                map.setOptions({ styles: noPoi });
+            } else {
+                s = '@language.Getkey("risultato")';
+                document.getElementById('map').style.width = '0%';
+                document.getElementById('map').style.height = "0px";
+            }
+            return s;
+
+
+        }
+
+        
+        $('#ricerca').submit(function (e) {
+            e.preventDefault();
+
+            var basepath = '@Url.Action("Index","Home")';
+            if (basepath.slice(-1) != "/") {
+                basepath = basepath + '/';
+            }
+            //var token = '@ViewBag.token';
+            var bandiera = '@language.Getkey("bandiera")';
+            //const apiurl = '@ViewBag.ApiUrl' + 'ricerca';
+           
+            //console.log("apiurl : " + apiurl);
+            const apiurl = 'api/orto/ricerca';
+          
+           
+            const data = {
+                specie: $('#specie').val(),
+                famiglia: $('#famiglia').val(),
+                regno: $('#regno').val(),
+                settore: $('#settore').val(),
+                collezione: $('#collezione').val(),
+                collezionedescr: $("#collezione option:selected").text(),
+                tiporicerca : $("input[name='tiporicerca']:checked").val(),
+                lingua: bandiera
+                
+            }
+            
+            $.ajax({
+                url: apiurl,
+               // headers: { 'Authorization': token },
+                data: data,
+
+                success: function (data) {
+                    
+                    console.log(data);
+                    
+                    var s = generatabella(data);
+
+                    $("#risultato").html('<div class="rescont mb-5">'+s+'</div>');
+                    jQuery(function () {
+                        jQuery('#ristabella').DataTable({
+                            'paging': true,
+                            'lengthChange': true,
+                            'searching': true,
+                            'ordering': false,
+                            'info': true,
+                            'autoWidth': true,
+                            'columns': [
+                                { "data": "Immagine" },
+                                { "data": "Dati" }
+                            ]
+                        });
+                    });
+
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert('Error during process: \n' + JSON.stringify(data));
+                },
+
+            });
+
+         
+            document.getElementById('specie').blur();
+        });
+
+
+
+        </script>
+
+        <script type="text/javascript">
+        $(document).ready(function () {
+            var basepath = '@Url.Action("Index","Home")';
+            var bandiera = '@language.Getkey("bandiera")';
+           // var token = '@ViewBag.token';
+       
+            $("input[type='radio']").click(function(){
+             document.getElementById("specie").value="";
+           
+              });
+            
+            if (basepath.slice(-1) != "/") {
+                basepath = basepath + '/';
+            }
+            
+            $("#specie").autocomplete({
+                source: function(request, response) {
+                    const apiurl = 'api/orto/cercaspecie';
+                 $.ajax({
+                        url: apiurl,
+                  dataType: "json",
+                 data: {
+                      term : request.term,
+                        lingua: bandiera,
+                         tipo: $("input[name='tiporicerca']:checked").val()
+                    },
+            success: function(data) {
+                response(data);
+                     }
+                });
+             },
+             minLength: 3,
+             position: { offset: '-30 0' },
+            delay :200
+            });
+            
+           
+
+            $.ajax({
+                  url: 'api/orto/ultimoinserito',
+               // url: '@ViewBag.ApiUrl' + 'ultimoinserito',
+              //  headers: { 'Authorization': token },
+                data: { lingua: bandiera },
+
+                success: function (data)
+                {
+                    var c = '';
+                    var numeroarrivi = 0;
+                    for (var i = 0; i < data.length; i++) {
+
+
+
+
+                    if (data[i].Immagine.length > 3) {
+                        var imm = data[i].Immagine;
+
+
+                        c += '<div class="col-12 col-md-4 col-lg-3 text-white rounded-5 ">';
+                        c += ' <a href ="@Url.Action("Details", "Home")?id=' + data[i].Individuo +'" class="text-decoration-none d-block mb-4">';
+                        c += '<div style="background-image: url(' + imm + '); background-size: cover;" class="square">';
+                        c += '<div class="text-white text-shadow-1 fw-bold">';
+                        c += '<h5 class="mb-3 fw-medium text-truncate"> ' + data[i].Indentitatassonomica + '</h5>';
+                        c += '<p></p>';
+                        c += '<ul class="d-flex list-unstyled mt-auto mb-0">';
+                        c += '    <li class="me-auto">';
+                            c += '       <img src="/bst-master/images/logo-footer-orto-e-museo-botanico.png" alt="Orto Botanico Pisa" width="32" height="32" class="rounded-circle border border-white">';
+                        c += ' </li>';
+                        c += '        <li class="d-flex align-items-center">';
+                        c += '          <small>'+ data[i].Settore+'</small>';
+                        c += '     </li>';
+                        c += '</ul>';
+                        c += '</div>';
+                        c += ' </div>';
+                        c += ' </a>';
+                        c += ' </div>';
+
+                        numeroarrivi = numeroarrivi + 1;
+                        }
+                        if (numeroarrivi > 3) {
+                            break;
+                        }
+                   }
+                    $("#ultimi").html(c);
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert('Error during process: \n' + xhr.responseText);
+                }
+
+            });
+
+
+        });
+
+        </script>
+        <script>
+
+
+
+        </script>
+        <script>
+        $('#settore').on("change", function () {
+
+            var codsettoresel = $('#settore :selected').val();
+            var lingua = '@language.Getkey("bandiera")';
+            $('#collezione').val('0');
+            var token = '@ViewBag.token';
+            var basepath = '@Url.Action("Index","Home")';
+            if (basepath.slice(-1) != "/") {
+                basepath = basepath + '/';
+            }
+
+            const apiurl = basepath + 'common/GetSettoreCollezioni';
+
+
+            $.ajax({
+                type: "GET",
+                //                url: "getProvincie?codiceregione=" + codregionesel,
+                url: apiurl,
+                headers: { 'Authorization': token },
+                data: {
+                    'codicesettore': codsettoresel,
+                    'lingua': lingua
+                },
+                success: function (data) {
+
+                    var s = '';
+                    if (lingua == 'it') {
+                        s += '<option value="">' + "----Tutte----" + '</option>';
+                    }
+                    if (lingua == 'en') {
+                        s += '<option value="">' + "----All----" + '</option>';
+                    }
+                    for (var i = 0; i < data.length; i++) {
+                        if (lingua == 'it') {
+                            s += '<option value="' + data[i].id + '">' + data[i].collezione + '</option>';
+                        }
+                        if (lingua == 'en') {
+                            s += '<option value="' + data[i].id + '">' + data[i].collezioneEn + '</option>';
+                        }
+                    }
+                  //  if (i == 0) {
+                    //    alert("Il settore non ha collezioni corrispondenti verificare e correggi");
+                      //  $('#Settori').focusin();
+
+//                    }
+                    $("#collezione").html(s);
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert('Error during process: \n' + xhr.responseText);
+                }
+            });
+
+        });
+        </script>
+        <script>
+    function dettaglioindividuo(e) {
+    var token = '@ViewBag.token';
+    var basepath = '@Url.Action("Index","Home")';
+    if (basepath.slice(-1) != "/") {
+    basepath = basepath + '/';
+    }
+            const apiurl = '/api/orto/dettaglio';
+
+           // const apiurl = '@ViewBag.ApiUrl' + 'dettaglio';
+    const data = {
+    individuo: $(e).val()
+    };
+    $.ajax({
+        url: apiurl,
+       // headers: { 'Authorization': token },
+    data: data,
+
+        success: function (data) {
+            console.log(data);
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            alert('Error during process: \n' + xhr.responseText);
+        }
+
+    });
+    }
+        </script>
+    }

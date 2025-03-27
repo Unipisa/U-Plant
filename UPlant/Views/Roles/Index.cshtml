@@ -1,0 +1,110 @@
+﻿@model IEnumerable<UPlant.Models.DB.Roles>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="card card-outline card-primary">
+    <div class="card-header with-border">
+        <h3 class="card-title">Elenco</h3>
+        @if (User.IsInRole("Administrator"))
+        {
+            <div class="float-right success ">
+                <a asp-action="Create" asp-controller="Roles">
+                    <span class="btn btn-success" title="Aggiungi Ruolo">
+                        Aggiungi Ruolo
+                    </span>
+                </a>
+
+
+            </div>
+        }
+    </div>
+    <div class="card-body">
+        <div class="">
+
+            <div class="row">
+                <div class="col-sm-3">
+
+
+
+
+                    <table id="table1" class="table table-bordered table-striped dataTable">
+                        <thead>
+                            <tr>
+
+            <th>
+                Ruolo
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Descr)
+            </td>
+                                    <td class="col-sm-3">
+                                        @if (User.IsInRole("Administrator"))
+                                        {
+                                        
+                                            <a asp-action="Edit" asp-controller="Roles" asp-route-id="@item.Id">
+                                                <span class="btn btn-warning btn-xs" title="Modifica Ruolo">
+                                                    <i class="fa-solid fa-pencil" style="color: #fafafa;"></i>
+                                                </span>
+                                            </a>
+                                            if (@item.UserRole.Count() == 0)
+                                            {
+                                            <a asp-action="Delete" asp-controller="Roles" asp-route-id="@item.Id">
+                                                <span class="btn btn-danger btn-xs" title="Cancella Ruolo">
+                                                    <i class="fa-solid fa-trash"></i>
+                                                </span>
+                                            </a>
+                                            }
+                                        }
+
+                                    </td>
+        </tr>
+}
+    </tbody>
+</table>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <link href="~/css/select2.min.css" rel="stylesheet" />
+    <link href="~/css/accessioni.min.css" rel="stylesheet" />
+
+}
+
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+
+}
+
+
+@section CustomScripts {
+    <script>
+        jQuery(function () {
+            jQuery('#table1').DataTable({
+                'paging': true,
+                'lengthChange': true,
+                'searching': true,
+                'ordering': true,
+                'info': true,
+                'autoWidth': false
+            })
+        })
+    </script>
+}

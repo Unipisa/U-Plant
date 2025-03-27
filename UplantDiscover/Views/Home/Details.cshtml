@@ -1,0 +1,361 @@
+﻿<!--Pietro Picconi pietro.picconi@unipi.it-->
+
+
+@model UplantDiscover.Models.DB.Individui
+
+@{
+    var i = Model;
+    ViewData["Title"] = "Details";
+}
+
+@inject LanguageService language
+<p></p>
+@{
+    if (ViewContext.HttpContext.Request.Query["percorso"] == "yes")
+    {
+        <h5 class="mb-4  lh-1 fw-bold text-success"> <a href="@Url.Action("Index", "Home")" class="link-success text-decoration-none">Home</a> / <a href="@Url.Action("Index", "Percorsi")" class="link-success text-decoration-none">Percorsi</a> / <a href="#" onclick="history.back();" class="link-success text-decoration-none">@ViewContext.HttpContext.Request.Query["nome"]</a></h5>
+    }
+    else
+    {
+        <h5 class="mb-4  lh-1 fw-bold text-success"><a href="@Url.Action("Index", "Home")" class="link-success text-decoration-none">Home</a></h5>
+    }
+}
+
+<div class="box-container p-3 mb-2  dettaglio" id="dettaglio" style="display:none">
+
+    <img src="~/bst-master/images/loadingok.gif" width="100" height="100" /> .. @language.Getkey("caricamento") ..
+</div>
+
+
+@section scripts {
+        <script src="@ViewBag.GoogleMapUrl@ViewBag.GoogleMapKey">
+    </script>
+    <script type="text/javascript">
+         var basepath = '@Url.Action("Index","Home")';
+        function initialize() {
+            var geocoder = new google.maps.Geocoder();
+            var infowindow = new google.maps.InfoWindow();
+            var myLatlng = new google.maps.LatLng(43.71944963861506, 10.396344067111961);
+            var mapOptions = {
+                zoom: 14,
+                center: myLatlng,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            };
+            var map = new google.maps.Map(document.getElementById("map"), mapOptions);
+
+
+
+            return map;
+
+        }
+
+
+    </script>
+    <script>
+            $(document).ready(function () {
+                $('.popup-gallery').magnificPopup({
+                    delegate: '.owl-item:not(.cloned) a',
+                    type: 'image',
+                    removalDelay: 500, //delay removal by X to allow out-animation
+                    callbacks: {
+                        beforeOpen: function () {
+                            // just a hack that adds mfp-anim class to markup
+                            this.st.image.markup = this.st.image.markup.replace('mfp-figure', 'mfp-figure mfp-with-anim');
+                           // this.st.mainClass = this.st.el.attr('data-effect');
+                            this.st.mainClass += ' ' + this.st.el.attr('data-effect');
+                        }
+                    },
+                    tLoading: 'Loading image #%curr%...',
+                    mainClass: 'mfp-img-mobile',
+                    gallery: {
+                        enabled: true,
+                        navigateByImgClick: true,
+                        preload: [0, 1] // Will preload 0 - before current, and 1 after the current image
+                    },
+                    image: {
+                        tError: '<a href="%url%">The image #%curr%</a> could not be loaded.',
+                        titleSrc: function (item) {
+                            return item.el.attr('title') + '<small></small>';
+                        }
+                    }
+                });
+
+
+
+
+            var bandiera = '@language.Getkey("bandiera")';
+            
+            if (basepath.slice(-1) != "/") {
+                basepath = basepath + '/';
+                }
+             //   var token = '@ViewBag.token';
+                const apiurl = '/api/orto/dettaglio';
+            $.ajax({
+                    url: apiurl,
+              //  headers: { 'Authorization': token },
+                    data: { id: "@i.id.ToString()", lingua: bandiera},
+
+                success: function (data) {
+                    
+                    var nm ='';
+                    var s = '';
+                    var immagini = data[0].ListaImmagini;
+                    var messaggio = '';
+                    var datiaggiuntivi = false;
+                    if (bandiera == 'it') {
+                        messaggio = 'Per favore Inserire Nome e Cognome%0A%0AInvio di foto relative all’esemplare di ' + data[0].Indentitatassonomica + ', codice IPEN ' + data[0].Ipen + ' nel settore ' + data[0].Settore + ', collezione ' + data[0].Collezione + '.%0A%0ACon questo invio consento all’Orto e Museo Botanico di Pisa ad utilizzare le foto per le proprie finalità.';
+                        messaggio = messaggio.replace( "&", "");
+                        nm = data[0].Nomecomune;
+                    }
+                    if (bandiera == 'en') {
+                        messaggio = 'Please Enter Name and Surname%0A%0AI am sending photos pertaining to specimen of ' + data[0].Indentitatassonomica + ', IPEN code ' + data[0].Ipen + ' in the sector ' + data[0].Settore + ', collection ' + data[0].Collezione + '.%0A%0AWith this sending I authorise the Pisa Botanic Garden and Museum to use the photos for its aims.';
+                        messaggio = messaggio.replace("&", "");
+                        nm = data[0].Nomecomuneen;
+                    }
+
+
+
+
+                    s += '<div class="row it"><div class="col-lg-8 h4 text-white text-shadow-1 fw-bold  p-3" >' + data[0].Indentitatassonomica + '</div> <div style="text-align: right" class="col-lg-4"><a href="' + data[0].Urlerbario + '" target="_blank" class="text-decoration-none"><h5 class=" display-7 lh-1 text-white text-shadow-1 p-4"><span class="bi-search"></span> @language.Getkey("erbario")</h5></a></div></div>';
+                   ;
+                    s += '<div class="row dati">';
+                    s += '<div class="col-lg-9" id="dati">';
+
+                    s += '<b>@language.Getkey("famiglia")</b>: ' + data[0].Famiglia + '<br>';
+                    s += '<b>IPEN</b>: ' + data[0].Ipen + '<br>';
+
+                  if (nm.length >2){
+                  s += '<b>@language.Getkey("nomecomune")</b>: ' + nm + '<br>';
+                  }
+                    
+
+                    
+                    s += '<b>@language.Getkey("settore")</b>: ' + data[0].Settore + '<br>';
+                    s += '<b>@language.Getkey("collezione")</b>: ' + data[0].Collezione + '<br>';
+                    if (parseInt(data[0].Propagatodata.substring(6,10)) < 1950) {
+                        s += '<b>@language.Getkey("propagatodata")</b>: ' + data[0].Propagatodata.substring(6, 10)+ '<br>';
+                    }
+                    s += '<b>@language.Getkey("acquisizione")</b>: ' + data[0].Acquisizione + '<br>';
+                    s += '<b>@language.Getkey("provenienza")</b>: ' + data[0].Provenienza + '<br>';
+
+                    if ((data[0].RaccoltaRid == "99" || data[0].RaccoltaRid == null) && data[0].RaccoltaL == "" && data[0].Habitat == "" && data[0].Dataraccolta == "" && data[0].Raccoglitore == "" ) {
+                        if (data[0].RaccoltaN.length > 0) {
+                            s += '<b>@language.Getkey("raccolta")</b>: ' + data[0].RaccoltaN + '<br>';
+
+                        } else {
+                             s += '<b>@language.Getkey("raccolta")</b>: @language.Getkey("vuoto")<br>';
+                        }
+                    } else {
+                        datiaggiuntivi = true;
+                        if (data[0].RaccoltaN.length > 0) {
+                               s += '<b>@language.Getkey("raccolta")</b>: <a href="#" class="link-success text-decoration-none fw-bold" onclick="visualizza();  return false">' + data[0].RaccoltaN + ' <i id="iconplus" class="fa fa-plus-square-o"></i> <i id="iconmin" class="fa fa-minus-square-o" style="display:none"></i></a><br>';
+                        } else {
+                            s += '<b>@language.Getkey("raccolta")</b>: <a href="#" class="link-success text-decoration-none fw-bold" onclick="visualizza();  return false">@language.Getkey("vuoto") <i id="iconplus" class="fa fa-plus-square-o"></i> <i id="iconmin" class="fa fa-minus-square-o" style="display:none"></i></a><br>';
+                        }
+                        s += '<div id="detraccolta" style="display:none">';
+                        if (data[0].RaccoltaR.length > 0) {
+                            s += '<b>@language.Getkey("regione")</b>: ' + data[0].RaccoltaR + '<br>';
+                            }
+                        if (data[0].RaccoltaP.length > 0) {
+                            s += '<b>@language.Getkey("provincia")</b>: ' + data[0].RaccoltaP + '<br>';
+                        }
+                        if (data[0].RaccoltaL.length > 0 ) {
+                            s += '<b>@language.Getkey("localita")</b>: ' + data[0].RaccoltaL + '<br>';
+						}
+						if (data[0].Habitat.length > 0 ) {
+                            s += '<b>Habitat</b>: ' + data[0].Habitat + '<br>';
+						}
+                        if (data[0].Dataraccolta.length > 0) {
+                            s += '<b>@language.Getkey("dataraccolta")</b>: ' + data[0].Dataraccolta.substring(0, 10) + '<br>';
+                        }
+                        if (data[0].Raccoglitore.length > 0) {
+                            s += '<b>@language.Getkey("raccoglitore")</b>: ' + data[0].Raccoglitore + '<br>';
+                        }
+
+                        s += '</div>';
+                    }
+                    
+                    s += '<br id ="br" style="display:none">';
+                    
+                    s += '@language.Getkey("collabora"): <a href="https://www.wetransfer.com/?to=ortomuseobot@unipi.it&msg=' + messaggio + '" target="_blank" class="link-success text-decoration-none fw-bold">@language.Getkey("foto") <i class="bi bi-camera-fill"></i></a><br><p> </p>';
+                    s += '<div class="gallery-carousel popup-gallery owl-carousel owl-theme">';
+
+                    for (var i = 0; i < immagini.length; i++) {
+
+                      /*  s += '<div>';
+                        s += '<a href="' + immagini[i].Path + '"  title="' + immagini[i].Credits + '"  data-effect="mfp-zoom-in" target="_blank">';
+                        s += '<img src="' + immagini[i].Paththumb + '">';
+                        s += '</a>';
+                        if (immagini[i].Credits != null && immagini[i].Credits.length > 2) {
+                            s += '<span><strong>Credits</strong> ' + immagini[i].Credits + '</span>';
+                        }
+                        s += '</div>';
+                        */
+                         s += '<div>';
+                        s += ' <a href="' + immagini[i].Path + '" title="' + immagini[i].Credits + '"  data-effect="mfp-zoom-in" target="_blank">';
+                        s += '<div style="background-image: url(' + immagini[i].Paththumb + '); background-size: cover;" class="square">';
+                        if (immagini[i].Credits != null && immagini[i].Credits.length > 2) {
+                            s += '<div class="text-white text-shadow-1 fw-bold">';
+                            s += '' + immagini[i].Credits.substring(0, 15) + '';
+                            s += '</div>';
+                        }
+                        s += '</div>';
+                        s += '</a>';
+                        s += '</div>';
+
+                    }
+
+
+                    s += '</div>';
+                    s += '</div>';
+                    s += '<div class="col-lg-3" id="mappa" >';
+                    s += '     <div id="map" name="map" style="width:100%;height:400px;"></div>';
+                    s += '</div>';
+                    s += '</div>';
+
+                    s += '<div class="row">&nbsp;</div>';
+
+                  // funziona  s += '<div class="owl-carIdousel orto-det owl-theme">';
+
+
+
+
+
+
+                    $("#dettaglio").html(s);
+                    
+
+
+                    //creo mappa
+                    var map = initialize();
+                    var bounds = new google.maps.LatLngBounds();
+
+                        var iconBase = '@ViewBag.GoogleMapIcons';
+                    var icons;
+                    switch (data[0].Ordinamento) {
+                            case "1":
+                                icons = iconBase + 'grey-pushpin.png';
+                                break;
+                            case "2":
+                                icons = iconBase + 'ylw-pushpin.png';
+                                break;
+                            case "3":
+                                icons = iconBase + 'purple-pushpin.png';
+                                break;
+                            case "4":
+                                icons = iconBase + 'blue-pushpin.png';
+                                break;
+                            case "5":
+                                icons = iconBase + 'red-pushpin.png';
+                                break;
+                            case "6":
+                                icons = iconBase + 'ltblu-pushpin.png';
+                                break;
+                            case "7":
+                                icons = iconBase + 'grn-pushpin.png';
+                                break;
+                            case "8":
+                                icons = iconBase + 'orange-pushpin.png';
+                                break;
+                            case "9":
+                                icons = iconBase + 'pink-pushpin.png';
+                                break;
+                            case "10":
+                                icons = iconBase + 'lily-pushpin.png';
+                                break;
+                            default:
+                            icons = iconBase + 'grey-pushpin.png'
+                    }
+
+                    if (data[0].Latitudine == "" || data[0].Longitudine == "") {
+                        var latitudine = "43.71944963861506";
+                        var longitudine = "10.396344067111961";
+                        var icona = iconBase + 'question.png';
+                    } else {
+                        var latitudine = data[0].Latitudine;
+                        var longitudine = data[0].Longitudine;
+                        var icona = icons;
+                    }
+                    var marker = new google.maps.Marker({
+                        position: new google.maps.LatLng(latitudine, longitudine),
+                        title: data[0].Indentitatassonomica,
+                        icon: icona
+                    });
+
+                    marker.setMap(map);
+                    bounds.extend(marker.getPosition());
+                    map.setCenter(bounds.getCenter());
+                    map.setZoom(17);
+                    var noPoi = [
+                        {
+                            featureType: "poi.business",
+                            stylers: [
+                                { visibility: "off" }
+                            ]
+                        }
+                    ];
+                    map.setOptions({ styles: noPoi });
+                    var nimg = false;
+                    if (immagini.length == 1) {
+                        nimg = true;
+                    } else {
+                        nimg = false;
+                    }
+
+                    $('.gallery-carousel').owlCarousel({
+                        navigation: true,
+                        slideSpeed: 300,
+                        center: false,
+                        margin: 10,
+                        dots: true,
+                        paginationSpeed: 400,
+                        singleItem: true,
+                        responsive: {
+                            0: {
+                                items: 1
+                            },
+                            600: {
+                                items: 3
+                            },
+                            1000: {
+                                items: 5
+                            }
+                        }
+                    });
+
+
+
+
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert('Error during process: \n' + xhr.responseText);
+                }
+
+            });
+        });
+
+            $('#dettaglio').show();
+
+
+    </script>
+
+
+    <script type="text/javascript" language="javascript">
+        function visualizza() {
+          if (document.getElementById("detraccolta").style.display == 'none') {
+                document.getElementById("detraccolta").style.display = 'inline-block';
+              document.getElementById("iconmin").style.display = 'inline-block';
+              document.getElementById("br").style.display = 'inline-block';
+                document.getElementById("iconplus").style.display = 'none';
+                } else {
+                document.getElementById("detraccolta").style.display = 'none';
+              document.getElementById("iconmin").style.display = 'none';
+              document.getElementById("br").style.display = 'none';
+              document.getElementById("iconplus").style.display = 'inline-block';
+                }
+            
+        }
+    </script>
+  
+
+}

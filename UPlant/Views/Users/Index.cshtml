@@ -1,0 +1,172 @@
+﻿@model IEnumerable<UPlant.Models.DB.UserRole>
+
+@{
+    ViewData["Title"] = "Utenti";
+}
+
+
+    
+        <div class="card card-outline card-primary">
+            <div class="card-header with-border">
+                <h3 class="card-title">Elenco</h3>
+                @if (User.IsInRole("Administrator"))
+                {
+                    <div class="float-right success ">
+                        <a asp-action="Create" asp-controller="Users">
+                            <span class="btn btn-success" title="Aggiungi Utente">
+                                Aggiungi Utente
+                            </span>
+                        </a>
+
+
+                    </div>
+                }
+            </div>
+            <div class="card-body">
+                <div class="">
+
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <table id="table1" class="table table-bordered table-striped dataTable">
+                                <thead>
+                                    <tr>
+
+
+                                        <th>
+                                           Nome
+                                        </th>
+                                        <th>
+                                            Cognome
+                                        </th>
+                                        <th>
+                                           Email
+                                        </th>
+                                        <th>
+                                           Abilitato
+                                        </th>
+
+                                        <th>
+                                            Ruolo
+                                        </th>
+                                        <th>
+                                            Utente (es:user dell'email)
+                                        </th>
+                                        <th>
+                                            Codice Fiscale (necessario per SAML2)
+                                         </th>
+                                <th>
+                                    Tipologia Utente
+                                </th>
+                                        <th>
+                                            Organizzazione
+                                        </th>
+                                        <th style="width:25%"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.UserFKNavigation.Name)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.UserFKNavigation.LastName)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.UserFKNavigation.Email)
+                                            </td>
+                                            <td>
+                                        @if (item.UserFKNavigation.IsEnabled == true)
+                                        {
+                                            <span> Si </span>
+                                                                }else
+                                        {
+                                            <span> No </span>
+                                        }
+                                       
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.RoleFKNavigation.Descr)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.UserFKNavigation.UnipiUserName)
+                                            </td>
+                                            <td>
+                                             @Html.DisplayFor(modelItem => item.UserFKNavigation.CF)
+                                            </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.UserFKNavigation.TipologiaUtenteNavigation.descrizione)
+                                    </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.UserFKNavigation.OrganizzazioneNavigation.descrizione)
+                                            </td>
+                                            <td>
+                                                @if (User.IsInRole("Administrator"))
+                                                {
+                                           /* <a asp-action="Details" asp-controller="Users" asp-route-id="@item.UserFKNavigation.Id">
+                                                        <span class="btn btn-primary btn-xs" title="Dettaglio Utente">
+                                                            <i class="fa-solid fa-search"></i>
+                                                        </span>
+                                                    </a>*/
+                                            <a asp-action="Edit" asp-controller="Users" asp-route-id="@item.UserFKNavigation.Id">
+                                                    <span class="btn btn-warning btn-xs" title="Modifica Utente">
+                                                    <i class="fa-solid fa-pencil" style="color: #fafafa;"></i>
+                                                    </span>
+                                                    </a>
+                                            if (@item.UserFKNavigation.AccessioniutenteUltimaModificaNavigation.Count() == 0)
+                                            {
+                                            
+                                            <a asp-action="Delete" asp-controller="Users" asp-route-id="@item.UserFKNavigation.Id">
+                                                        <span class="btn btn-danger btn-xs" title="Cancella Utente">
+                                                    <i class="fa-solid fa-trash"></i>
+                                                        </span>
+                                                    </a>
+                                                
+                                                }
+                                            }
+                                            </td>
+                                        </tr>
+                                    }
+
+                            </table>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+@section Styles {
+    <link href="~/css/select2.min.css" rel="stylesheet" />
+    <link href="~/css/accessioni.min.css" rel="stylesheet" />
+    <link href="~/css/datatables.min.css" rel="stylesheet" />
+}
+
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script src="~/js/datatables.min.js"></script>
+}
+
+
+@section CustomScripts {
+    <script>
+        jQuery(function () {
+            jQuery('#table1').DataTable({
+              'paging'      : true,
+              'lengthChange': true,
+              'searching'   : true,
+              'ordering'    : true,
+              'info'        : true,
+              'autoWidth'   : false
+            })
+          })
+    </script>
+}
+

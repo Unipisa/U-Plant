@@ -1,0 +1,81 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>@AppSettings.Value.Application.NomeAppShort | @ViewData["Title"]</title>
+    
+
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    @*<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">*@
+
+    @await Html.PartialAsync("_Styles.cshtml")
+    @RenderSection("Styles", required: false)
+    <link rel="stylesheet" href="~/css/site.min.css">
+    @RenderSection("CustomStyles", required: false)
+    @*<link rel="stylesheet" href="/css/customusite.min.css">*@
+</head>
+<body class="hold-transition sidebar-mini" style=" padding-top:0px">
+    @await Component.InvokeAsync("UnipiHeader")
+    <div class="wrapper">
+        @await Component.InvokeAsync("Header")
+        @await Component.InvokeAsync("Sidebar")
+
+        <div class="content-wrapper">
+            <section class="content-header">
+                @await Component.InvokeAsync("PageHeader")
+                @await Component.InvokeAsync("Breadcrumb")
+                <br />
+                @await Component.InvokeAsync("PageAlert")
+            </section>
+            <section class="content">
+                @RenderBody()
+            </section>
+           
+        </div>
+        @await Component.InvokeAsync("Footer")
+        @await Component.InvokeAsync("ControlSidebar")
+        <aside class="control-sidebar control-sidebar-dark"></aside>
+    </div>
+
+    @await Html.PartialAsync("_Scripts.cshtml")
+    @RenderSection("Scripts", required: false)
+    <script src="~/js/site.min.js"></script>
+    @RenderSection("CustomSCripts", required: false)
+    <script>
+        jQuery(document).ready(function () {
+            jQuery('a[href="' + this.location.pathname + '"]').parents('li,ul').addClass('active');
+            jQuery('ul.nav-sidebar li.nav-item a[href="' + this.location.pathname + '"]').addClass('active');
+            
+            
+            $.ajax({
+        type: "GET",
+        url: baseUrlGetAccNoAuth,
+        //data: "{}",
+        success: function (data) {
+            var t = data.recordsTotal;
+            var a = data.recordAcc;
+            var i = data.recordInd;
+            var iok = data.recordIndOk;
+
+            $("#avvisitotali").text(a);
+            if (t > 0) {
+                $("#avvisitotali").removeClass('label-default').addClass('label-warning')
+            }
+            $("#avvisitotali2").text(t);
+            $("#avvisiacc").text(a);
+            $("#avvisiind").text(i);
+            $("#avvisiindok").text(iok);
+           
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            alert('Error during process: \n' + xhr.responseText);
+        }
+    });
+        });
+       
+    </script>
+    <script>   var baseUrlGetAccNoAuth = '@Url.Action("GetAccNoAuth", "Common")';</script>
+</body>
+</html>

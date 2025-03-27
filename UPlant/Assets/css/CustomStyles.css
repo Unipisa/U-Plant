@@ -1,0 +1,173 @@
+﻿html,
+body {
+    font-family: 'Titillium Web', sans-serif !important;
+}
+
+body {
+    padding-top: 50px;
+    padding-bottom: 0px;
+}
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/*Stili generici per filter template*/
+.bg-unipi {
+    background-color: #003C71 !important;
+}
+.customBorder {
+    border-top:1px solid #ffffff;
+}
+
+.bgBottomHeader
+{
+    background-color: #ffffff !important;
+    /*background-color: lightgrey;*/
+}
+
+.navbar-expand .navbar-nav .btn-navbar,
+.navbar-expand .navbar-nav .nav-link {
+    color: #343a40;
+    /*border: 1px solid #343a40;*/
+    padding: 0.5em;
+    /*border-radius: 5px;*/
+}
+a.nav-link p,
+a.nav-link span {
+    font-size: 1.1rem;
+}
+.unipi-navbar {
+    color: #343a40;
+}
+
+
+.logocherubino {
+    width: 225px;
+    margin-right: 1em;
+    margin-top: 0.7em;
+}
+.img-fluid {
+    max-width: 100%;
+    height: auto;
+}
+.bgpantone img {
+    color: #fff;
+}
+
+.bgpantone, 
+.post-navigation {
+    background-color: #003c71;
+    color: #fff;
+}
+.bgpantone a,
+.post-navigation a {
+    color: #fff !important;
+}
+.preheader .bgpantone a,
+.preheader .post-navigation a {
+    color: #fff !important;
+}
+
+a.site-title {
+    color: #fff !important;
+    margin-left: 0.6em;
+    line-height: 2.4em;
+}
+
+#DemoMessage {
+    position: fixed;
+    text-align: right;
+    bottom: 1.8em;
+    right: 4%;
+    left: 10%;
+    opacity: 0.4;
+    z-index: 999;
+    color: red;
+    font-size: 2.5em;
+    /*max-width: 80%;*/
+    /*transform: rotate(340deg);*/
+    /*transition: transform 2s;*/
+}
+
+
+
+.user-panel img {
+    height: auto;
+    width: auto;
+}
+
+.dropdown-item.active,
+.dropdown-item:active,
+.dropdown-item:hover {
+    color: #212529;
+    background-color: #fff !important;
+}
+
+/*Stili per form ellipse dettagli*/
+.card-title.card-titleContainer {
+    font-size: 1.5rem;
+}
+
+.btn-app {
+    border-radius: 10px;
+    padding: 15px 5px;
+    padding-top: 13px;
+}
+
+/*Stili per Select2*/
+.select2-container {
+    width: 100% !important;
+}
+
+span.select2-selection.select2-selection--single {
+    height: 35px !important;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+    height: 26px;
+    top: 5px;
+    width: 20px;
+}
+
+.select2-search--dropdown .select2-search__field {
+    max-width: 100%;
+}
+
+
+
+/* Override the default bootstrap behavior where horizontal description lists 
+   will truncate terms that are too long to fit in the left column 
+*/
+.dl-horizontal dt {
+    white-space: normal;
+}
+
+/* Set width on the form input elements since they're 100% wide by default */
+input,
+select,
+textarea {
+    max-width: 280px;
+}
+
+
+.select2-container--default .select2-selection--multiple .select2-selection__choice {
+    background-color: #03497c;
+    border: 1px solid #043659;
+}
+
+
+
+
+
+.intestazione {
+/*    background: -webkit-gradient(linear,left top,left bottom,from(#043659),to(#03497c));
+    background: -webkit-linear-gradient(top,#043659,#03497c);
+    background: -moz-linear-gradient(top,#043659,#03497c);
+    background: -ms-linear-gradient(top,#043659,#03497c);
+    background: -o-linear-gradient(top,#043659,#03497c);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#043659,endColorstr=#03497c,GradientType=0);
+    background-color: #043659;*/
+}
+

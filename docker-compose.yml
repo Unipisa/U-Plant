@@ -1,0 +1,6 @@
+services:
+  uplant:
+    image: ${DOCKER_REGISTRY-}uplant
+    build:
+      context: .
+      dockerfile: UPlant/Dockerfile

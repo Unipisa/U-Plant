@@ -1,0 +1,319 @@
+[
+  // ==================================================== \\
+  // ===================   File JS   ==================== \\
+  // ==================================================== \\
+  // Jquery
+  {
+    "outputFileName": "wwwroot/js/jquery.min.js",
+    "inputFiles": [
+      "Assets/lib/jquery/jquery.min.js"
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    }
+  },
+  // JqueryUI
+  {
+    "outputFileName": "wwwroot/js/jquery-ui.min.js",
+    "inputFiles": [
+      "Assets/lib/jqueryui/jquery-ui.min.js"
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    }
+  },
+  // Bootstrap
+  {
+    "outputFileName": "wwwroot/js/bootstrap.min.js",
+    "inputFiles": [
+
+      "Assets/lib/twitter-bootstrap/js/bootstrap.js"
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    }
+  },
+  // AdminLTE
+  {
+    "outputFileName": "wwwroot/js/adminlte.min.js",
+    "inputFiles": [
+
+      "Assets/lib/admin-lte/js/adminlte.min.js"
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    }
+  },
+  // Font-awesome
+  {
+    "outputFileName": "wwwroot/js/font-awesome.min.js",
+    "inputFiles": [
+      "wwwroot/fonts/font-awesome/js/fontawesome.min.js"
+      // "Assets/lib/font-awesome/js/fontawesome.min.js"
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    }
+  },
+  // Datatables
+  {
+    "outputFileName": "wwwroot/js/datatables.min.js",
+    "inputFiles": [
+      "Assets/lib/datatables/js/jquery.dataTables.js",
+      "Assets/lib/datatables/js/dataTables.dataTables.js",
+      "Assets/lib/datatables/js/dataTables.bootstrap4.js",
+      "Assets/lib/datatables-responsive/dataTables.responsive.js",
+      "Assets/js/DataTablesDefaults.js"
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    }
+  },
+  // Datatables-buttons
+  {
+    "outputFileName": "wwwroot/js/datatablesButtons.min.js",
+    "inputFiles": [
+      "Assets/lib/datatables-buttons/js/dataTables.buttons.js",
+      "Assets/lib/datatables-buttons/js/buttons.colVis.js",
+      "Assets/lib/datatables-tabletools/js/TableTools.js",
+      "Assets/lib/datatables-buttons/js/buttons.html5.js",
+      "Assets/lib/datatables-buttons/js/buttons.print.js"
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    }
+  },
+  // Select2
+  {
+    "outputFileName": "wwwroot/js/select2.min.js",
+    "inputFiles": [
+      "Assets/lib/select2/js/select2.js",
+      "Assets/lib/select2/js/i18n/it.js",
+      "Assets/js/Select2Customs.js"
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    }
+  },
+  // jQuery.Inputmask
+  {
+    "outputFileName": "wwwroot/js/jquery.inputmask.min.js",
+    "inputFiles": [
+      "Assets/lib/jquery.inputmask/jquery.inputmask.js",
+      "Assets/lib/jquery.inputmask/bindings/inputmask.binding.js"
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    }
+  },
+  // Jquery validate
+  {
+    "outputFileName": "wwwroot/js/jquery.validation.min.js",
+    "inputFiles": [
+      "Assets/lib/jquery-validate/jquery.validate.min.js",
+      "Assets/lib/jquery-validate/additional-methods.min.js",
+      "Assets/lib/jquery-validate/localization/messages_it.min.js",
+      "Assets/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    }
+  },
+  // Moment.js
+  {
+    "outputFileName": "wwwroot/js/moment.min.js",
+    "inputFiles": [
+      "Assets/lib/moment.js/moment-with-locales.js"
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    }
+  },
+  // TinyMCE
+  {
+    "outputFileName": "wwwroot/js/MyTinymce.min.js",
+    "inputFiles": [
+      "wwwroot/js/jquery.tinymce.min.js",
+      "wwwroot/js/tinymce.min.js",
+      "wwwroot/js/themes/mobile/*",
+      "wwwroot/js/themes/silver/*"
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    }
+  },
+  /// Script Generico
+  {
+    "outputFileName": "wwwroot/js/site.min.js",
+    "inputFiles": [
+      "Assets/js/CustomScripts.js"
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    }
+  },
+  // Home/Index javascript
+  {
+    "outputFileName": "wwwroot/js/home-index.min.js",
+    "inputFiles": [
+      "Assets/js/home-index.js"
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    }
+  },
+
+  // ==================================================== \\
+  // ===================   File CSS   =================== \\
+  // ==================================================== \\
+
+  // === Stili comuni a tutte le pagine === \\
+  {
+    "outputFileName": "wwwroot/css/CustomAdminlte.min.css",
+    "inputFiles": [
+      // font-awesome
+      "wwwroot/fonts/font-awesome/css/all.min.css",
+      // JqueryUI
+      "Assets/lib/jqueryui/jquery-ui.css",
+      // Admin-lte
+      "Assets/lib/admin-lte/css/adminlte.min.css",
+      "wwwroot/fonts/font-awesome/css/fontawesome.css"
+
+      // "Assets/lib/font-awesome/css/fontawesome.css",
+
+      //"Assets/lib/twitter-bootstrap/css/bootstrap.css",
+      //"Assets/lib/twitter-bootstrap/css/bootstrap-grid.css",
+      //"Assets/lib/twitter-bootstrap/css/bootstrap-reboot.css"
+      //"Assets/lib/admin-lte/css/alt/adminlte.components.css",
+      //"Assets/lib/admin-lte/css/alt/adminlte.extra-components.css",
+      //"Assets/lib/admin-lte/css/alt/adminlte.pages.css",
+      //"Assets/lib/admin-lte/css/alt/adminlte.plugins.css"
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    },
+    "sourceMap": false
+  },
+  // DataTables
+  {
+    "outputFileName": "wwwroot/css/datatables.min.css",
+    "inputFiles": [
+      "Assets/lib/datatables/css/dataTables.bootstrap4.css",
+      //"Assets/lib/datatables/css/jquery.dataTables.css",
+      "Assets/lib/datatables.net-responsive-dt/responsive.dataTables.css"
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    },
+    "sourceMap": false
+  },
+  // DataTables buttons
+  {
+    "outputFileName": "wwwroot/css/buttons.bootstrap.min.css",
+    "inputFiles": [
+      "Assets/lib/datatables.net-buttons-bs/buttons.bootstrap.css"
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    },
+    "sourceMap": false
+  },
+  // Select2
+  {
+    "outputFileName": "wwwroot/css/select2.min.css",
+    "inputFiles": [
+      "Assets/lib/select2/css/select2.css"
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    },
+    "sourceMap": false
+  },
+
+  // Site.css
+  {
+    "outputFileName": "wwwroot/css/site.min.css",
+    "inputFiles": [
+      "Assets/css/CustomStyles.css"
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    },
+    "sourceMap": false
+  },
+  // uplant .css accessioni.css
+  {
+    "outputFileName": "wwwroot/css/accesioni.css",
+    "inputFiles": [
+      "Assets/lib/uplant/css/accessioni.css"
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    },
+    "sourceMap": false
+  },
+  {
+    "outputFileName": "wwwroot/css/accessioni.css",
+    "inputFiles": [
+      "Assets/lib/uplant/css/accessioni.css"
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    },
+    "sourceMap": false
+  },
+  /// Script accesioni
+  {
+    "outputFileName": "wwwroot/js/scriptAccessioni.js",
+    "inputFiles": [
+      "Assets/lib/uplant/js/scriptAccessioni.js"
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    }
+  },
+  /// Script individui
+  {
+    "outputFileName": "wwwroot/js/scriptIndividui.js",
+    "inputFiles": [
+      "Assets/lib/uplant/js/scriptIndividui.js"
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    }
+  },
+  /// Script menu per notifiche
+  {
+    "outputFileName": "wwwroot/js/scriptMenu.js",
+    "inputFiles": [
+      "Assets/lib/uplant/js/scriptMenu.js"
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    }
+  }
+]

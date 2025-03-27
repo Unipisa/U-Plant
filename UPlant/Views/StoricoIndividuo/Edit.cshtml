@@ -1,0 +1,110 @@
+﻿@model UPlant.Models.DB.StoricoIndividuo
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<div class="col-lg-12">
+<p>
+    @{
+        if (ViewBag.tipo == "ricerca")
+        {
+            @Html.ActionLink("Torna alla ricerca", null, null, null, new { @class = "btn btn-info go_back" })
+
+
+        }
+        else
+        {
+            @Html.ActionLink("Torna all'individuo", "Details", "Individui", new { id = ViewBag.individuo, tipo = ViewBag.tipo }, new { @class = "btn btn-info " })
+
+        }
+
+
+    }
+</p>
+
+    <div class="card card-primary">
+
+        <div class="card-header with-border">
+            <h3 class="card-title">Storico Individuo - Modifica</h3>
+        </div>
+
+
+
+
+
+ <div class="card-body">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="id" />
+           
+            <div class="form-group">
+                <label asp-for="statoIndividuo" class="control-label"></label>
+                <select asp-for="statoIndividuo" class="form-control" asp-items="ViewBag.statoIndividuo"></select>
+                <span asp-validation-for="statoIndividuo" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="condizione" class="control-label"></label>
+                <select asp-for="condizione" class="form-control" asp-items="ViewBag.condizione"></select>
+                <span asp-validation-for="condizione" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="operazioniColturali" class="control-label"></label>
+                <input asp-for="operazioniColturali" class="form-control" />
+                <span asp-validation-for="operazioniColturali" class="text-danger"></span>
+            </div>
+                @Html.Hidden("individuo", null, new { @individuo = "individuo" })
+           
+                @Html.Hidden("tipo", null, new { @tipo = "tipo" })
+            <div class="form-group">
+                <input type="submit" value="Modifica Stato" class="btn btn-success" />
+            </div>
+        </form>
+    </div>
+    </div>
+    <p>
+        @{
+            if (ViewBag.tipo == "ricerca")
+            {
+                @Html.ActionLink("Torna alla ricerca", null, null, null, new { @class = "btn btn-info go_back" })
+
+
+            }
+            else
+            {
+                @Html.ActionLink("Torna all'individuo", "Details", "Individui", new { id = ViewBag.individuo, tipo = ViewBag.tipo }, new { @class = "btn btn-info " })
+
+            }
+
+
+        }
+    </p>
+</div>
+
+
+@section Styles {
+    <link href="~/css/select2.min.css" rel="stylesheet" />
+
+
+}
+@section Scripts {
+
+
+    <script src="~/js/select2.min.js"></script>
+    <script src="~/js/jquery.validation.min.js"></script>
+
+}
+
+@section CustomScripts {
+
+
+    <script>
+        jQuery(function () {
+            jQuery(".datepicker").datepicker({
+                language: "it",
+                autoclose: true
+            });
+        });
+    </script>
+
+}

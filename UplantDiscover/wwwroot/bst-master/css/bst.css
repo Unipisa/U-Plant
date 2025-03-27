@@ -1,0 +1,1291 @@
+* {
+  -webkit-font-smoothing: antialiased;
+}
+body,
+html {
+  overflow-x: hidden;
+}
+/*
+Max content widths
+*/
+.embed-youtube {
+  position: relative;
+  padding-bottom: 56.25%;
+  padding-top: 30px;
+  height: 0;
+  overflow: hidden;
+  clear: both;
+}
+.embed-youtube iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+.size-auto,
+.size-full,
+.size-large,
+.size-medium,
+.size-thumbnail {
+  max-width: 100%;
+  height: auto;
+}
+.alignleft {
+  float: left;
+  margin-right: 15px;
+}
+.alignright {
+  float: right;
+  margin-left: 15px;
+}
+.aligncenter {
+  display: block;
+  margin: 0 auto 15px;
+}
+#content img {
+  max-width: 100%;
+  height: auto;
+}
+.gallery-item
+{
+    width: 14% !important;
+    margin-right: 2%;
+}
+.preview-specie {
+    width :150px;
+   
+}
+.formricerca {
+    color: #000000;
+    background: #f3efe5;
+    text-decoration: none;
+    text-transform: none;
+}
+    .formricerca a {
+        color: #000;
+        text-transform: none;
+        text-decoration: none;
+    }
+
+a:hover {
+    color: #004582;
+    text-transform: none;
+    text-decoration: none;
+}
+a:visited {
+
+    text-decoration: none;
+}
+a:active {
+    text-decoration: none;
+}
+.bloccoricerca {
+    background: #fbf9f6;
+}
+.dettaglio {
+    background-color: #E8E8E8;
+    border: 1px solid #1e6031;
+}
+.it {
+    color: white;
+    background-color: #1e6031;
+    border: 1px solid #000000;
+    
+}
+.dati {
+    background: #fbf9f6;
+    
+    
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 10px;
+    padding-top: 10px;
+   
+}
+.map {
+    border: 1px solid #000000;
+    border-color : black;
+}
+.features-icons {
+    padding-top: 7rem;
+    padding-bottom: 7rem;
+}
+.features-icons .features-icons-item {
+        max-width: 20rem;
+}
+.features-icons .features-icons-item .features-icons-icon {
+  height: 7rem;
+}
+.features-icons .features-icons-item .features-icons-icon i {
+       font-size: 4.5rem;
+}
+.features-icons .features-icons-item:hover .features-icons-icon i {
+       font-size: 5rem;
+}
+.load {
+    text-align: center;
+    
+}
+/* inizio punto della parte modale*/
+
+
+.gallery-item {
+    position: relative;
+    font-family: Verdana, sans-serif;
+    font-size: 10px;
+    float: left;
+    margin: 0;
+    padding: 0;
+    position: relative;
+    
+}
+
+    .gallery-item img {
+        opacity: 1;
+        transition: opacity 0.35s;
+        width: auto;
+        height: 200px;
+        float: left;
+        margin: 0;
+        padding: 0;
+        background: #fff;
+        border: none;
+    }
+    .gallery-item span {
+        float: left;
+        margin: 0;
+        padding: 10px;
+        width: 200PX;
+        color: #dedede;
+        background: #222; /* browser che non supportano rgba */
+        background: rgba(0,0,0,0.7);
+        position: absolute;
+        left: 0;
+        bottom: 0;
+    }
+        .gallery-item span strong {
+            font-weight: bold;
+            font-size: 11px;
+            text-transform: uppercase;
+            display: block;
+            padding-bottom: 5px;
+        
+    }
+    .gallery-item::before {
+        position: absolute;
+        content: "";
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background-position: center;
+        background-repeat: no-repeat;
+    }
+
+    .gallery-item:hover img {
+        opacity: 0.2;
+        transition: opacity 0.35s;
+    }
+
+.owl-prev {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.owl-next {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+}
+/*Fine punto parte modale*/
+/*
+Main content
+*/
+#content article {
+    margin-bottom: 40px;
+}
+#content header {
+  margin: 20px 0;
+}
+#content section {
+  margin-bottom: 20px;
+}
+#content footer {
+  padding-bottom: 20px;
+}
+.square {
+    overflow: hidden;
+    height: 0;
+    padding-top: 100%;
+    position: relative;
+    border-radius: .25rem;
+}
+.square50 {
+   
+    padding-top: 50%;
+   
+}
+.rescont {
+    background: #ffF;
+    padding: 1rem;
+}
+.square > div {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        padding: .5rem;
+        background: rgba(0,0,0,.4)
+ }
+/*
+Sidebar
+*/
+.sidebar {
+  margin-top: 20px;
+}
+.sidebar section {
+  margin-bottom: 40px;
+}
+.sidebar ul,
+.sidebar ol {
+  list-style-type: none;
+  padding: 0;
+}
+.sidebar li {
+  margin: 10px 0;
+}
+#sidebar {
+  background: rgba(255, 255, 255, 0.8);
+  padding-top: 50px;
+  height: 80vh;
+}
+body.single #sidebar {
+  padding-top: 180px;
+}
+#sidebar h4 {
+  font-size: 18px;
+  text-align: center;
+  font-weight: bold;
+}
+#sidebar #wp-calendar tbody td a {
+  font-weight: bold;
+}
+/*
+Hide form placeholders on focus
+*/
+#s.form-control:focus::-webkit-input-placeholder {
+  color: transparent;
+}
+#s.form-control:focus:-moz-placeholder {
+  color: transparent;
+}
+/* FF 4-18 */
+#s.form-control:focus::-moz-placeholder {
+  color: transparent;
+}
+/* FF 19+ */
+
+#s.form-control::-webkit-input-placeholder {
+  color: #fafafa;
+}
+#s.form-control:-moz-placeholder {
+  color: #fafafa;
+}
+/* FF 4-18 */
+#s.form-control::-moz-placeholder {
+  color: #fafafa;
+}
+/* FF 19+ */
+/*
+Comments
+*/
+#respond {
+  margin-top: 40px;
+}
+ol.commentlist {
+  counter-reset: li;
+  /* Initiate a counter */
+  padding: 0;
+}
+ol.commentlist ul {
+  padding: 0;
+}
+ol.commentlist > li {
+  position: relative;
+  margin: 0 0 20px 0;
+  list-style: none /* Disable the normal item numbering */;
+}
+ol.commentlist > li:before {
+  content: "Thread " counter(li);
+  /* Use the counter as content */
+  counter-increment: li;
+  /* Increment the counter by 1 */
+  position: absolute;
+  top: 0;
+  right: 0;
+  border-bottom: 1px solid #ddd;
+  border-left: 1px solid #ddd;
+  border-bottom-left-radius: 4px;
+  padding: 5px 20px 5px 10px;
+  color: #999;
+}
+ol.commentlist li ol,
+ol.commentlist li ul {
+  list-style-type: none;
+  margin: 0;
+}
+.commentlist li li {
+  background: #f8f8f8;
+}
+.commentlist li li li {
+  background: #fff;
+}
+.commentlist li li li li {
+  background: #f8f8f8;
+}
+.commentlist li li li li li li {
+  background: #fff;
+}
+.commentlist li {
+  padding: 20px;
+}
+.commentlist ul li {
+  margin-top: 20px;
+  margin-bottom: 0;
+}
+.reply p {
+  margin: 0;
+}
+/*
+Site footer
+*/
+.site-footer ul,
+.site-footer ol {
+  list-style-type: none;
+  padding: 0;
+}
+.site-footer li {
+  margin: 10px 0;
+}
+.site-sub-footer p {
+  text-align: center;
+}
+.site-footer p {
+  text-align: center;
+}
+/* FONT */
+/* font-family: 'Raleway', sans-serif; */
+body {
+  font-family: 'Raleway', sans-serif;
+  font-size: 16px;
+  line-height: 1.62857143;
+}
+@media (min-width: 768px) {
+  .container {
+    width: 728px;
+  }
+}
+@media (min-width: 992px) {
+  .container {
+    width: 948px;
+  }
+}
+@media (min-width: 1200px) {
+  .container {
+    width: 1178px;
+  }
+}
+/* HEADER */
+/*.navmenu
+{
+    position: relative;
+    width: 100%;
+    background-color: @color-default;
+}*/
+.navmenu {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  z-index: 999;
+  background: 0 0;
+}
+body.home .navmenu,
+body .header-full .navmenu {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  z-index: 999;
+  background: transparent;
+}
+body.home header {
+  height: auto;
+}
+body > header {
+  height: 280px;
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-image: url(../images/slide-orto-botanico.jpg);
+}
+body > header.header-full {
+  height: 650px;
+}
+.navbarsearch {
+  position: absolute;
+  left: 210px;
+  top: 3px;
+  height: 70px;
+  opacity: 0.9;
+  background-color: #1e6031;
+  width: 61%;
+}
+.navbar {
+  background-color: #1e6031
+}
+.navbar li {
+  font-size: 14px;
+}
+.navbar-brand {
+  color: #fff !important;
+  padding: 8px 15px;
+  font-weight: 600;
+}
+.navbar-brand img {
+    max-height: 60px
+}
+.dropdown-menu>.active>a, .dropdown-menu>.active>a:focus, .dropdown-menu>.active>a:hover
+{
+    background-color:#2a8945 !important;
+}
+.dropdown-menu li a:hover
+{
+    background-color: #216d37 !important;
+}
+
+.unipi-logo img.sma {
+  width: 140px;
+  margin-top: 8px;
+}
+.unipi-logo img.unipi {
+  width: 60px;
+}
+.nav {
+  margin: 18px 0 0 0;
+}
+.nav > li > a {
+  position: relative;
+  display: block;
+  padding: 10px 10px;
+  font-family: 'Raleway', sans-serif;
+  font-weight: 500;
+}
+.navbar-default .navbar-nav > .active > a,
+.navbar-default .navbar-nav > .active > a:focus,
+.navbar-default .navbar-nav > .active > a:hover,
+.navbar-default .navbar-nav > li > a,
+.navbar-default .navbar-nav > li > a:focus,
+.navbar-default .navbar-nav > li > a:hover {
+  color: #ffffff;
+  background: none;
+}
+.navbar-default .navbar-nav > .open > a,
+.navbar-default .navbar-nav > .open > a:focus,
+.navbar-default .navbar-nav > .open > a:hover {
+  background-color: transparent;
+  color: #ffffff;
+}
+.navbar-dark .navbar-toggler {
+    border-color: #fff;
+}.navbar-toggler:focus {box-shadow: none;}.navbar-dark .navbar-toggler-icon {background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 1%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");}
+.dropdown-menu {
+  top: 58px;
+  background-color: #1e6031;
+  border: none;
+  border-radius: 0;
+}
+.navbar-dark .navbar-nav .nav-link {
+    color: rgba(255,255,255,0.9);
+}
+.dropdown-menu li a {
+  color: #ffffff;
+  line-height: 20px !important;
+  padding: 5px 15px 5px 15px !important;
+}
+.dropdown-menu li a:hover {
+  background-color: #0d6269;
+  color: #ffffff;
+  -webkit-transition: background-color 0.2s ease-in-out;
+  -moz-transition: background-color 0.2s ease-in-out;
+  -o-transition: background-color 0.2s ease-in-out;
+  transition: background-color 0.2s ease-in-out;
+}
+
+#searchform {
+  margin: 0;
+}
+.search-close {
+    position: absolute;
+    top: 45%;
+    right: 25px;
+    margin-top: -14px;
+    font-size: 20px;
+    cursor: pointer;
+    -webkit-transition: all 0.3s ease-in-out;
+    -moz-transition: all 0.3s ease-in-out;
+    /* -ms-transition: all 0.3s ease-in-out;*/
+    -o-transition: all 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
+    color: #fff;
+    opacity: 0.8;
+}
+#searchform input {
+  background: none;
+  color: #ffffff;
+  border: none;
+  outline: none;
+  box-shadow: none;
+  width: 100%;
+  padding-left: 15px;
+  height: 70px;
+  font-size: 16px;
+  color: #fff;
+  font-weight: 300;
+}
+.navbar {
+  margin-bottom: 0;
+}
+.topbar-icons {
+  position: absolute;
+  right: 260px;
+  top: 25px;
+  color: #ffffff;
+}
+.topbar-icons i {
+  cursor: pointer;
+}
+.navbar-static-top {
+  border-width: 0;
+}
+/* Card Styles */
+
+.card-sl {
+    border-radius: 8px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.card-image img {
+    max-height: 100%;
+    max-width: 100%;
+    border-radius: 8px 8px 0px 0;
+}
+
+.card-action {
+    position: relative;
+    float: right;
+    margin-top: -25px;
+    margin-right: 20px;
+    z-index: 2;
+    color: #E26D5C;
+    background: #fff;
+    border-radius: 100%;
+    padding: 15px;
+    font-size: 15px;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 rgba(0, 0, 0, 0.19);
+}
+
+    .card-action:hover {
+        color: #fff;
+        background: #E26D5C;
+        -webkit-animation: pulse 1.5s infinite;
+    }
+
+.card-heading {
+    font-size: 18px;
+    font-weight: bold;
+    background: #fff;
+    padding: 10px 15px;
+}
+
+.card-text {
+    padding: 10px 15px;
+    background: #fff;
+    font-size: 14px;
+    color: #636262;
+}
+
+.card-button {
+    display: flex;
+    justify-content: center;
+    padding: 10px 0;
+    width: 100%;
+    background-color: #1F487E;
+    color: #fff;
+    border-radius: 0 0 8px 8px;
+}
+
+    .card-button:hover {
+        text-decoration: none;
+        background-color: #1D3461;
+        color: #fff;
+    }
+
+
+@-webkit-keyframes pulse {
+    0% {
+        -moz-transform: scale(0.9);
+        -ms-transform: scale(0.9);
+        -webkit-transform: scale(0.9);
+        transform: scale(0.9);
+    }
+
+    70% {
+        -moz-transform: scale(1);
+        -ms-transform: scale(1);
+        -webkit-transform: scale(1);
+        transform: scale(1);
+        box-shadow: 0 0 0 50px rgba(90, 153, 212, 0);
+    }
+
+    100% {
+        -moz-transform: scale(0.9);
+        -ms-transform: scale(0.9);
+        -webkit-transform: scale(0.9);
+        transform: scale(0.9);
+        box-shadow: 0 0 0 0 rgba(90, 153, 212, 0);
+    }
+}
+/* / SECTION SLIDER */
+/* SECTION NEWS-EVENTS */
+.news-events h2,
+.museum-list h2 {
+    text-align: center;
+    padding: 40px 0 0 0;
+}
+.news-events h2:after,
+.museum-list h2:after {
+  display: block;
+  width: 120px;
+  content: ' ';
+  border-bottom: 5px solid #1e6031;
+  margin: 0 auto 35px auto;
+  padding: 20px 0 0 0;
+}
+.notizie-sistema-museale .thumb-group {
+  position: relative;
+  width: 195px;
+  /*height:175px;*/
+  margin: 0 15px 0 0;
+}
+.notizie-sistema-museale .thumb-group .label-category,
+.category-article .label-category {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: #004582;
+  color: #fff;
+  font-weight: 600;
+  font-size: 14px;
+  padding: 2px 5px;
+}
+.notizie-sistema-museale .thumb-group .label-category a,
+.notizie-sistema-museale .thumb-group .label-category a:visited,
+.notizie-sistema-museale .thumb-group .label-category a:hover,
+.notizie-sistema-museale .thumb-group .label-category a:active,
+.notizie-sistema-museale .thumb-group .label-category a:focus,
+.category-article .label-category a,
+.category-article .label-category a:visited,
+.category-article .label-category a:hover,
+.category-article .label-category a:active,
+.category-article .label-category a:focus {
+  color: #fff;
+}
+.notizie-sistema-museale .thumb-group img {
+  width: 100% !important;
+}
+.notizie-sistema-museale article {
+  padding-bottom: 15px;
+  padding-top: 15px;
+}
+.notizie-sistema-museale article .grey-box {
+  background-color: #fafafa;
+  padding: 0;
+}
+.notizie-sistema-museale article .fa {
+  color: #1e6031;
+}
+.notizie-sistema-museale article .fa-clock-o,
+.notizie-sistema-museale article .fa-calendar {
+  font-size: 16px;
+  margin-right: 5px;
+}
+.notizie-sistema-museale article .fa-map-marker {
+  font-size: 16px;
+  margin-right: 5px;
+}
+.notizie-sistema-museale article .news-museum,
+.notizie-sistema-museale article .news-date {
+  font-weight: 600;
+  font-size: 14px;
+  display: block;
+}
+.notizie-sistema-museale article .news-museum {
+  top: 10px;
+}
+.notizie-sistema-museale article .news-date {
+  top: 30px;
+}
+.notizie-sistema-museale article h3.news-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 5px 0 5px 0;
+}
+.notizie-sistema-museale article h3.news-title a {
+  color: #000000;
+  text-decoration: none;
+}
+.notizie-sistema-museale p.excerpt {
+  margin: 0 0 5px 0;
+  line-height: 1.3em;
+}
+.grey-box p.entry-title {
+  margin-bottom: 0;
+  line-height: 130%;
+}
+.btn-blue {
+  border-color: #004582;
+  color: #004582;
+  font-size: 14px;
+  padding: 3px;
+  margin: 0;
+}
+.btn-blue:hover,
+.btn-blue:focus {
+  color: #ffffff;
+  background-color: #004582;
+}
+/* / SECTION NEWS-EVENTS */
+/* SECTION MUSEUM-LIST */
+.musei-sistema-museale .container {
+  padding: 0;
+}
+.musei-sistema-museale .museum-icons {
+  list-style: none;
+  margin: 0 -15px 15px -15px;
+  padding: 0;
+}
+.musei-sistema-museale .museum-icon {
+  width: 20%;
+  display: block;
+  float: left;
+  position: relative;
+  overflow: hidden;
+  padding-right: 15px;
+  padding-left: 15px;
+  padding-bottom: 34px;
+}
+.musei-sistema-museale .museum-icon a {
+  background-size: cover;
+  text-decoration: none;
+  position: relative;
+}
+.musei-sistema-museale .museum-icon a span {
+  height: 160px;
+  display: table-cell;
+  vertical-align: middle;
+  width: 100%;
+  padding: 0 10px;
+}
+.musei-sistema-museale .museum-icon .museum-title {
+  padding-right: 30px;
+  padding-bottom: 30px;
+}
+/* in caso si voglia nascondere il titolo del bottone del museo */
+.musei-sistema-museale .museum-icon.notext .museum-title {
+  display: none;
+}
+.musei-sistema-museale .museum-icon span {
+  color: #ffffff;
+  text-decoration: none;
+  text-align: center;
+  font-size: 25px;
+  line-height: 30px;
+  display: table-cell;
+  vertical-align: middle;
+  z-index: 2;
+  position: relative;
+}
+.musei-sistema-museale a {
+  display: block;
+  width: 100%;
+  height: 160px;
+}
+/* colori per i bottoni dei musei */
+.musei-sistema-museale .museum-icon.sistema-museale-ateneo a {
+  background-color: #1e6031;
+  border: 1px solid #1e6031;
+  -webkit-box-shadow: 4px 4px 0px 0px #1e6031;
+  -moz-box-shadow: 4px 4px 0px 0px #1e6031;
+  box-shadow: 4px 4px 0px 0px #1e6031;
+}
+.musei-sistema-museale .museum-icon a:before {
+  position: absolute;
+  top: 0;
+  left: 0;
+  content: "";
+  opacity: 1;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  transition: opacity 0.3s;
+  -webkit-transition: opacity 0.3s;
+  -moz-transition: opacity 0.3s;
+  background-color: #1e6031;
+}
+.musei-sistema-museale .museum-icon a:hover:before {
+  opacity: 0.5;
+}
+.museum-markers a {
+  color: #1e6031;
+}
+/* / SECTION MUSEUM-LIST */
+/* SECTION MAP */
+.map-pisa {
+  width: 100%;
+  height: 500px;
+  margin-top: 20px;
+  border-top: 1px solid #A2A29D;
+  position: relative;
+}
+.map-pisa > div {
+  height: 500px;
+}
+.page-template-default .map-pisa {
+  border-top: none;
+}
+
+/* / SECTION MAP */
+/* ARTICLES */
+.category-article .label-category {
+  left: 15px;
+  top: 15px;
+}
+.container.category #content .articles {
+  margin: 0;
+  padding: 0;
+}
+.container.category #content .articles .category-article {
+  padding: 15px 14px;
+  position: relative;
+  list-style: none;
+  margin: 20px 0;
+  line-height: 125%;
+  border-bottom: 1px solid #eeeeee;
+}
+.container.category .article-list > #content {
+  min-height: 80vh;
+}
+div.container.category .article-list .articles {
+  /*background-color:#FBFBFB;*/
+  padding-top: 30px;
+}
+.article-list .container-category .back,
+.article-detail section .back,
+.container.category .back {
+  background-color: #FBFBFB;
+  width: 100%;
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  height: 100%;
+  left: 0;
+}
+.container.category #content .articles a.article-image {
+  height: 150px;
+  width: 150px;
+  background-size: cover;
+  background-repeat: no-repeat;
+  display: block;
+  margin-bottom: 15px;
+  float: left;
+  margin-right: 15px;
+}
+.container.category #content .divider {
+  /*border-bottom:1px solid #eeeeee;*/
+  width: 100%;
+  clear: both;
+  margin-top: 35px;
+}
+.container.category #content .articles .news-museum,
+.container.category #content .articles .news-date {
+  font-weight: 600;
+  font-size: 14px;
+  display: inline-block;
+  line-height: 21px;
+  margin-bottom: 5px;
+}
+.container.category h1 {
+  margin-bottom: 0;
+}
+/* colori dei musei per il pin e l'orologio/calendario sulla lista delle news di categoria */
+#content .article-detail .fa {
+  color: #1e6031;
+}
+.container.category #content .articles li .fa {
+  font-size: 20px;
+  vertical-align: top;
+  width: 20px;
+  text-align: right;
+  margin-right: 5px;
+}
+.container.category #content .articles li h2 {
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 150%;
+  margin-top: 0;
+  margin-bottom: 5px;
+}
+.container.category #content .articles li h2 a {
+  color: #000000;
+  text-transform: uppercase;
+}
+.read-more {
+  display: inline;
+  padding-top: 5px;
+}
+.container.category #content .articles .category-article .excerpt {
+  font-size: 14px;
+  margin-top: 10px;
+  line-height: 25px;
+}
+.articles .pagination {
+  margin: 10px auto 30px auto;
+  padding: 20px 0 0 0;
+}
+.pagination-container {
+  clear: both;
+  text-align: center;
+}
+.pagination-container .pagination > li > a,
+.pagination-container .pagination > li > a:active,
+.pagination-container .pagination > li > a:visited,
+.pagination-container .pagination > li > a:focus,
+.pagination-container .pagination > li > .dots {
+  background-color: #004582;
+  color: #ffffff;
+  border: 1px solid #004582;
+}
+.pagination-container .pagination > li > a:hover {
+  background-color: #ffffff;
+  text-decoration: none;
+  color: #004582;
+}
+.pagination-container .pagination > li > span.current {
+  color: #004582;
+  border: 1px solid #004582;
+}
+/* / ARTICLES */
+/* BODY */
+h1 {
+  margin-top: 50px;
+  margin-bottom: 50px;
+  font-size: 30px;
+}
+h2.cat-news-title {
+  text-transform: uppercase;
+  font-weight: 600;
+  font-size: 35px;
+  margin-top: 45px;
+}
+ul.news-category-tabs {
+  margin: 50px 0 0 0;
+  padding: 0;
+  list-style: none;
+  display: table;
+  width: 100%;
+}
+ul.news-category-tabs li {
+  display: table-cell;
+  height: 465px;
+  position: relative;
+  overflow: hidden;
+  border-bottom: 8px solid transparent;
+}
+ul.news-category-tabs li a {
+  display: block;
+  width: 100%;
+  height: 450px;
+  position: absolute;
+  z-index: 12;
+}
+ul.news-category-tabs li a:hover {
+  opacity: 1;
+  transition: opacity 0.3s;
+  -webkit-transition: opacity 0.3s;
+  -moz-transition: opacity 0.3s;
+}
+    ul.news-category-tabs li span.text,
+    ul.news-category-tabs li span.image {
+        width: 450px;
+        position: absolute;
+        color: #ffffff;
+        /* Safari */
+        -webkit-transform: rotate(-90deg);
+        /* Firefox */
+        -moz-transform: rotate(-90deg);
+        /* IE */
+        -ms-transform: rotate(-90deg);
+        /* Opera */
+        -o-transform: rotate(-90deg);
+        /* Internet Explorer */
+        /*0, 1, 2, or 3 which will rotate the element 0, 90, 180 or 270 degrees respectively 
+  filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);*/
+        transform-origin: 5% 0;
+        padding: 0;
+        margin: 0;
+        bottom: 5px;
+        left: 15%;
+        font-size: 24px;
+        z-index: 11;
+    }
+ul.news-category-tabs li span.image {
+  left: 0;
+}
+.news-category-tabs li .tab-cont {
+  width: 100%;
+  height: 450px;
+  background-size: cover;
+  background-position-x: -75%;
+}
+.news-category-tabs li .tab-cont > a,
+.news-category-tabs li .tab-cont > a:hover {
+  -webkit-transition: all .5s linear 0.05s;
+  -moz-transition: all .5s linear 0.05s;
+  -o-transition: all .5s linear 0.05s;
+  transition: all .5s linear 0.05s;
+}
+.news-category-tabs li .tab-cont > a:hover {
+  background-color: #1e6031;
+}
+.news-category-tabs li .tab-cont > a {
+  background-color: rgba(18, 140, 151, 0.9);
+}
+.news-category-tabs li.active {
+  border-bottom: 8px solid #1e6031;
+}
+.article-detail,
+.page-detail {
+  min-height: 40vh;
+}
+#content .article-detail header {
+  padding-left: 10px;
+  margin-bottom: 20px;
+  border-left: 4px solid #1e6031;
+}
+.article-detail header h1,
+.page-detail h1 {
+  font-size: 35px;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+.article-detail header .news-museum,
+.article-detail header .news-date {
+  display: block;
+  font-size: 16px;
+  padding-left: 30px;
+}
+.article-detail header .fa {
+  font-size: 25px;
+  margin-left: -1.28571429em;
+}
+.article-detail #content .article-image img {
+  max-width: 50%;
+  float: left;
+  margin-right: 20px;
+}
+.article-detail section {
+  padding: 30px 15px;
+  position: relative;
+  min-height: 80vh;
+}
+.article-list .container-category {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  min-height: 80vh;
+}
+.article-detail section .back {
+  top: 0;
+  height: 100%;
+}
+p.no-events {
+  padding: 100px 0 0 0;
+}
+.row #content {
+  /*min-height:80vh;*/
+  position: relative;
+}
+div.gm-style-iw a {
+  font-size: 14px !important;
+}
+
+.fontsize body {
+  transform: scale(1.2, 1.2);
+  transform-origin: top center;
+}
+body.contrast img {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+/* / BODY */
+/* FOOTER */
+footer {
+  height: auto;
+  clear: both;
+  font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  color: #000000;
+  /*background-image: url(../images/immagine-footer-orto.jpg);*/
+  background-color:#ffffff;
+  background-repeat: no-repeat;
+  background-size: cover;
+  border-top: 1px solid #dfdfdf;
+}
+footer ul {
+  list-style-type: none;
+  padding: 0;
+  margin-bottom: 13px;
+}
+footer a {
+  color: #000000;
+}
+footer a:hover,
+footer a:visited,
+footer a:focus,
+footer a:active {
+  text-decoration: underline;
+  color: #000000;
+}
+footer .col-md-12 {
+  padding-left: 0;
+  padding-right: 0;
+}
+.subfooter {
+  background-color: #004582;
+  color: #ffffff;
+  padding: 25px 0 15px;
+  font-size: 0.9em;
+}
+.subfooter a {
+  text-decoration: none;
+  color: #ffffff;
+}
+.subfooter .col {
+  margin: 0;
+  padding: 0;
+}
+.customFooter {
+    background: -webkit-gradient(linear, left top, left bottom, from(#043659), to(#03497c));
+    background: -webkit-linear-gradient(top, #043659, #03497c);
+    background: -moz-linear-gradient(top, #043659, #03497c);
+    /* background: -ms-linear-gradient(top, #043659, #03497c);
+  background: -o-linear-gradient(top, #043659, #03497c);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#043659, endColorstr=#03497c, GradientType=0);*/
+    background-color: #043659;
+    
+}
+.customFooter .custom_footer ul {
+  list-style-type: none;
+  padding: 0;
+}
+.social {
+  margin-bottom: 0px;
+  padding: 15px 0px 0px;
+  display: table;
+}
+.social .fa {
+  font-size: 24px;
+  padding: 3px;
+}
+.social .segui {
+  background-color: inherit;
+  width: 150px;
+  font-size: 1.5em;
+  color: #000000 !important;
+}
+.social li a {
+  color: #000000;
+}
+.spotlight {
+  padding: 52px 0;
+  padding-top: 10px !important;
+  border-top: 1px solid #666666;
+}
+#footer {
+  position: relative;
+}
+/* / FOOTER */
+/* WP-ACCESSIBILITY */
+.widget_wp_accessibility_toolbar {
+  text-align: right;
+  margin-bottom: -65px;
+  position: relative;
+  z-index: 100;
+  margin-top: 25px;
+  background: transparent;
+  width: 50%;
+  float: right;
+}
+.widget_wp_accessibility_toolbar .offscreen {
+  padding-right: 10px;
+}
+.widget_wp_accessibility_toolbar .aticon {
+  padding-right: 30px;
+}
+.widget_wp_accessibility_toolbar a,
+.widget_wp_accessibility_toolbar span {
+  text-decoration: none !important;
+}
+.widget_wp_accessibility_toolbar li {
+  display: inline;
+}
+.container.category h1.mb50 {
+  margin-bottom: 50px;
+}
+.nav.unipi-logo {
+  margin: 0;
+}
+@media (min-width: 768px) {
+  .nav.unipi-logo {
+    margin: 0 10px 0 0;
+  }
+}
+.a11y-toolbar-widget button {
+    background-color: transparent !important;
+    border: 0;
+    padding: 0;
+    padding-bottom: 6px;
+}
+#is_normal_fontsize .aticon {
+  padding-right: 0;
+}
+
+body.admin-bar .navbar {
+  margin-top: 35px;
+}
+@media (max-width: 768px) {
+    .navbar-brand img {
+        width: 100px;
+        height: auto;
+    }
+    .navbar-brand {
+        margin-right: 0;
+        margin-left: 0;
+        padding-right: 0;
+    }
+}
+
+

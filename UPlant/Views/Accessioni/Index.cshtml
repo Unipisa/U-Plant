@@ -1,0 +1,256 @@
+﻿@model IEnumerable<UPlant.Models.DB.Accessioni>
+
+
+@{
+
+    ViewBag.Title = "Index";
+}
+
+
+   
+<div class="card card-outline card-primary">
+    <div class="card-header with-border">
+        <h1 class="card-title">Elenco</h1>
+                @{
+
+            if (User.IsInRole("Administrator") || User.IsInRole("Operator") || User.IsInRole("TreeKeeper") || User.IsInRole("Discover") || User.IsInRole("Seminum") || User.IsInRole("Utility"))
+                    {
+                        <div class="float-right success ">
+                            <a asp-action="Create" asp-controller="Accessioni">
+                                <span class="btn btn-success" title="aggiungi accessione">
+                                    Crea Accessione
+                                </span>
+                            </a>
+                
+                
+                        </div>
+                    }
+                }
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+                            <table id="table1" class="table table-bordered table-striped dataTable" >
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.progressivo)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.vecchioprogressivo)
+                                        </th>
+                                        <th>
+                                            Nome Scientifico
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.specieNavigation.genereNavigation.famiglia)
+                                        </th>
+
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.specieNavigation.genere)
+                                        </th>
+
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.dataAcquisizione)
+                                        </th>
+                                        <th>
+                                            Data per formato yyymmmdd
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.tipoMateriale)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.Individui)
+                                        </th>
+                                        <th>
+                                            Inserito da
+                                        </th>
+                                        <th>
+                                            Modificato da
+                                        </th>
+
+
+
+                                        <th style="width:10%"></th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>
+                                <a asp-action="Details" asp-controller="Accessioni" asp-route-id="@item.id" asp-route-tipo="accessione">
+                                                    <span class="btn btn-primary btn-xs" title="dettaglio accessione">
+                                                        <i class="fa-solid fa-search"></i>
+                                                    </span>
+                                                </a>
+                                                
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.progressivo)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.vecchioprogressivo)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.specieNavigation.nome_scientifico)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.specieNavigation.genereNavigation.famigliaNavigation.descrizione)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.specieNavigation.genereNavigation.descrizione)
+                                            </td>
+
+                                            <td>
+                                                @Convert.ToDateTime(item.dataAcquisizione).ToString("dd/MM/yyyy")
+                                            </td>
+                                            <td>
+                                                @Convert.ToDateTime(item.dataAcquisizione).ToString("yyyyMMdd")
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.tipoMaterialeNavigation.descrizione)
+                                            </td>
+                                            <td>
+                                                @* @item.Individui.Count(i => i.validazione == true)*@
+                                                @item.contaFigli
+
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.utenteAcquisizioneNavigation.NomeCognome)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.utenteUltimaModificaNavigation.NomeCognome)
+                                            </td>
+
+
+
+                                            <td>
+
+
+
+
+                                                @{
+                                    if (User.IsInRole("Administrator") || User.IsInRole("Operator") || User.IsInRole("TreeKeeper") || User.IsInRole("Discover") || User.IsInRole("Seminum") || User.IsInRole("Utility"))
+                                                    {
+
+                                                        <a asp-action="Create" asp-controller="Individui" asp-route-idaccessione="@item.id" >
+                                                            <span class="btn btn-success btn-xs" title="aggiungi individuo">
+                                                                <i class="fa-solid fa-plus"></i>
+                                                            </span>
+                                                        </a>
+
+                                                    }
+
+                                                    @*@Html.ActionLink("Aggiungi Individuo", "Create", "Individui", new { idaccessione = item.id }, null); <span>|</span>*@
+                                    if (User.IsInRole("Operator") || User.IsInRole("TreeKeeper") || User.IsInRole("Discover") || User.IsInRole("Seminum") || User.IsInRole("Utility") && Convert.ToBoolean(item.validazione) == false)
+                                                    {
+                                                        <a asp-action="Edit" asp-controller="Accessioni" asp-route-id="@item.id">
+                                                            <span class="btn btn-warning btn-xs" title="modifica accessione">
+                                                <i class="fa-solid fa-pencil" style="color: #fafafa;"></i>
+                                                            </span>
+                                                        </a>
+                                                        
+                                                        @* @Html.ActionLink("Modifica", "Edit", new { id = item.id})*@
+                                                    }
+
+
+                                                    if (User.IsInRole("Administrator"))
+                                                    {
+                                                        <a asp-action="Edit" asp-controller="Accessioni" asp-route-id="@item.id">
+                                                            <span class="btn btn-warning btn-xs" title="modifica accessione">
+                                                <i class="fa-solid fa-pencil" style="color: #fafafa;"></i>
+                                                            </span>
+                                                        </a>
+                                                        
+                                                        @* @Html.ActionLink("Modifica", "Edit", new { id = item.id})*@
+
+                                                        if (item.contaFigli == 0)
+                                                        {
+
+                                                            <a asp-action="Delete" asp-controller="Accessioni" asp-route-id="@item.id">
+                                                                <span class="btn btn-danger btn-xs" title="cancella accessione">
+                                                    <i class="fa-solid fa-trash"></i>
+                                                                </span>
+                                                            </a>
+                                                           
+
+                                                        }
+                                                        if (Convert.ToBoolean(item.validazione) == false)
+                                                        {
+                                                         <a asp-action="ValidaAccessione" asp-route-id="@item.id">
+                                                                <span class="btn btn-info btn-xs" title="Valida accessione">
+                                                                    <i class="fa-solid fa-check"></i>
+                                                                </span>
+                                                            </a>
+
+
+                                                           
+                                                            @*@Html.ActionLink("ValidaAccessione", "ValidaAccessione", new { id = item.id });*@
+                                                        }
+                                                    }
+
+                                                }
+                                            </td>
+
+                                        </tr>
+                                    }
+
+                            </table>
+        </div>
+
+    </div>
+</div>
+
+
+@section Styles {
+    <link href="~/css/select2.min.css" rel="stylesheet" />
+    <link href="~/css/accessioni.min.css" rel="stylesheet" />
+    <link href="~/css/datatables.min.css" rel="stylesheet" />
+}
+@section CustomStyles {
+    <style>
+      
+
+        .bg-light-blue-active {
+            background-color: #357CA5;
+            color: #FFFFFF
+        }
+    </style>
+}
+@section Scripts {
+    <script src="~/js/datatables.min.js"></script>
+    <script src="~/js/select2.min.js"></script>
+    <script src="~/js/jquery.validation.min.js"></script>
+}
+@section CustomScripts {
+
+    
+    <script>
+
+        jQuery(function () {
+            jQuery('#table1').DataTable({
+                'paging': true,
+                'lengthChange': true,
+                'searching': true,
+                'ordering': true,
+                'info': true,
+                'autoWidth': false,
+
+                "columnDefs": [
+                    { "orderData": [7], "targets": [6] },
+                    {
+                        'targets': [7],
+                        'visible': false,
+                        'searchable': false
+                    }
+                ]
+            })
+        })
+    </script>
+
+
+}
+

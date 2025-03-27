@@ -1,0 +1,47 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>@AppSettings.Value.Application.NomeAppShort | @ViewData["Title"]</title>
+
+
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    @*<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">*@
+
+    @await Html.PartialAsync("_Styles.cshtml")
+    @RenderSection("Styles", required: false)
+    <link rel="stylesheet" href="~/css/site.min.css">
+    @RenderSection("CustomStyles", required: false)
+</head>
+<body class="hold-transition sidebar-mini" style=" padding-top:0px">
+
+    @await Component.InvokeAsync("UnipiHeader")
+
+    <div class="wrapper">
+        <div class="container">
+            <section class="content-header">
+                @await Component.InvokeAsync("PageAlert")
+            </section>
+            <section class="content">
+                @RenderBody()
+            </section>
+            @if (AppSettings.Value.Application.Demo)
+            {
+                <section>
+                    <div id="DemoMessage">@AppSettings.Value.Application.MessaggioDemo</div>
+                </section>
+            }
+        </div>
+
+
+        <aside class="control-sidebar control-sidebar-dark"></aside>
+    </div>
+
+    @await Html.PartialAsync("_Scripts.cshtml")
+    @RenderSection("Scripts", required: false)
+    <script src="~/js/site.min.js"></script>
+    @RenderSection("CustomSCripts", required: false)
+</body>
+</html>

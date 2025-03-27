@@ -1,0 +1,464 @@
+﻿@model IEnumerable<UPlant.Models.DB.RisultatoRicercaAcc>
+
+
+@{
+
+    ViewBag.Title = "Ricerca Accessioni";
+}
+
+
+<div class="title">
+<h3>Ricerca Accessioni</h3>
+</div>
+<div >
+    &nbsp;
+</div>
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "ricercaform" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="box-body">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-row">
+            <div class="form-group col-md-4 autocomplete ">
+                <label for="inputNomeScientifico"> Nome Scientifico</label>
+                <input type="text" class="form-control" id="specie" name="specie" placeholder="Nome Scientifico" value="@ViewBag.specie">
+                
+            </div>
+            <div class="form-group col-md-4">
+                <label for="inputFamiglia">Famiglia</label>
+                @Html.DropDownList("famiglia", (IEnumerable<SelectListItem>)ViewBag.listafamiglie, "Tutti", htmlAttributes: new { @Id = "famiglia", @class = "form-control" })
+            </div>
+            <div class="form-group col-md-4 autocomplete">
+                <label for="inputProgressivo">Progressivo</label>
+                <input type="text" class="form-control" id="progressivo" name="progressivo" placeholder="Progressivo" value="@ViewBag.progressivo" />
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-4">
+                <label for="inputVecchioprogressivo">Vecchio Progressivo</label>
+                <input type="text" class="form-control" id="vecchioprogressivo" name="vecchioprogressivo" placeholder="Vecchio Progressivo" value="@ViewBag.vecchioprogressivo" />
+            </div>
+            <div class="form-group col-sm-1">
+                <label for="inputDataInizio">Data Inizio</label>
+                <input type="date" class="form-control" id="datainserimentoinizio" name="datainserimentoinizio" placeholder="Data Inizio" value="@ViewBag.datainserimentoinizio.ToString("yyyy-MM-dd")" size="40" maxlength="50" />
+            </div><span>&nbsp;</span><div class="form-group col-sm-1">
+                <label for="inputDatafine">Data fine</label>
+                <input type="date" class="form-control" id="datainserimentofine" name="datainserimentofine" placeholder="Data Fine" value="@ViewBag.datainserimentofine.ToString("yyyy-MM-dd")" size="40" maxlength="50" />
+            </div>
+
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-4">
+                <label for="inputTipodiMateriale">Tipo di Materiale</label>
+                @Html.DropDownList("tipomateriale", (IEnumerable<SelectListItem>)ViewBag.listatipomateriale, "Tutti", htmlAttributes: new { @Id = "tipomateriale", @class = "form-control" })
+            </div>
+
+            <div class="form-group col-md-4">
+                <label for="inputModalitadiacquisizione">Modalità di acquisizione</label>
+                @Html.DropDownList("tipoacquisizione", (IEnumerable<SelectListItem>)ViewBag.listatipoacquisizione, "Tutti", htmlAttributes: new { @Id = "tipoacquisizione", @class = "form-control" })
+            </div>
+            <div class="form-group col-md-4">
+                <label for="inputDonatoreFornitore">Donatore/Fornitore</label>
+                @Html.DropDownList("fornitore", (IEnumerable<SelectListItem>)ViewBag.listafornitore, "Tutti", htmlAttributes: new { @Id = "fornitore", @class = "form-control" })
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="form-group col-md-4">
+                <label for="inputGradodiIncertezza">Grado di Incertezza</label>
+                @Html.DropDownList("gradoincertezza", (IEnumerable<SelectListItem>)ViewBag.listagradoincertezza, "Tutti", htmlAttributes: new { @Id = "gradoincertezza", @class = "form-control" })
+            </div>
+            <div class="form-group col-md-4">
+                <label for="inputRaccoglitore">Raccoglitore</label>
+                @Html.DropDownList("raccoglitore", (IEnumerable<SelectListItem>)ViewBag.listaraccoglitore, "Tutti", htmlAttributes: new { @Id = "raccoglitore", @class = "form-control" })
+            </div>
+
+
+        </div>
+
+
+        <div class="row">
+            <div class="form-group col-md-1">
+                <input type="submit" value="Cerca" class="btn btn-success" />
+            </div>
+            <div class="form-group col-md-3">
+                <input id="azzera" type="button" value="Azzera" class="btn btn-danger" />
+            </div>
+            @{
+                if (User.IsInRole("Administrator") || User.IsInRole("Operator") || User.IsInRole("TreeKeeper") || User.IsInRole("Discover") || User.IsInRole("Seminum") || User.IsInRole("Utility"))
+                {
+                    if (Model != null)
+                    {
+                        if (Model.Count() > 0)
+                        {
+                            <div class="form-group col-md-3">
+                                Download File di ricerca  <button type="button" class="btn btn-success" onclick="window.location.href = '@Url.Action("Download", "Home", new { file = ViewBag.filename })';">
+                                 
+                                <span class="fa-solid fa-file-excel" aria-hidden="true"></span>
+                                </button>
+                            </div>
+                        }
+                    }
+                }
+            }
+        </div>
+    </div>
+}
+
+
+
+<div class="row" id="risultato" style="display:none">
+    <div class="col-sm-12">
+        <table id="table1" class="table table-bordered table-striped dataTable">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>
+                        Progressivo
+                    </th>
+                    <th>
+                        Vecchio Progressivo
+                    </th>
+                    <th>
+                        Nome Scientifico
+                    </th>
+                    <th>
+                        Famiglia
+                    </th>
+
+                    <th>
+                        Genere
+                    </th>
+
+                    <th>
+                        Data Acquisizione
+                    </th>
+                    <th>
+                        Data per formato yyymmmdd
+                    </th>
+                    <th>
+                        Tipo Materiale
+                    </th>
+                    <th>
+                        Numero Individui
+                    </th>
+                    <th>
+                        Inserito da
+                    </th>
+                    <th>
+                        Modificato da
+                    </th>
+
+
+
+                    <th style="width:10%"></th>
+
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    if (Model != null)
+                    {
+
+
+                        foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                   
+                                    <a asp-action="Details" asp-controller="Accessioni" asp-route-id="@item.id" asp-route-tipo="ricerca">
+                                        <span class="btn btn-primary btn-xs" title="dettaglio individuo">
+                                            <i class="fa-solid fa-search"></i>
+                                        </span>
+                                    </a>
+
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.progressivo)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.vecchioprogressivo)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.nome_scientifico)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.famiglia)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.genere)
+                                </td>
+
+                                <td>
+                                    @Convert.ToDateTime(item.dataacquisizione).ToString("dd/MM/yyyy")
+                                </td>
+                                <td>
+                                    @Convert.ToDateTime(item.dataacquisizione).ToString("yyyyMMdd")
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.tipomateriale)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.countind)
+
+
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.inseritoda)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.modificatoda)
+                                </td>
+
+
+
+                                <td>
+
+
+                                    @{
+                                        if (User.IsInRole("Administrator") || User.IsInRole("Operator") || User.IsInRole("TreeKeeper") || User.IsInRole("Discover") || User.IsInRole("Seminum") || User.IsInRole("Utility"))
+                                        {
+                                            <a asp-action="Create" asp-controller="Individui" asp-route-idaccessione="@item.id">
+                                                <span class="btn btn-success btn-xs" title="aggiungi individuo">
+                                                    <i class="fa-solid fa-plus"></i>
+                                                </span>
+                                            </a>
+
+                                          
+
+                                        }
+                                    }
+                                    @if (User.IsInRole("Operator") || User.IsInRole("TreeKeeper") || User.IsInRole("Discover") || User.IsInRole("Seminum") || User.IsInRole("Utility"))
+                                    {
+
+                                        <a asp-action="Edit" asp-controller="Accessioni" asp-route-id="@item.id">
+                                            <span class="btn btn-warning btn-xs" title="modifica accessione">
+                                                <i class="fa-solid fa-pencil" style="color: #fafafa;"></i>
+                                            </span>
+                                        </a>
+
+                                    }
+
+
+                                    @if (User.IsInRole("Administrator"))
+                                    {
+                                        <a asp-action="Edit" asp-controller="Accessioni" asp-route-id="@item.id" >
+                                            <span class="btn btn-warning btn-xs" title="modifica accessione">
+                                                <i class="fa-solid fa-pencil" style="color: #fafafa;"></i>
+                                            </span>
+                                        </a>
+                                      
+
+
+                                     @*  if (Convert.ToInt32(item.countind) > 0)
+                                        {
+
+                                            <button class="btn btn-basic btn-xs" title="non puoi cancellare perchè l'accessione ha degli individui figli">
+                                                <i class="fa-solid fa-trash"></i>
+                                            </button>
+
+                                        }
+                        else*@
+                                        if (Convert.ToInt32(item.countind) == 0)
+                                        {
+                                            <a asp-action="Delete" asp-controller="Accessioni" asp-route-id="@item.id" >
+                                                <span class="btn btn-danger btn-xs" title="cancella accessione">
+                                                    <i class="fa-solid fa-trash"></i>
+                                                </span>
+                                            </a>
+                                         
+                                        }
+                                        if (item.validazione == false)
+                                        {
+                                            <a asp-action="ValidaAccessione" asp-controller="Accessioni" asp-route-id="@item.id">
+                                                <span class="btn btn-info btn-xs" title="Valida accessione">
+                                                    <i class="fa-solid fa-check"></i>
+                                                </span>
+                                            </a>
+                                            
+
+                                        }
+                                    }
+
+
+                                </td>
+
+                            </tr>
+                        }
+                    }
+                }
+        </table>
+    </div>
+</div>
+<div class="row" id="gifricerca">
+    <div class="col-md-12 center">
+        <table id="table2" class="table table-bordered table-striped dataTable">
+            <thead>
+            <th></th>
+
+            </thead>
+            <tbody>
+                <tr><td style="text-align: center; vertical-align: middle;"><img src="~/Content/AdminLTE/img/load.gif" /> .. Ricerca in Corso ..</td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+@section Styles {
+    <link href="~/css/select2.min.css" rel="stylesheet" />
+    <link href="~/css/accessioni.min.css" rel="stylesheet" />
+    <link href="~/css/datatables.min.css" rel="stylesheet" />
+}
+@section CustomStyles {
+   
+
+}
+@section Scripts {
+
+
+ 
+    <script src="~/js/select2.min.js"></script>
+  
+    <script src="~/js/datatables.min.js"></script>
+}
+@section CustomScripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#gifricerca').hide();
+            //  $('.modal').modal('hide');
+            $('#risultato').show();
+            $('#ricercaform').submit(function () {
+                $('#risultato').hide();
+                $('#gifricerca').show();
+                //    $('.modal').modal('show');
+            });
+        });
+    </script>
+
+
+
+    <script>
+
+        jQuery(function () {
+            jQuery('#table1').DataTable({
+                'paging': true,
+                'lengthChange': true,
+                'searching': true,
+                'ordering': true,
+                'info': true,
+                'autoWidth': false,
+
+                "columnDefs": [
+                    { "orderData": [7], "targets": [6] },
+                    {
+                        'targets': [7],
+                        'visible': false,
+                        'searchable': false
+                    }
+                ]
+            })
+        })
+    </script>
+    <script>
+
+        jQuery(function () {
+            jQuery('#table2').DataTable({
+                'paging': true,
+                'lengthChange': true,
+                'searching': true,
+                'ordering': true,
+                'info': true,
+                'autoWidth': false,
+
+            })
+        })
+    </script>
+
+
+
+
+    <script>
+        $("#famiglia").select2({
+        });
+        $("#tipomateriale").select2({
+        });
+        $("#tipoacquisizione").select2({
+        });
+        $("#fornitore").select2({
+        });
+        $("#gradoincertezza").select2({
+        });
+        $("#raccoglitore").select2({
+        });
+
+    </script>
+    <script>
+        $('#azzera').on("click", function () {
+            // document.getElementById("famiglia").value = "";
+            //document.getElementById("famiglia").textContent = "Tutti";
+            $('#famiglia').val('').trigger('change');
+            $('#tipomateriale').val('').trigger('change');
+            $('#tipoacquisizione').val('').trigger('change');
+            $('#fornitore').val('').trigger('change');
+            $('#gradoincertezza').val('').trigger('change');
+            $('#raccoglitore').val('').trigger('change');
+            document.getElementById("specie").value = "";
+            document.getElementById("progressivo").value = "";
+            document.getElementById("vecchioprogressivo").value = "";
+            document.getElementById("datainserimentoinizio").value = "1543-01-01";
+            var date = new Date();
+            var day = date.getDate();
+            var month = date.getMonth() + 1;
+            var year = date.getFullYear();
+            if (month < 10) month = "0" + month;
+            if (day < 10) day = "0" + day;
+            var today = year + "-" + month + "-" + day;
+
+            document.getElementById("datainserimentofine").value = today;
+
+
+
+            //alert(document.getElementById("famiglia").options[document.getElementById("famiglia").selectedIndex].text);
+            // alert(document.getElementById("famiglia").options[document.getElementById("famiglia").selectedIndex].value);
+        });
+
+    </script>
+    <script>
+        var baseUrlCercaspecie = '@Url.Action("Cercaspecie", "Common")';
+
+        $("#specie").autocomplete({
+            source: baseUrlCercaspecie,
+            minLength: 3,
+            position: { offset: '-30 0' }
+        });
+
+
+    </script>
+    <script>
+        var baseUrlCercaprog = '@Url.Action("Cercaprog", "Common")';
+
+        $("#progressivo").autocomplete({
+            source: baseUrlCercaprog,
+            minLength: 3,
+            position: { offset: '-30 0' }
+        });
+
+
+    </script>
+    <script>
+        var baseUrlCercavecchioprog = '@Url.Action("Cercavecchioprog", "Common")';
+
+        $("#vecchioprogressivo").autocomplete({
+            source: baseUrlCercavecchioprog,
+            minLength: 3,
+            position: { offset: '-30 0' }
+        });
+
+
+    </script>
+
+
+}
+

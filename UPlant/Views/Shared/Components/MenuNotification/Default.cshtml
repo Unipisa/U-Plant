@@ -1,0 +1,25 @@
+﻿@model IEnumerable<Message>
+
+                                                    @if (User.IsInRole("Administrator")) {
+<li class="nav-item dropdown">
+    <!-- Menu toggle button -->
+    <a class="nav-link" data-toggle="dropdown" href="#">
+        <i class="fa-solid fa-bell fa-shake" style="color: #FFD43B;"></i>
+       <span id="avvisitotali" class="label label-default"></span>
+    </a>
+    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+        
+        <!-- Inner Menu: contains the notifications -->
+        @foreach (var message in Model)
+        {
+            <div class="dropdown-divider"></div>
+            <!-- start notification -->
+            <a href="@Url.Action("Index", "Accessioni", new { valida = "yes" })" class="dropdown-item">
+                <i class="fa-brands fa-pagelines " style="color: #db242d;"></i> <span id="avvisiacc"> </span> Accessioni da Validare
+            </a>
+            
+        }
+       
+    </div>
+</li>
+                                                    }

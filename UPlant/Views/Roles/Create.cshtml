@@ -1,0 +1,56 @@
+﻿@model UPlant.Models.DB.Roles
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<div class="card card-outline card-primary">
+    <div class="card-header with-border">
+        <h3 class="card-title">Aggiungi Ruolo</h3>
+    </div>
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Descr" class="control-label">Descrizione Ruolo</label>
+                <input asp-for="Descr" class="form-control" />
+                <span asp-validation-for="Descr" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Crea" class="btn btn-success" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    @Html.ActionLink("Torna Indietro", null, null, null, new { @class = "btn btn-info go_back" })
+</div>
+
+
+@section Styles {
+    <link href="~/css/select2.min.css" rel="stylesheet" />
+    <link href="~/css/accessioni.min.css" rel="stylesheet" />
+
+}
+
+
+
+@section Scripts {
+    @{
+        <script src="~/js/select2.min.js"></script>
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+
+}
+@section CustomScripts {
+    <script type="text/javascript">
+        $(function () {
+            $('.go_back').click(function (e) {
+                e.preventDefault();
+                history.go(-1);
+            });
+        });
+    </script>
+}

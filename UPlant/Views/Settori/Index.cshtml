@@ -1,0 +1,134 @@
+﻿@model IEnumerable<UPlant.Models.DB.Settori>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="card card-outline card-primary">
+    <div class="card-header with-border">
+        <h1 class="card-title">Elenco</h1>
+        @{
+
+            if (User.IsInRole("Administrator"))
+            {
+                <div class="float-right success ">
+                    <a asp-action="Create">
+                        <span class="btn btn-success" title="Aggiungi Settore">
+                            Aggiungi Settore
+                        </span>
+                    </a>
+
+
+                </div>
+            }
+        }
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table id="table1" class="table table-bordered table-striped dataTable">
+    <thead>
+        <tr>
+            <th>
+               Settore
+            </th>
+            <th>
+                Settore in Inglese
+            </th>
+                        <th>
+                            Visualizzazione Web
+                        </th>
+                        <th>
+                            Ordinamento
+                        </th>
+            <th>
+                Organizzazione
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.settore)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.settore_en)
+            </td>
+                            <td>
+                                @if (item.visualizzazioneweb == true)
+                                {
+                                    <span> Si</span>
+                                }
+                                else
+                                {
+                                    <span> No</span>
+                                }
+
+
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ordinamento)
+                            </td>
+                            <td>
+                @Html.DisplayFor(modelItem => item.organizzazioneNavigation.descrizione)
+            </td>
+            <td>
+                                @if (User.IsInRole("Administrator"))
+                                {
+
+                                    <a asp-action="Edit" asp-route-id="@item.id">
+                                        <span class="btn btn-warning btn-xs" title="Modifica Settore">
+                                            <i class="fa-solid fa-pencil" style="color: #fafafa;"></i>
+                                        </span>
+                                    </a>
+                                    if (@item.Individui.Count() == 0)
+                                    {
+                                        <a asp-action="Delete" asp-route-id="@item.id">
+                                            <span class="btn btn-danger btn-xs" title="Cancella Settore">
+                                                <i class="fa-solid fa-trash"></i>
+                                            </span>
+                                        </a>
+                                    }
+                                }
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+        </div>
+    </div>
+
+
+</div>
+@section Styles {
+    <link href="~/css/select2.min.css" rel="stylesheet" />
+    <link href="~/css/accessioni.min.css" rel="stylesheet" />
+    <link href="~/css/datatables.min.css" rel="stylesheet" />
+}
+
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script src="~/js/datatables.min.js"></script>
+}
+
+
+@section CustomScripts {
+    <script>
+        jQuery(function () {
+            jQuery('#table1').DataTable({
+                'paging': true,
+                'lengthChange': true,
+                'searching': true,
+                'ordering': true,
+                'info': true,
+                'autoWidth': false
+            })
+        })
+    </script>
+}          

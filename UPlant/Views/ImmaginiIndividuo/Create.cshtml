@@ -1,0 +1,67 @@
+﻿@model UPlant.Models.DB.ImmaginiIndividuo
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Immagini</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="individuo" class="control-label"></label>
+                <select asp-for="individuo" class ="form-control" asp-items="ViewBag.individuo"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="descrizione" class="control-label"></label>
+                <input asp-for="descrizione" class="form-control" />
+                <span asp-validation-for="descrizione" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="dataInserimento" class="control-label"></label>
+                <input asp-for="dataInserimento" class="form-control" />
+                <span asp-validation-for="dataInserimento" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="autore" class="control-label"></label>
+                <input asp-for="autore" class="form-control" />
+                <span asp-validation-for="autore" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="nomefile" class="control-label"></label>
+                <input asp-for="nomefile" class="form-control" />
+                <span asp-validation-for="nomefile" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="visibile" /> @Html.DisplayNameFor(model => model.visibile)
+                </label>
+            </div>
+            <div class="form-group">
+                <label asp-for="predefinita" class="control-label"></label>
+                <input asp-for="predefinita" class="form-control" />
+                <span asp-validation-for="predefinita" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="credits" class="control-label"></label>
+                <input asp-for="credits" class="form-control" />
+                <span asp-validation-for="credits" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

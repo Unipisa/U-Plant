@@ -1,0 +1,612 @@
+﻿@using Azure.Core
+@model IEnumerable<UPlant.Models.DB.RisultatoRicercaInd>
+
+
+@{
+    ViewBag.Title = "Ricerca Individui";
+}
+<div class="title">
+    <h3>Ricerca Individui</h3>
+</div>
+<div>
+    &nbsp;
+</div>
+
+
+
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "ricercaform" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="box-body">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-row">
+            <div class="form-group col-md-4 autocomplete " >
+                <label for="inputNomeScientifico"> Nome Scientifico</label>
+                <input type="text" class="form-control" id="specie" name="specie" placeholder="Nome Scientifico" value="@ViewBag.specie" >
+            </div>
+            <div class="form-group col-md-4">
+                <label for="inputFamiglia">Famiglia</label>
+                @Html.DropDownList("famiglia", (IEnumerable<SelectListItem>)ViewBag.listafamiglie, "Tutti", htmlAttributes: new { @Id = "famiglia", @class = "form-control" })
+            </div>
+            <div class="form-group col-md-4 autocomplete">
+                <label for="inputProgressivoAccessioni">Progressivo Accessione</label>
+                <input type="text" id="progacc" name="progacc" class="form-control" value="@ViewBag.progacc" placeholder="Progressivo Accessione">
+            </div>
+           
+            
+           
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-4">
+                <label for="inputSettore">Settore</label>
+               @Html.DropDownList("settore", (IEnumerable<SelectListItem>)ViewBag.listasettori, "Tutti", htmlAttributes: new { @Id = "settore", @class = "form-control" })
+            </div>
+            <div class="form-group col-md-4">
+                <label for="inputCollezione">Collezione</label>
+                @Html.DropDownList("collezione", (IEnumerable<SelectListItem>)ViewBag.listacollezioni, "Tutti", htmlAttributes: new { @Id = "collezione", @class = "form-control" })
+            </div>
+            <div class="form-group col-sm-1">
+                <label for="inputPropagazioneda">Propagazione da</label>
+                <input id="datapropagazioneinizio" name="datapropagazioneinizio" value="@ViewBag.datapropagazioneinizio.ToString("yyyy-MM-dd")" type="date" size="40" maxlength="50" />
+            </div>
+            <div class="form-group col-sm-1">
+            </div>
+            <div class="form-group col-sm-1">
+                <label for="inputPropagazionea">a</label>
+                <br />
+                <input id="datapropagazionefine" name="datapropagazionefine" value="@ViewBag.datapropagazionefine.ToString("yyyy-MM-dd")" type="date" size="40" maxlength="50" />
+            </div>
+
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-4">
+                <label for="inputStatodellIndividuo">Stato dell'Individuo</label>
+                @Html.DropDownList("statoindividuo", (IEnumerable<SelectListItem>)ViewBag.listastatoindividui, "Tutti", htmlAttributes: new { @Id = "statoindividuo", @class = "form-control" })
+            </div>
+            <div class="form-group col-md-4">
+                <label for="inputCondizione">Condizione</label>
+                @Html.DropDownList("condizione", (IEnumerable<SelectListItem>)ViewBag.listacondizioni, "Tutti", htmlAttributes: new { @Id = "condizione", @class = "form-control" })
+            </div>
+            <div class="form-group col-md-4">
+                <label for="inputCartellino">Cartellino</label>
+                @Html.DropDownList("cartellino", (IEnumerable<SelectListItem>)ViewBag.listacartellini, "Tutti", htmlAttributes: new { @Id = "cartellino", @class = "form-control" })
+            </div>
+        </div>
+        <div class="row">
+
+            <div class="form-group col-md-4">
+                <input type="submit" value="Cerca" class="btn btn-success" />
+            </div>
+            <div class="form-group col-md-3">
+                <input id="azzera" type="button" value="Azzera" class="btn btn-danger" />
+            </div>
+            @{
+                if (User.IsInRole("Administrator") || User.IsInRole("Operator") || User.IsInRole("TreeKeeper") || User.IsInRole("Discover") || User.IsInRole("Seminum") || User.IsInRole("Utility"))
+                {
+                    if (Model != null)
+                    {
+                        if (Model.Count() > 0)
+                        {
+                                                        <div class="form-group col-md-3">
+                                                            Download File di ricerca  <button type="button" class="btn btn-success" onclick="window.location.href = '@Url.Action("Download", "Home", new { file = ViewBag.filename })';">
+                                                                <span class="fa-solid fa-file-excel" aria-hidden="true"></span>
+                                                            </button>
+                                                        </div>
+                        }
+                    }
+                }
+            }
+        </div>
+
+    </div>
+}
+
+
+
+<div class="row" id="risultato" style="display:none">
+    <div class="col-sm-12">
+        <table id="table1" class="table table-bordered table-striped dataTable">
+            <thead>
+                <tr>
+                    <th>
+                    </th>
+                    <th>
+                        Progressivo
+                    </th>
+                    <th>
+                        Vecchio Progressivo
+                    </th>
+                    <th>
+                        Nome Scientifico
+                    </th>
+                    <th>
+                        Settore
+                    </th>
+                    <th>
+                        Collezione
+                    </th>
+                    <th>
+                        Cartellino
+                    </th>
+                    <th>
+                        Stato Individuo
+                    </th>
+                    <th>
+                        Nominativo ultima modifica
+                    </th>
+                    <th>
+                        Data Ultima Modifica
+                    </th>
+                    <th>
+                        Data per formato yyymmmdd
+                    </th>
+                    <th style="width:5%">
+                        Numero Immagini
+                    </th>
+
+                    <th>
+                    </th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                @{
+                    if (Model != null)
+                    {
+
+
+                        foreach (var item in Model)
+                        {
+                                                        <tr>
+                                                                            <td>
+                                                                <a asp-action="Details" asp-controller="Individui" asp-route-id="@item.id" asp-route-tipo="ricerca" >
+                                                                    <span class="btn btn-primary btn-xs" title="dettaglio individuo">
+                                                                        <i class="fa-solid fa-search"></i>
+                                                                    </span>
+                                                                </a>
+                                                                             
+                                                                                @{
+                                        if (User.IsInRole("Administrator") || User.IsInRole("Operator") || User.IsInRole("TreeKeeper") || User.IsInRole("Discover") || User.IsInRole("Seminum") || User.IsInRole("Utility"))
+                                        {
+
+                                                            
+                                            
+                                                                                                    <button class="btn btn-info btn-xs" title="stampa etichetta" id="etichetta" onclick="stampa('@item.id','@item.nomeetichetta','@item.ipen','@item.shortprog')">
+                                                                                                        <i class="fa-solid fa-print"></i>
+                                                                                                                    </button>
+                                                            
+                                                        }
+                                                                                }
+                                                                            </td>
+                                                            <td>
+                                                                @Html.DisplayFor(modelItem => item.progressivo)
+                                                               
+                                                            </td>
+                                                            <td>
+                                                                @Html.DisplayFor(modelItem => item.vecchioprogressivo)
+                                                            </td>
+                                                            <td>
+                                                                @Html.DisplayFor(modelItem => item.nome_scientifico)
+                                                            </td>
+
+                                                            <td>
+                                                                @Html.DisplayFor(modelItem => item.settore)
+                                                            </td>
+                                                            <td>
+                                                                @Html.DisplayFor(modelItem => item.collezione)
+                                                            </td>
+                                                            <td>
+                                                                @Html.DisplayFor(modelItem => item.cartellino)
+                                                            </td>
+                                                            <td>
+                                                                @Html.DisplayFor(modelItem => item.stato)
+                                                            </td>
+                                                            <td>
+                                                                @Html.DisplayFor(modelItem => item.nomecognome)
+                                                            </td>
+
+                                                            <td>
+                                                                @Convert.ToDateTime(item.datainserimento).ToString("dd/MM/yyyy")
+                                                            </td>
+                                                            <td>
+                                                                @Convert.ToDateTime(item.datainserimento).ToString("yyyyMMdd")
+                                                            </td>
+                                                            <td>
+                                                                @Html.DisplayFor(modelItem => item.countimg)
+                                                            </td>
+                                                            <td>
+                                                                @{
+                                        if (User.IsInRole("Administrator") || User.IsInRole("Operator") || User.IsInRole("TreeKeeper") || User.IsInRole("Discover") || User.IsInRole("Seminum") || User.IsInRole("Utility"))
+                                        {
+                                                                                                    <a asp-action="Edit" asp-controller="Individui" asp-route-id="@item.id" asp-route-tipo="ricerca">
+                                                                                                        <span class="btn btn-warning btn-xs" title="modifica individuo">
+                                                                                                            <i class="fa-solid fa-pencil" style="color: #fafafa;"></i>
+                                                                                                        </span>
+                                                                                                    </a>
+
+
+                                            
+                                        }
+
+
+
+
+                                        if (User.IsInRole("Administrator"))
+                                        {
+
+                                                                                                    <a asp-action="Delete" asp-controller="Individui" asp-route-id="@item.id" asp-route-tipo="ricerca">
+                                                                                                        <span class="btn btn-danger btn-xs" title="cancella individuo">
+                                                                                                            <i class="fa-solid fa-trash"></i>
+                                                                                                        </span>
+                                                                                                    </a>
+
+
+
+                                        }
+                                                                }
+
+
+
+
+                                                            </td>
+                                                        </tr>
+                        }
+                    }
+                }
+
+        </table>
+    </div>
+</div>
+<div class="modal fade bd-example-modal" data-backdrop="static" data-keyboard="false" tabindex="-1">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content" style="top: 350px;right: 100px; bottom: 0;  left: 0; z-index: 10040; ">
+
+            <img src="~/img/loading.gif" />
+
+        </div>
+    </div>
+</div>
+<div class="row" id="gifricerca">
+    <div class="col-md-12 center">
+        <table id="table2" class="table table-bordered dataTable">
+            <thead>
+            <th></th>
+
+            </thead>
+
+            <tbody>
+                <tr><td style="text-align: center; vertical-align: middle;"><img src="~/img/load.gif" /> .. Ricerca in Corso ..</td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+@section Styles {
+    <link href="~/css/select2.min.css" rel="stylesheet" />
+ 
+    <link href="~/css/datatables.min.css" rel="stylesheet" />
+}
+@section CustomStyles {
+   
+
+}
+@section Scripts {
+
+
+ 
+    <script src="~/js/select2.min.js"></script>
+ 
+    <script src="~/js/datatables.min.js"></script>
+    <script src="~/js/dymo.connect.framework.js"></script>
+}
+@section CustomScripts {
+
+    
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            
+       
+            
+         
+            $('#gifricerca').hide();
+            //  $('.modal').modal('hide');
+            $('#risultato').show();
+            $('#ricercaform').submit(function () {
+                $('#risultato').hide();
+                $('#gifricerca').show();
+                //    $('.modal').modal('show');
+            });
+        });
+     
+            
+        
+
+       
+    </script>
+
+    <script>
+
+                jQuery(function () {
+                    jQuery('#table1').DataTable({
+                      'paging'      : true,
+                      'lengthChange': true,
+                      'searching'   : true,
+                      'ordering'    : true,
+                      'info'        : true,
+                      'autoWidth'   : false,
+                      
+                         "columnDefs": [
+                            { "orderData": [10], "targets": [9] },
+                            {
+                                'targets': [10],
+                                'visible': false,
+                                'searchable': false
+                            }
+                        ]
+                    })
+                  })
+    </script>
+    
+    <script>
+
+
+        $("#famiglia").select2({
+        });
+        $("#settore").select2({
+        });
+        $("#collezione").select2({
+        });
+        $("#statoindividuo").select2({
+        });
+        $("#condizione").select2({
+        });
+        $("#cartellino").select2({
+        });
+        $(document).ready(function () {
+            var codsettoresel = $('#settore :selected').val();
+            if (codsettoresel != '') {
+                var viewbagcol = "@ViewBag.collezione";
+
+                $("#collezione").removeAttr("disabled");
+                $.ajax({
+                    type: "GET",
+
+                    url: baseUrlCollezioni,
+                    data: {
+                        'codicesettore': codsettoresel
+                    },
+                    success: function (data) {
+
+                        var s = '<option value="">Tutti</option>';
+
+                        for (var i = 0; i < data.length; i++) {
+                            if (viewbagcol == data[i].codicecollezione) {
+                                s += '<option value="' + data[i].codicecollezione + '" selected="selected">' + data[i].descrizionecollezione + '</option>';
+                            } else {
+                            s += '<option value="' + data[i].codicecollezione + '">' + data[i].descrizionecollezione + '</option>';
+                            }
+                        }
+                        if (i == 0) {
+                            alert("Il settore non ha collezioni corrispondenti verificare e correggi");
+                            $('#settore').focusin();
+
+                        }
+                        $("#collezione").html(s);
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        alert('Error during process: \n' + xhr.responseText);
+                    }
+
+                });
+
+               var objSelect = document.getElementById("collezione");
+                setSelectedValue(objSelect, viewbagcol);
+             } else {
+                $('#collezione').val('').trigger('change');
+                $('#collezione').prop('disabled', true);
+            }
+
+        });
+    </script>
+    <script>
+    var baseUrlCercaspecie = '@Url.Action("Cercaspecie", "Common")';
+
+        $("#specie").autocomplete({
+                source: baseUrlCercaspecie,
+                minLength: 3,
+                position: { offset: '-30 0' }
+            });
+
+
+    </script>
+    <script>
+    var baseUrlCercaprog = '@Url.Action("Cercaprog", "Common")';
+
+        $("#progacc").autocomplete({
+            source: baseUrlCercaprog,
+                minLength: 3,
+                position: { offset: '-30 0' }
+            });
+
+
+    </script>
+
+
+    <script>
+    var baseUrlSettori = '@Url.Action("GetSettori", "Common")';
+    var baseUrlCollezioni = '@Url.Action("GetCollezioni", "Common")';
+
+
+        $('#settore').on("change", function () {
+            var codsettoresel = $('#settore :selected').val();
+            if (codsettoresel != '') {
+
+                $('#collezione').val('').trigger('change');
+                $("#collezione").removeAttr("disabled");
+                $.ajax({
+                    type: "GET",
+
+                    url: baseUrlCollezioni,
+                    data: {
+                        'codicesettore': codsettoresel
+                    },
+                    success: function (data) {
+
+                        var s = '<option value="">Tutti</option>';
+
+                        for (var i = 0; i < data.length; i++) {
+
+                            s += '<option value="' + data[i].codicecollezione + '">' + data[i].descrizionecollezione + '</option>';
+                        }
+                        if (i == 0) {
+                            alert("Il settore non ha collezioni corrispondenti verificare e correggi");
+                            $('#settore').focusin();
+
+                        }
+                        $("#collezione").html(s);
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        alert('Error during process: \n' + xhr.responseText);
+                    }
+
+                });
+            } else {
+                $('#collezione').val('').trigger('change');
+                $('#collezione').prop('disabled', true);
+            }
+        });
+    </script>
+    <script>
+        $('#azzera').on("click", function () {
+            // document.getElementById("famiglia").value = "";
+            //document.getElementById("famiglia").textContent = "Tutti";
+            $('#famiglia').val('').trigger('change');
+            $('#settore').val('').trigger('change');
+            $('#collezione').val('').trigger('change');
+            $('#statoindividuo').val('').trigger('change');
+            $('#condizione').val('').trigger('change');
+            $('#cartellino').val('').trigger('change');
+            document.getElementById("specie").value = "";
+            document.getElementById("datapropagazioneinizio").value = "1543-01-01";
+            var date = new Date();
+            var day = date.getDate();
+            var month = date.getMonth() + 1;
+            var year = date.getFullYear();
+            if (month < 10) month = "0" + month;
+            if (day < 10) day = "0" + day;
+            var today = year + "-" + month + "-" + day;
+
+            document.getElementById("datapropagazionefine").value = today;
+
+        });
+
+    </script>
+
+  
+
+    <script>
+
+       
+            // called when the document completly loaded
+        function stampa(qrcode, nome, ipen, progressivo) {
+           if (nome.length > 15) {
+                nome = nome.substr(0, nome.indexOf(' ')) + '\n' + nome.substr(nome.indexOf(' ') + 1);
+            }
+           
+            var labelXml = '<DieCutLabel Version="8.0" Units="twips"><PaperOrientation>Landscape</PaperOrientation><Id>ReturnAddressInt</Id><PaperName>11352 Return Address Int</PaperName><DrawCommands><RoundRectangle X="0" Y="0" Width="1440" Height="3060" Rx="180" Ry="180" /></DrawCommands><ObjectInfo><TextObject><Name>nome</Name><ForeColor Alpha="255" Red="0" Green="0" Blue="0" /><BackColor Alpha="0" Red="255" Green="255" Blue="255" /><LinkedObjectName></LinkedObjectName><Rotation>Rotation0</Rotation><IsMirrored>False</IsMirrored><IsVariable>False</IsVariable><HorizontalAlignment>Left</HorizontalAlignment><VerticalAlignment>Top</VerticalAlignment><TextFitMode>AlwaysFit</TextFitMode><UseFullFontHeight>True</UseFullFontHeight><Verticalized>False</Verticalized><StyledText><Element><String>' + nome + '</String><Attributes><Font Family="Tahoma" Size="9" Bold="False" Italic="False" Underline="False" Strikeout="False" /><ForeColor Alpha="255" Red="0" Green="0" Blue="0" /></Attributes></Element></StyledText></TextObject><Bounds X="1150" Y="188" Width="1756" Height="566.929142372689" /></ObjectInfo><ObjectInfo><BarcodeObject><Name>qrcode</Name><ForeColor Alpha="255" Red="0" Green="0" Blue="0" /><BackColor Alpha="0" Red="255" Green="255" Blue="255" /><LinkedObjectName></LinkedObjectName><Rotation>Rotation0</Rotation><IsMirrored>False</IsMirrored><IsVariable>False</IsVariable><Text></Text><Type>QRCode</Type><Size>Medium</Size><TextPosition>None</TextPosition><TextFont Family="Arial" Size="8" Bold="False" Italic="False" Underline="False" Strikeout="False" /><CheckSumFont Family="Arial" Size="8" Bold="False" Italic="False" Underline="False" Strikeout="False" /><TextEmbedding>None</TextEmbedding><ECLevel>0</ECLevel><HorizontalAlignment>Center</HorizontalAlignment><QuietZonesPadding Left="0" Top="0" Right="0" Bottom="0" /></BarcodeObject><Bounds X="130" Y="225" Width="986" Height="960" /></ObjectInfo><ObjectInfo><TextObject><Name>ipen</Name><ForeColor Alpha="255" Red="0" Green="0" Blue="0" /><BackColor Alpha="0" Red="255" Green="255" Blue="255" /><LinkedObjectName></LinkedObjectName><Rotation>Rotation0</Rotation><IsMirrored>False</IsMirrored><IsVariable>False</IsVariable><HorizontalAlignment>Left</HorizontalAlignment><VerticalAlignment>Top</VerticalAlignment><TextFitMode>AlwaysFit</TextFitMode><UseFullFontHeight>True</UseFullFontHeight><Verticalized>False</Verticalized><StyledText><Element><String>' + ipen + '</String><Attributes><Font Family="Tahoma" Size="9" Bold="False" Italic="False" Underline="False" Strikeout="False" /><ForeColor Alpha="255" Red="0" Green="0" Blue="0" /></Attributes></Element></StyledText></TextObject><Bounds X="1150" Y="737.007885084496" Width="1286" Height="240" /></ObjectInfo><ObjectInfo><TextObject><Name>progressivo</Name><ForeColor Alpha="255" Red="0" Green="0" Blue="0" /><BackColor Alpha="0" Red="255" Green="255" Blue="255" /><LinkedObjectName></LinkedObjectName><Rotation>Rotation0</Rotation><IsMirrored>False</IsMirrored><IsVariable>False</IsVariable><HorizontalAlignment>Left</HorizontalAlignment><VerticalAlignment>Top</VerticalAlignment><TextFitMode>AlwaysFit</TextFitMode><UseFullFontHeight>True</UseFullFontHeight><Verticalized>False</Verticalized><StyledText><Element><String>' + progressivo + '</String><Attributes><Font Family="Tahoma" Size="8" Bold="False" Italic="False" Underline="False" Strikeout="False" /><ForeColor Alpha="255" Red="0" Green="0" Blue="0" /></Attributes></Element></StyledText></TextObject><Bounds X="1150" Y="963.779542033572" Width="1781" Height="170.078742711807" /></ObjectInfo></DieCutLabel>';
+            
+            // prints the label
+            
+                    try {
+                        // open label
+                
+                        var label = dymo.label.framework.openLabelXml(labelXml);
+                var baseUrl = "@Context.Request.Host";///messo per dare un path relativo a seconda del host
+                        
+                var link = 'URL:https://' + baseUrl + '/Individui/Details/' + qrcode;// sostituire url fissa con la variabile del host
+
+
+
+
+              
+                       label.setObjectText("qrcode", link);
+               // alert("nome prima " + nome);
+                      //if (nome.length > 20) { nome = nome.substr(0, nome.indexOf(' ',12)) + '\n' + nome.substr(nome.indexOf(' ',12) + 1); }
+
+
+
+                //label.setObjectText("nome", ipen);
+                
+                    // label.setObjectText("progressivo", progressivo);
+               
+              
+                        // select printer to print on
+                        // for simplicity sake just use the first LabelWriter printer
+               
+                        var printers = dymo.label.framework.getPrinters();
+                
+                        if (printers.length == 0)
+                            throw "No DYMO printers are installed. Install DYMO printers.";
+
+                        var printerName = "";
+                        for (var i = 0; i < printers.length; ++i) {
+                            var printer = printers[i];
+                            if (printer.printerType == "LabelWriterPrinter") {
+                                printerName = printer.name;
+                                break;
+                            }
+                        }
+
+                        if (printerName == "")
+                            throw "No LabelWriter printers found. Install LabelWriter printer";
+
+                        // finally print the label
+                      //  label.print(printerName);
+                        
+                        var myParams = dymo.label.framework.createLabelWriterPrintParamsXml({ NumCopies: 1 });
+                        
+                        label.print(printerName, myParams);
+                    }
+                    catch (e) {
+                        alert(e.message || e);
+                    }
+                
+            };
+
+            function initTests() {
+                if (dymo.label.framework.init) {
+                    //dymo.label.framework.trace = true;
+                    dymo.label.framework.init(onload);
+                } else {
+                    onload();
+                }
+            }
+
+            // register onload event
+            if (window.addEventListener)
+                window.addEventListener("load", initTests, false);
+            else if (window.attachEvent)
+                window.attachEvent("onload", initTests);
+            else
+                window.onload = initTests;
+
+        
+
+
+
+
+
+
+
+    </script>
+
+
+
+
+
+
+}

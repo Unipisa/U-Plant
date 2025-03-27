@@ -1,0 +1,68 @@
+﻿@model UPlant.Models.DB.StatoIndividuo
+
+@{
+    ViewData["Title"] = "Create";
+}
+<div class="card card-outline card-primary">
+    <div class="card-header with-border">
+        <h3 class="card-title">Aggiungi Stato Individuo</h3>
+    </div>
+    <div class="card-body">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="stato" class="control-label">Stato Individuo</label>
+                <input asp-for="stato" class="form-control" />
+                <span asp-validation-for="stato" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="visualizzazioneweb" class="control-label">Visualizzazione Web</label><br />
+                <input asp-for="visualizzazioneweb" class="form-check-input mx-auto" id="visualizzazioneweb" name="visualizzazioneweb" />
+                <span asp-validation-for="visualizzazioneweb" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ordinamento" class="control-label">Ordinamento</label>
+                <input asp-for="ordinamento" class="form-control" value="@ViewData["ordinesuccessivo"]" />
+                <span asp-validation-for="ordinamento" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="organizzazione" class="control-label">Organizzazione</label>
+                <select asp-for="organizzazione" class ="form-control" asp-items="ViewBag.organizzazione"></select>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Crea" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+<div>
+    @Html.ActionLink("Torna Indietro", null, null, null, new { @class = "btn btn-info go_back" })
+</div>
+
+
+@section Styles {
+    <link href="~/css/select2.min.css" rel="stylesheet" />
+    <link href="~/css/accessioni.min.css" rel="stylesheet" />
+
+}
+
+
+
+@section Scripts {
+    @{
+        <script src="~/js/select2.min.js"></script>
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+
+}
+@section CustomScripts {
+    <script type="text/javascript">
+        $(function () {
+            $('.go_back').click(function (e) {
+                e.preventDefault();
+                history.go(-1);
+            });
+        });
+    </script>
+}

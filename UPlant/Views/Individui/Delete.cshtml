@@ -1,0 +1,68 @@
+﻿@model UPlant.Models.DB.Individui
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+
+<div class="row">
+    <div class="col-xs-12">
+        <div class="card card-outline card-primary">
+            <div class="card-header with-border">
+                <form asp-action="Delete">
+                <h3 class="card-title text-red">Confermi la cancellazione?</h3>
+                   <br />
+                <div class="card-body  ">
+                        <table style="height: 30px; width: 100% " class="table-striped table-bordered">
+                            <tbody>
+                                <tr style="height: 23px;">
+                                    <th style="width: 20% "> @Html.DisplayNameFor(model => model.progressivo)</th>
+                                    <th style="width: 20% ">@Html.DisplayNameFor(model => model.sessoNavigation)</th>
+                                </tr>
+                                <tr style="height: 23px;">
+                                    <td style="width: 478px; height: 23px;"> @Html.DisplayFor(model => model.progressivo)</td>
+                                    <td style="width: 239px; height: 23px;">@Html.DisplayFor(model => model.sessoNavigation.descrizione)</td>
+
+                                </tr>
+                                  <tr style="height: 23px;">
+                                    <th style="width: 20% ">@Html.DisplayNameFor(model => model.propagatoData)</th>
+                                    <th style="width: 20% ">@Html.DisplayNameFor(model => model.propagatoModalita)</th>
+                                </tr>
+                                <tr style="height: 23px;">
+                                    <td style="width: 478px; height: 23px;">@Html.DisplayFor(model => model.propagatoData)</td>
+                                    <td style="width: 239px; height: 23px;">@Html.DisplayFor(model => model.propagatoModalitaNavigation.propagatoModalita)</td>
+
+                                </tr>
+                                <tr style="height: 23px;">
+                                    <th style="width: 20% ">@Html.DisplayNameFor(model => model.settoreNavigation)</th>
+                                    <th style="width: 20% ">@Html.DisplayNameFor(model => model.collezioneNavigation)</th>
+                                </tr>
+                                <tr style="height: 23px;">
+                                    <td style="width: 478px; height: 23px;">@Html.DisplayFor(model => model.settoreNavigation.settore)</td>
+                                    <td style="width: 239px; height: 23px;">@Html.DisplayFor(model => model.collezioneNavigation.collezione)</td>
+
+                                </tr>
+                                <tr style="height: 23px;">
+                                    <th style="width: 20% ">@Html.DisplayNameFor(model => model.destinazioni)</th>
+                                    <th style="width: 20% ">@Html.DisplayNameFor(model => model.note)</th>
+                                </tr>
+                                <tr style="height: 23px;">
+                                    <td style="width: 478px; height: 23px;">@Html.DisplayFor(model => model.destinazioni)</td>
+                                    <td style="width: 239px; height: 23px;">@Html.DisplayFor(model => model.note)</td>
+
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="card-footer with-border">Ti ricordo che cancellando l'individuo andrai a cancellare anche tutto lo storico e le immagini
+                        </div>
+            </div>
+                    
+                <input type="hidden" asp-for="id" />
+                <input type="submit" value="Cancella" class="btn btn-danger" />
+                <input type="button" value="Torna indietro" class="btn alert-info" onclick="javascript:window.history.back();" />
+            </form>
+    </div>
+    </div>
+</div>
+  
+</div>

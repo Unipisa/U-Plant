@@ -1,0 +1,126 @@
+﻿@model UPlant.Models.DB.Percorsi
+
+@{
+    ViewBag.Title = "Percorsi";
+}
+<div class="row">
+    <div class="col-sm-12">
+
+
+        <button type="button" id="torna" class="btn btn-info btn-xs" onclick="window.location.href = '@Url.Action("Index", "Percorsi")';">
+            Torna Indietro
+        </button>
+    </div>
+</div>
+<div class="row">
+	<div class="col-md-12">
+        <div class="card card-outline card-primary">
+            <div class="card-header with-border">
+                <div class="col-md-9">
+                    <h3 class="card-title">Modifica</h3>
+                </div>
+                @{
+                    if (Model.nomefile !=null)
+                    {
+                        <div class="float-center success">
+                            <img src="@Url.Action("ViewImg","Percorsi", new { percorso = Model.id,nomefile = Model.nomefile  })" title="@Html.DisplayFor(model => model.nomefile)" height="200" />
+                            <button type="button" id="DeleteImg" class="btn btn-danger btn-xs">Rimuovi Immagine <i class="fa-regular fa-trash"></i></button>
+                            <div class="modal fade" id="myModal2" role="dialog" data-url='@Url.Action("DeleteImg","Percorsi",new { id =  Model.id,nomefile = Model.nomefile})'>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="float-center success">
+                            <button type="button" id="UploadImg" class="btn btn-primary btn-xs">Aggiungi Immagine <i class="fa-regular fa-image"> </i></button>
+                            <div class="modal fade" id="myModal" role="dialog" data-url='@Url.Action("UploadImg","Percorsi",new { id =  Model.id})'>
+                            </div>
+                        </div>
+
+                    }
+
+                }
+
+            </div>
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+                <div class="card-body">
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            @Html.HiddenFor(model => model.id)
+            <div class="form-group">
+                 <b>Titolo</b><br>
+                 @Html.EditorFor(model => model.titolo, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.titolo, "", new { @class = "text-danger" })
+            </div>
+            <div class="form-group">
+                <b>Descrizione</b><br>
+                        @Html.TextAreaFor(model => model.descrizione, 10, 80, new { htmlAttributes = new { @class = "form-control" } }) <br>
+                Caratteri da aggiungere al testo : [br]ritorno a capo - [p] nuovo paragrafo
+                @Html.ValidationMessageFor(model => model.descrizione, "", new { @class = "text-danger" })
+            </div>
+            <div class="form-group">
+                <b>Titolo Inglese</b><br>
+                        @Html.EditorFor(model => model.titolo_en, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.titolo_en, "", new { @class = "text-danger" })
+            </div>
+            <div class="form-group">
+                <b>Descrizione Inglese</b><br>
+                        @Html.TextAreaFor(model => model.descrizione_en, 10, 80, new { htmlAttributes = new { @class = "form-control", } }) <br>
+                Caratteri da aggiungere al testo : [br]ritorno a capo - [p] nuovo paragrafo
+                @Html.ValidationMessageFor(model => model.descrizione_en, "", new { @class = "text-danger" })
+            </div>
+            <div class="form-group">
+                        <b>Credits</b><br>
+                @Html.EditorFor(model => model.credits, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.credits, "", new { @class = "text-danger" })
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-2">
+                    <input type="submit" value="Salva" class="btn btn-success" />
+                </div>
+            </div>
+
+
+        </div>
+
+                }
+
+            </div>
+	</div>
+</div>
+
+
+
+@section CustomScripts {
+    <script>
+		jQuery(function () {
+			jQuery(".datepicker").datepicker({
+				language: "it",
+				autoclose: true
+			});
+        });
+        $('#UploadImg').click(function () {
+            var url = $('#myModal').data('url');
+            $.get(url, function (data) {
+                $("#myModal").html(data);
+                $("#myModal").modal({ backdrop: "static" });
+
+            });
+
+
+        });
+        $('#DeleteImg').click(function () {
+            var url = $('#myModal2').data('url');
+            $.get(url, function (data) {
+                $("#myModal2").html(data);
+                $("#myModal2").modal({ backdrop: "static" });
+
+            });
+
+
+        });
+	</script>
+
+    
+}

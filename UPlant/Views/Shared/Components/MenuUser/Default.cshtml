@@ -1,0 +1,38 @@
+﻿@using System.Security.Principal
+
+@if (User.Identity.IsAuthenticated)
+{
+    var cognome = @User.Identities.FirstOrDefault()?.Claims?.Where(c => c.Type == "family_name").FirstOrDefault()?.Value;
+    var nome = @User.Identities.FirstOrDefault()?.Claims?.Where(c => c.Type == "given_name").FirstOrDefault()?.Value;
+    <li class="nav-item dropdown">
+        <a class="nav-link" data-toggle="dropdown" href="#">
+            <i class="fas fa-user"></i>
+            <span>  @nome @cognome </span>
+        </a>
+
+        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+            <div class="dropdown-item">
+                <div class="media">
+                    <div class="media-body text-left ">
+                        <p class="text text-lg">
+                            @nome @cognome
+                        </p>
+                        <p class="text text-sm">
+                            (@User.Identity.Name)
+                        </p>
+
+                    </div>
+                </div>
+                <div class="dropdown-divider"></div>
+                <div class="dropdown-item dropdown-footer">
+                    <div>
+                        <a class="btn btn-default btn-block"
+                           
+                           asp-controller="Account"
+                           asp-action="SignOut">@localizer["MenuTop_Logout"]</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </li>
+}

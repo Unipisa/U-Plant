@@ -1,0 +1,67 @@
+﻿@model IEnumerable<UplantDiscover.Models.DB.Percorsi>
+
+@{
+    ViewData["Title"] = "Indice Percorsi";
+}
+
+@inject LanguageService language
+<div>
+    <p></p>
+
+    <h5 class="mb-4  lh-1 fw-bold text-success"><a asp-controller="Home" class="link-success text-decoration-none">Home</a> / @language.Getkey("percorsi")</h5>
+    <div class="row bloccopercorsi " id="bloccopercorsi" name="bloccopercorsi">
+
+    </div>
+</div>
+
+
+@section scripts {
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var basepath = '@Url.Action("Index","Home")';
+            var bandiera = '@language.Getkey("bandiera")';
+           // var token = '@ViewBag.token';
+            const apiurl = '/api/orto/elencopercorsi';
+            if (basepath.slice(-1) != "/") {
+                basepath = basepath + '/';
+            }
+
+            $.ajax({
+                url: apiurl,
+                //headers: { 'Authorization': token },
+                data: { lingua: bandiera },
+
+                success: function (data)
+                {
+                    var c = '';
+
+                    for (var i = 0; i < data.length; i++) {
+                        c += '<div class="col-12 col-md-4 col-lg-3 text-white rounded-5 ">';
+                        c += ' <a href ="@Url.Action("Details", "Percorsi")?id=' + data[i].id + '" class="text-decoration-none d-block mb-4">';
+                        c += '<div style="background-image: url(' + data[i].pathimmagine + '); background-size: cover;" class="square">';
+                        c += '<div class="text-white text-shadow-1 fw-bold">';
+                        c += '<h5 class="mb-3 fw-medium text-truncate"> ' + data[i].titolo + '</h5>';
+                        c += '<p></p>';
+
+                        c += '</div>';
+                        c += ' </div>';
+                        c += ' </a>';
+                        c += ' </div>';
+
+
+                   }
+                    $("#bloccopercorsi").html(c);
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert('Error during process: \n' + xhr.responseText);
+                }
+
+            });
+
+
+        });
+
+    </script>
+
+}

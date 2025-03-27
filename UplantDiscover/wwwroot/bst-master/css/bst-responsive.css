@@ -1,0 +1,583 @@
+@media only screen and (max-width: 424px) {
+    .musei-sistema-museale .museum-icon
+    {
+        width:65%;
+        padding-bottom:30px;
+        float:none;
+    }
+    .notizie-sistema-museale article .grey-box
+    {
+        min-height:260px;
+    }
+    .navbar-brand img
+    {
+        max-height:85%;
+    }
+    .navbar-brand 
+    {
+        padding: 0 15px 0 0;
+        margin: 18px 0 0 10px;
+    }
+}
+
+@media only screen and (max-width: 425px) 
+{
+    .menu-main-container ul
+    {
+        margin:10px 0 0 0;
+    }
+    
+    .slider, .carousel .item
+    {
+        min-height:250px;
+    }
+    .carousel-inner .container
+    {
+        height:55px;
+        left:5px;
+        min-width:230px;
+        padding-left:15px;
+    }
+    .carousel-inner .container .content-title
+    {
+        font-size: 20px;
+        font-weight: 600;
+        line-height: 15px;
+        padding-top: 10px;
+    }
+    .carousel-inner .container .content-description
+    {
+        font-size: 14px;
+        font-weight: 600;
+    }
+    .news-events h2
+    , .museum-list h2
+    {
+        padding:10px 0 0 0 ;
+    }
+    .notizie-sistema-museale .thumb-group
+    {
+        display: block;
+        margin: 10px auto 10px auto;
+        float:none;
+    }
+    .notizie-sistema-museale article
+    , .notizie-sistema-museale .container
+    {
+        padding-left:0;
+        padding-right:0;
+    }
+    .notizie-sistema-museale article .read-more a
+    {
+        margin:10px auto 0 auto;
+    }
+    .news-events h2:after, .museum-list h2:after
+    {
+        margin-bottom:10px;
+    }
+    .notizie-sistema-museale .thumb-group
+    {
+        width: 100%;
+        overflow: hidden;
+    }
+    .notizie-sistema-museale .thumb-group img
+    {
+        width:100%;
+    }
+    .musei-sistema-museale .museum-icon
+    ,.musei-sistema-museale .museum-icon:first-child
+    ,.musei-sistema-museale .museum-icon:last-child
+    {
+        display:block;
+        margin:0 auto;
+        float:none;
+    }
+    .notizie-sistema-museale article .grey-box
+    {
+        margin:0 10px;
+        padding: 10px 20px;
+    }
+
+    #searchform 
+    {
+        margin: 20px auto;
+        width: 95%;
+    }
+    #searchform .search:before
+    {
+        left:5px;
+    }
+    .read-more
+    {
+        margin:0 auto;
+        width:110px;
+    }
+    
+    
+    
+    .musei-sistema-museale .museum-icons
+    {
+        margin: 25px -15px 15px -15px;
+    }
+    
+    .musei-sistema-museale .museum-icon
+    {
+        width:70%;
+        padding-bottom:30px;
+    }
+    ul.news-category-tabs li
+    {
+        display:block;
+        height:55px;
+        position:relative;
+        overflow:hidden;
+        border:none;
+        margin-bottom: 3px;
+    }
+    ul.news-category-tabs li a
+    {
+        text-align:center;
+        height:55px;
+        text-decoration:none;
+        padding-top:10px;
+    }
+    .news-category-tabs li .tab-cont
+    {
+        height:100%;
+    }
+    ul.news-category-tabs li span.image
+    {
+        top:-7px !important;
+    }
+    ul.news-category-tabs li span.image img
+    {
+        height:100%;
+    }
+    ul.news-category-tabs li span.text
+    , ul.news-category-tabs li span.image
+    {
+        width: 100%;
+        position: relative;
+        left:0;
+        bottom:0;
+        top:0;
+        right:0;
+        color:#ffffff;
+        /* Safari */
+        -webkit-transform: rotate(0deg);
+        /* Firefox */
+        -moz-transform: rotate(0deg);
+        /* IE */
+        -ms-transform: rotate(0deg);
+        /* Opera */
+        -o-transform: rotate(0deg);
+        /* Internet Explorer */
+        /*0, 1, 2, or 3 which will rotate the element 0, 90, 180 or 270 degrees respectively */
+        filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=0);
+        padding: 0;
+        margin: 0;
+        font-size: 15px;
+        line-height: 37px;
+    }
+    .read-more
+    {
+        display:block;
+        margin:0 auto;
+    }
+    .read-more .btn-blue
+    {
+        font-size:12px;
+    }
+    .container.category #content .articles a.article-image
+    {
+        width:100%;
+        height:300px;
+    }
+    #searchform input
+    {
+        width:100%;
+        border:none;
+        border-radius:0;
+        -webkit-border-radius: 0;
+        -moz-border-radius: 0;
+        border-radius: 0;
+        padding:7px 0 5px 40px;
+        font-size:10px;
+    }
+    
+    #content header {
+        margin: 85px 0;
+    }
+    
+    #sidebar 
+    {
+        padding-top:20px;
+        height:auto;
+    }
+    
+    body.home .navmenu
+    {
+        top:20px;
+    }
+    
+}
+
+@media only screen and (min-width: 426px) and (max-width: 767px) {
+    .nav
+    {
+        float:left;
+    }
+    .navbar-collapse.collapse.in 
+    {
+        display: block !important;
+        left:inherit;
+    }
+}
+
+@media only screen and (max-width: 767px) {
+    body > header.header-full
+    {
+        height:250px;
+    }
+    .overlay-universita .watermark
+    {
+        background-size: 90% auto;
+        background-position:bottom;
+    }
+    .map .map-pisa
+    {
+        width:100%;
+        height:500px;
+        margin-top:20px;
+        border:1px solid #A2A29D;
+        position:relative;
+    }
+    .map .map-calci
+    {
+        width:100%;
+        height:500px;
+        margin-top:20px;
+        border:1px solid #A2A29D;
+        position:relative;
+    }
+    .notizie-sistema-museale article .grey-box
+    {
+        min-height:270px;
+    }
+    .read-more
+    {
+        margin:0 auto;
+        width:110px;
+    }
+    .unipi-logo img.sma {
+      margin-top: 0;
+    }
+    .unipi-logo li {
+      display: inline-block;
+    }
+}
+
+@media only screen and (min-width: 426px) and (max-width: 991px) {
+    .musei-sistema-museale .museum-icons
+    {
+        width:60%;
+        margin:0 auto;
+    }
+    .musei-sistema-museale .museum-icon
+    {
+        width:50%;
+    }
+    
+
+    .navbar-header
+    {
+        width:100%;
+        float:left;
+    }
+    .nav
+    {
+        margin:18px 0 0 15px;
+        left:0;
+    }
+    .navbar-default .navbar-toggle
+    {
+        background:#ffffff;
+    }
+    .navbar-default .navbar-toggle:not(.collapsed):focus
+    , .navbar-default .navbar-toggle:not(.collapsed):hover
+    {
+        background-color:#ffffff;
+    }    
+    .navbar-toggle.collapsed
+    , .navbar-default.collapsed .navbar-toggle:focus
+    , .navbar-default.collapsed .navbar-toggle:hover
+    {
+        background:transparent !important;
+    }
+    .navbar-default .navbar-toggle .icon-bar
+    {
+        background-color:#1e6031;
+    }
+    .navbar-default .navbar-toggle.collapsed .icon-bar
+    {
+        background-color:#fff;
+    }
+    .navbar-default .navbar-collapse, .navbar-default .navbar-form
+    {
+        border: none;
+        outline: none;
+        box-shadow: none;
+        padding: 0;
+        overflow: hidden; 
+    }
+    .navbar-toggle
+    {
+        display:inline-block;
+        position: relative;
+        float: right;
+        padding: 9px 10px;
+        margin-top: 20px;
+        margin-right: 15px;
+        margin-bottom: 8px;
+        background-color: transparent;
+        background-image: none;
+        border: 1px solid transparent;
+        border-radius: 4px;
+    }
+    .navbar-collapse.collapse
+    , .navbar-collapse.collapsing
+    {
+        background-color: #1e6031;
+        opacity: 0.9;
+        margin-top: 10px;
+        display:none !important;
+        position:absolute;
+        margin-top:77px;
+        width:100%;
+        padding:0 10px 10px 10px;
+        left:0;
+        top:0;
+    }
+    .navbar-collapse.collapse.in
+    {
+        display:block !important;
+    }
+    .navbar-nav>li
+    {
+        float:none;
+        clear:none;
+    }
+
+    
+}
+@media only screen and (max-width: 991px)
+{
+    #sidebar
+    {
+        height:auto !important;
+        padding-top:0 !important;
+    } 
+}
+@media only screen and (min-width: 768px) and (max-width: 1024px) {
+    .notizie-sistema-museale article
+    {
+        width:100%;
+    }
+    .notizie-sistema-museale article .grey-box
+    {
+        min-height:175px;
+    }
+    .read-more
+    {
+        width:auto;
+    }
+    ul.news-category-tabs li span.text
+    {
+        left:-15%;
+    }
+    ul.news-category-tabs li span.image
+    {
+        left:-30%;
+    }
+}
+
+@media only screen and (min-width: 992px) and (max-width: 1199px) {
+    .nav
+    {
+        font-size:12px;
+        margin:18px 0 0 10px;
+    }
+    #searchform
+    {
+        width: 80px;
+        float: left !important;
+        padding: 0;
+        margin: 20px 0 0 15px;
+    }
+    .navbar-form .form-group.search
+    {
+        width:70px;
+    }
+    #searchform .search:before
+    {
+        left:5px;
+    }
+    .navbar-form .form-group.search input
+    {
+        width:100%;
+    }
+    ul.news-category-tabs li span.text
+    {
+        left:0;
+    }
+    ul.news-category-tabs li span.image
+    {
+        left:-15%;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+@media only screen and (max-width: 1199px) 
+{
+    .navbar-header
+    {
+        width:100%;
+        float:left;
+    }
+    .nav
+    {
+        margin:18px 0 0 15px;
+        left:0;
+    }
+    .navbar-default .navbar-toggle
+    {
+        background:#ffffff;
+    }
+    .navbar-default .navbar-toggle:not(.collapsed):focus
+    , .navbar-default .navbar-toggle:not(.collapsed):hover
+    {
+        background-color:#ffffff;
+    }    
+    .navbar-toggle.collapsed
+    , .navbar-default.collapsed .navbar-toggle:focus
+    , .navbar-default.collapsed .navbar-toggle:hover
+    {
+        background:transparent !important;
+    }
+    .navbar-default .navbar-toggle .icon-bar
+    {
+        background-color:#1e6031;
+    }
+    .navbar-default .navbar-toggle.collapsed .icon-bar
+    {
+        background-color:#fff;
+    }
+    .navbar-default .navbar-collapse, .navbar-default .navbar-form
+    {
+        border: none;
+        outline: none;
+        box-shadow: none;
+        padding: 0;
+        overflow: hidden; 
+    }
+    .navbar-toggle
+    {
+        display:inline-block;
+        position: relative;
+        float: right;
+        padding: 9px 10px;
+        margin-top: 20px;
+        margin-right: 15px;
+        margin-bottom: 8px;
+        background-color: transparent;
+        background-image: none;
+        border: 1px solid transparent;
+        border-radius: 4px;
+    }
+    .navbar-collapse.collapse
+    , .navbar-collapse.collapsing
+    {
+        background-color: #1e6031;
+        opacity: 0.98;
+        margin-top: 10px;
+        display:none !important;
+        position:absolute;
+        margin-top:77px;
+        width:100%;
+        padding:0 10px 10px 10px;
+        left:0;
+        top:0;
+    }
+    .navbar-collapse.collapse.in
+    {
+        display:block !important;
+    }
+    .navbar-nav>li
+    {
+        float:none;
+        clear:both;
+    }
+    
+    .topbar-icons
+    {
+        right: 40px;
+        top:43%;
+    }
+    .search
+    {
+        left: 0;
+        right: 0;
+        opacity: 0.9;
+        width: 100%;
+        height: 100%;
+    }
+    #searchform
+    {
+        float:left;
+        width:98%;
+        position:absolute;
+        top:35%;
+    }
+
+    #searchform .search:before
+    {
+        left:6px;
+    }
+    .navbar-form .form-group
+    {
+        display:block;
+    }
+    
+    #searchform input
+    {
+        width: 80%;
+        padding: 7px 0 5px 10px;
+    }
+    .navbar-default .navbar-nav .open .dropdown-menu>li>a
+    {
+        color:#ffffff;
+    }
+    .navbar-default .navbar-nav .open .dropdown-menu>.active>a, .navbar-default .navbar-nav .open .dropdown-menu>.active>a:focus, .navbar-default .navbar-nav .open .dropdown-menu>.active>a:hover
+    {
+        color: #fff;
+        text-decoration: none;
+        background-color: #2a8945;
+        outline: 0;
+    }
+    .dropdown-menu
+    {
+        position:relative;
+        top:0;
+        background-color:transparent;
+        box-shadow:none;
+        width:100% !important;
+    }
+}

@@ -1,0 +1,730 @@
+﻿@model UPlant.Models.DB.Individui
+
+@{
+    ViewData["Title"] = "Individui";
+    
+}
+
+<p>
+    @{
+        if (User.IsInRole("Administrator") || User.IsInRole("Operator") || User.IsInRole("TreeKeeper") || User.IsInRole("Discover") || User.IsInRole("Seminum") || User.IsInRole("Utility"))
+        {
+            @Html.ActionLink("Modifica", "Edit", new { id = Model.id, tipo = ViewBag.tipo }, new { @class = "btn btn-primary" }) <span> </span>
+        }
+
+        if (ViewBag.tipo == "ricerca")
+        {
+            @Html.ActionLink("Vai all'accessione padre", "Details", "Accessioni", new { id = Model.accessione, tipo = "ricerca" }, new { @class = "btn btn-warning" }) <span> </span>
+            <button type="button" id="ricerca" class="btn btn-info" onclick="window.location.href = '@Url.Action("RicercaIndividui", "Home", new {  tipo  = ViewBag.tipo })';">
+                Torna alla ricerca
+            </button>
+
+        }
+        else
+        {
+
+            @Html.ActionLink("Torna all'accessione padre", "Details", "Accessioni", new
+            {
+                id = Model.accessione,
+                    tipo = ViewBag.tipo
+            }, new
+            {
+                @class = "btn btn-info"
+            });
+
+        }
+
+    }
+
+</p>
+
+
+
+<div class="col-xs-12">
+        <div class="card card-outline card-primary">
+            
+            <div class="card-header with-border">
+                <h3 class="card-title font-weight-bold">
+                    <span class="text-primary">Dettaglio Individuo</span> - @Html.DisplayFor(model => model.progressivo) 
+                    @if (!String.IsNullOrEmpty(Model.vecchioprogressivo))
+                    {
+
+                        <span> - </span> @Html.Label("Vecchio Progressivo  :  ") @Html.DisplayFor(model => model.vecchioprogressivo)
+                    }<span> - </span> @Html.Label("Specie  :  ") @Html.DisplayFor(model => model.accessioneNavigation.specieNavigation.nome_scientifico)
+                </h3>
+
+            </div>
+            
+
+            @Html.AntiForgeryToken()
+             <div class="card-body">
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="form-group">
+
+                    @Html.Hidden("accessione", null, new { @id = "accessione" })
+                    @Html.Hidden("progressivo", null, new { @id = "progressivo" })
+
+
+                </div>
+                @{
+                    int rowNo = 0;
+                }
+
+            <table style="height: 30px; width: 100% " class=" table-striped table-bordered ">
+                <tbody>
+                    <tr style="height: 12px;">
+                        <th style="width: 100%;font:xx-large" class="bg-lightblue" colspan="3">
+
+                            Dati Principali
+                        </th>
+                    </tr>
+
+                    <tr>
+                        <th style="width:33%;font:xx-large">
+                            Propagato Data
+                        </th>
+                        <th style="width:33%; font:xx-large">
+                            Modalità di Propagazione
+                        </th>
+                        <th style="width:33%;font:xx-large">
+                            Sesso
+                        </th>
+                    </tr>
+                    <tr>
+                        <td style="width:33%">
+                            @Convert.ToDateTime(Model.propagatoData).ToString("dd/MM/yyyy")
+                            
+                        </td>
+                        <td style="width:33%">
+                            @Html.DisplayFor(model => model.propagatoModalitaNavigation.propagatoModalita)
+                        </td>
+                        <td style="width:33%">
+                            @Html.DisplayFor(model => model.sessoNavigation.descrizione)
+                        </td>
+                    </tr>
+                    <tr>
+                        <th style="width:33%">
+                            Nome Scientifico
+                        </th>
+                        <th style="width:33%">
+                            &nbsp;
+                        </th>
+                        <th style="width:33%">
+                            &nbsp;
+                        </th>
+                    </tr>
+                    <tr>
+                        <td style="width:33%">
+                            @Html.DisplayFor(model => model.accessioneNavigation.specieNavigation.nome_scientifico)
+                        </td>
+                        <td style="width:33%">
+                            &nbsp;
+                        </td>
+                        <td style="width:33%">
+                            &nbsp;
+                        </td>
+                    </tr>
+                    <tr style="height:12px;">
+                        <th style="width:100%;font:xx-large" class="bg-lightblue" colspan="3">
+                            Posizione OrtoBotanico
+                        </th>
+                    </tr>
+                    <tr>
+                    </tr>
+                    <tr>
+                        <th style="width: 33% ">
+                            Settore
+                        </th>
+                        <th style="width: 33% ">
+                            Collezione
+                        </th>
+                        <th style="width: 33% ">
+                            Cartellino
+                        </th>
+                    </tr>
+
+                    <tr>
+                        <td style="width:33%">
+                            @Html.DisplayFor(model => model.settoreNavigation.settore)
+                        </td>
+                        <td style="width:33%">
+                            @Html.DisplayFor(model => model.collezioneNavigation.collezione)
+                        </td>
+                        <td style="width:33%">
+                            @Html.DisplayFor(model => model.cartellinoNavigation.descrizione)
+                        </td>
+                    </tr>
+                    <tr>
+                        <th style="width:33%">
+                            Longitudine
+                        </th>
+                        <th style="width:33%">
+                            Latitudine
+                        </th>
+                        <th style="width:33%">
+                            &nbsp;
+                        </th>
+                    </tr>
+                    <tr>
+                        <td style="width:33%">
+                            @Html.DisplayFor(model => model.longitudine)
+                            @Html.HiddenFor(model => model.longitudine, new { @id = "longitudine", @name = "longitudine" })
+                        </td>
+                        <td style="width:33%">
+                            @Html.DisplayFor(model => model.latitudine)
+                            @Html.HiddenFor(model => model.latitudine, new { @id = "latitudine", @name = "latitudine" })
+                        </td>
+                        <td style="width:33%">
+                            &nbsp;
+                        </td>
+                    </tr>
+                    <tr><td colspan="3"><div id="myMap"></div></td></tr>
+                    <tr style="height:12px;">
+                        <th style="width: 100%;font:xx-large" class="bg-lightblue" colspan="3">
+                            Altri Dati
+                        </th>
+                    </tr>
+
+                    <tr>
+                        <th style="width: 33% ">
+                            IndexSeminum
+                        </th>
+                        <th style="width: 33% ">
+                            Destinazioni
+                        </th>
+                        <th style="width: 33% ">
+                            Note
+                        </th>
+                    </tr>
+                    <tr>
+                        <td style="width: 33%">
+                            @if (Model.indexSeminum == true)
+                            {
+                                <span> Si</span>
+                            }
+                            else
+                            {
+                                <span> No</span>
+                            }
+
+
+                        </td>
+                        <td style="width: 33% ">
+                            @Html.DisplayFor(model => model.destinazioni)
+                        </td>
+                        <td style="width: 33% ">
+                            @Html.DisplayFor(model => model.note)
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+
+            <div id="storico">
+                <div class="card card-outline card-primary col-xs-12">
+                    <div class="card-header with-border ml-2  col-xs-12" id="headingOne" >
+                        <h3 class="card-title mb-0"><button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">Storico Individuo</button></h3>  
+                                @{
+                                    if (User.IsInRole("Administrator") || User.IsInRole("Operator") || User.IsInRole("TreeKeeper") || User.IsInRole("Discover") || User.IsInRole("Seminum") || User.IsInRole("Utility"))
+                                    {
+                                    <div class="float-right">
+                                    <a asp-action="Create" asp-controller="StoricoIndividuo" asp-route-idindividuo="@ViewBag.idindividuo" asp-route-tipo="@ViewBag.tipo">
+                                                <span class="btn btn btn-success" title="crea storico">
+                                                    Aggiungi
+                                                </span>
+                                            </a>
+                                        </div>
+                                        
+                                        
+                                        
+                                           
+                                        
+                                        
+                                        
+                                    }
+                                }
+                            </div>
+
+@if (Model.StoricoIndividuo.Count() > 0) {
+                            <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#storico">
+                                <div class="card-body">
+                                    <div class="table-responsive">
+
+                                            <table id="table1" class="table table-bordered table-striped dataTable">
+                                                <thead>
+                                                   
+                                                            <tr>
+                                                                <th>
+                                                                    Data Inserimento
+                                                                </th>
+                                                <th>
+                                                    Utente
+                                                </th>
+                                                                <th>
+                                                                   Stato Individuo
+                                                                </th>
+                                                                <th>
+                                                                   Condizione
+                                                                </th>
+                                                                <th>
+                                                                    Operazioni Culturali
+                                                                </th>
+
+
+                                                                <th style="width:25%"></th>
+                                                            </tr>
+                                                   
+                                                </thead>
+                                                <tbody>
+
+                                                    @foreach (var item in Model.StoricoIndividuo)
+                                                    {
+
+                                                        <tr>
+
+                                                            <td>
+                                                                @Convert.ToDateTime(item.dataInserimento).ToString("dd/MM/yyyy")
+                                                            </td>
+                                                    <td>
+                                                            @Html.DisplayFor(modelItem => item.utenteNavigation.NomeCognome)
+                                                    </td>
+                                                            <td>
+                                                                @Html.DisplayFor(modelItem => item.statoIndividuoNavigation.stato)
+                                                            </td>
+                                                            <td>
+                                                                @Html.DisplayFor(modelItem => item.condizioneNavigation.condizione)
+                                                            </td>
+                                                            <td>
+                                                                @Html.DisplayFor(modelItem => item.operazioniColturali)
+                                                            </td>
+
+
+                                                            <td>
+
+                                                                @{
+                                                                    if (User.IsInRole("Administrator") || User.IsInRole("Operator") || User.IsInRole("TreeKeeper") || User.IsInRole("Discover") || User.IsInRole("Seminum") || User.IsInRole("Utility"))
+                                                                    {
+                                                                        if (rowNo == 0)
+                                                                        {
+                                                                        <a asp-action="Edit" asp-controller="StoricoIndividuo" asp-route-id="@item.id" asp-route-individuo="@item.individuo" asp-route-tipo="@ViewBag.tipo">
+                                                                                <span class="btn btn-warning btn-xs" title="modifica storico">
+                                                                            <i class="fa-solid fa-pencil" style="color: #fafafa;"></i>
+                                                                                </span>
+                                                                            </a>
+                                                                      
+
+
+                                                                        }
+                                                                    }
+                                                                    if (Model.StoricoIndividuo.Count() > 1 && User.IsInRole("Administrator") && rowNo == 0)
+
+                                                                    {
+
+
+                                                                    <a asp-action="Delete" asp-controller="StoricoIndividuo" asp-route-id="@item.id" asp-route-individuo="@item.individuo" asp-route-tipo="@ViewBag.tipo">
+                                                                                <span class="btn btn-danger btn-xs" title="cancella storico">
+                                                                                    <i class="fa-solid fa-trash"></i>
+                                                                                </span>
+                                                                            </a>
+                                                                      
+                                                                        
+
+                                                                    }
+
+                                                                }
+
+
+                                                            </td>
+                                                        </tr>
+                                                        rowNo = rowNo + 1;
+                                                    }
+                                            </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+             
+                } else {
+                            <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#storico">
+                                <div>Niente Storico</div>
+                            </div>
+
+                }
+                
+                    <div id="immagini">
+                        <div class="card card-outline card-primary col-xs-12">
+                            <div class="card-header with-border ml-2  col-xs-12" id="headingOne">
+                                <h3 class="card-title mb-0"><button class="btn btn-link" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">Elenco Immagini</button></h3>
+                                @{
+                                    if (User.IsInRole("Administrator") || User.IsInRole("Operator") || User.IsInRole("TreeKeeper") || User.IsInRole("Discover") || User.IsInRole("Seminum") || User.IsInRole("Utility"))
+                                    {
+                                         <div class="float-right">
+                                            <button type="button" id="UploadImg" class="btn btn-success">Aggiungi</button>
+                                            <div class="modal fade" id="myModal" role="dialog" data-url='@Url.Action("UploadImg", "Individui", new { @id = ViewBag.idindividuo, tipo = ViewBag.tipo })'>
+                                            </div>
+
+                                        </div>
+                                    }
+                                }
+
+                            </div>
+            @{
+               if (Model.ImmaginiIndividuo.Count > 0)
+                  {
+
+                    <div id="collapseTwo" class="collapse show" aria-labelledby="headingOne" data-parent="#immagini">
+                    <div class="card-body">
+                                            <div class="table-responsive1">
+
+                                    
+                                        
+                                            <table id="table1" class="table table-bordered table-striped dataTable">
+                                                <thead>
+                                               
+                                                            <tr>
+                                                                <th>
+                                                                    Predefinita
+                                                                </th>
+                                                                <th>
+                                                                    Thumb
+                                                                </th>
+                                                                <th>
+                                                                    Nome Immagine
+                                                                </th>
+                                                                <th>
+                                                                    Descrizione
+                                                                </th>
+                                                                <th>
+                                                                    Credits
+                                                                </th>
+                                                                <th>
+                                                                    Data Inserimento
+                                                                </th>
+                                                                <th>
+                                                                    Autore
+                                                                </th>
+
+                                                                <th style="width:25%"></th>
+                                                            </tr>
+                                                      
+                                                </thead>
+                                                <tbody>
+
+                                                    @foreach (var item in Model.ImmaginiIndividuo)
+                                                    {
+                                                    // int rowNo2 = 0;
+                                                        <tr>
+                                                            <td style="vertical-align: middle; text-align: center;" width="30px">
+                                                                @{
+                                                                    if (User.IsInRole("Administrator") || User.IsInRole("Operator") || User.IsInRole("TreeKeeper") || User.IsInRole("Discover") || User.IsInRole("Seminum") || User.IsInRole("Utility"))
+                                                                    {
+                                                                        if (item.predefinita == true)
+                                                                        {
+                                                                  
+                                                                            <button type="button" id="Sito" class="btn btn-warning btn-xs" onclick="window.location.href = '@Url.Action("Default", "Individui", new { individuo = item.individuo, img = item.id, tipo = ViewBag.tipo })';">
+                                                                        <i class="fa-solid fa-chess-king"></i>
+                                                                            </button>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <button type="button" id="Sito" class="btn btn-light btn-xs" onclick="window.location.href = '@Url.Action("Default", "Individui", new { individuo = item.individuo, img = item.id, tipo = ViewBag.tipo })';">
+                                                                                    <i class="fa-solid fa-chess-king"></i>
+                                                                            </button>
+                                                                        }
+                                                                    }
+                                                                }
+                                                            </td>
+                                                            <td style=" vertical-align: middle;">
+                                                                <div class="zoom">
+                                                                    <img src="@Url.Action("ViewImg","Individui", new { individuo = item.individuo , img = item.id ,filename = item.nomefile })" height="40" />
+                                                                </div>
+                                                            </td>
+                                                            <td style="vertical-align: middle;">
+                                                                @Html.DisplayFor(modelItem => item.nomefile)
+                                                            </td>
+                                                            <td style=" vertical-align: middle;">
+                                                                @Html.DisplayFor(modelItem => item.descrizione)
+                                                            </td>
+                                                            <td style=" vertical-align: middle;">
+                                                                @Html.DisplayFor(modelItem => item.credits)
+                                                            </td>
+                                                            <td style="vertical-align: middle;">
+                                                                @Convert.ToDateTime(item.dataInserimento).ToString("dd/MM/yyyy")
+                                                            </td>
+                                                            <td style="vertical-align: middle;">
+                                                                @Html.DisplayFor(modelItem => item.autore)
+                                                            </td>
+
+                                                            <td style="text-align: center; vertical-align: middle;">
+
+                                                                @{
+                                                                    if (User.IsInRole("Administrator") || User.IsInRole("Operator") || User.IsInRole("TreeKeeper") || User.IsInRole("Discover") || User.IsInRole("Seminum") || User.IsInRole("Utility"))
+                                                                    {
+                                                                        var idimg = @Html.Raw(item.id);
+
+                                                                        <div class="pull-left">
+                                                                    <button type="button" id="FlipThumb" class="btn btn-warning btn-xs" onclick="window.location.href = '@Url.Action("FlipThumb","Individui", new {  individuo = item.individuo , img = item.id ,filename = item.nomefile , tipo  = ViewBag.tipo})';"><i class="fa-solid fa-rotate-right"></i>
+
+                                                                </button>
+
+                                                                            @{
+                                                                                if (item.visibile == true)
+                                                                                {
+                                                                                    <button type="button" id="Sito" class="btn btn-info btn-xs" onclick="window.location.href = '@Url.Action("ShowHidden", "Individui", new { individuo = item.individuo, img = item.id , tipo  = ViewBag.tipo })';">
+                                                                                        <i class="fa-solid fa-eye"></i>
+                                                                                    </button>
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    <button type="button" id="Sito" class="btn btn-light btn-xs" onclick="window.location.href = '@Url.Action("ShowHidden", "Individui", new { individuo = item.individuo, img = item.id, tipo  = ViewBag.tipo })';">
+                                                                                <i class="fa-solid fa-eye-slash"></i>
+                                                                                    </button>
+                                                                                }
+                                                                            }
+
+
+
+
+
+
+
+                                                                            <button type="button" id="DownloadImg" class="btn btn-primary btn-xs" value="@idimg" onclick="window.location.href = '@Url.Action("Download", "Individui", new {  individuo = item.individuo , img = item.id ,filename = item.nomefile })';"><i class="fa-solid fa-download"></i></button>
+                                                                            <button type="button" id="DeleteImg" class="btn btn-danger btn-xs" value="@idimg" onclick="CancellaImg(this.value)"><i class="fa-solid fa-trash"></i></button>
+
+                                                                            <div class="modal fade" id="@item.id" role="dialog" data-url='@Url.Action("DeleteImg", "Individui", new { @id = item.id, tipo = ViewBag.tipo })'>
+                                                                            </div>
+
+                                                                        </div>
+
+                                                                    }
+
+                                                                }
+
+
+                                                            </td>
+                                                        </tr>
+
+                                                    }
+</tbody>
+                                            </table>
+                                        
+                                    </div>
+
+
+                                </div>
+                            </div>
+                            }else{
+                                    <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#immagini">
+                                        <div>Nessuna Immagine</div>
+                                    </div>
+                            }
+                            }
+
+
+
+
+                        </div>
+                    </div>
+               
+
+
+
+            </div>
+
+
+        </div>
+    </div>
+
+    </div>
+</div>
+<p>
+
+            @{
+                if (User.IsInRole("Administrator") || User.IsInRole("Operator") || User.IsInRole("TreeKeeper") || User.IsInRole("Discover") || User.IsInRole("Seminum") || User.IsInRole("Utility"))
+                {
+                    @Html.ActionLink("Modifica", "Edit", new { id = Model.id, tipo = ViewBag.tipo }, new { @class = "btn btn-primary" }) <span> </span>
+                }
+
+                if (ViewBag.tipo == "ricerca")
+                {
+                    @Html.ActionLink("Vai all'accessione padre", "Details", "Accessioni", new { id = Model.accessione, tipo = "ricerca" }, new { @class = "btn btn-warning" }) <span> </span>
+                    <button type="button" id="ricerca" class="btn btn-info" onclick="window.location.href = '@Url.Action("RicercaIndividui", "Home", new {  tipo  = ViewBag.tipo })';">
+                        Torna alla ricerca
+                    </button>
+
+                }
+                else
+                {
+
+                    @Html.ActionLink("Torna all'accessione padre", "Details", "Accessioni", new
+                        {
+                            id = Model.accessione,
+                            tipo = ViewBag.tipo
+                        }, new
+                        {
+                            @class = "btn btn-info"
+                        })
+                    ;
+
+                }
+
+            }
+
+
+</p>
+
+@section Styles {
+ 
+}
+@section CustomStyles {
+    <style>
+        #myMap {
+            height: 250px;
+            width: 100%;
+        }
+
+
+        .zoom {
+            padding: 0px;
+            transition: transform .2s; /* Animation */
+            width: 50px;
+            height: 50px;
+            margin: 0 auto;
+        }
+
+            .zoom:hover {
+                transform: scale(6.5); /* (150% zoom - Note: if the zoom is too large, it will go outside of the viewport) */
+            }
+    </style>
+}
+@section Scripts {
+
+  
+    <script src="@AppSettings.Value.GoogleMap.Url@AppSettings.Value.GoogleMap.Key"></script>
+ 
+
+   
+   
+
+
+}
+@section CustomScripts {
+
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#UploadImg').click(function () {
+                var url = $('#myModal').data('url');
+                $.get(url, function (data) {
+                    $("#myModal").html(data);
+                    $("#myModal").modal({ backdrop: "static" });
+
+                });
+
+
+            });
+
+        });
+       
+    </script>
+
+    <script type="text/javascript">
+        function CancellaImg(x) {
+
+            var url = $('#' + x).data('url');
+            $.get(url, function (data) {
+                $('#' + x).html(data);
+                $('#' + x).modal({ backdrop: "static" });
+
+
+
+
+            });
+        }
+    </script>
+
+    <script type="text/javascript">
+
+        var _validFileExtensions = [".jpg", ".jpeg", ".png", ".heif", ".hevc", ".heic"];
+        function validateForm(oForm) {
+
+            var arrInputs = oForm.getElementsByTagName("input");
+            for (var i = 0; i < arrInputs.length; i++) {
+                var oInput = arrInputs[i];
+                if (oInput.type == "file") {
+                    var sFileName = oInput.value;
+                    if (sFileName.length > 0) {
+                        var blnValid = false;
+                        for (var j = 0; j < _validFileExtensions.length; j++) {
+                            var sCurExtension = _validFileExtensions[j];
+                            var estensionefile = sFileName.substr(sFileName.length - sCurExtension.length, sCurExtension.length);
+                            if (estensionefile.toLowerCase() == sCurExtension.toLowerCase()) {
+                                blnValid = true;
+                                break;
+                            }
+                        }
+
+                        if (!blnValid) {
+                            var messerr = "Mi dispiace ma, il formato " + estensionefile + " non è valido , le estensioni consentite sono le seguenti : " + _validFileExtensions.join(", ");
+                            //alert(messerr);
+                            document.getElementById("errore").innerHTML = messerr;
+                            document.getElementById("errore").style.display = "block";
+
+                            return false;
+                        }
+                    }
+                }
+            }
+
+            return true;
+        }
+
+
+    </script>
+
+
+    <script type="text/javascript">
+        var map;
+        var marker;
+        if (document.getElementById("latitudine").value != '' && document.getElementById("longitudine").value != '') {
+
+            var myLatlng = new google.maps.LatLng(document.getElementById("latitudine").value, document.getElementById("longitudine").value);
+        } else {
+            var myLatlng = new google.maps.LatLng(43.71944963861506, 10.396344067111961);
+        }
+
+        var geocoder = new google.maps.Geocoder();
+        var infowindow = new google.maps.InfoWindow();
+        function initialize() {
+            var mapOptions = {
+                zoom: 17,
+                center: myLatlng,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            };
+
+            map = new google.maps.Map(document.getElementById("myMap"), mapOptions);
+
+            marker = new google.maps.Marker({
+                map: map,
+                position: myLatlng,
+                draggable: false
+            });
+
+
+        }
+        google.maps.event.addDomListener(window, 'load', initialize);
+    </script>
+    <script type="text/javascript">
+        $(function () {
+            $('.go_back').click(function (e) {
+                e.preventDefault();
+                history.go(-1);
+            });
+        });
+    </script>
+
+
+
+}

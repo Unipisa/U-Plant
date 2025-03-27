@@ -1,0 +1,57 @@
+﻿@model UPlant.Models.DB.Individui
+
+@{
+    ViewBag.Title = "Validazione Individuo";
+}
+
+
+
+
+
+<div class="row">
+    <div class="col-xs-12">
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h3 class="box-title text-red">Confermi la validazione dell'individuo?</h3>
+                <form role="form">
+                    <div class="box-body">
+
+                        <label>
+                            @Html.DisplayNameFor(model => model.progressivo)
+                        </label>
+                        <div>
+                            @Html.DisplayFor(model => model.progressivo)
+                        </div>
+                        <label>
+                            @Html.DisplayNameFor(model => model.propagatoData)
+                        </label>
+                        <div>
+                            @Html.DisplayFor(model => model.propagatoData)
+                        </div>
+
+
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+@using (Html.BeginForm())
+{
+
+    @Html.AntiForgeryToken()
+
+    <div class="form-actions no-color">
+        <input type="submit" value="Valida" class="btn btn-success" /> |
+        @Html.ActionLink("Torna all'elenco", "../Accessioni/Details", new { id = Model.accessione  })
+    </div>
+}

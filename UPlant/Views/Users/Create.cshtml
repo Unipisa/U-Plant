@@ -1,0 +1,109 @@
+﻿@model UPlant.Models.DB.Users
+@{
+    ViewBag.Title = "Utenti";
+   
+}
+
+<div class="card card-outline card-primary">
+    <div class="card-header with-border">
+        <h3 class="card-title">Aggiungi</h3>
+    </div>
+
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label  class="control-label">Nome</label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Cognome</label>
+                <input asp-for="LastName" class="form-control" />
+                <span asp-validation-for="LastName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UnipiUserName" class="control-label"> </label> <i>es:a012345</i>
+                <input asp-for="UnipiUserName" class="form-control" />
+                <span asp-validation-for="UnipiUserName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label  class="control-label">Codice Fiscale</label>
+                <input asp-for="CF" class="form-control" />
+                <span asp-validation-for="CF" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label  class="control-label">Ruolo</label>
+               <select name="ruolo" class="form-control" asp-items="ViewBag.Ruolo"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="TipologiaUtente" class="control-label"></label>
+                <select asp-for="TipologiaUtente" class="form-control" asp-items="ViewBag.TipologiaUtente"></select>
+                <span asp-validation-for="TipologiaUtente" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="IsEnabled" /> Attivo
+                </label>
+            </div>
+           @* <div class="form-group">
+                <label asp-for="CreatedBy" class="control-label"></label>
+                <input asp-for="CreatedBy" class="form-control" />
+                <span asp-validation-for="CreatedBy" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CreatedFrom" class="control-label"></label>
+                <input asp-for="CreatedFrom" class="form-control" />
+                <span asp-validation-for="CreatedFrom" class="text-danger"></span>
+            </div>
+            *@
+            <div class="form-group">
+
+                <label asp-for="Organizzazione" class="control-label"></label>
+                <select asp-for="Organizzazione" class="form-control" asp-items="ViewBag.Organizzazione"></select>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Crea" class="btn btn-success" />
+            </div>
+        </form>
+    </div>
+    
+</div>
+<div>
+    @Html.ActionLink("Torna Indietro", null, null, null, new { @class = "btn btn-info go_back" })
+</div>
+
+
+@section Styles {
+    <link href="~/css/select2.min.css" rel="stylesheet" />
+    <link href="~/css/accessioni.min.css" rel="stylesheet" />
+
+}
+
+
+
+@section Scripts {
+    @{
+        <script src="~/js/select2.min.js"></script>
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    
+  
+  }
+@section CustomScripts {
+    <script type="text/javascript">
+        $(function () {
+            $('.go_back').click(function (e) {
+                e.preventDefault();
+                history.go(-1);
+            });
+        });
+    </script>
+}
+

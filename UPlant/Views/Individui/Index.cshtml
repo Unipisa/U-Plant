@@ -1,0 +1,172 @@
+﻿@model IEnumerable<UPlant.Models.DB.Individui>
+
+@{
+    ViewData["Title"] = "Individui";
+}
+
+
+<div class="card card-outline card-primary">
+    <div class="card-header with-border">
+        <h3 class="card-title">Elenco</h3>
+        <div class="float-right success">
+                 
+                </div>
+            </div>
+    <div class="card-body">
+        <div class="table-responsive">
+                <div id="table1_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
+
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <table id="table1" class="table table-bordered table-striped dataTable">
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.progressivo)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.vecchioprogressivo)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.accessioneNavigation.specieNavigation.nome_scientifico)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.settoreNavigation.settore)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.collezioneNavigation.collezione)
+                                        </th>
+                                        <th>
+                                            StatoIndividuo
+                                        </th>
+                                        <th>
+                                            Inseritore
+                                        </th>
+                                        <th>
+                                            Cartellino
+                                        </th>
+                                        <th>
+                                            Data Ultimo Aggiornamento
+                                        </th>
+                                        <th></th>
+                                        @*
+                                        <th style="width:25%"></th>*@
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <a href="@Url.Action("../Individui/Details", new { id = item.id ,tipo = "elenco"})">
+                                                    <i class="glyphicon glyphicon-search"></i>
+                                                </a>
+
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.progressivo)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.vecchioprogressivo)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.accessioneNavigation.specieNavigation.nome_scientifico)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.settoreNavigation.settore)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.collezioneNavigation.collezione)
+                                            </td>
+                                            @{
+                                            if (item.StoricoIndividuo.Count() == 0)
+                                                {
+                                                    <td>
+                                                        Non ci sono occorrenze
+                                                    </td>
+
+
+                                                    <td>
+                                                        Non ci sono occorrenze
+                                                    </td>
+                                                }
+                                                else
+                                                {
+                                                    <td>
+                                                    @Html.DisplayFor(modelItem => item.StoricoIndividuo.First().statoIndividuoNavigation.stato)
+                                                    </td>
+                                                    <td>
+                                                    @Html.DisplayFor(modelItem => item.StoricoIndividuo.First().utenteNavigation.NomeCognome)
+                                                    </td>
+
+                                                }
+                                            }
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.cartellinoNavigation.descrizione)
+                                            </td>
+                                            @{
+                                            if (item.StoricoIndividuo.Count() == 0)
+                                                {
+                                                    <td>
+                                                        Non ci sono occorrenze
+                                                    </td>
+                                                }
+                                                else
+                                                {
+                                                    <td>
+                                                    @Html.DisplayFor(modelItem => item.StoricoIndividuo.First().dataInserimento)
+                                                    </td>
+                                                }
+                                                if (User.IsInRole("Administrator"))
+                                                {
+                                                    <td>
+                                                        @Html.ActionLink("Cancella", "../Individui/Delete", new { id = item.id })
+                                                    </td>
+
+                                                }
+                                                else
+                                                {
+                                                    <td></td>
+                                                }
+                                            }
+
+
+
+
+
+                                            @*
+                                        <td>
+                                        @Html.ActionLink("ValidaIndividuo", "ValidaIndividuo", new { id = item.id, all = "" })
+                                        </td>
+                                        *@
+                                        </tr>
+                                    }
+
+                            </table>
+                        </div>
+                </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+
+
+
+@section scripts {
+    <script>
+        jQuery(function () {
+            jQuery('#table1').DataTable({
+              'paging'      : true,
+              'lengthChange': true,
+              'searching'   : true,
+              'ordering'    : true,
+              'info'        : true,
+              'autoWidth'   : false
+            })
+          })
+    </script>
+}

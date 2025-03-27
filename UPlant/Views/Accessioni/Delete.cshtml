@@ -1,0 +1,51 @@
+﻿@model UPlant.Models.DB.Accessioni
+
+@{
+    ViewBag.Title = "Accessioni";
+}
+<div class="row">
+	<div class="col-xs-12">
+        <div class="card card-outline card-primary">
+            <div class="card-header with-border">
+                 <form asp-action="Delete">
+                <h3 class="card-title text-red">Confermi la cancellazione?</h3>
+                    <br />
+                <div class="card-body">
+                        <table style="height: 30px; width: 100% " class="table-striped table-bordered">
+                            <tbody>
+                                <tr style="height: 23px;">
+                                    <th style="width: 20% ">Data Acquisizione</th>
+                                    <th style="width: 20% ">Progressivo</th>
+                                </tr>
+                                <tr style="height: 23px;">
+                                    <td style="width: 478px; height: 23px;">@Html.DisplayFor(model => model.dataAcquisizione)</td>
+                                    <td style="width: 239px; height: 23px;">@Html.DisplayFor(model => model.progressivo)</td>
+
+                                </tr>
+                                <tr style="height: 23px;">
+                                    <th style="width: 20% ">IPEN</th>
+                                    <th style="width: 20% ">&nbsp;</th>
+                                </tr>
+                                <tr style="height: 23px;">
+                                    <td style="width: 478px; height: 23px;">@Html.DisplayFor(model => model.ipen)</td>
+                                    <td style="width: 239px; height: 23px;">&nbsp;</td>
+
+                                </tr>
+                            </tbody>
+                        </table>
+                       
+
+
+                    </div>
+                    <input type="hidden" asp-for="id" />
+                    <input type="submit" value="Cancella" class="btn btn-danger" /> 
+                    <input type="button" value="Torna indietro" class="btn alert-info" onclick="javascript:window.history.back();" />
+                </form>
+			</div>
+		</div>
+	</div>
+   
+        
+   
+</div>
+

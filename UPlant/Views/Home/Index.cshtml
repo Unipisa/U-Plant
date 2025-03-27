@@ -1,0 +1,203 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="row">
+
+    @if (User.IsInRole("Administrator") || User.IsInRole("Operator") || User.IsInRole("TreeKeeper") || User.IsInRole("Discover") || User.IsInRole("Seminum") || User.IsInRole("Utility"))
+    {
+    <div class="col-md-3">
+        <h2>Menù Rapido</h2>
+        <br />
+        <button type="button" class="btn btn-lg btn-block" style="background-color :#3C8DBC;color :aliceblue" onclick="window.location.href = '@Url.Action("Create","Accessioni")';">
+                <span class="fa-brands fa-pagelines" aria-hidden="true"></span> Nuova Accessione
+        </button>
+    </div>
+
+    <div class="col-md-3">
+        <h2>Estrazione Dati</h2>
+        <br />
+            <button type="button" class="btn btn-default btn-lg btn-block" onclick="window.location.href = '@Url.Action("EstraiAccessioniTotale","Home")';">
+                <span class="fa-solid fa-file-zipper" aria-hidden="true"></span> Estrazione Accessioni
+        </button>
+    </div>
+
+    }
+    else if (User.IsInRole("Reader"))
+    {
+        <div class="col-md-3">
+            <h2>Menù Rapido</h2>
+
+
+        </div>
+
+        <div class="col-md-3">
+
+            <br />
+
+        </div>
+    }else
+    {
+        <div >
+            <h2>Mi dispiace ma non hai un ruolo per accedere ai servizi di Uplant</h2>
+
+
+        </div>
+    }
+</div>
+<div class="row">
+    <div>&nbsp;</div>
+</div>
+<div class="row">
+   
+    @if (User.IsInRole("Administrator") || User.IsInRole("Operator") || User.IsInRole("TreeKeeper") || User.IsInRole("Discover") || User.IsInRole("Seminum") || User.IsInRole("Utility"))
+    {
+        <div class="col-md-3">
+            <button type="button" class="btn btn-lg btn-block" style="background-color :#F39C12;color :aliceblue" onclick="window.location.href = '@Url.Action("RicercaAccessioni","Home")';">
+                <span class="fa-solid fa-search" aria-hidden="true"></span> Ricerca Accessioni
+            </button>
+        </div>
+    <div class="col-md-3">
+            <button type="button" class="btn btn-default btn-lg btn-block" onclick="window.location.href = '@Url.Action("EstraiIndividuiTotale", "Home")';">
+                <span class="fa-solid fa-file-zipper" aria-hidden="true"></span> Estrazione Individui
+        </button>
+    </div>
+    }
+    else if (User.IsInRole("Reader"))
+    {
+        <div class="col-md-3">
+            <button type="button" class="btn btn-warning btn-lg btn-block" onclick="window.location.href = '@Url.Action("RicercaAccessioni","Home")';">
+                <span class="fa-solid fa-search" aria-hidden="true"></span> Ricerca Accessioni
+            </button>
+        </div>
+    }
+</div>
+<div class="row">
+    <div>&nbsp;</div>
+</div>
+<div class="row">
+    
+    @if (User.IsInRole("Administrator") || User.IsInRole("Operator") || User.IsInRole("TreeKeeper") || User.IsInRole("Discover") || User.IsInRole("Seminum") || User.IsInRole("Utility"))
+    {
+        <div class="col-md-3">
+            <button type="button" class="btn btn-lg btn-block" style="background-color :#DD4B39;color :aliceblue" onclick="window.location.href = '@Url.Action("RicercaIndividui","Home")';">
+                <span class="fa-solid fa-search" aria-hidden="true"></span> Ricerca Individui
+            </button>
+        </div>
+    <div class="col-md-3">
+            <button type="button" class="btn btn-default btn-lg btn-block" onclick="window.location.href = '@Url.Action("EstraiSpecieTotale", "Home")';">
+                <span class="fa-solid fa-file-zipper" aria-hidden="true"></span> Estrazione Specie
+        </button>
+    </div>
+    } 
+    else if (User.IsInRole("Reader"))
+    {
+        <div class="col-md-3">
+            <button type="button" class="btn btn-danger btn-lg btn-block" onclick="window.location.href = '@Url.Action("RicercaIndividui","Home")';">
+                <span class="fa-solid fa-search" aria-hidden="true"></span> Ricerca Individui
+            </button>
+        </div>
+    }
+</div>
+<div class="row">&nbsp;</div>
+@if (User.IsInRole("Administrator") || User.IsInRole("Operator") || User.IsInRole("TreeKeeper") || User.IsInRole("Discover") || User.IsInRole("Seminum") || User.IsInRole("Utility") || User.IsInRole("Reader"))
+    {
+<div class="row">
+  
+    <div class="col-md-6">
+        <table class="table table-bordered table-striped dataTable">
+                <caption class="text-center cell-border" style="caption-side: top;background-color :#008D4C;color :aliceblue">Dati Orto Botanico Pisa</caption>
+            <tr>
+                <td>
+                    Numero di nomi accettati in Uplant
+                </td>
+                <td class="text-bold">
+                    <font color="green">@ViewBag.cens</font>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Numero di famiglie coltivate in Orto
+                </td>
+                <td class="text-bold">
+                    <font color="blue"> @ViewBag.fam</font>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Numero di generi coltivati in Orto
+                </td>
+                <td class="text-bold">
+                    <font color="violet">  @ViewBag.gen</font>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Numero di specie coltivate in Orto
+                </td>
+                <td class="text-bold">
+                    <font color="red"> @ViewBag.spe</font>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Numero di specie coltivate in nursery
+                </td>
+                <td class="text-bold">
+                    <font color="brown">  @ViewBag.nur</font>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Numero di specie disponibili nell'Index Seminum
+                </td>
+                <td class="text-bold">
+                    <font color="black">@ViewBag.ban</font>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+ <div id="chartContainer" style="height: 1px; width: 1%;"></div>
+}
+
+@section Styles {
+
+}
+@section CustomStyles {
+
+}
+@section Scripts {
+
+    <script type="text/javascript" src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
+
+}
+@section CustomScripts {
+
+
+    <script>
+        window.onload = function () {
+
+            var chart = new CanvasJS.Chart("chartContainer", {
+                animationEnabled: true,
+                theme: "light2", // "light1", "light2", "dark1", "dark2"
+                title: {
+                    text: "Numeri Situazione Attuale in Orto"
+                },
+                axisY: {
+                    title: "Numero di occorrenze"
+                },
+                data: [
+                    {
+                    type: "column",
+                    dataPoints: [@Html.Raw(ViewBag.DataPoints)] }
+                ]
+            });
+            chart.render();
+
+        }
+    </script>
+
+
+}

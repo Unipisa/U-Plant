@@ -1,0 +1,177 @@
+﻿@model UPlant.Models.DB.Specie
+
+@{
+    ViewData["Title"] = "Create";
+}
+<div class="card card-outline card-primary">
+    <div class="card-header with-border">
+        <h3 class="card-title">Aggiungi Specie</h3>
+    </div>
+    <div class="card-body">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="genere" class="control-label"></label>
+                <select asp-for="genere" class ="form-control" asp-items="ViewBag.genere"></select>
+            </div>
+            
+            <div class="form-group">
+                <label asp-for="nome" class="control-label">Nome Specifico</label>
+                <input asp-for="nome" class="form-control" />
+                <span asp-validation-for="nome" class="text-danger"></span>
+            </div>
+            <input type="hidden" asp-for="nome_scientifico" />
+            <div class="form-group">
+                <label asp-for="autori" class="control-label">Autori Specie</label>
+                <input asp-for="autori" class="form-control" />
+                <span asp-validation-for="autori" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="subspecie" class="control-label">Subspecie</label>
+                <input asp-for="subspecie" class="form-control" />
+                <span asp-validation-for="subspecie" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="autorisub" class="control-label">Autori Subspecie</label>
+                <input asp-for="autorisub" class="form-control" />
+                <span asp-validation-for="autorisub" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="varieta" class="control-label">Varietà</label>
+                <input asp-for="varieta" class="form-control" />
+                <span asp-validation-for="varieta" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="autorivar" class="control-label">Autori Varietà</label>
+                <input asp-for="autorivar" class="form-control" />
+                <span asp-validation-for="autorivar" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="cult" class="control-label">Cultivar</label>
+                <input asp-for="cult" class="form-control" />
+                <span asp-validation-for="cult" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="autoricult" class="control-label">Autori Cultivar</label>
+                <input asp-for="autoricult" class="form-control" />
+                <span asp-validation-for="autoricult" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="nome_comune" class="control-label">Nome Comune</label>
+                <input asp-for="nome_comune" class="form-control" />
+                <span asp-validation-for="nome_comune" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="nome_comune_en" class="control-label">Nome Comune Inglese</label>
+                <input asp-for="nome_comune_en" class="form-control" />
+                <span asp-validation-for="nome_comune_en" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="regno" class="control-label">Regno</label>
+                <select asp-for="regno" class ="form-control" asp-items="ViewBag.regno"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="areale" class="control-label">Areale</label>
+                <select asp-for="areale" class ="form-control" asp-items="ViewBag.areale"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="cites" class="control-label">CITES</label>
+                <select asp-for="cites" class="form-control" asp-items="ViewBag.cites"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="iucn_globale" class="control-label">IUCN Globale</label>
+                <select asp-for="iucn_globale" class ="form-control" asp-items="ViewBag.iucn_globale"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="iucn_italia" class="control-label">IUCN Italia</label>
+                <select asp-for="iucn_italia" class ="form-control" asp-items="ViewBag.iucn_italia"></select>
+            </div>
+           
+            <div class="form-group">
+                <input type="submit" value="Crea" id="aggiungi" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    @Html.ActionLink("Torna Indietro", null, null, null, new { @class = "btn btn-info go_back" })
+</div>
+
+
+@section Styles {
+    <link href="~/css/select2.min.css" rel="stylesheet" />
+    <link href="~/css/accessioni.min.css" rel="stylesheet" />
+
+}
+
+
+
+@section Scripts {
+    @{
+            <script src="~/js/select2.min.js"></script>
+            <script src="~/js/jquery.validation.min.js"></script>
+      //  await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+
+}
+@section CustomScripts {
+    
+            <script>
+                jQuery(function () {
+                    jQuery(".datepicker").datepicker({
+                        language: "it",
+                        autoclose: true
+                    });
+                });
+            </script>
+            <script>
+                $('#aggiungi').on('click', function () {
+
+                    var e = document.getElementById("genere");
+                    var val1 = e.options[e.selectedIndex].text;
+                    var val2 = $('#nome').val().trim();
+                    var val3 = $('#autori').val().trim();
+                    if ($('#subspecie').val().length > 0) {
+                        var val4 = " subsp. " + $('#subspecie').val().trim() + " " + $('#autorisub').val().trim();
+                    } else {
+                        var val4 = "";
+                    }
+                    if ($('#varieta').val().length > 0) {
+
+                        var val6 = " var. " + $('#varieta').val().trim() + " " + $('#autorivar').val().trim();
+                    } else {
+                        var val6 = "";
+                    }
+                    if ($('#cult').val().length > 0) {
+
+                        var val8 = " '" + $('#cult').val().trim() + "' " + $('#autoricult').val().trim();
+                    } else {
+                        var val8 = "";
+                    }
+
+                    $('#nome_scientifico').val(val1 + " " + val2 + " " + val3 + val4 + val6 + val8  );
+                   
+                });
+            </script>
+            
+
+
+
+
+
+
+
+
+
+    <script type="text/javascript">
+        $(function () {
+            $('.go_back').click(function (e) {
+                e.preventDefault();
+                history.go(-1);
+            });
+        });
+    </script>
+}

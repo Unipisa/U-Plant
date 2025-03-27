@@ -1,0 +1,313 @@
+﻿@model UPlant.Models.DB.Individui
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+ <form asp-action="Edit">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+   
+<div class="col-lg-12">
+        <div class="form-group">
+            
+            @{
+                if (ViewBag.tipo == "ricerca")
+                {
+                    @Html.ActionLink("Torna alla ricerca", null, null, null, new { @class = "btn btn-info go_back" })
+                    
+
+                }
+                else
+                {
+                    @Html.ActionLink("Torna all'individuo", null, null, null, new { @class = "btn btn-info go_back" })
+                   
+                }
+
+
+            }
+            <span> </span>
+            @Html.ActionLink("Torna all'accessione padre", "Details", "Accessioni", new { id = Model.accessione }, new { @class = "btn btn-warning" })
+           
+            
+            
+
+        </div>
+        
+    <div class="card card-outline card-primary">
+        <div class="card-header with-border">
+                <h3 class="card-title font-weight-bold"> <span class="text-primary">Modifica</span> - @Html.DisplayFor(model => model.progressivo) - @Html.DisplayFor(model => model.accessioneNavigation.specieNavigation.nome_scientifico) </h3>
+                
+        </div>
+
+       <div class="card-body">
+                <div class="form-group">
+                    @Html.HiddenFor(model => model.id)
+                    @Html.Hidden("id", null, new { @id = "id" })
+                    @Html.Hidden("idindividuo", null, new { @id = "idindividuo" })
+                    @Html.Hidden("progressivo", null, new { @id = "progressivo" })
+                    @Html.Hidden("tipo", null, new { @id =  ViewBag.tipo })
+               
+                </div>
+                <div class="row">
+                    <div class="form-group col">
+                        <label asp-for="propagatoData" class="control-label">Propagato Data</label>
+                        <input asp-for="propagatoData" class="form-control" />
+                        <span asp-validation-for="propagatoData" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group col">
+                        <label asp-for="propagatoModalita" class="control-label">Propagato Modalità</label>
+                        <select asp-for="propagatoModalita" class="form-control" asp-items="ViewBag.propagatoModalita"></select>
+                        <span asp-validation-for="propagatoModalita" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col">
+                        <label asp-for="sesso" class="control-label">Sesso</label>
+                        <select asp-for="sesso" class="form-control" asp-items="ViewBag.sesso"></select>
+                        <span asp-validation-for="sesso" class="text-danger"></span>
+                    </div>
+
+
+                    <div class="form-group col">
+                        <label asp-for="vecchioprogressivo" class="control-label">Vecchio Progressivo</label>
+                        <input asp-for="vecchioprogressivo" class="form-control" />
+                        <span asp-validation-for="vecchioprogressivo" class="text-danger"></span>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="form-group col font-weight-bold"> Posizione nell' Ortobotanico</div>
+                </div>
+                <hr>
+                <div class="row"> 
+
+                    <div class="form-group col">
+                        <label asp-for="settore" class="control-label">Settore</label>
+                        <select asp-for="settore" class="form-control" asp-items="ViewBag.settore"></select>
+                        <span asp-validation-for="settore" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col">
+                        <label asp-for="collezione" class="control-label">Collezione</label>
+                        <select asp-for="collezione" class="form-control" asp-items="ViewBag.collezione"></select>
+                        <span asp-validation-for="collezione" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col">
+                        <label asp-for="cartellino" class="control-label">Cartellino</label>
+                        <select asp-for="cartellino" class="form-control" asp-items="ViewBag.cartellino"></select>
+                        <span asp-validation-for="cartellino" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col">
+                        <label asp-for="longitudine" class="control-label">Longitudine</label>
+                        <input asp-for="longitudine" class="form-control" id="longitudine" name="longitudine" />
+                        <span asp-validation-for="longitudine" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col">
+                        <label asp-for="latitudine" class="control-label">Latitudine</label>
+                        <input asp-for="latitudine" class="form-control" id="latitudine" name="latitudine" />
+                        <span asp-validation-for="latitudine" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <hr>
+                <div class="row">
+                    <div class="form-group col" id="myMap" align="center"></div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="form-group col">
+                        <label asp-for="destinazioni" class="control-label">Destinazioni</label>
+                        <input asp-for="destinazioni" class="form-control" id="destinazioni" name="destinazioni" />
+                        <span asp-validation-for="destinazioni" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col">
+                        <label asp-for="indexSeminum" class="control-label">Index Seminum</label><br />
+                        <input asp-for="indexSeminum" class="form-check-input"  id="indexSeminum" name="indexSeminum" />
+                        <span asp-validation-for="indexSeminum" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group col">
+                        <label asp-for="note" class="control-label">Note</label>
+                        <input asp-for="note" class="form-control" id="note" name="note" />
+                        <span asp-validation-for="note" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col">
+                        @Html.Label("")
+                        @Html.Hidden(" ", "", new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.note, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="form-group col font-weight-bold"> Situazione Attuale</div>
+                </div>
+                <hr>
+                <div class="row">
+                <div class="form-group col">
+                    @Html.Label("Condizione")<br />
+                @Html.DisplayFor(model => model.StoricoIndividuo.ToList().Last().condizioneNavigation.condizione)
+                </div>
+                <div class="form-group col">
+                    @Html.Label("Stato Individuo")<br />
+                    @Html.DisplayFor(model => model.StoricoIndividuo.ToList().Last().statoIndividuoNavigation.stato)
+                </div>
+                <div class="form-group col">
+                    @Html.Label("Operazioni Culturali")<br />
+                    @Html.DisplayFor(model => model.StoricoIndividuo.ToList().Last().operazioniColturali)
+                </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="form-group col">
+                        <input type="submit" value="Salva" class="btn btn-success" />
+                    </div>
+                </div>
+       </div>
+
+            
+    </div>
+
+        <div class="form-group">
+
+            @{
+                if (ViewBag.tipo == "ricerca")
+                {
+                    @Html.ActionLink("Torna alla ricerca", null, null, null, new { @class = "btn btn-info go_back" })
+
+
+                }
+                else
+                {
+                    @Html.ActionLink("Torna all'individuo", null, null, null, new { @class = "btn btn-info go_back" })
+
+                }
+
+
+            }
+            <span> </span>
+            @Html.ActionLink("Torna all'accessione padre", "Details", "Accessioni", new { id = Model.accessione }, new { @class = "btn btn-warning" })
+
+
+
+
+        </div>
+    
+</div>
+    
+</form>
+@section Styles {
+    <link href="~/css/select2.min.css" rel="stylesheet" />
+
+
+}
+@section CustomStyles {
+    <style>
+        #myMap {
+            height: 250px;
+            width: 100%;
+        }
+
+
+        .zoom {
+            padding: 0px;
+            transition: transform .2s; /* Animation */
+            width: 50px;
+            height: 50px;
+            margin: 0 auto;
+        }
+
+            .zoom:hover {
+                transform: scale(6.5); /* (150% zoom - Note: if the zoom is too large, it will go outside of the viewport) */
+            }
+    </style>
+}
+@section Scripts {
+
+
+    <script src="@AppSettings.Value.GoogleMap.Url@AppSettings.Value.GoogleMap.Key"></script>
+    <script src="~/js/select2.min.js"></script>
+    <script src="~/js/jquery.validation.min.js"></script>
+    <script src="~/js/scriptIndividui.js"></script>
+
+
+
+
+
+}
+@section CustomScripts {
+
+    <script type="text/javascript">
+        var map;
+        var marker;
+        if (document.getElementById("latitudine").value != '' && document.getElementById("longitudine").value != '') {
+
+            var myLatlng = new google.maps.LatLng(document.getElementById("latitudine").value, document.getElementById("longitudine").value);
+        } else {
+            var myLatlng = new google.maps.LatLng(43.71944963861506, 10.396344067111961);
+        }
+
+        var geocoder = new google.maps.Geocoder();
+        var infowindow = new google.maps.InfoWindow();
+        function initialize() {
+            var mapOptions = {
+                zoom: 17,
+                center: myLatlng,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            };
+
+            map = new google.maps.Map(document.getElementById("myMap"), mapOptions);
+
+            marker = new google.maps.Marker({
+                map: map,
+                position: myLatlng,
+                draggable: false
+            });
+            function placeMarker(location) {
+                if (marker) {
+                    marker.setPosition(location);
+                } else {
+                    marker = new google.maps.Marker({
+                        position: location,
+                        map: map,
+                        title: 'move and pin exact point of your property'
+                    });
+                }
+            }
+
+            google.maps.event.addListener(map, 'click', function (event) {
+                placeMarker(event.latLng);
+
+
+                $('#latitudine').val(event.latLng.lat());
+                $('#longitudine').val(event.latLng.lng());
+
+            });
+
+
+
+            google.maps.event.addListener(marker, 'dragend', function () {
+
+                $('#latitudine').val(marker.getPosition().lat());
+                $('#longitudine').val(marker.getPosition().lng());
+
+            });
+
+        }
+        google.maps.event.addDomListener(window, 'load', initialize);
+    </script>
+
+    <script>
+       // $('#collezione').prop('disabled', true);// aggiunta altrimenti si poteva selezionare una collezione senza aver selezionato prima un settore
+        var baseUrlSettori = '@Url.Action("GetSettori", "Common")';
+        var baseUrlCollezioni = '@Url.Action("GetCollezioni", "Common")';
+    </script>
+    <script type="text/javascript">
+        $(function () {
+            $('.go_back').click(function (e) {
+                e.preventDefault();
+                history.go(-1);
+            });
+        });
+    </script>
+
+
+
+}

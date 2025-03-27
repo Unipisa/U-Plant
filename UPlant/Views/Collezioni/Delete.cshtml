@@ -1,0 +1,51 @@
+﻿@model UPlant.Models.DB.Collezioni
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<div class="card card-outline card-primary">
+<div class="card-header with-border">
+    <h3 class="card-title">Cancella Collezione - Sei sicuro di voler cancellare questa Collezione?</h3>
+</div>
+<div class="card-body">
+    <dl class="row">
+        <dt class = "col-sm-2">
+         Collezione
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.collezione)
+        </dd>
+        <dt class = "col-sm-2">
+           Collezione in Inglese
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.collezione_en)
+        </dd>
+        <dt class="col-sm-2">
+            Settore
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.settoreNavigation.settore)
+        </dd>
+        <dt class = "col-sm-2">
+           Organizzazione
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.organizzazioneNavigation.descrizione)
+        </dd>
+        
+    </dl><p>
+        <form asp-action="Delete">
+            <input type="hidden" asp-for="id" />
+            <input type="submit" value="Cancella" class="btn btn-danger" />
+        </form>
+    </p>
+</div>
+
+
+</div>
+<div>
+    <a asp-action="Index" class="btn btn-info">Torna Indietro</a>
+
+</div>

@@ -1,0 +1,77 @@
+﻿{
+  "version": "1.0",
+  "defaultProvider": "cdnjs",
+  "libraries": [
+    {
+      "library": "jquery@3.6.0",
+      "destination": "Assets/lib/jquery/"
+    },
+    {
+      "library": "jqueryui@1.12.1",
+      "destination": "Assets/lib/jqueryui/"
+    },
+    {
+      "library": "jquery-validate@1.19.3",
+      "destination": "Assets/lib/jquery-validate/"
+    },
+    {
+      "library": "jquery-validation-unobtrusive@3.2.12",
+      "destination": "Assets/lib/jquery-validation-unobtrusive/"
+    },
+    {
+      "library": "twitter-bootstrap@4.4.0",
+      "destination": "Assets/lib/twitter-bootstrap/"
+    },
+    {
+      "library": "admin-lte@3.2.0",
+      "destination": "Assets/lib/admin-lte/"
+    },
+    {
+      "library": "font-awesome@6.1.1",
+      "destination": "wwwroot/fonts/font-awesome/"
+    },
+    {
+      "library": "select2@4.0.13",
+      "destination": "Assets/lib/select2/"
+    },
+    {
+      "library": "jquery.inputmask@5.0.7",
+      "destination": "Assets/lib/jquery.inputmask/"
+    },
+    {
+      "library": "datatables@1.10.21",
+      "destination": "Assets/lib/datatables/"
+    },
+    {
+      "library": "datatables-buttons@2.2.2",
+      "destination": "Assets/lib/datatables-buttons/"
+    },
+    {
+      "library": "datatables-tabletools@2.1.5",
+      "destination": "Assets/lib/datatables-tabletools/"
+    },
+    {
+      "library": "datatables-responsive@2.2.9",
+      "destination": "Assets/lib/datatables-responsive/"
+    },
+
+    // la versione 2.2.0 di datatables.net-buttons-bs contiene caratteri non supportati 
+    // e blocca il processo di bundler & minifier: tenere la versione 1.7.0 in attesa di aggiornamenti
+    {
+      "library": "datatables.net-buttons-bs@2.2.2",
+      "destination": "Assets/lib/datatables.net-buttons-bs/"
+    },
+    {
+      "library": "datatables.net-responsive-dt@2.2.9",
+      "destination": "Assets/lib/datatables.net-responsive-dt/"
+    },
+    {
+      "library": "moment.js@2.29.3",
+      "destination": "Assets/lib/moment.js/"
+    },
+    {
+      "library": "tinymce@5.10.3",
+      "destination": "wwwroot/js/"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+﻿@using UPlant
+@using UPlant.Models
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@*@addTagHelper *, UPlant*@
+
+@using Microsoft.Extensions.Options
+@inject IOptions<AppSettings> AppSettings
+
+@using UPlant.ViewComponents
+@using Microsoft.AspNetCore.Http
+@using Microsoft.AspNetCore.Http.Extensions
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer localizer
