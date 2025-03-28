@@ -27,7 +27,7 @@ using Azure;
 using Microsoft.AspNetCore.Http.HttpResults;
 using NuGet.Protocol;
 using Microsoft.AspNetCore.Identity;
-using iText.Kernel.Events;
+
 using System.Security.Cryptography.Xml;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Http;
@@ -43,7 +43,7 @@ using System.Xml.Linq;
 using Newtonsoft.Json;
 using JsonSerializer = Newtonsoft.Json.JsonSerializer;
 using NuGet.Versioning;
-using static iText.StyledXmlParser.Jsoup.Select.Evaluator;
+
 using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
