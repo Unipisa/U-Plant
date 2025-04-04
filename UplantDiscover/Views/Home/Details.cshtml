@@ -132,9 +132,19 @@
                     
                     s += '<b>@language.Getkey("settore")</b>: ' + data[0].Settore + '<br>';
                     s += '<b>@language.Getkey("collezione")</b>: ' + data[0].Collezione + '<br>';
-                    if (parseInt(data[0].Propagatodata.substring(6,10)) < 1950) {
-                        s += '<b>@language.Getkey("propagatodata")</b>: ' + data[0].Propagatodata.substring(6, 10)+ '<br>';
+                    var bandiera = '@language.Getkey("bandiera")';
+
+                    if (bandiera == 'it') {
+                                if (parseInt(data[0].Propagatodata.substring(6,10)) < 1950) {
+                                    s += '<b>@language.Getkey("propagatodata")</b>: ' + data[0].Propagatodata.substring(6, 10)+ '<br>';
+                                }
+                    } else {
+                       
+                            if (parseInt(data[0].Propagatodata.substring(4,8)) < 1950) {
+                                s += '<b>@language.Getkey("propagatodata")</b>: ' + data[0].Propagatodata.substring(4, 8)+ '<br>';
+                            }
                     }
+                   
                     s += '<b>@language.Getkey("acquisizione")</b>: ' + data[0].Acquisizione + '<br>';
                     s += '<b>@language.Getkey("provenienza")</b>: ' + data[0].Provenienza + '<br>';
 

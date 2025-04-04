@@ -284,9 +284,7 @@
                     }
                     s += '</a></td>'
                         + '<td data-label="dati" id="dati"><b>IPEN</b>: ' + data[i].Ipen + ' <br><b>' + nomescientifico + '</b>: ' + data[i].Indentitatassonomica + ' <br><b>' + nomecomune + '</b>: ' + nm + '<br><b>@language.Getkey("settore")</b>: ' + data[i].Settore + '<br><b>@language.Getkey("collezione")</b>:  ' + data[i].Collezione + '<br> ';
-                     if (parseInt(data[i].Propagatodata.substring(6,10)) < 1950) {
-                        s += '<b>@language.Getkey("propagatodata")</b>: ' + data[i].Propagatodata.substring(6, 10)+ ' <br>';
-                    }
+                     
 
                     s += '<a href ="@Url.Action("Details", "Home")?id=' + data[i].Individuo + '" class="link-success text-decoration-none fw-bold">' + det +' <i class="bi bi-zoom-in"></i></a></td></tr>';
 
