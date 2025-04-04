@@ -41,7 +41,7 @@ namespace U_Plant.Controllers
 
 
 
-                if (StatoIndanomalo(i.id))
+                if (StatoIndanomalo(i.id) && i.attivo == true)
                 {
                     perindmorto.Add(i.id);
                     AddPageAlerts(PageAlertType.Warning, "Attenzione hai un individuo in '" + i.titolo +"' con uno stato differente da vivo in uno o più percorsi");
