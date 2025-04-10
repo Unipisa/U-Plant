@@ -104,8 +104,9 @@ namespace UPlant.Controllers
               .Include(a => a.specieNavigation).ThenInclude(a => a.genereNavigation)
               
                .Include(a => a.Individui).ThenInclude(a => a.StoricoIndividuo).ThenInclude(a => a.statoIndividuoNavigation)
-            //    .Include(a => a.Individui).ThenInclude(a => a.individuoNavigation).ThenInclude(a => a.ListaStoricoIndividui).ThenInclude(a => a.utenteNavigation)
-                .Include(a => a.fornitoreNavigation)
+               .Include(a => a.Individui).ThenInclude(a => a.StoricoIndividuo).ThenInclude(a => a.utenteNavigation)
+                
+               .Include(a => a.fornitoreNavigation)
                 .Include(a => a.gradoIncertezzaNavigation)
                 .Include(a => a.nazioneNavigation)
                 .Include(a => a.organizzazioneNavigation)

@@ -1,13 +1,13 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
-
+@inject LanguageService language
 <div class="row">
 
     @if (User.IsInRole("Administrator") || User.IsInRole("Operator") || User.IsInRole("TreeKeeper") || User.IsInRole("Discover") || User.IsInRole("Seminum") || User.IsInRole("Utility"))
     {
     <div class="col-md-3">
-        <h2>Menù Rapido</h2>
+            <h2>@language.Getkey("Rapidmenu")</h2>
         <br />
         <button type="button" class="btn btn-lg btn-block" style="background-color :#3C8DBC;color :aliceblue" onclick="window.location.href = '@Url.Action("Create","Accessioni")';">
                 <span class="fa-brands fa-pagelines" aria-hidden="true"></span> Nuova Accessione

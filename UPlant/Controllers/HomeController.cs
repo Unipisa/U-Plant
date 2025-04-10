@@ -54,6 +54,7 @@ namespace UPlant.Controllers
 
         public ActionResult Index()
         {
+            var linguacorrente = System.Globalization.CultureInfo.CurrentCulture.Name;
             /*var articleQuery = from a in _context.Individui
                                select new { a.propagatoData, a.settore };
             // codice utilizzato insieme al modello Datapoint contenuto dentro DataPoint.cs per la creazione dei Chart
@@ -699,9 +700,18 @@ namespace UPlant.Controllers
                 var validazione = "";
                 if (item.validazione == false) { validazione = "NO"; } else { validazione = "SI"; }
 
-             
+
+                var recordstorico = _context.StoricoIndividuo.Include(x => x.statoIndividuoNavigation).Where(x => x.individuo == item.id).OrderByDescending(a => a.dataInserimento).FirstOrDefault();
                 var stato = "";
-               
+                if (recordstorico == null)
+                {
+                    stato = "Non c'è uno storico per individuo";
+                }
+                else
+                {
+                    stato = recordstorico.statoIndividuoNavigation.stato;
+                }
+
                 sb.AppendFormat("{0};{1};{2};{3};{4};{5};{6};{7};{8};{9};{10};{11};{12};{13};{14};{15};{16};{17};{18};{19};", ada(item.progressivo), ada(item.vecchioprogressivo), ada(item.accessioneNavigation.progressivo), ada(item.accessioneNavigation.ipen), ada(item.individuo?.ToString()), ada(item.sessoNavigation.descrizione), ada(item.propagatoData.ToString("dd/MM/yyyy")), ada(item.propagatoModalitaNavigation.propagatoModalita), ada(item.accessioneNavigation.specieNavigation.nome_scientifico), ada(item.settoreNavigation.settore), ada(item.collezioneNavigation.collezione), ada(indexSeminum), ada(item.destinazioni), ada(item.longitudine), ada(item.latitudine), ada(item.cartellinoNavigation.descrizione), ada(stato), ada(item.ImmaginiIndividuo.Count.ToString()), ada(validazione), ada(item.note));
                 sb.AppendFormat(Environment.NewLine);
 

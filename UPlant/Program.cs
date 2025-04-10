@@ -48,6 +48,8 @@ using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using NuGet.Protocol.Core.Types;
+using System.Reflection;
+using Microsoft.Extensions.Options;
 
 #region Services container
 
@@ -74,23 +76,58 @@ builder.Services.AddDbContext<Entities>(options => {
 
 }
     );
+builder.Services.AddSingleton<LanguageService>();
+
+var typelanguage = configuration["AppSettings:Application:TypeLanguage"];
+builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
+builder.Services.AddMvc()
+               .AddViewLocalization()
+               .AddDataAnnotationsLocalization(options =>
+               {
+                   options.DataAnnotationLocalizerProvider = (type, factory) =>
+                   {
+
+                       var assemblyName = new AssemblyName(typeof(ShareResource).GetTypeInfo().Assembly.FullName);
+
+                       return factory.Create("ShareResource", assemblyName.Name);
+
+                   };
+
+               });
+
+    
+   
 
 
 
-builder.Services.AddLocalization(options =>
-{
-    options.ResourcesPath = "Resources";
-});
-builder.Services.Configure<RequestLocalizationOptions>(options =>
-{
-    var supportedCultures = new[]
-    {
-        new CultureInfo("it")
-    };
-    options.DefaultRequestCulture = new RequestCulture(culture: "it", uiCulture: "it");
-    options.SupportedCultures = supportedCultures;
-    options.SupportedUICultures = supportedCultures;
-});
+
+
+
+builder.Services.Configure<RequestLocalizationOptions>(
+                options =>
+                {
+                    var supportedCultures = new List<CultureInfo>
+                        {
+                            new CultureInfo("en-US"),
+                            new CultureInfo("it-IT"),
+
+                        };
+
+
+
+                    options.DefaultRequestCulture = new RequestCulture(culture: typelanguage, uiCulture: typelanguage);
+
+                    options.SupportedCultures = supportedCultures;
+                    options.SupportedUICultures = supportedCultures;
+                    options.RequestCultureProviders.Insert(0, new QueryStringRequestCultureProvider());
+                    
+
+                    
+
+
+
+                });
+
 builder.Services.AddTransient<IStringLocalizer, CustomLocalizer>();
 #endregion
 #region Autenticazione e Cookie
@@ -410,10 +447,23 @@ var app = builder.Build();
 
 if (!app.Environment.IsDevelopment())
 {
+    // Replace the following line:  
+    // var locOptions = app.ApplicationServices.GetService<IOptions<RequestLocalizationOptions>>();  
+
+    // With this corrected line:  
+  
+
+
     app.UseExceptionHandler("/Home/Error");
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+
+// inizio aggiunto per definire la lingua
+var locOptions = app.Services.GetService<IOptions<RequestLocalizationOptions>>();
+var tipodefault = locOptions.Value.DefaultRequestCulture.Culture;
+app.UseRequestLocalization(locOptions.Value);
+// fine
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
