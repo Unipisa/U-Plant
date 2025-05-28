@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 
 namespace UPlant.Models.DB;
 
@@ -37,14 +36,14 @@ public partial class Accessioni
     public string provincia { get; set; }
 
     public string localita { get; set; }
-   
-    public decimal? altitudine { get; set; }
+
+    public int? altitudine { get; set; }
 
     public string habitat { get; set; }
 
     public Guid tipoMateriale { get; set; }
-   
-    public decimal numeroEsemplari { get; set; }
+
+    public int numeroEsemplari { get; set; }
 
     public Guid statoMateriale { get; set; }
 

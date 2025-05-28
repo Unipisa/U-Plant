@@ -187,9 +187,9 @@ namespace UPlant.Controllers
                                    bool associatoErbario,
                                    string nazione, string regione, string provincia,
                                    string localita,
-                                   string altitudine,
+                                   int altitudine,
                                    string habitat, Guid tipoMateriale,
-                                   decimal numeroEsemplari, Guid statoMateriale, Guid gradoIncertezza, string note, string vecchioprogressivo, string longitudine, string latitudine, string dataraccolta, string ipendiprovenienza)
+                                   int numeroEsemplari, Guid statoMateriale, Guid gradoIncertezza, string note, string vecchioprogressivo, string longitudine, string latitudine, string dataraccolta, string ipendiprovenienza)
         {
             // string msgerr ;
             string risultato = "si";
@@ -253,10 +253,17 @@ namespace UPlant.Controllers
 
             accessioni.localita = localita;
             accessioni.habitat = habitat;
-            if (!String.IsNullOrEmpty(altitudine))
+
+            if (altitudine == 0)
             {
-                accessioni.altitudine = Convert.ToDecimal(altitudine);
+                accessioni.altitudine = null;
+
             }
+            else
+            {
+                accessioni.altitudine = altitudine;
+            }
+
             accessioni.statoMateriale = statoMateriale;
             accessioni.note = note;
             accessioni.nazione = nazione;
@@ -444,8 +451,8 @@ namespace UPlant.Controllers
         public ActionResult Edit(Guid id, string ipen, Guid identificatore, Guid tipoAcquisizione,
                                    Guid fornitore, Guid raccoglitore, Guid provenienza, // non mi serve la famiglia e il genere
                                    Guid specie, string nazione, string regione, string provincia,
-                                   string localita, string altitudine, string habitat, Guid tipoMateriale,
-                                   decimal numeroEsemplari, Guid statoMateriale, Guid gradoIncertezza, bool associatoErbario, string note, string vecchioprogressivo, string longitudine, string latitudine, string dataraccolta)//,string ipendiprovenienza
+                                   string localita, int altitudine, string habitat, Guid tipoMateriale,
+                                   int numeroEsemplari, Guid statoMateriale, Guid gradoIncertezza, bool associatoErbario, string note, string vecchioprogressivo, string longitudine, string latitudine, string dataraccolta)//,string ipendiprovenienza
         {
             Accessioni accessioni = _context.Accessioni.Find(id);
             string msgerr = "";
@@ -507,17 +514,17 @@ namespace UPlant.Controllers
                         accessioni.associatoErbario = false;
                     }
 
-                    if (!String.IsNullOrEmpty(altitudine))
-                    {
-                        accessioni.altitudine = Convert.ToDecimal(altitudine);
-                    }
-                    else
-                    {
+
+                    if (altitudine == 0 ) {
                         accessioni.altitudine = null;
+                        
+                    } else
+                    {
+                        accessioni.altitudine = altitudine;
                     }
 
 
-                    accessioni.note = note;
+                        accessioni.note = note;
                     accessioni.longitudine = longitudine;
                     accessioni.latitudine = latitudine;
                     accessioni.vecchioprogressivo = vecchioprogressivo;

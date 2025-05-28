@@ -104,7 +104,6 @@ public partial class Entities : DbContext
         modelBuilder.Entity<Accessioni>(entity =>
         {
             entity.Property(e => e.id).HasDefaultValueSql("(newid())");
-            entity.Property(e => e.altitudine).HasColumnType("numeric(18, 0)");
             entity.Property(e => e.dataAcquisizione).HasColumnType("datetime");
             entity.Property(e => e.dataUltimaModifica).HasColumnType("datetime");
             entity.Property(e => e.dataraccolta).HasColumnType("datetime");
@@ -124,7 +123,6 @@ public partial class Entities : DbContext
                 .HasMaxLength(2)
                 .IsUnicode(false);
             entity.Property(e => e.note).HasColumnType("text");
-            entity.Property(e => e.numeroEsemplari).HasColumnType("numeric(18, 0)");
             entity.Property(e => e.progressivo)
                 .IsRequired()
                 .HasMaxLength(50)
