@@ -144,7 +144,7 @@ namespace U_Plant.Controllers
 
             return View(percorsi);
         }
-        public ActionResult Edit(Guid id)
+        public ActionResult Edit(Guid? id)
         {
             if (id == null)
             {

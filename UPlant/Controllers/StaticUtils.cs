@@ -131,7 +131,8 @@ namespace UPlant.Controllers
         }
         public static int GeneraSuccessivo(int successivo)
         {
-            return successivo >0 ? successivo++ :successivo;
+            _ = successivo > 0 ? successivo++ : successivo;
+            return successivo;
         }
 
 
