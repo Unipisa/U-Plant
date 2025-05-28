@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 
 namespace UPlant.Models.DB;
 
@@ -9,9 +8,7 @@ public partial class Accessioni
     public Guid id { get; set; }
 
     public Guid organizzazione { get; set; }
-    [Editable(false)]
-    [Display(Name = "Data Acquisizione")]
-    [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
+
     public DateTime dataAcquisizione { get; set; }
 
     public string progressivo { get; set; }
@@ -39,13 +36,13 @@ public partial class Accessioni
     public string provincia { get; set; }
 
     public string localita { get; set; }
-    [DisplayFormat(DataFormatString = "{0:0.###}", ApplyFormatInEditMode = true)]
+
     public decimal? altitudine { get; set; }
 
     public string habitat { get; set; }
 
     public Guid tipoMateriale { get; set; }
-    [DisplayFormat(DataFormatString = "{0:0.###}", ApplyFormatInEditMode = true)]
+
     public decimal numeroEsemplari { get; set; }
 
     public Guid statoMateriale { get; set; }
@@ -67,7 +64,7 @@ public partial class Accessioni
     public string longitudine { get; set; }
 
     public bool validazione { get; set; }
-    [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
+
     public DateTime? dataraccolta { get; set; }
 
     public string ipendiprovenienza { get; set; }
@@ -77,6 +74,8 @@ public partial class Accessioni
     public virtual Fornitori fornitoreNavigation { get; set; }
 
     public virtual GradoIncertezza gradoIncertezzaNavigation { get; set; }
+
+    public virtual Identificatori identificatoreNavigation { get; set; }
 
     public virtual Nazioni nazioneNavigation { get; set; }
 
@@ -101,9 +100,4 @@ public partial class Accessioni
     public virtual Users utenteAcquisizioneNavigation { get; set; }
 
     public virtual Users utenteUltimaModificaNavigation { get; set; }
-
-    public virtual Identificatori identificatoreNavigation { get; set; }
-
-
-   
 }

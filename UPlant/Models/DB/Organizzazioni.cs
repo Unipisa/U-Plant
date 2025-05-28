@@ -25,6 +25,8 @@ public partial class Organizzazioni
 
     public virtual ICollection<GradoIncertezza> GradoIncertezza { get; set; } = new List<GradoIncertezza>();
 
+    public virtual ICollection<Identificatori> Identificatori { get; set; } = new List<Identificatori>();
+
     public virtual ICollection<ModalitaPropagazione> ModalitaPropagazione { get; set; } = new List<ModalitaPropagazione>();
 
     public virtual ICollection<Provenienze> Provenienze { get; set; } = new List<Provenienze>();
@@ -48,6 +50,4 @@ public partial class Organizzazioni
     public virtual ICollection<TipologiaUtente> TipologiaUtente { get; set; } = new List<TipologiaUtente>();
 
     public virtual ICollection<Users> Users { get; set; } = new List<Users>();
-
-    public virtual ICollection<Identificatori> Identificatori { get; set; } = new List<Identificatori>();
 }
