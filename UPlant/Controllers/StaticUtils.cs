@@ -129,9 +129,13 @@ namespace UPlant.Controllers
                
 
         }
+        public static int GeneraSuccessivo(int successivo)
+        {
+            return successivo >0 ? successivo++ :successivo;
+        }
 
 
-            public static void ResizeAndSave(string FileNameInput, string fileNamethumb, int maxSideSize, bool makeItSquare)
+        public static void ResizeAndSave(string FileNameInput, string fileNamethumb, int maxSideSize, bool makeItSquare)
         {
             int newWidth2;
             int newHeight2;
