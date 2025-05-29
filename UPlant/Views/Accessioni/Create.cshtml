@@ -182,7 +182,7 @@
                             <tr style="height: 23px;">
                                 <th style="height: 23px;">Altitudine</th>
                                 <td style="height: 23px;">
-                                    @Html.EditorFor(model => model.altitudine, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.EditorFor(model => model.altitudine, new { htmlAttributes = new { @class = "form-control", @Value = 0 } })
                                     @Html.ValidationMessageFor(model => model.altitudine, "", new { @class = "text-danger" })
                                 </td>
 

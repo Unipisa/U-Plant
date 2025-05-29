@@ -183,7 +183,7 @@ namespace UPlant.Controllers
         }
 
         // GET: StoricoIndividuo/Delete/5
-        public async Task<IActionResult> Delete(Guid? id)
+        public async Task<IActionResult> Delete(Guid? id, string tipo)
         {
             if (id == null || _context.StoricoIndividuo == null)
             {
@@ -200,14 +200,14 @@ namespace UPlant.Controllers
             {
                 return NotFound();
             }
-
+            ViewBag.tipo = tipo;
             return View(storicoIndividuo);
         }
 
         // POST: StoricoIndividuo/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(Guid id)
+        public async Task<IActionResult> DeleteConfirmed(Guid id, string tipo)
         {
             if (_context.StoricoIndividuo == null)
             {
@@ -220,7 +220,11 @@ namespace UPlant.Controllers
             }
             
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Details), nameof(Individui), new
+            {
+                id = storicoIndividuo.individuo,
+                tipo = tipo
+            });
         }
 
         private bool StoricoIndividuoExists(Guid id)

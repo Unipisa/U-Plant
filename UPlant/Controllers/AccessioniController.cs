@@ -143,7 +143,7 @@ namespace UPlant.Controllers
             
             return View(accessioni);
         }
-
+        [Authorize(Roles = "Administrator,Operator")]
         // GET: Accessioni/Create
         public IActionResult Create()
         {
@@ -182,12 +182,12 @@ namespace UPlant.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(string dataAcquisizione, Guid identificatore, Guid tipoAcquisizione,
-                                   Guid fornitore, Guid raccoglitore, Guid provenienza, string famiglia, string genere,// non mi serve la famiglia e il genere
+                                   Guid fornitore, Guid raccoglitore, Guid provenienza, Guid famiglia, Guid genere,// non mi serve la famiglia e il genere
                                    Guid specie,
                                    bool associatoErbario,
                                    string nazione, string regione, string provincia,
                                    string localita,
-                                   int altitudine,
+                                   string altitudine,
                                    string habitat, Guid tipoMateriale,
                                    int numeroEsemplari, Guid statoMateriale, Guid gradoIncertezza, string note, string vecchioprogressivo, string longitudine, string latitudine, string dataraccolta, string ipendiprovenienza)
         {
@@ -254,15 +254,15 @@ namespace UPlant.Controllers
             accessioni.localita = localita;
             accessioni.habitat = habitat;
 
-            if (altitudine == 0)
+            if (!String.IsNullOrEmpty(altitudine))
             {
-                accessioni.altitudine = null;
-
+                accessioni.altitudine = Convert.ToInt32(altitudine);
             }
             else
             {
-                accessioni.altitudine = altitudine;
+                accessioni.altitudine = null;
             }
+
 
             accessioni.statoMateriale = statoMateriale;
             accessioni.note = note;
@@ -328,6 +328,8 @@ namespace UPlant.Controllers
                 ViewData["provincia"] = new SelectList(_context.Province.OrderBy(a => a.descrizione), "codice", "descrizione", accessioni.provincia);
                 ViewData["raccoglitore"] = new SelectList(_context.Raccoglitori.OrderBy(a => a.nominativo), "id", "nominativo", accessioni.raccoglitore);
                 ViewData["regione"] = new SelectList(_context.Regioni.OrderBy(a => a.descrizione), "codice", "descrizione", accessioni.regione);
+                ViewData["famiglia"] = new SelectList(_context.Famiglie.OrderBy(a => a.descrizione), "id", "descrizione", famiglia);
+                ViewData["genere"] = new SelectList(_context.Generi.OrderBy(a => a.descrizione), "id", "descrizione",genere);
                 ViewData["specie"] = new SelectList(_context.Specie.OrderBy(a => a.nome_scientifico), "id", "nome_scientifico", accessioni.specie);
                 ViewData["statoMateriale"] = new SelectList(_context.StatoMateriale.OrderBy(a => a.ordinamento), "id", "descrizione", accessioni.statoMateriale);
                 ViewData["tipoAcquisizione"] = new SelectList(_context.TipoAcquisizione.OrderBy(a => a.ordinamento), "id", "descrizione", accessioni.tipoAcquisizione);
@@ -335,8 +337,9 @@ namespace UPlant.Controllers
                 ViewData["utenteAcquisizione"] = new SelectList(_context.Users, "Id", "CreatedBy", accessioni.utenteAcquisizione);
                 ViewData["utenteUltimaModifica"] = new SelectList(_context.Users, "Id", "CreatedBy", accessioni.utenteUltimaModifica);
                 ViewData["identificatore"] = new SelectList(_context.Identificatori.OrderBy(a => a.nominativo), "id", "nominativo", accessioni.identificatore);
+                ViewData["areale"] = new SelectList(_context.Areali.OrderBy(e => e.descrizione), "id", "descrizione");
+                ViewData["regno"] = new SelectList(_context.Regni.OrderBy(e => e.ordinamento), "id", "descrizione");
 
-             
 
             }
             if (risultato == "si")
@@ -350,7 +353,7 @@ namespace UPlant.Controllers
 
             
         }
-
+        [Authorize(Roles = "Administrator,Operator")]
         // GET: Accessioni/Edit/5
         public async Task<IActionResult> Edit(Guid? id)
         {
@@ -402,56 +405,14 @@ namespace UPlant.Controllers
         // POST: Accessioni/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Administrator,Operator")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        /* public async Task<IActionResult> Edit(Guid id, [Bind("id,organizzazione,dataAcquisizione,progressivo,ipen,utenteAcquisizione,vecchioprogressivo,identificatore,tipoAcquisizione,fornitore,raccoglitore,provenienza,nazione,regione,provincia,localita,altitudine,habitat,tipoMateriale,numeroEsemplari,statoMateriale,gradoIncertezza,associatoErbario,note,utenteUltimaModifica,dataUltimaModifica,specie,latitudine,longitudine,validazione,dataraccolta,ipendiprovenienza")] Accessioni accessioni)
-         {
-             if (id != accessioni.id)
-             {
-                 return NotFound();
-             }
-
-             if (ModelState.IsValid)
-             {
-                 try
-                 {
-                     _context.Update(accessioni);
-                     await _context.SaveChangesAsync();
-                 }
-                 catch (DbUpdateConcurrencyException)
-                 {
-                     if (!AccessioniExists(accessioni.id))
-                     {
-                         return NotFound();
-                     }
-                     else
-                     {
-                         throw;
-                     }
-                 }
-                 return RedirectToAction(nameof(Index));
-             }
-             ViewData["fornitore"] = new SelectList(_context.Fornitori, "id", "descrizione", accessioni.fornitore);
-             ViewData["gradoIncertezza"] = new SelectList(_context.GradoIncertezza, "id", "descrizione", accessioni.gradoIncertezza);
-             ViewData["nazione"] = new SelectList(_context.Nazioni, "codice", "codice", accessioni.nazione);
-             ViewData["organizzazione"] = new SelectList(_context.Organizzazioni, "id", "descrizione", accessioni.organizzazione);
-             ViewData["provenienza"] = new SelectList(_context.Provenienze, "id", "descrizione", accessioni.provenienza);
-             ViewData["provincia"] = new SelectList(_context.Province, "codice", "codice", accessioni.provincia);
-             ViewData["raccoglitore"] = new SelectList(_context.Raccoglitori, "id", "nominativo", accessioni.raccoglitore);
-             ViewData["regione"] = new SelectList(_context.Regioni, "codice", "codice", accessioni.regione);
-             ViewData["specie"] = new SelectList(_context.Specie, "id", "nome", accessioni.specie);
-             ViewData["statoMateriale"] = new SelectList(_context.StatoMateriale, "id", "descrizione", accessioni.statoMateriale);
-             ViewData["tipoAcquisizione"] = new SelectList(_context.TipoAcquisizione, "id", "descrizione", accessioni.tipoAcquisizione);
-             ViewData["tipoMateriale"] = new SelectList(_context.TipiMateriale, "id", "descrizione", accessioni.tipoMateriale);
-             ViewData["utenteAcquisizione"] = new SelectList(_context.Users, "Id", "CreatedBy", accessioni.utenteAcquisizione);
-             ViewData["utenteUltimaModifica"] = new SelectList(_context.Users, "Id", "CreatedBy", accessioni.utenteUltimaModifica);
-             ViewData["identificatore"] = new SelectList(_context.Identificatori, "id", "nominativo", accessioni.identificatore);
-             return View(accessioni);
-         }*/
+        
         public ActionResult Edit(Guid id, string ipen, Guid identificatore, Guid tipoAcquisizione,
                                    Guid fornitore, Guid raccoglitore, Guid provenienza, // non mi serve la famiglia e il genere
                                    Guid specie, string nazione, string regione, string provincia,
-                                   string localita, int altitudine, string habitat, Guid tipoMateriale,
+                                   string localita, string altitudine, string habitat, Guid tipoMateriale,
                                    int numeroEsemplari, Guid statoMateriale, Guid gradoIncertezza, bool associatoErbario, string note, string vecchioprogressivo, string longitudine, string latitudine, string dataraccolta)//,string ipendiprovenienza
         {
             Accessioni accessioni = _context.Accessioni.Find(id);
@@ -515,12 +476,11 @@ namespace UPlant.Controllers
                     }
 
 
-                    if (altitudine == 0 ) {
-                        accessioni.altitudine = null;
-                        
-                    } else
+                    if (!String.IsNullOrEmpty(altitudine))
                     {
-                        accessioni.altitudine = altitudine;
+                        accessioni.altitudine = Convert.ToInt32(altitudine);
+                    } else {
+                        accessioni.altitudine = null;
                     }
 
 
@@ -579,7 +539,7 @@ namespace UPlant.Controllers
             }
              return RedirectToAction(nameof(Details),  new { id = accessioni.id });
         }
-
+        [Authorize(Roles = "Administrator,Operator")]
         // GET: Accessioni/Delete/5
         public async Task<IActionResult> Delete(Guid? id)
         {
@@ -613,7 +573,7 @@ namespace UPlant.Controllers
 
             return View(accessioni);
         }
-
+        [Authorize(Roles = "Administrator,Operator")]
         // POST: Accessioni/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]

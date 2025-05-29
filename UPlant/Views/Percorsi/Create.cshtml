@@ -22,18 +22,19 @@
 			{
 				@Html.AntiForgeryToken()
         <div class="box-body">
-            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    <div asp-validation-summary="None" class="text-danger"></div>
             <div class="form-group">
                 <b>Titolo</b><br>
-                <input type="text" id="titolo" name="titolo" />
+                @Html.EditorFor(model => model.titolo, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.titolo, "", new { @class = "text-danger" })
             </div>
             <div class="form-group">
                         <b>Descrizione</b><br>
-                <textarea id="descrizione" name="descrizione" rows="10" cols="80"></textarea>
-                <br />Caratteri da aggiungere al testo : [br]ritorno a capo - [p] nuovo paragrafo
+                        @Html.TextAreaFor(model => model.descrizione, new { htmlAttributes = new { @class = "form-control", @rows = 10 , @cols = 80 } })
+                        @Html.ValidationMessageFor(model => model.descrizione, "", new { @class = "text-danger" })
+                        <br />Caratteri da aggiungere al testo : [br]ritorno a capo - [p] nuovo paragrafo
 
-                @Html.ValidationMessageFor(model => model.descrizione, "", new { @class = "text-danger" })
+                
             </div>
             <div class="form-group">
                         <b>Titolo Inglese</b><br>
@@ -71,7 +72,7 @@
 @section Scripts {
     @{
         <script src="~/js/select2.min.js"></script>
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        <script src="~/js/jquery.validation.min.js"></script>
     }
 
 

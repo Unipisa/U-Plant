@@ -20,8 +20,21 @@ namespace UPlant.Models.DB
     {   
     }
 
+    [MetadataType(typeof(PercorsiCustom))]
+    public partial class Percorsi
+    {
+    }
 
-    
+    public partial class PercorsiCustom
+    {
+
+        [Required(ErrorMessage = "Titolo richiesto.")]
+        public string titolo { get; set; }
+
+    }
+   
+
+
     public partial class CitesCustom
     {
        

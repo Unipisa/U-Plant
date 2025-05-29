@@ -108,18 +108,21 @@ namespace U_Plant.Controllers
         public ActionResult Create(string titolo, string descrizione, string titolo_en, string descrizione_en)
         {
             Percorsi percorsi = new Percorsi();
-         
-            percorsi.titolo = titolo.Trim();
-            if (descrizione.Length > 1)
+            if (!String.IsNullOrEmpty(titolo))
+            {
+                percorsi.titolo = titolo.Trim();
+            }
+
+            if (!String.IsNullOrEmpty(descrizione))
             {
                 percorsi.descrizione = descrizione.Trim();
             }
-            if (titolo_en.Length > 1)
+            if (!String.IsNullOrEmpty(titolo_en))
             {
                 percorsi.titolo_en = titolo_en.Trim();
             }
 
-            if (descrizione_en.Length > 1)
+            if (!String.IsNullOrEmpty(descrizione_en))
             {
                 percorsi.descrizione_en = descrizione_en.Trim();
             }
@@ -134,8 +137,7 @@ namespace U_Plant.Controllers
             percorsi.autore = autore;
             if (ModelState.IsValid)
             {
-
-
+            
                 _context.Percorsi.Add(percorsi);
                 _context.SaveChanges();
                 return RedirectToAction("Index");
