@@ -11,7 +11,7 @@ public partial class Iucn
 
     public string descrizione { get; set; }
 
-    public string ordinamento { get; set; }
+    public int ordinamento { get; set; }
 
     public virtual ICollection<Specie> Specieiucn_globaleNavigation { get; set; } = new List<Specie>();
 

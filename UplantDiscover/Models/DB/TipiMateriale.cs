@@ -11,7 +11,7 @@ public partial class TipiMateriale
 
     public string descrizione { get; set; }
 
-    public string ordinamento { get; set; }
+    public int ordinamento { get; set; }
 
     public virtual ICollection<Accessioni> Accessioni { get; set; } = new List<Accessioni>();
 

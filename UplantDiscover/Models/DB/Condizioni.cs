@@ -11,7 +11,7 @@ public partial class Condizioni
 
     public Guid organizzazione { get; set; }
 
-    public string ordinamento { get; set; }
+    public int ordinamento { get; set; }
 
     public virtual ICollection<StoricoIndividuo> StoricoIndividuo { get; set; } = new List<StoricoIndividuo>();
 

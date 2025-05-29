@@ -19,6 +19,6 @@ namespace UplantDiscover.Models
         public int NumeroImmagini { get; set; }
         public string Stato { get; set; }
         public string Immagine { get; set; }
-        public string Ordinamento { get; set; }
+        public int Ordinamento { get; set; }
     }
 }

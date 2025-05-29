@@ -11,7 +11,7 @@ public partial class Cartellini
 
     public Guid organizzazione { get; set; }
 
-    public string ordinamento { get; set; }
+    public int ordinamento { get; set; }
 
     public virtual ICollection<Individui> Individui { get; set; } = new List<Individui>();
 

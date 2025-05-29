@@ -41,6 +41,8 @@ public partial class Entities : DbContext
 
     public virtual DbSet<GradoIncertezza> GradoIncertezza { get; set; }
 
+    public virtual DbSet<Identificatori> Identificatori { get; set; }
+
     public virtual DbSet<ImmaginiIndividuo> ImmaginiIndividuo { get; set; }
 
     public virtual DbSet<Individui> Individui { get; set; }
@@ -97,14 +99,11 @@ public partial class Entities : DbContext
 
     public virtual DbSet<Users> Users { get; set; }
 
-    public virtual DbSet<Identificatori> Verificatori { get; set; }
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Accessioni>(entity =>
         {
             entity.Property(e => e.id).HasDefaultValueSql("(newid())");
-            entity.Property(e => e.altitudine).HasColumnType("numeric(18, 0)");
             entity.Property(e => e.dataAcquisizione).HasColumnType("datetime");
             entity.Property(e => e.dataUltimaModifica).HasColumnType("datetime");
             entity.Property(e => e.dataraccolta).HasColumnType("datetime");
@@ -124,7 +123,6 @@ public partial class Entities : DbContext
                 .HasMaxLength(2)
                 .IsUnicode(false);
             entity.Property(e => e.note).HasColumnType("text");
-            entity.Property(e => e.numeroEsemplari).HasColumnType("numeric(18, 0)");
             entity.Property(e => e.progressivo)
                 .IsRequired()
                 .HasMaxLength(50)
@@ -146,6 +144,11 @@ public partial class Entities : DbContext
             entity.HasOne(d => d.gradoIncertezzaNavigation).WithMany(p => p.Accessioni)
                 .HasForeignKey(d => d.gradoIncertezza)
                 .HasConstraintName("FK_Accessioni_GradoIncertezza");
+
+            entity.HasOne(d => d.identificatoreNavigation).WithMany(p => p.Accessioni)
+                .HasForeignKey(d => d.identificatore)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Accessioni_Identificatore");
 
             entity.HasOne(d => d.nazioneNavigation).WithMany(p => p.Accessioni)
                 .HasForeignKey(d => d.nazione)
@@ -202,11 +205,6 @@ public partial class Entities : DbContext
                 .HasForeignKey(d => d.utenteUltimaModifica)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Accessioni_UtentiModifica");
-
-            entity.HasOne(d => d.identificatoreNavigation).WithMany(p => p.Accessioni)
-                .HasForeignKey(d => d.identificatore)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Accessioni_Identificatore");
         });
 
         modelBuilder.Entity<Areali>(entity =>
@@ -227,10 +225,6 @@ public partial class Entities : DbContext
                 .IsRequired()
                 .HasMaxLength(50)
                 .IsUnicode(false);
-            entity.Property(e => e.ordinamento)
-                .IsRequired()
-                .HasMaxLength(50)
-                .IsUnicode(false);
 
             entity.HasOne(d => d.organizzazioneNavigation).WithMany(p => p.Cartellini)
                 .HasForeignKey(d => d.organizzazione)
@@ -245,10 +239,6 @@ public partial class Entities : DbContext
                 .IsRequired()
                 .IsUnicode(false);
             entity.Property(e => e.descrizione).IsUnicode(false);
-            entity.Property(e => e.ordinamento)
-                .IsRequired()
-                .HasMaxLength(50)
-                .IsUnicode(false);
         });
 
         modelBuilder.Entity<Collezioni>(entity =>
@@ -279,10 +269,6 @@ public partial class Entities : DbContext
             entity.Property(e => e.condizione)
                 .IsRequired()
                 .HasMaxLength(100)
-                .IsUnicode(false);
-            entity.Property(e => e.ordinamento)
-                .IsRequired()
-                .HasMaxLength(50)
                 .IsUnicode(false);
 
             entity.HasOne(d => d.organizzazioneNavigation).WithMany(p => p.Condizioni)
@@ -384,6 +370,24 @@ public partial class Entities : DbContext
                 .HasConstraintName("FK_GradoIncertezza_Organizzazione");
         });
 
+        modelBuilder.Entity<Identificatori>(entity =>
+        {
+            entity.Property(e => e.id).HasDefaultValueSql("(newid())");
+            entity.Property(e => e.nominativo)
+                .IsRequired()
+                .IsUnicode(false);
+
+            entity.HasOne(d => d.organizzazioneNavigation).WithMany(p => p.Identificatori)
+                .HasForeignKey(d => d.organizzazione)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Identificatori_Organizzazione");
+
+            entity.HasOne(d => d.tipoIdentificatoreNavigation).WithMany(p => p.Identificatori)
+                .HasForeignKey(d => d.tipoIdentificatore)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Identificatori_Tipo");
+        });
+
         modelBuilder.Entity<ImmaginiIndividuo>(entity =>
         {
             entity.Property(e => e.id).HasDefaultValueSql("(newid())");
@@ -475,19 +479,11 @@ public partial class Entities : DbContext
                 .IsRequired()
                 .IsUnicode(false);
             entity.Property(e => e.descrizione).IsUnicode(false);
-            entity.Property(e => e.ordinamento)
-                .IsRequired()
-                .HasMaxLength(50)
-                .IsUnicode(false);
         });
 
         modelBuilder.Entity<ModalitaPropagazione>(entity =>
         {
             entity.Property(e => e.id).HasDefaultValueSql("(newid())");
-            entity.Property(e => e.ordinamento)
-                .IsRequired()
-                .HasMaxLength(50)
-                .IsUnicode(false);
             entity.Property(e => e.propagatoModalita)
                 .IsRequired()
                 .HasMaxLength(50)
@@ -560,10 +556,6 @@ public partial class Entities : DbContext
             entity.Property(e => e.descrizione_en)
                 .HasMaxLength(50)
                 .IsUnicode(false);
-            entity.Property(e => e.ordinamento)
-                .IsRequired()
-                .HasMaxLength(50)
-                .IsUnicode(false);
 
             entity.HasOne(d => d.organizzazioneNavigation).WithMany(p => p.Provenienze)
                 .HasForeignKey(d => d.organizzazione)
@@ -628,10 +620,6 @@ public partial class Entities : DbContext
                 .IsRequired()
                 .IsUnicode(false);
             entity.Property(e => e.descrizione_en).IsUnicode(false);
-            entity.Property(e => e.ordinamento)
-                .IsRequired()
-                .HasMaxLength(50)
-                .IsUnicode(false);
         });
 
         modelBuilder.Entity<Ricercaacc>(entity =>
@@ -734,7 +722,7 @@ public partial class Entities : DbContext
 
         modelBuilder.Entity<Roles>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Roles__3214EC07CAB4429D");
+            entity.HasKey(e => e.Id).HasName("PK__Roles__3214EC07D331C006");
 
             entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
             entity.Property(e => e.Descr)
@@ -760,10 +748,6 @@ public partial class Entities : DbContext
         modelBuilder.Entity<Settori>(entity =>
         {
             entity.Property(e => e.id).HasDefaultValueSql("(newid())");
-            entity.Property(e => e.ordinamento)
-                .IsRequired()
-                .HasMaxLength(50)
-                .IsUnicode(false);
             entity.Property(e => e.settore)
                 .IsRequired()
                 .HasMaxLength(50)
@@ -848,10 +832,6 @@ public partial class Entities : DbContext
         modelBuilder.Entity<StatoIndividuo>(entity =>
         {
             entity.Property(e => e.id).HasDefaultValueSql("(newid())");
-            entity.Property(e => e.ordinamento)
-                .IsRequired()
-                .HasMaxLength(50)
-                .IsUnicode(false);
             entity.Property(e => e.stato)
                 .IsRequired()
                 .HasMaxLength(50)
@@ -868,10 +848,6 @@ public partial class Entities : DbContext
             entity.Property(e => e.id).HasDefaultValueSql("(newid())");
             entity.Property(e => e.descrizione)
                 .IsRequired()
-                .IsUnicode(false);
-            entity.Property(e => e.ordinamento)
-                .IsRequired()
-                .HasMaxLength(50)
                 .IsUnicode(false);
 
             entity.HasOne(d => d.organizzazioneNavigation).WithMany(p => p.StatoMateriale)
@@ -913,10 +889,6 @@ public partial class Entities : DbContext
             entity.Property(e => e.descrizione)
                 .IsRequired()
                 .IsUnicode(false);
-            entity.Property(e => e.ordinamento)
-                .IsRequired()
-                .HasMaxLength(50)
-                .IsUnicode(false);
 
             entity.HasOne(d => d.organizzazioneNavigation).WithMany(p => p.TipiMateriale)
                 .HasForeignKey(d => d.organizzazione)
@@ -931,10 +903,6 @@ public partial class Entities : DbContext
                 .IsRequired()
                 .IsUnicode(false);
             entity.Property(e => e.descrizione_en).IsUnicode(false);
-            entity.Property(e => e.ordinamento)
-                .IsRequired()
-                .HasMaxLength(50)
-                .IsUnicode(false);
 
             entity.HasOne(d => d.organizzazioneNavigation).WithMany(p => p.TipoAcquisizione)
                 .HasForeignKey(d => d.organizzazione)
@@ -944,6 +912,8 @@ public partial class Entities : DbContext
 
         modelBuilder.Entity<TipoIdentificatore>(entity =>
         {
+            entity.HasKey(e => e.id).HasName("PK_TipoVerificatore");
+
             entity.Property(e => e.id).HasDefaultValueSql("(newid())");
             entity.Property(e => e.descrizione)
                 .IsRequired()
@@ -952,7 +922,7 @@ public partial class Entities : DbContext
             entity.HasOne(d => d.organizzazioneNavigation).WithMany(p => p.TipoIdentificatore)
                 .HasForeignKey(d => d.organizzazione)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_TipoIdentificatore_Organizzazione");
+                .HasConstraintName("FK_TipoVerificatore_Organizzazione");
         });
 
         modelBuilder.Entity<TipologiaUtente>(entity =>
@@ -960,10 +930,6 @@ public partial class Entities : DbContext
             entity.Property(e => e.id).HasDefaultValueSql("(newid())");
             entity.Property(e => e.descrizione)
                 .IsRequired()
-                .IsUnicode(false);
-            entity.Property(e => e.ordinamento)
-                .IsRequired()
-                .HasMaxLength(50)
                 .IsUnicode(false);
 
             entity.HasOne(d => d.organizzazioneNavigation).WithMany(p => p.TipologiaUtente)
@@ -974,14 +940,14 @@ public partial class Entities : DbContext
 
         modelBuilder.Entity<UserRole>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__UserRole__3214EC07C3C18B13");
+            entity.HasKey(e => e.Id).HasName("PK__UserRole__3214EC07F208CA42");
 
             entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
 
             entity.HasOne(d => d.RoleFKNavigation).WithMany(p => p.UserRole)
                 .HasForeignKey(d => d.RoleFK)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__UserRole__RoleFK__2645B050");
+                .HasConstraintName("FK__UserRole__RoleFK__45BE5BA9");
 
             entity.HasOne(d => d.UserFKNavigation).WithMany(p => p.UserRole)
                 .HasForeignKey(d => d.UserFK)
@@ -995,7 +961,7 @@ public partial class Entities : DbContext
 
             entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
             entity.Property(e => e.CF)
-            .IsRequired()
+                .IsRequired()
                 .HasMaxLength(16)
                 .IsUnicode(false);
             entity.Property(e => e.CreatedAt)
@@ -1035,24 +1001,6 @@ public partial class Entities : DbContext
                 .HasForeignKey(d => d.TipologiaUtente)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Users_TipologiaUtente");
-        });
-
-        modelBuilder.Entity<Identificatori>(entity =>
-        {
-            entity.Property(e => e.id).HasDefaultValueSql("(newid())");
-            entity.Property(e => e.nominativo)
-                .IsRequired()
-                .IsUnicode(false);
-
-            entity.HasOne(d => d.organizzazioneNavigation).WithMany(p => p.Identifificatori)
-                .HasForeignKey(d => d.organizzazione)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Identificatori_Organizzazione");
-
-            entity.HasOne(d => d.tipoIdentificatoreNavigation).WithMany(p => p.Identificatori)
-                .HasForeignKey(d => d.tipoIdentificatore)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Identificatori_Tipo");
         });
 
         OnModelCreatingPartial(modelBuilder);

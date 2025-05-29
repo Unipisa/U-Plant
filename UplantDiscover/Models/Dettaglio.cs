@@ -43,7 +43,7 @@ namespace UplantDiscover.Models
         public string Percorso { get; set; }
         public string Immagine { get; set; }
         public List<ListaImmagini> ListaImmagini { get; set; }
-        public string Ordinamento { get; set; }
+        public int Ordinamento { get; set; }
 
     }
 }

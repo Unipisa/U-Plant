@@ -37,13 +37,13 @@ public partial class Accessioni
 
     public string localita { get; set; }
 
-    public decimal? altitudine { get; set; }
+    public int? altitudine { get; set; }
 
     public string habitat { get; set; }
 
     public Guid tipoMateriale { get; set; }
 
-    public decimal numeroEsemplari { get; set; }
+    public int numeroEsemplari { get; set; }
 
     public Guid statoMateriale { get; set; }
 
@@ -75,6 +75,8 @@ public partial class Accessioni
 
     public virtual GradoIncertezza gradoIncertezzaNavigation { get; set; }
 
+    public virtual Identificatori identificatoreNavigation { get; set; }
+
     public virtual Nazioni nazioneNavigation { get; set; }
 
     public virtual Organizzazioni organizzazioneNavigation { get; set; }
@@ -98,6 +100,4 @@ public partial class Accessioni
     public virtual Users utenteAcquisizioneNavigation { get; set; }
 
     public virtual Users utenteUltimaModificaNavigation { get; set; }
-
-    public virtual Identificatori identificatoreNavigation { get; set; }
 }

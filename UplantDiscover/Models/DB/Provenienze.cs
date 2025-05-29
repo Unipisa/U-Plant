@@ -13,7 +13,7 @@ public partial class Provenienze
 
     public string descrizione_en { get; set; }
 
-    public string ordinamento { get; set; }
+    public int ordinamento { get; set; }
 
     public virtual ICollection<Accessioni> Accessioni { get; set; } = new List<Accessioni>();
 

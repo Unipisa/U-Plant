@@ -21,7 +21,7 @@ namespace UplantDiscover.Models
         public string Collezione { get; set; }
         public string Propagatodata { get; set; }
         public int NumeroImmagini { get; set; }
-        public string Ordinamento { get; set; }
+        public int Ordinamento { get; set; }
 
         public string Immagine { get; set; }
         

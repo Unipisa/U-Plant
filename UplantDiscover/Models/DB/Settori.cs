@@ -15,7 +15,7 @@ public partial class Settori
 
     public bool visualizzazioneweb { get; set; }
 
-    public string ordinamento { get; set; }
+    public int ordinamento { get; set; }
 
     public virtual ICollection<Collezioni> Collezioni { get; set; } = new List<Collezioni>();
 

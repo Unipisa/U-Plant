@@ -13,7 +13,7 @@ public partial class StatoIndividuo
 
     public bool visualizzazioneweb { get; set; }
 
-    public string ordinamento { get; set; }
+    public int ordinamento { get; set; }
 
     public virtual ICollection<StoricoIndividuo> StoricoIndividuo { get; set; } = new List<StoricoIndividuo>();
 

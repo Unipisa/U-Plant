@@ -111,7 +111,7 @@ namespace UplantDiscover.Controllers
             List<SelectListItem> listasettori = new List<SelectListItem>();
             if (lingua == "it-IT")
             {
-                listasettori = (from product in _context.Settori.OrderBy(a => a.settore).Where(a => !notallowedsector.Contains(a.settore))
+                listasettori = (from product in _context.Settori.OrderBy(a => a.settore).Where(a => a.visualizzazioneweb == true)
                                 select new SelectListItem()
                                 {
 
@@ -160,7 +160,7 @@ namespace UplantDiscover.Controllers
                  }).Distinct().ToList();*/
                 
 
-                listacollezioni = (from product in _context.Collezioni.OrderBy(a => a.collezione).Where(a => !notallowedsector.Contains(a.settoreNavigation.settore)).Where(a =>!a.collezione.Contains("Non Def")).Where(a => !a.collezione.ToUpper().Contains("NESSUNA"))
+                listacollezioni = (from product in _context.Collezioni.OrderBy(a => a.collezione).Where(a => a.settoreNavigation.visualizzazioneweb==true).Where(a =>!a.collezione.Contains("Non Def")).Where(a => !a.collezione.ToUpper().Contains("NESSUNA"))
                                    select  new SelectListItem()
                                      {
                                          Text = product.collezione != null ? product.collezione : product.collezione_en,

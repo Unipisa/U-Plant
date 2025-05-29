@@ -11,7 +11,7 @@ public partial class TipologiaUtente
 
     public Guid organizzazione { get; set; }
 
-    public string ordinamento { get; set; }
+    public int ordinamento { get; set; }
 
     public virtual ICollection<Users> Users { get; set; } = new List<Users>();
 
