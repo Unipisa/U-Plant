@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DocumentFormat.OpenXml.Office2010.Excel;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -58,19 +59,27 @@ namespace UPlant.Controllers
         }
 
         // GET: StoricoIndividuo/Create
-        public IActionResult Create(string idindividuo,string tipo,string damodifica)
+        public IActionResult Create(Guid idindividuo,string tipo,string damodifica)
         {
         if (damodifica== "ok") { 
             var messaggio = "Hai appena fatto una modifica all'individuo vuoi aggiornare il suo stato?Altrimenti torna alla pagina dell'individuo";
             AddPageAlerts(PageAlertType.Success, messaggio);
             }
+            var storicoindividuo = _context.StoricoIndividuo.Where(x => x.individuo == idindividuo).ToList().OrderByDescending(x => x.dataInserimento).FirstOrDefault();
             ViewData["individuo"] = idindividuo;
             ViewData["tipo"] = tipo;
-            ViewData["condizione"] = new SelectList(_context.Condizioni.OrderBy(x => x.condizione), "id", "condizione");
-            ViewData["statoIndividuo"] = new SelectList(_context.StatoIndividuo.OrderBy(x => x.stato), "id", "stato");
-
-           
+            if (storicoindividuo == null) {
+                ViewData["condizione"] = new SelectList(_context.Condizioni.OrderBy(x => x.condizione), "id", "condizione");
+                ViewData["statoIndividuo"] = new SelectList(_context.StatoIndividuo.OrderBy(x => x.stato), "id", "stato");
+            }
+            else
+            {
+                ViewData["condizione"] = new SelectList(_context.Condizioni.OrderBy(x => x.condizione), "id", "condizione", storicoindividuo.condizione);
+                ViewData["statoIndividuo"] = new SelectList(_context.StatoIndividuo.OrderBy(x => x.stato), "id", "stato", storicoindividuo.statoIndividuo);
+             
+            }
             return View();
+
         }
 
         // POST: StoricoIndividuo/Create

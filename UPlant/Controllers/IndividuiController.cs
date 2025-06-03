@@ -637,7 +637,7 @@ namespace UPlant.Controllers
 
 
                
-
+                // passare ultimi valori stato individuo
                 return RedirectToAction(nameof(Create), nameof(StoricoIndividuo), new { idindividuo = individui.id, tipo= tipo ,damodifica = "ok" });
               //  return RedirectToAction("../StoricoIndivi/Create", new { idindividuo = individui.id, damodifica = "ok" });
             }
