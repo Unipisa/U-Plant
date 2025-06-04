@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace UPlant.Models.DB;
 
@@ -8,7 +9,9 @@ public partial class Accessioni
     public Guid id { get; set; }
 
     public Guid organizzazione { get; set; }
-
+    [Editable(false)]
+    [Display(Name = "Data Acquisizione")]
+    [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
     public DateTime dataAcquisizione { get; set; }
 
     public string progressivo { get; set; }
@@ -64,7 +67,7 @@ public partial class Accessioni
     public string longitudine { get; set; }
 
     public bool validazione { get; set; }
-
+    [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
     public DateTime? dataraccolta { get; set; }
 
     public string ipendiprovenienza { get; set; }
