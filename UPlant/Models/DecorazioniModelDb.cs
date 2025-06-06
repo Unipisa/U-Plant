@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 
 namespace UPlant.Models.DB
 {
@@ -15,14 +16,9 @@ namespace UPlant.Models.DB
         [Required]
         public int ordinamento { get; set; }
     }
-    [MetadataType(typeof(CartelliniCustom))]
+    [ModelMetadataType(typeof(CartelliniCustom))]
     public partial class Cartellini
     {   
-    }
-
-    [MetadataType(typeof(PercorsiCustom))]
-    public partial class Percorsi
-    {
     }
 
     public partial class PercorsiCustom
@@ -32,6 +28,9 @@ namespace UPlant.Models.DB
         public string titolo { get; set; }
 
     }
+
+    [ModelMetadataType(typeof(PercorsiCustom))]
+    public partial class Percorsi{}
    
 
 
@@ -44,7 +43,7 @@ namespace UPlant.Models.DB
         [Required]
         public string ordinamento { get; set; }
     }
-    [MetadataType(typeof(CitesCustom))]
+    [ModelMetadataType(typeof(CitesCustom))]
     public partial class Cites
     {
     }
@@ -59,7 +58,7 @@ namespace UPlant.Models.DB
         public string ordinamento { get; set; }
 
     }
-    [MetadataType(typeof(CondizioniCustom))]
+    [ModelMetadataType(typeof(CondizioniCustom))]
     public partial class Condizioni
     { }
 
@@ -77,7 +76,7 @@ namespace UPlant.Models.DB
         public string ordinamento { get; set; }
 
     }
-    [MetadataType(typeof(IucnCustom))]
+    [ModelMetadataType(typeof(IucnCustom))]
     public partial class Iucn
     { }
 
@@ -95,7 +94,7 @@ namespace UPlant.Models.DB
         public string ordinamento { get; set; }
 
     }
-    [MetadataType(typeof(ModalitaPropagazioneCustom))]
+    [ModelMetadataType(typeof(ModalitaPropagazioneCustom))]
     public partial class ModalitaPropagazione
     { }
 
@@ -112,7 +111,7 @@ namespace UPlant.Models.DB
         public string ordinamento { get; set; }
 
     }
-    [MetadataType(typeof(ProvenienzeCustom))]
+    [ModelMetadataType(typeof(ProvenienzeCustom))]
     public partial class Provenienze
     { }
 
@@ -130,7 +129,7 @@ namespace UPlant.Models.DB
         public string ordinamento { get; set; }
 
     }
-    [MetadataType(typeof(RegniCustom))]
+    [ModelMetadataType(typeof(RegniCustom))]
     public partial class Regni
     { }
 
@@ -152,7 +151,7 @@ namespace UPlant.Models.DB
         public string ordinamento { get; set; }
 
     }
-    [MetadataType(typeof(SettoriCustom))]
+    [ModelMetadataType(typeof(SettoriCustom))]
     public partial class Settori
     { }
 
@@ -172,7 +171,7 @@ namespace UPlant.Models.DB
         public string ordinamento { get; set; }
 
     }
-    [MetadataType(typeof(StatoIndividuoCustom))]
+    [ModelMetadataType(typeof(StatoIndividuoCustom))]
     public partial class StatoIndividuo { }
 
 
@@ -190,7 +189,7 @@ namespace UPlant.Models.DB
 
 
     }
-    [MetadataType(typeof(StatoMaterialeCustom))]
+    [ModelMetadataType(typeof(StatoMaterialeCustom))]
     public partial class StatoMateriale { }
 
 
@@ -209,7 +208,7 @@ namespace UPlant.Models.DB
 
 
     }
-    [MetadataType(typeof(TipiMaterialeCustom))]
+    [ModelMetadataType(typeof(TipiMaterialeCustom))]
     public partial class TipiMateriale { }
 
 
@@ -226,7 +225,7 @@ namespace UPlant.Models.DB
         public string ordinamento { get; set; }
 
     }
-    [MetadataType(typeof(TipoAcquisizioneCustom))]
+    [ModelMetadataType(typeof(TipoAcquisizioneCustom))]
     public partial class TipoAcquisizione { }
 
 
@@ -242,7 +241,7 @@ namespace UPlant.Models.DB
 
 
     }
-    [MetadataType(typeof(TipologiaUtenteCustom))]
+    [ModelMetadataType(typeof(TipologiaUtenteCustom))]
     public partial class TipologiaUtente { }
 
 
@@ -262,7 +261,7 @@ namespace UPlant.Models.DB
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime? dataraccolta { get; set; }
     }
-    [MetadataType(typeof(AccessioniCustom))]
+    [ModelMetadataType(typeof(AccessioniCustom))]
     public partial class Accessioni { }
 
 
