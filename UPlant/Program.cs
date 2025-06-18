@@ -76,9 +76,36 @@ builder.Services.AddDbContext<Entities>(options => {
 
 }
     );
+
+builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
+builder.Services.AddControllersWithViews()
+        .AddViewLocalization()
+        .AddDataAnnotationsLocalization();
+
+    // Leggi la cultura di default da appsettings
+    var defaultCulture = configuration["Localization:DefaultCulture"];
+
+    builder.Services.Configure<RequestLocalizationOptions>(options =>
+    {
+        var supportedCultures = new List<CultureInfo>
+        {
+            new CultureInfo("it-IT"),
+            new CultureInfo("en-US")
+            // aggiungi altre lingue se necessario
+        };
+
+        options.DefaultRequestCulture = new RequestCulture(defaultCulture);
+        options.SupportedCultures = supportedCultures;
+        options.SupportedUICultures = supportedCultures;
+    });
+
+
+builder.Services.AddSingleton<LanguageService>();
+/*
+
 builder.Services.AddSingleton<LanguageService>();
 
-var typelanguage = configuration["AppSettings:Application:TypeLanguage"];
+//var typelanguage = configuration["AppSettings:Application:TypeLanguage"];
 builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
 builder.Services.AddMvc()
                .AddViewLocalization()
@@ -94,10 +121,6 @@ builder.Services.AddMvc()
                    };
 
                });
-
-    
-   
-
 
 
 
@@ -127,7 +150,7 @@ builder.Services.Configure<RequestLocalizationOptions>(
 
 
                 });
-
+*/
 builder.Services.AddTransient<IStringLocalizer, CustomLocalizer>();
 #endregion
 #region Autenticazione e Cookie
@@ -444,7 +467,8 @@ builder.Services.AddDirectoryBrowser();
 #endregion
 #region HTTP pipeline configuration
 var app = builder.Build();
-
+var locOptions = app.Services.GetService<IOptions<RequestLocalizationOptions>>();
+app.UseRequestLocalization(locOptions.Value);
 if (!app.Environment.IsDevelopment())
 {
     // Replace the following line:  
@@ -460,9 +484,9 @@ if (!app.Environment.IsDevelopment())
 }
 
 // inizio aggiunto per definire la lingua
-var locOptions = app.Services.GetService<IOptions<RequestLocalizationOptions>>();
-var tipodefault = locOptions.Value.DefaultRequestCulture.Culture;
-app.UseRequestLocalization(locOptions.Value);
+//var locOptions = app.Services.GetService<IOptions<RequestLocalizationOptions>>();
+//var tipodefault = locOptions.Value.DefaultRequestCulture.Culture;
+//app.UseRequestLocalization(locOptions.Value);
 // fine
 
 app.UseHttpsRedirection();

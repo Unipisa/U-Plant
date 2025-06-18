@@ -1,6 +1,13 @@
 ﻿@model IEnumerable<Message>
+@using System.Globalization
 
-                                                    @if (User.IsInRole("Administrator")) {
+@if (User.IsInRole("Administrator")) {
+    @if (@CultureInfo.CurrentCulture.Name == "it-IT")
+    {
+        <a asp-controller="Common" asp-action="SetLanguage" asp-route-culture="en-US" asp-route-returnUrl="~/"> English </a>
+    } else {
+    <a asp-controller="Common" asp-action="SetLanguage" asp-route-culture="it-IT" asp-route-returnUrl="~/">Italiano</a>
+    }
 <li class="nav-item dropdown">
     <!-- Menu toggle button -->
     <a class="nav-link" data-toggle="dropdown" href="#">

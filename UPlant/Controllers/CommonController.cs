@@ -11,6 +11,7 @@ using DymoSDK.Implementations;
 using DymoSDK.Interfaces;
 
 using System.Configuration;
+using Microsoft.AspNetCore.Localization;
 
 
 
@@ -28,6 +29,18 @@ namespace UPlant.Controllers
 
 
         }
+
+        public IActionResult SetLanguage(string culture, string returnUrl)
+        {
+            Response.Cookies.Append(
+                CookieRequestCultureProvider.DefaultCookieName,
+                CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(culture)),
+                new CookieOptions { Expires = DateTimeOffset.UtcNow.AddYears(1) }
+            );
+
+            return LocalRedirect(returnUrl);
+        }
+
 
         public JsonResult GetNazioni()
         {
