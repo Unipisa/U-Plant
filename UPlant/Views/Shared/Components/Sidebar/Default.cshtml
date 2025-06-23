@@ -1,4 +1,6 @@
 ﻿@model IEnumerable<SidebarMenu>
+@using System.Globalization
+
 
 <aside class="main-sidebar sidebar-dark-primary elevation-4 customBorder">
     <aside class="main-sidebar sidebar-dark-primary elevation-4">
@@ -7,6 +9,7 @@
             var logos = @AppSettings.Value.Application.UrlLogoSsmall;
             var logol = @AppSettings.Value.Application.UrlLogoSlarge;
             var definizione = @AppSettings.Value.Application.NomeUrlLogoS;
+           
 
             var cognome = @User.Identities.FirstOrDefault()?.Claims?.Where(c => c.Type == "family_name").FirstOrDefault()?.Value;
             var nome = @User.Identities.FirstOrDefault()?.Claims?.Where(c => c.Type == "given_name").FirstOrDefault()?.Value;
@@ -434,19 +437,20 @@
 
                             </li>
                         
-                        
-                        
+                            
                         
                         }
                     </ul>
                         
                 </nav>
 
-
+               
                 
 
         </div>
+           
         }
     </aside>
+    
 </aside>
-                   
+                  

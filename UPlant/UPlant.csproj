@@ -14,6 +14,8 @@
 
   <ItemGroup>
     <Content Remove="wwwroot\img\cherubino-white.svg" />
+    <Content Remove="wwwroot\img\en-EN.png" />
+    <Content Remove="wwwroot\img\it-IT.png" />
     <Content Remove="wwwroot\img\uplantlarge.png" />
   </ItemGroup>
 
@@ -40,6 +42,12 @@
 
   <ItemGroup>
     <None Include="wwwroot\img\cherubino-white.svg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="wwwroot\img\en-EN.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="wwwroot\img\it-IT.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="wwwroot\img\uplantlarge.png">
@@ -150,6 +158,12 @@
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>
 	  <None Update="Assets\img\cheru_180.png">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="Assets\img\en-EN.png">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="Assets\img\it-IT.png">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>
 	  <None Update="Assets\img\uplant.png">
