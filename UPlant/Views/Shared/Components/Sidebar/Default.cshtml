@@ -443,8 +443,37 @@
                     </ul>
                         
                 </nav>
+                <hr />
+                <div>
+                   
+                    @if (@CultureInfo.CurrentCulture.Name == "it-IT")
+                    {
+                        <div class="col-md-6 offset-sm-0">
+                            <a asp-controller="Common" asp-action="SetLanguage" asp-route-culture="en-US" asp-route-returnUrl="~/">
+                                <img src="~/img/en-EN.png" alt="" width="20" height="15">
+                                <span title="English">
+                                    English
+                                </span>
 
-               
+                            </a>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="col-md-6 offset-sm-0">
+                        <a asp-controller="Common" asp-action="SetLanguage" asp-route-culture="it-IT" asp-route-returnUrl="~/">
+                            <img src="~/img/it-IT.png" alt="" width="20" height="15">
+                            <span title="Italiano">
+                                Italiano
+                            </span>
+
+                        </a>
+                        </div>
+                    }
+
+
+
+                </div>
                 
 
         </div>
