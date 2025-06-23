@@ -1,9 +1,33 @@
 ﻿@model IEnumerable<Message>
+@using System.Globalization
 
+
+
+
+@if (@CultureInfo.CurrentCulture.Name == "it-IT")
+{
+
+    <a asp-controller="Common" asp-action="SetLanguage" asp-route-culture="en-US" asp-route-returnUrl="~/" class="nav-link">
+        <img src="~/img/en-EN.png" alt="" width="20" height="15" class="align-content-md-between">
+    </a>
+
+}
+else
+{
+
+    <a asp-controller="Common" asp-action="SetLanguage" asp-route-culture="it-IT" asp-route-returnUrl="~/" class="nav-link">
+        <img src="~/img/it-IT.png" alt="" width="20" height="15" class="align-content-md-between">
+    </a>
+
+}
 
 @if (User.IsInRole("Administrator")) {
    
 <li class="nav-item dropdown">
+        
+
+
+     
     <!-- Menu toggle button -->
     <a class="nav-link" data-toggle="dropdown" href="#">
         <i class="fa-solid fa-bell fa-shake" style="color: #FFD43B;"></i>
@@ -21,7 +45,7 @@
             </a>
             
         }
-       
+            
     </div>
 </li>
                                                     }
