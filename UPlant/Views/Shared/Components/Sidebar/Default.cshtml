@@ -1,29 +1,26 @@
 ﻿@model IEnumerable<SidebarMenu>
-@using System.Globalization
-
 
 <aside class="main-sidebar sidebar-dark-primary elevation-4 customBorder">
     <aside class="main-sidebar sidebar-dark-primary elevation-4">
-       @if (User.Identity.IsAuthenticated)
+        @if (User.Identity.IsAuthenticated)
         {
             var logos = @AppSettings.Value.Application.UrlLogoSsmall;
             var logol = @AppSettings.Value.Application.UrlLogoSlarge;
             var definizione = @AppSettings.Value.Application.NomeUrlLogoS;
-           
 
             var cognome = @User.Identities.FirstOrDefault()?.Claims?.Where(c => c.Type == "family_name").FirstOrDefault()?.Value;
             var nome = @User.Identities.FirstOrDefault()?.Claims?.Where(c => c.Type == "given_name").FirstOrDefault()?.Value;
             <div class="user-panel pull-left image">
-            <a href="/" class="brand-link logo-switch ">
-                <img src="~/@logos" alt="logosmall" class="brand-image-xl logo-xs">
+                <a href="/" class="brand-link logo-switch ">
+                    <img src="~/@logos" alt="logosmall" class="brand-image-xl logo-xs">
                     <img src="~/@logol" alt="logolarge" class="brand-image-xs logo-xl" style="left: 12px">
 
 
                     <div class="col-lg">@definizione</div>
                 </a>
             </div>
-            
-            
+
+
             <div class="sidebar">
 
 
@@ -33,49 +30,50 @@
                     <ul class="nav nav-pills nav-sidebar flex-column nav-flat nav-legacy" data-widget="treeview" role="menu" data-accordion="false">
                         @* blocco alberi che vediamo a seconda del ruolo*@
 
-                      
 
-                        @if(User.IsInRole("Administrator")) {
 
-                       <li class="nav-item has-treeview">
-                                    <a href = "#" class="nav-link">
+                        @if (User.IsInRole("Administrator"))
+                        {
+
+                            <li class="nav-item has-treeview">
+                                <a href="#" class="nav-link">
                                     <i class="fa fa-light fa-table-list"></i>
 
-                            <p class="text-xs-right">Amministrazione</p>
+                                    <p class="text-xs-right">Amministrazione</p>
 
-                            <i class="right fa fa-angle-left"></i>
-                                    </a>
-                                    <ul class="nav nav-treeview">
-                                   
+                                    <i class="right fa fa-angle-left"></i>
+                                </a>
+                                <ul class="nav nav-treeview">
+
                                     @*un albero*@
                                     <li class="nav-item has-treeview ">
                                         <a href="#" class="nav-link">
                                             <i class="nav-icon fa fa-table" style="color :beige"></i><p style="color :beige">Gestione Utenze</p><i class="right fa fa-angle-left"></i>
                                         </a>
                                         <ul class="nav nav-treeview">
-                                    <li class="nav-item">
-                                        <a asp-action="Index" asp-controller="Users" class="nav-link ">
-                                            <span  title="Utenti">
-                                                <i class="fa fa-angle-right mt-2"></i> Utenti
-                                            </span>
-                                        </a>
-                                    </li>
-                                   
-                                    <li class="nav-item">
-                                        <a asp-action="Index" asp-controller="TipologiaUtente" class="nav-link ">
-                                            <span title="Tipologia Utente">
+                                            <li class="nav-item">
+                                                <a asp-action="Index" asp-controller="Users" class="nav-link ">
+                                                    <span title="Utenti">
+                                                        <i class="fa fa-angle-right mt-2"></i> Utenti
+                                                    </span>
+                                                </a>
+                                            </li>
+
+                                            <li class="nav-item">
+                                                <a asp-action="Index" asp-controller="TipologiaUtente" class="nav-link ">
+                                                    <span title="Tipologia Utente">
                                                         <i class="fa fa-angle-right mt-2"></i> Tipologia Utente
-                                            </span>
-                                        </a>
-                                    </li>
+                                                    </span>
+                                                </a>
+                                            </li>
                                         </ul>
                                     </li>
-                                @*un albero*@
-                            <li class="nav-item has-treeview "  >
-                                            <a href = "#" class="nav-link">
+                                    @*un albero*@
+                                    <li class="nav-item has-treeview ">
+                                        <a href="#" class="nav-link">
                                             <i class="nav-icon fa fa-table" style="color :aqua"></i><p style="color :aqua">Tabelle di Accessioni</p><i class="right fa fa-angle-left"></i>
-                                            </a>
-                                            <ul class="nav nav-treeview">
+                                        </a>
+                                        <ul class="nav nav-treeview">
                                             <li class="nav-item">
                                                 <a asp-action="Index" asp-controller="TipoAcquisizione" class="nav-link">
                                                     <span>
@@ -99,21 +97,21 @@
                                             </li>
                                             <li class="nav-item">
                                                 <a asp-action="Index" asp-controller="Provenienze" class="nav-link active">
-                                                    <span >
+                                                    <span>
                                                         <i class="far fa-circle nav-icon"></i> Provenienze
                                                     </span>
                                                 </a>
                                             </li>
                                             <li class="nav-item">
                                                 <a asp-action="Index" asp-controller="StatoMateriale" class="nav-link active">
-                                                    <span >
+                                                    <span>
                                                         <i class="far fa-circle nav-icon"></i> Stato Materiale
                                                     </span>
                                                 </a>
                                             </li>
                                             <li class="nav-item">
                                                 <a asp-action="Index" asp-controller="GradoIncertezza" class="nav-link active">
-                                                    <span >
+                                                    <span>
                                                         <i class="far fa-circle nav-icon"></i> GradoIncertezza
                                                     </span>
                                                 </a>
@@ -134,7 +132,7 @@
                                             </li>
                                             <li class="nav-item">
                                                 <a asp-action="Index" asp-controller="Identificatori" class="nav-link active">
-                                                    <span >
+                                                    <span>
                                                         <i class="far fa-circle nav-icon"></i> Identificatori
                                                     </span>
                                                 </a>
@@ -146,15 +144,15 @@
                                                     </span>
                                                 </a>
                                             </li>
-                                                
-                                              </ul>
-                                        </li>
-                                @*un albero*@
-                            <li class="nav-item has-treeview">
-                                            <a href = "#" class="nav-link">
+
+                                        </ul>
+                                    </li>
+                                    @*un albero*@
+                                    <li class="nav-item has-treeview">
+                                        <a href="#" class="nav-link">
                                             <i class="nav-icon fa fa-table" style="color :orangered"></i><p style="color :orangered">Tabelle di Individui</p><i class="right fa fa-angle-left"></i>
-                                            </a>
-                                            <ul class="nav nav-treeview">
+                                        </a>
+                                        <ul class="nav nav-treeview">
                                             <li class="nav-item">
                                                 <a asp-action="Index" asp-controller="ModalitaPropagazione" class="nav-link active">
                                                     <span>
@@ -204,14 +202,14 @@
                                                     </span>
                                                 </a>
                                             </li>
-                                            </ul>
-                                        </li>
-@*un albero*@
-                                <li class="nav-item has-treeview">
-                                    <a href="#" class="nav-link">
-                                            <i class="nav-icon fa fa-table" style="color :forestgreen"></i><p style ="color :forestgreen">Famiglie-Generi-Specie</p><i class="right fa fa-angle-left"></i>
-                                    </a>
-                                    <ul class="nav nav-treeview">
+                                        </ul>
+                                    </li>
+                                    @*un albero*@
+                                    <li class="nav-item has-treeview">
+                                        <a href="#" class="nav-link">
+                                            <i class="nav-icon fa fa-table" style="color :forestgreen"></i><p style="color :forestgreen">Famiglie-Generi-Specie</p><i class="right fa fa-angle-left"></i>
+                                        </a>
+                                        <ul class="nav nav-treeview">
                                             <li class="nav-item">
                                                 <a asp-action="Index" asp-controller="Famiglie" class="nav-link active">
                                                     <span>
@@ -261,35 +259,35 @@
                                                     </span>
                                                 </a>
                                             </li>
-                                            
-                                    </ul>
-                                </li>
-                            </ul>
-                        </li>
+
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
                         }
                         @if (User.IsInRole("Administrator") || User.IsInRole("Operator") || User.IsInRole("TreeKeeper") || User.IsInRole("Discover") || User.IsInRole("Seminum") || User.IsInRole("Utility"))
-                        
+
                         {
 
                             <li class="nav-item has-treeview">
-                             <a href = "#" class="nav-link">
-                                 <i class="fa fa-light fa-table-list">
-                                 </i><p class="text-xs-right">  Inserimento</p>
-                            <i class="right fa fa-angle-left"></i>
-                            </a>
-                            
-                               
+                                <a href="#" class="nav-link">
+                                    <i class="fa fa-light fa-table-list">
+                                    </i><p class="text-xs-right">  Inserimento</p>
+                                    <i class="right fa fa-angle-left"></i>
+                                </a>
+
+
                                 <ul class="nav nav-treeview">
                                     <li class="nav-item">
                                         <a asp-action="Create" asp-controller="Accessioni" class="nav-link ">
-                                            <span >
+                                            <span>
                                                 <i class="far fa-circle nav-icon"></i> Nuova Accessione
                                             </span>
                                         </a>
                                     </li>
                                 </ul>
-                            </li>   
-                                 
+                            </li>
+
                             <li class="nav-item has-treeview">
                                 <a href="#" class="nav-link">
                                     <i class="fa fa-light fa-table-list"></i><p class="text-xs-right"> Moduli di Ricerca</p>
@@ -301,60 +299,10 @@
                                     <li class="nav-item">
                                         <a asp-action="Index" asp-controller="Accessioni" class="nav-link ">
                                             <span>
-                                            <i class="far fa-circle nav-icon"></i> Accessioni Recenti
+                                                <i class="far fa-circle nav-icon"></i> Accessioni Recenti
                                             </span>
                                         </a>
                                     </li>
-                                <li class="nav-item">
-                                    <a asp-action="RicercaAccessioni" asp-controller="Home" class="nav-link ">
-                                        <span>
-                                            <i class="far fa-circle nav-icon"></i> Ricerca Accessioni   
-                                        </span>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a asp-action="Ricercaindividui" asp-controller="Home" class="nav-link ">
-                                        <span>
-                                            <i class="far fa-circle nav-icon"></i> Ricerca Individui
-                                        </span>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a asp-action="EstraiAccessioniTotale" asp-controller="Home" class="nav-link ">
-                                        <span>
-                                            <i class="far fa-circle nav-icon"></i> Estrazione Accessioni
-                                        </span>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a asp-action="EstraiIndividuiTotale" asp-controller="Home" class="nav-link ">
-                                        <span>
-                                            <i class="far fa-circle nav-icon"></i> Estrazione Individui
-                                        </span>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a asp-action="EstraiSpecieTotale" asp-controller="Home" class="nav-link ">
-                                        <span>
-                                            <i class="far fa-circle nav-icon"></i> Estrazione Specie
-                                        </span>
-                                    </a>
-                                </li>
-                                </ul>
-                            </li>
-                        }
-                        else if (User.IsInRole("Reader"))
-                        {
-
-                           <li class="nav-item has-treeview">
-                                <a href="#" class="nav-link">
-                                    <i class="fa fa-light fa-table-list"></i><p class="text-xs-right"> Moduli di Ricerca</p>
-                                    <i class="right fa fa-angle-left"></i>
-                                </a>
-
-
-                                <ul class="nav nav-treeview">
-                                   
                                     <li class="nav-item">
                                         <a asp-action="RicercaAccessioni" asp-controller="Home" class="nav-link ">
                                             <span>
@@ -369,7 +317,57 @@
                                             </span>
                                         </a>
                                     </li>
-                                   
+                                    <li class="nav-item">
+                                        <a asp-action="EstraiAccessioniTotale" asp-controller="Home" class="nav-link ">
+                                            <span>
+                                                <i class="far fa-circle nav-icon"></i> Estrazione Accessioni
+                                            </span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a asp-action="EstraiIndividuiTotale" asp-controller="Home" class="nav-link ">
+                                            <span>
+                                                <i class="far fa-circle nav-icon"></i> Estrazione Individui
+                                            </span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a asp-action="EstraiSpecieTotale" asp-controller="Home" class="nav-link ">
+                                            <span>
+                                                <i class="far fa-circle nav-icon"></i> Estrazione Specie
+                                            </span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        }
+                        else if (User.IsInRole("Reader"))
+                        {
+
+                            <li class="nav-item has-treeview">
+                                <a href="#" class="nav-link">
+                                    <i class="fa fa-light fa-table-list"></i><p class="text-xs-right"> Moduli di Ricerca</p>
+                                    <i class="right fa fa-angle-left"></i>
+                                </a>
+
+
+                                <ul class="nav nav-treeview">
+
+                                    <li class="nav-item">
+                                        <a asp-action="RicercaAccessioni" asp-controller="Home" class="nav-link ">
+                                            <span>
+                                                <i class="far fa-circle nav-icon"></i> Ricerca Accessioni
+                                            </span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a asp-action="Ricercaindividui" asp-controller="Home" class="nav-link ">
+                                            <span>
+                                                <i class="far fa-circle nav-icon"></i> Ricerca Individui
+                                            </span>
+                                        </a>
+                                    </li>
+
                                 </ul>
                             </li>
                         }
@@ -377,26 +375,27 @@
                         @if (User.IsInRole("Administrator") || User.IsInRole("Operator") || User.IsInRole("Alberi") || User.IsInRole("Discover") || User.IsInRole("Seminum") || User.IsInRole("Utility"))
 
                         {
-                             <li class="nav-item has-treeview">
-                                    <a href = "#" class="nav-link">
+                            <li class="nav-item has-treeview">
+                                <a href="#" class="nav-link">
                                     <i class="fa fa-light fa-table-list"></i>
                                     <p class="text-xs-right">Strumenti di Supporto</p><i class="right fa fa-angle-left"></i>
                                 </a>
                                 <ul class="nav nav-treeview">
-                                @if (User.IsInRole("Administrator") || User.IsInRole("Operator")) {
+                                    @if (User.IsInRole("Administrator") || User.IsInRole("Operator"))
+                                    {
                                         <li class="nav-item has-treeview">
                                             <a href="#" class="nav-link">
                                                 <i class="nav-icon fa fa-table" style="color :orange"></i>
                                                 <p class="text-xs-right" style="color :orange">Uplant Discover</p><i class="right fa fa-angle-left"></i>
                                             </a>
                                             <ul class="nav nav-treeview">
-                                            <li class="nav-item">
-                                                <a asp-action="Index" asp-controller="Percorsi" class="nav-link ">
-                                                    <span>
-                                                        <i class="far fa-circle nav-icon"></i> Percorsi
-                                                    </span>
-                                                </a>
-                                            </li>
+                                                <li class="nav-item">
+                                                    <a asp-action="Index" asp-controller="Percorsi" class="nav-link ">
+                                                        <span>
+                                                            <i class="far fa-circle nav-icon"></i> Percorsi
+                                                        </span>
+                                                    </a>
+                                                </li>
                                             </ul>
                                         </li>
                                     }
@@ -431,55 +430,24 @@
                                             </a>
                                         </li>
                                     }
-                                   
+
                                 </ul>
 
 
                             </li>
-                        
-                            
-                        
+
+
+
+
                         }
                     </ul>
-                        
+
                 </nav>
-              
-                <div>
-                   
-                    @if (@CultureInfo.CurrentCulture.Name == "it-IT")
-                    {
-                        <div class="col-md-6 offset-sm-0">
-                            <a asp-controller="Common" asp-action="SetLanguage" asp-route-culture="en-US" asp-route-returnUrl="~/">
-                                <img src="~/img/en-EN.png" alt="" width="20" height="15">
-                                <span title="English">
-                                    English
-                                </span>
-
-                            </a>
-                        </div>
-                    }
-                    else
-                    {
-                        <div class="col-md-6 offset-sm-0">
-                        <a asp-controller="Common" asp-action="SetLanguage" asp-route-culture="it-IT" asp-route-returnUrl="~/">
-                            <img src="~/img/it-IT.png" alt="" width="20" height="15">
-                            <span title="Italiano">
-                                Italiano
-                            </span>
-
-                        </a>
-                        </div>
-                    }
 
 
 
-                </div>
-                
 
-        </div>
-           
+            </div>
         }
     </aside>
-    
 </aside>
-                  

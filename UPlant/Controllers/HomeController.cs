@@ -643,20 +643,37 @@ namespace UPlant.Controllers
                 .Include(s => s.iucn_italiaNavigation)
                 .Include(s => s.regnoNavigation).ToList();
             StringBuilder sb = new StringBuilder();
-
-
+            var Famiglia = "";
+            var Genere = "";
+            var NomeScientifico = "";
+            var NomeComune = "";
+            var NomeComuneEN = "";
+            var Regno = "";
+            var Areale = "";
+            var IUCNGlobale = "";
+            var IUCNItalia = "";
+            var CITES = "";
             sb.AppendFormat("{0};{1};{2};{3};{4};{5};{6};{7};{8};{9};", ada("Famiglia"), ada("Genere"), ada("Nome Scientifico"), ada("Nome Comune"), ada("Nome Comune Inglese"), ada("Regno"), ada("Areale"), ada("IUCN Globale"), ada("IUCN Italia"), ada("CITES"));
             sb.AppendFormat(Environment.NewLine);
             foreach (var item in listaspecie)
             {
-                var IUCNGlobale = "";
-                if (item.iucn_globale== Guid.Empty) { IUCNGlobale = "Campo Null o Vuoto Verificare"; } else { IUCNGlobale = item.iucn_globaleNavigation.codice; }
-                var IUCNItalia = "";
-                if (item.iucn_italia == Guid.Empty) { IUCNItalia = "Campo Null o Vuoto Verificare"; } else { IUCNItalia = item.iucn_italiaNavigation.codice; }
-                var CITES = "";
-                if (item.cites == Guid.Empty) { CITES = "Campo Null o Vuoto Verificare"; } else { CITES = item.citesNavigation.codice; }
+               
+                if (item.iucn_globale == Guid.Empty ) { IUCNGlobale = "Campo Null o Vuoto Verificare"; } else { IUCNGlobale = item.iucn_globaleNavigation.codice; }
+               
+                if (item.iucn_italia == Guid.Empty ) { IUCNItalia = "Campo Null o Vuoto Verificare"; } else { IUCNItalia = item.iucn_italiaNavigation.codice; }
+               
+                if (item.cites == Guid.Empty ) { CITES = "Campo Null o Vuoto Verificare"; } else { CITES = item.citesNavigation.codice; }
 
-                sb.AppendFormat("{0};{1};{2};{3};{4};{5};{6};{7};{8};{9};", ada(item.genereNavigation.famigliaNavigation.descrizione), ada(item.genereNavigation.descrizione), ada(item.nome_scientifico), ada(item.nome_comune), ada(item.nome_comune_en), ada(item.regnoNavigation.descrizione), ada(item.arealeNavigation.descrizione), ada(IUCNGlobale), ada(IUCNItalia), ada(CITES));
+                if (String.IsNullOrEmpty(item.genereNavigation.famigliaNavigation.descrizione)) { Famiglia = "Campo Null o Vuoto Verificare"; } else { CITES = item.genereNavigation.famigliaNavigation.descrizione; }
+                if (String.IsNullOrEmpty(item.genereNavigation.descrizione)) { Genere = "Campo Null o Vuoto Verificare"; } else { Genere = item.genereNavigation.descrizione; }
+                if (String.IsNullOrEmpty(item.nome_scientifico)) { NomeScientifico = "Campo Null o Vuoto Verificare"; } else { NomeScientifico = item.nome_scientifico; }
+                if (String.IsNullOrEmpty(item.nome_comune)) { NomeComune = "Campo Null o Vuoto Verificare"; } else { NomeComune = item.nome_comune; }
+                if (String.IsNullOrEmpty(item.nome_comune_en)) { NomeComuneEN = "Campo Null o Vuoto Verificare"; } else { NomeComuneEN = item.nome_comune_en; }
+                if (String.IsNullOrEmpty(item.regnoNavigation.descrizione)) { Regno = "Campo Null o Vuoto Verificare"; } else { Regno = item.regnoNavigation.descrizione; }
+                if (String.IsNullOrEmpty(item.arealeNavigation.descrizione)) { Areale = "Campo Null o Vuoto Verificare"; } else { Areale = item.arealeNavigation.descrizione; }
+
+
+                sb.AppendFormat("{0};{1};{2};{3};{4};{5};{6};{7};{8};{9};", ada(Famiglia), ada(Genere), ada(NomeScientifico), ada(NomeComune), ada(NomeComuneEN), ada(Regno), ada(Areale), ada(IUCNGlobale), ada(IUCNItalia), ada(CITES));
                 sb.AppendFormat(Environment.NewLine);
 
             }
