@@ -7,18 +7,18 @@
     @if (User.IsInRole("Administrator") || User.IsInRole("Operator") || User.IsInRole("TreeKeeper") || User.IsInRole("Discover") || User.IsInRole("Seminum") || User.IsInRole("Utility"))
     {
     <div class="col-md-3">
-            <h2>@language.Getkey("Rapidmenu")</h2>
+            <h2>@language.Getkey("Home_Index_1")</h2>
         <br />
         <button type="button" class="btn btn-lg btn-block" style="background-color :#3C8DBC;color :aliceblue" onclick="window.location.href = '@Url.Action("Create","Accessioni")';">
-                <span class="fa-brands fa-pagelines" aria-hidden="true"></span> Nuova Accessione
+                <span class="fa-brands fa-pagelines" aria-hidden="true"></span> @language.Getkey("Home_Index_2")
         </button>
     </div>
 
     <div class="col-md-3">
-        <h2>Estrazione Dati</h2>
+            <h2>@language.Getkey("Home_Index_16")</h2>
         <br />
             <button type="button" class="btn btn-default btn-lg btn-block" onclick="window.location.href = '@Url.Action("EstraiAccessioniTotale","Home")';">
-                <span class="fa-solid fa-file-zipper" aria-hidden="true"></span> Estrazione Accessioni
+                <span class="fa-solid fa-file-zipper" aria-hidden="true"></span> @language.Getkey("Home_Index_3")
         </button>
     </div>
 
@@ -26,7 +26,7 @@
     else if (User.IsInRole("Reader"))
     {
         <div class="col-md-3">
-            <h2>Menù Rapido</h2>
+            <h2>@language.Getkey("Home_Index_1")</h2>
 
 
         </div>
@@ -39,7 +39,7 @@
     }else
     {
         <div >
-            <h2>Mi dispiace ma non hai un ruolo per accedere ai servizi di Uplant</h2>
+            <h2>@language.Getkey("Home_Index_4")</h2>
 
 
         </div>
@@ -54,12 +54,12 @@
     {
         <div class="col-md-3">
             <button type="button" class="btn btn-lg btn-block" style="background-color :#F39C12;color :aliceblue" onclick="window.location.href = '@Url.Action("RicercaAccessioni","Home")';">
-                <span class="fa-solid fa-search" aria-hidden="true"></span> Ricerca Accessioni
+                <span class="fa-solid fa-search" aria-hidden="true"></span> @language.Getkey("Home_Index_5")
             </button>
         </div>
     <div class="col-md-3">
             <button type="button" class="btn btn-default btn-lg btn-block" onclick="window.location.href = '@Url.Action("EstraiIndividuiTotale", "Home")';">
-                <span class="fa-solid fa-file-zipper" aria-hidden="true"></span> Estrazione Individui
+                <span class="fa-solid fa-file-zipper" aria-hidden="true"></span> @language.Getkey("Home_Index_6")
         </button>
     </div>
     }
@@ -67,7 +67,7 @@
     {
         <div class="col-md-3">
             <button type="button" class="btn btn-warning btn-lg btn-block" onclick="window.location.href = '@Url.Action("RicercaAccessioni","Home")';">
-                <span class="fa-solid fa-search" aria-hidden="true"></span> Ricerca Accessioni
+                <span class="fa-solid fa-search" aria-hidden="true"></span> @language.Getkey("Home_Index_5")
             </button>
         </div>
     }
@@ -81,12 +81,12 @@
     {
         <div class="col-md-3">
             <button type="button" class="btn btn-lg btn-block" style="background-color :#DD4B39;color :aliceblue" onclick="window.location.href = '@Url.Action("RicercaIndividui","Home")';">
-                <span class="fa-solid fa-search" aria-hidden="true"></span> Ricerca Individui
+                <span class="fa-solid fa-search" aria-hidden="true"></span> @language.Getkey("Home_Index_7")
             </button>
         </div>
     <div class="col-md-3">
             <button type="button" class="btn btn-default btn-lg btn-block" onclick="window.location.href = '@Url.Action("EstraiSpecieTotale", "Home")';">
-                <span class="fa-solid fa-file-zipper" aria-hidden="true"></span> Estrazione Specie
+                <span class="fa-solid fa-file-zipper" aria-hidden="true"></span> @language.Getkey("Home_Index_8")
         </button>
     </div>
     } 
@@ -94,7 +94,7 @@
     {
         <div class="col-md-3">
             <button type="button" class="btn btn-danger btn-lg btn-block" onclick="window.location.href = '@Url.Action("RicercaIndividui","Home")';">
-                <span class="fa-solid fa-search" aria-hidden="true"></span> Ricerca Individui
+                <span class="fa-solid fa-search" aria-hidden="true"></span> @language.Getkey("Home_Index_7")
             </button>
         </div>
     }
@@ -106,10 +106,10 @@
   
     <div class="col-md-6">
         <table class="table table-bordered table-striped dataTable">
-                <caption class="text-center cell-border" style="caption-side: top;background-color :#008D4C;color :aliceblue">Dati Orto Botanico Pisa</caption>
+                <caption class="text-center cell-border" style="caption-side: top;background-color :#008D4C;color :aliceblue">@language.Getkey("Home_Index_9")</caption>
             <tr>
                 <td>
-                    Numero di nomi accettati in Uplant
+                   @language.Getkey("Home_Index_10")
                 </td>
                 <td class="text-bold">
                     <font color="green">@ViewBag.cens</font>
@@ -117,7 +117,7 @@
             </tr>
             <tr>
                 <td>
-                    Numero di famiglie coltivate in Orto
+                        @language.Getkey("Home_Index_11")
                 </td>
                 <td class="text-bold">
                     <font color="blue"> @ViewBag.fam</font>
@@ -125,7 +125,7 @@
             </tr>
             <tr>
                 <td>
-                    Numero di generi coltivati in Orto
+                        @language.Getkey("Home_Index_12")
                 </td>
                 <td class="text-bold">
                     <font color="violet">  @ViewBag.gen</font>
@@ -133,7 +133,7 @@
             </tr>
             <tr>
                 <td>
-                    Numero di specie coltivate in Orto
+                        @language.Getkey("Home_Index_13")
                 </td>
                 <td class="text-bold">
                     <font color="red"> @ViewBag.spe</font>
@@ -141,7 +141,7 @@
             </tr>
             <tr>
                 <td>
-                    Numero di specie coltivate in nursery
+                        @language.Getkey("Home_Index_14")
                 </td>
                 <td class="text-bold">
                     <font color="brown">  @ViewBag.nur</font>
@@ -149,7 +149,7 @@
             </tr>
             <tr>
                 <td>
-                    Numero di specie disponibili nell'Index Seminum
+                        @language.Getkey("Home_Index_15")
                 </td>
                 <td class="text-bold">
                     <font color="black">@ViewBag.ban</font>

@@ -120,7 +120,52 @@
   <data name="MenuTop_Logout" xml:space="preserve">
     <value>Logout</value>
   </data>
-  <data name="Rapidmenu" xml:space="preserve">
+  <data name="Home_Index_1" xml:space="preserve">
     <value>Menù Rapido</value>
+  </data>
+  <data name="Home_Index_2" xml:space="preserve">
+    <value>Nuova Accessione</value>
+  </data>
+  <data name="Home_Index_3" xml:space="preserve">
+    <value>Estrazione Accessioni</value>
+  </data>
+  <data name="Home_Index_4" xml:space="preserve">
+    <value>Mi dispiace ma non hai un ruolo per accedere ai servizi di U-Plant</value>
+  </data>
+  <data name="Home_Index_5" xml:space="preserve">
+    <value>Ricerca Accessioni</value>
+  </data>
+  <data name="Home_Index_6" xml:space="preserve">
+    <value>Estrazione Individui</value>
+  </data>
+  <data name="Home_Index_7" xml:space="preserve">
+    <value>Ricerca Individui</value>
+  </data>
+  <data name="Home_Index_8" xml:space="preserve">
+    <value>Estrazione Specie</value>
+  </data>
+  <data name="Home_Index_9" xml:space="preserve">
+    <value>Dati Orto Botanico Pisa</value>
+  </data>
+  <data name="Home_Index_10" xml:space="preserve">
+    <value>Numero di nomi accettati in U-Plant</value>
+  </data>
+  <data name="Home_Index_11" xml:space="preserve">
+    <value>Numero di famiglie coltivate in Orto</value>
+  </data>
+  <data name="Home_Index_12" xml:space="preserve">
+    <value>Numero di generi coltivati in Orto</value>
+  </data>
+  <data name="Home_Index_13" xml:space="preserve">
+    <value>Numero di specie coltivate in Orto</value>
+  </data>
+  <data name="Home_Index_14" xml:space="preserve">
+    <value>Numero di specie coltivate in nursery</value>
+  </data>
+  <data name="Home_Index_15" xml:space="preserve">
+    <value>Numero di specie disponibili nell'Index Seminum</value>
+  </data>
+  <data name="Home_Index_16" xml:space="preserve">
+    <value>Estrazione Dati</value>
   </data>
 </root>
