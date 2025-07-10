@@ -1,5 +1,5 @@
 ﻿@model UPlant.Models.DB.Specie
-
+@inject LanguageService language
 @{
     ViewData["Title"] = "Delete";
 }
@@ -23,7 +23,7 @@
             @Html.DisplayFor(model => model.nome)
         </dd>
         <dt class = "col-sm-2">
-            Nome Scientifico
+                @language.Getkey("Global_Scientific_Name")
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.nome_scientifico)

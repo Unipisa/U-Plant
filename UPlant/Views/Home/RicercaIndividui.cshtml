@@ -1,6 +1,6 @@
 ﻿@using Azure.Core
 @model IEnumerable<UPlant.Models.DB.RisultatoRicercaInd>
-
+@inject LanguageService language
 
 @{
     ViewBag.Title = "Ricerca Individui";
@@ -22,11 +22,11 @@
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="form-row">
             <div class="form-group col-md-4 autocomplete " >
-                <label for="inputNomeScientifico"> Nome Scientifico</label>
-                <input type="text" class="form-control" id="specie" name="specie" placeholder="Nome Scientifico" value="@ViewBag.specie" >
+                <label for="inputNomeScientifico">@language.Getkey("Global_Scientific_Name")</label>
+                <input type="text" class="form-control" id="specie" name="specie" placeholder="@language.Getkey("Global_Scientific_Name")" value="@ViewBag.specie">
             </div>
             <div class="form-group col-md-4">
-                <label for="inputFamiglia">Famiglia</label>
+                <label for="inputFamiglia">@language.Getkey("Global_Family")</label>
                 @Html.DropDownList("famiglia", (IEnumerable<SelectListItem>)ViewBag.listafamiglie, "Tutti", htmlAttributes: new { @Id = "famiglia", @class = "form-control" })
             </div>
             <div class="form-group col-md-4 autocomplete">
@@ -118,7 +118,7 @@
                         Vecchio Progressivo
                     </th>
                     <th>
-                        Nome Scientifico
+                        @language.Getkey("Global_Scientific_Name")
                     </th>
                     <th>
                         Settore

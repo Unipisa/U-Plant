@@ -168,4 +168,10 @@
   <data name="Home_Index_16" xml:space="preserve">
     <value>Estrazione Dati</value>
   </data>
+  <data name="Global_Family" xml:space="preserve">
+    <value>Famiglia</value>
+  </data>
+  <data name="Global_Scientific_Name" xml:space="preserve">
+    <value>Nome Scientifico</value>
+  </data>
 </root>

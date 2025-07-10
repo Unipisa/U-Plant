@@ -1,5 +1,5 @@
 ﻿@model UPlant.Models.DB.Accessioni
-
+@inject LanguageService language
 @{
     ViewBag.Title = "Accessioni";
     string url = string.Empty;
@@ -45,7 +45,7 @@
                                     <th style="width: 100% " colspan="4"></th>
                                 </tr>
                                 <tr style="width: 100% ; height: 23px;">
-                                    <th>Famiglia</th>
+                                    <th>@language.Getkey("Global_Family")</th>
                                     <th>Genere <a id="addlink2" href="#" style="display:none">+</a></th>
                                     <th colspan="2">Specie <a id="addlink" href="#" style="display:none">+</a></th>
 

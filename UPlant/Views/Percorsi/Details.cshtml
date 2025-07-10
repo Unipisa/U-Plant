@@ -1,5 +1,5 @@
 ﻿@model UPlant.Models.DB.Percorsi
-
+@inject LanguageService language
 @{
     
     ViewBag.Title = "Percorsi";
@@ -132,7 +132,7 @@
                                                 Vecchioprogressivo
                                             </th>
                                             <th>
-                                                Nome Scientifico
+                                @language.Getkey("Global_Scientific_Name")
                                             </th>
                                             <th>
                                                 Settore

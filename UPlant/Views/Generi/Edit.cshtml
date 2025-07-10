@@ -1,5 +1,5 @@
 ﻿@model UPlant.Models.DB.Generi
-
+@inject LanguageService language
 @{
     ViewData["Title"] = "Edit";
 }
@@ -17,7 +17,7 @@
                 <span asp-validation-for="descrizione" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="famiglia" class="control-label">Famiglia</label>
+                <label asp-for="famiglia" class="control-label">@language.Getkey("Global_Family")</label>
                 <select asp-for="famiglia" class="form-control" asp-items="ViewBag.famiglia"></select>
                 <span asp-validation-for="famiglia" class="text-danger"></span>
             </div>

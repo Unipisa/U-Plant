@@ -1,5 +1,5 @@
 ﻿@model IEnumerable<UPlant.Models.DB.Accessioni>
-
+@inject LanguageService language
 
 @{
 
@@ -40,10 +40,10 @@
                                             @Html.DisplayNameFor(model => model.vecchioprogressivo)
                                         </th>
                                         <th>
-                                            Nome Scientifico
+                            @language.Getkey("Global_Scientific_Name")
                                         </th>
                                         <th>
-                                            @Html.DisplayNameFor(model => model.specieNavigation.genereNavigation.famiglia)
+                            @language.Getkey("Global_Family")
                                         </th>
 
                                         <th>

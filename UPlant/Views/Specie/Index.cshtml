@@ -1,5 +1,5 @@
 ﻿@model IEnumerable<UPlant.Models.DB.Specie>
-
+@inject LanguageService language
 @{
     ViewData["Title"] = "Index";
 }
@@ -28,7 +28,7 @@
                                 <thead>
                                     <tr>
                                         <th>
-                                            Nome Scientifico
+                                        @language.Getkey("Global_Scientific_Name")
                                         </th>
                                         <th>
                                             Nome Comune
@@ -37,7 +37,7 @@
                                             Nome Comune Inglese
                                         </th>
                                         <th>
-                                            Famiglia
+                                        @language.Getkey("Global_Family")
                                         </th>
                                         <th>
                                             Genere

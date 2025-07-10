@@ -1,5 +1,5 @@
 ﻿@model UPlant.Models.DB.Individui
-
+@inject LanguageService language
 @{
     ViewData["Title"] = "Individui";
     
@@ -104,7 +104,7 @@
                     </tr>
                     <tr>
                         <th style="width:33%">
-                            Nome Scientifico
+                            @language.Getkey("Global_Scientific_Name")
                         </th>
                         <th style="width:33%">
                             &nbsp;

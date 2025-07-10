@@ -1,5 +1,5 @@
 ﻿@model IEnumerable<UPlant.Models.DB.Generi>
-
+@inject LanguageService language
 @{
     ViewData["Title"] = "Index";
 }
@@ -31,7 +31,7 @@
                 Descrizione
             </th>
             <th>
-                Famiglia
+                            @language.Getkey("Global_Family")
             </th>
             <th></th>
         </tr>

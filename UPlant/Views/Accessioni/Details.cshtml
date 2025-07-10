@@ -1,5 +1,5 @@
 ﻿@model UPlant.Models.DB.Accessioni
-
+@inject LanguageService language
 @{
     ViewData["Title"] = "Accessioni";
     string url = string.Empty;
@@ -72,7 +72,7 @@
                                     <th style="width: 1195px; height: 0px;" colspan="5"></th>
                                 </tr>
                                 <tr style="height: 23px;">
-                                    <th style="width: 478px; height: 23px;">Nome Scientifico</th>
+                            <th style="width: 478px; height: 23px;">@language.Getkey("Global_Scientific_Name")</th>
                                     <th style="width: 239px; height: 23px;">Modalità acquisizione</th>
                                     <th style="width: 239px; height: 23px;">Tipo di materiale</th>
                                     <th style="width: 239px; height: 23px;">Origine del materiale</th>
