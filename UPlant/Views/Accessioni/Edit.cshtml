@@ -1,5 +1,5 @@
 ﻿@model UPlant.Models.DB.Accessioni
-
+@inject LanguageService language
 @{
     ViewData["Title"] = "Edit";
 
@@ -33,7 +33,7 @@
                                 <th style="width: 100% " colspan="5">@Html.HiddenFor(model => model.id)</th>
                             </tr>
                             <tr style="height: 23px;">
-                                <th style="width: 20% ">Numero Progressivo</th>
+                            <th style="width: 20% ">@language.Getkey("Global_Progressive")</th>
                                 <th style="width: 20% ">Ipen</th>
                                 <th style="width: 20%">Organizzazione</th>
                                 <th style="width: 20% ">Data acquisizione</th>
@@ -94,7 +94,7 @@
                                 <th style="width: 239px; height: 23px;">Quantit&agrave;</th>
                                 <th style="width: 239px; height: 23px;">Incertezza Tassonomica</th>
                                 <th style="width: 239px; height: 23px;">Erbario Associato</th>
-                                <th style="width: 239px; height: 23px;">Vecchio Progressivo</th>
+                            <th style="width: 239px; height: 23px;">@language.Getkey("Global_Old_Progressive")</th>
                                 <th style="width: 239px; height: 23px;">&nbsp;</th>
                             </tr>
                             <tr style="height: 23px;">

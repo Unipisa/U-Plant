@@ -1,5 +1,5 @@
 ﻿@model UPlant.Models.DB.StoricoIndividuo
-
+@inject LanguageService language
 @{
     ViewBag.Title = "Individui";
 }
@@ -16,11 +16,13 @@
     <div class="card card-outline card-primary">
         <div class="card-header with-border">
             <h3 class="card-title font-weight-bold">
-                <span class="text-primary">Aggiungi Individuo</span> - Progressivo Accessione : @ViewBag.progressivo 
+                <span class="text-primary">Aggiungi Individuo</span> - @language.Getkey("Global_Accession_Progressive") : @ViewBag.progressivo
                 @if (!String.IsNullOrEmpty(ViewBag.accvecprog))
                 {
 
-                    <span> - </span> @Html.Label("Vecchio Progressivo Accessione :  ") @ViewBag.accvecprog
+                    <span> - </span>
+                    <label asp-for="individuoNavigation.accessioneNavigation.vecchioprogressivo" class="control-label">@language.Getkey("Global_Old_Accession_Progressive")</label>
+                     @ViewBag.accvecprog
                 }<span> - </span> @Html.Label("Specie  :  ") @ViewBag.nome_scientifico
             </h3>
             </div>
@@ -58,14 +60,14 @@
                        @if (!String.IsNullOrEmpty(ViewBag.accvecprog))
                       {
                         <div class="form-group col">
-                            @Html.Label("Vecchio Progressivo Accessione")
+                            @language.Getkey("Global_Old_Accession_Progressive")
                             @Html.Label((string)ViewBag.accvecprog + "/")
                             @Html.ValidationMessageFor(model => model.individuoNavigation.vecchioprogressivo, "", new { @class = "text-danger" })
                         </div>
 
-
+                        
                         <div class="form-group col">
-                            @Html.Label("Vecchio Progressivo Individuo")
+                            @language.Getkey("Global_Old_Individual_Progressive")
                             @Html.EditorFor(model => model.individuoNavigation.vecchioprogressivo, new { htmlAttributes = new { @class = "form-control", @style = "width:180px", maxlength = "2" } })
                             @Html.ValidationMessageFor(model => model.individuoNavigation.vecchioprogressivo, "", new { @class = "text-danger" })
                         </div>

@@ -1,5 +1,5 @@
 ﻿@model IEnumerable<UPlant.Models.DB.IndividuiPercorso>
-
+@inject LanguageService language
 @{
     ViewData["Title"] = "Index";
 }
@@ -13,7 +13,7 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.individuoNavigation)
+                @language.Getkey("Global_Progressive")
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.percorsoNavigation)

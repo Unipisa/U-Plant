@@ -30,8 +30,8 @@
                 @Html.DropDownList("famiglia", (IEnumerable<SelectListItem>)ViewBag.listafamiglie, "Tutti", htmlAttributes: new { @Id = "famiglia", @class = "form-control" })
             </div>
             <div class="form-group col-md-4 autocomplete">
-                <label for="inputProgressivoAccessioni">Progressivo Accessione</label>
-                <input type="text" id="progacc" name="progacc" class="form-control" value="@ViewBag.progacc" placeholder="Progressivo Accessione">
+                <label for="inputProgressivoAccessioni">@language.Getkey("Global_Accession_Progressive")</label>
+                <input type="text" id="progacc" name="progacc" class="form-control" value="@ViewBag.progacc" placeholder="@language.Getkey("Global_Accession_Progressive")">
             </div>
            
             
@@ -112,10 +112,10 @@
                     <th>
                     </th>
                     <th>
-                        Progressivo
+                        @language.Getkey("Global_Progressive")
                     </th>
                     <th>
-                        Vecchio Progressivo
+                        @language.Getkey("Global_Old_Progressive")
                     </th>
                     <th>
                         @language.Getkey("Global_Scientific_Name")

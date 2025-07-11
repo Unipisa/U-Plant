@@ -1,5 +1,5 @@
 ﻿@model IEnumerable<UPlant.Models.DB.ImmaginiIndividuo>
-
+@inject LanguageService language
 @{
     ViewData["Title"] = "Index";
 }
@@ -34,7 +34,7 @@
                 @Html.DisplayNameFor(model => model.credits)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.individuoNavigation)
+                @language.Getkey("Global_Progressiv")
             </th>
             <th></th>
         </tr>

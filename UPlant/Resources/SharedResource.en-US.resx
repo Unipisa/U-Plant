@@ -174,4 +174,22 @@
   <data name="Global_Scientific_Name" xml:space="preserve">
     <value>Scientific Name</value>
   </data>
+  <data name="Home_RicercaAccessioni_1" xml:space="preserve">
+    <value>Accession search</value>
+  </data>
+  <data name="Global_Progressive" xml:space="preserve">
+    <value>Progressive</value>
+  </data>
+  <data name="Global_Accession_Progressive" xml:space="preserve">
+    <value>Accession Progressive</value>
+  </data>
+  <data name="Global_Old_Progressive" xml:space="preserve">
+    <value>Old Progressive</value>
+  </data>
+  <data name="Global_Old_Accession_Progressive" xml:space="preserve">
+    <value>Old Accession Progressive</value>
+  </data>
+  <data name="Global_Old_Individual_Progressive" xml:space="preserve">
+    <value>Old Individual Progressive</value>
+  </data>
 </root>

@@ -1,5 +1,5 @@
 ﻿@model UPlant.Models.DB.Individui
-
+@inject LanguageService language
 @{
     ViewData["Title"] = "Edit";
 }
@@ -68,7 +68,7 @@
 
 
                     <div class="form-group col">
-                        <label asp-for="vecchioprogressivo" class="control-label">Vecchio Progressivo</label>
+                        <label asp-for="vecchioprogressivo" class="control-label">@language.Getkey("Global_Old_Progressive")</label>
                         <input asp-for="vecchioprogressivo" class="form-control" />
                         <span asp-validation-for="vecchioprogressivo" class="text-danger"></span>
                     </div>

@@ -1,5 +1,5 @@
 ﻿@model UPlant.Models.DB.StoricoIndividuo
-
+@inject LanguageService language
 @{
     ViewData["Title"] = "Details";
 }
@@ -29,7 +29,7 @@
             @Html.DisplayFor(model => model.condizioneNavigation.condizione)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.individuoNavigation)
+            @language.Getkey("Global_Progressive")
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.individuoNavigation.progressivo)

@@ -1,5 +1,5 @@
 ﻿@model UPlant.Models.DB.Individui
-
+@inject LanguageService language
 @{
     ViewBag.Title = "Validazione Individuo";
 }
@@ -17,7 +17,7 @@
                     <div class="box-body">
 
                         <label>
-                            @Html.DisplayNameFor(model => model.progressivo)
+                            @language.Getkey("Global_Progressive")
                         </label>
                         <div>
                             @Html.DisplayFor(model => model.progressivo)

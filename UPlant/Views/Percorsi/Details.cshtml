@@ -126,10 +126,10 @@
                                         <tr>
                                             <th></th>
                                             <th>
-                                                Progressivo
+                                @language.Getkey("Global_Progressive")
                                             </th>
                                             <th>
-                                                Vecchioprogressivo
+                                @language.Getkey("Global_Old_Progressive")
                                             </th>
                                             <th>
                                 @language.Getkey("Global_Scientific_Name")
@@ -259,7 +259,7 @@
 <div class="row">
 
     <div class="col-md-2">
-        <input id="progressivo" name="progressivo" type="text" placeholder="progressivo">
+        <input id="progressivo" name="progressivo" type="text" placeholder="@language.Getkey("Global_Progressive")">
         <input id="idpercorso" name="idpercorso" type="hidden" value="@Model.id">
     </div>
     <div class="col-md-1">

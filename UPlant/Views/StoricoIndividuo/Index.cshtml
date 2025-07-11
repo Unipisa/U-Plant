@@ -1,5 +1,5 @@
 ﻿@model IEnumerable<UPlant.Models.DB.StoricoIndividuo>
-
+@inject LanguageService language
 @{
     ViewData["Title"] = "Index";
 }
@@ -22,7 +22,7 @@
                 @Html.DisplayNameFor(model => model.condizioneNavigation)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.individuoNavigation)
+                @language.Getkey("Global_Progressive")
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.statoIndividuoNavigation)
