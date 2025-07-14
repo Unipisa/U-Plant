@@ -40,22 +40,22 @@
                 <input type="text" class="form-control" id="vecchioprogressivo" name="vecchioprogressivo" placeholder="@language.Getkey("Global_Old_Progressive")" value="@ViewBag.vecchioprogressivo" />
             </div>
             <div class="form-group col-sm-1">
-                <label for="inputDataInizio">Data Inizio</label>
-                <input type="date" class="form-control" id="datainserimentoinizio" name="datainserimentoinizio" placeholder="Data Inizio" value="@ViewBag.datainserimentoinizio.ToString("yyyy-MM-dd")" size="40" maxlength="50" />
+                <label for="inputDataInizio">@language.Getkey("Home_RicercaAccessioni_2")</label>
+                <input type="date" class="form-control" id="datainserimentoinizio" name="datainserimentoinizio" placeholder="@language.Getkey("Home_RicercaAccessioni_2")" value="@ViewBag.datainserimentoinizio.ToString("yyyy-MM-dd")" size="40" maxlength="50" />
             </div><span>&nbsp;</span><div class="form-group col-sm-1">
-                <label for="inputDatafine">Data fine</label>
+                <label for="inputDatafine">@language.Getkey("Home_RicercaAccessioni_3")</label>
                 <input type="date" class="form-control" id="datainserimentofine" name="datainserimentofine" placeholder="Data Fine" value="@ViewBag.datainserimentofine.ToString("yyyy-MM-dd")" size="40" maxlength="50" />
             </div>
 
         </div>
         <div class="form-row">
             <div class="form-group col-md-4">
-                <label for="inputTipodiMateriale">Tipo di Materiale</label>
+                <label for="inputTipodiMateriale">@language.Getkey("Global_Material_Type")</label>
                 @Html.DropDownList("tipomateriale", (IEnumerable<SelectListItem>)ViewBag.listatipomateriale, "Tutti", htmlAttributes: new { @Id = "tipomateriale", @class = "form-control" })
             </div>
 
             <div class="form-group col-md-4">
-                <label for="inputModalitadiacquisizione">Modalità di acquisizione</label>
+                <label for="inputModalitadiacquisizione">@language.Getkey("Global_Acquisition_Mode")</label>
                 @Html.DropDownList("tipoacquisizione", (IEnumerable<SelectListItem>)ViewBag.listatipoacquisizione, "Tutti", htmlAttributes: new { @Id = "tipoacquisizione", @class = "form-control" })
             </div>
             <div class="form-group col-md-4">

@@ -1,5 +1,5 @@
 ﻿@model IEnumerable<UPlant.Models.DB.TipiMateriale>
-
+@inject LanguageService language
 @{
     ViewData["Title"] = "Index";
 }
@@ -13,7 +13,7 @@
                 <div class="float-right success ">
                     <a asp-action="Create" >
                         <span class="btn btn-success" title="Aggiungi Tipo di Materiale">
-                            Aggiungi Tipo di Materiale
+                            @language.Getkey("Global_Add") @language.Getkey("Global_Material_Type")
                         </span>
                     </a>
 

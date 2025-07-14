@@ -1,12 +1,12 @@
 ﻿@model UPlant.Models.DB.TipiMateriale
-
+@inject LanguageService language
 @{
     ViewData["Title"] = "Edit";
 }
 
 <div class="card card-outline card-primary">
     <div class="card-header with-border">
-        <h3 class="card-title">Modifica Tipo di Materiale </h3>
+        <h3 class="card-title">@language.Getkey("Global_Edit") @language.Getkey("Global_Material_Type")</h3>
     </div>
     <div class="card-body">
 

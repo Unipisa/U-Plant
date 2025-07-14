@@ -1,12 +1,12 @@
 ﻿@model UPlant.Models.DB.TipoAcquisizione
-
+@inject LanguageService language
 @{
     ViewData["Title"] = "Create";
 }
 
 <div class="card card-outline card-primary">
     <div class="card-header with-border">
-        <h3 class="card-title">Aggiungi Modalità Acquisizione</h3>
+        <h3 class="card-title">@language.Getkey("Global_Add") @language.Getkey("Global_Acquisition_Mode")</h3>
     </div>
     <div class="card-body">
         <form asp-action="Create">

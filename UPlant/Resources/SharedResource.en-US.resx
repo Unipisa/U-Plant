@@ -192,4 +192,22 @@
   <data name="Global_Old_Individual_Progressive" xml:space="preserve">
     <value>Old Individual Progressive</value>
   </data>
+  <data name="Home_RicercaAccessioni_2" xml:space="preserve">
+    <value>Start Date</value>
+  </data>
+  <data name="Home_Ricerca_Accessioni_3" xml:space="preserve">
+    <value>End Date</value>
+  </data>
+  <data name="Global_Material_Type" xml:space="preserve">
+    <value>Tipo di Materiale</value>
+  </data>
+  <data name="Global_Edit" xml:space="preserve">
+    <value>Modifica</value>
+  </data>
+  <data name="Global_Add" xml:space="preserve">
+    <value>Aggiungi</value>
+  </data>
+  <data name="Global_Acquisition_Mode" xml:space="preserve">
+    <value>Acquisition Mode</value>
+  </data>
 </root>

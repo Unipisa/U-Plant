@@ -1,5 +1,5 @@
 ﻿@model IEnumerable<UPlant.Models.DB.TipoAcquisizione>
-
+@inject LanguageService language
 @{
     ViewData["Title"] = "Index";
 }
@@ -14,7 +14,7 @@
                 <div class="float-right success ">
                     <a asp-action="Create">
                         <span class="btn btn-success" title="Aggiungi Modalità">
-                            Aggiungi Modalità Acquisizione
+                            @language.Getkey("Global_Add") @language.Getkey("Global_Acquisition_Mode")
                         </span>
                     </a>
 
