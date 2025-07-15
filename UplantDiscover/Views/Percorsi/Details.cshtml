@@ -162,13 +162,29 @@
                        
                         nm = elencoindividui[i].nomecomune;
                     } else {
-                        nm = elencoindividui[i].nomecomune_en;
+                        nm = elencoindividui[i].nomecomuneen;
                     }
                         s += '</td>'
                             + '<td data-label="dati" id="dati"><b>IPEN</b>: ' + elencoindividui[i].ipen + ' <br><b>' + nomescientifico + '</b>: ' + elencoindividui[i].indentitatassonomica + ' <br><b>' + nomecomune + '</b>: ' + nm + '<br><b>@language.Getkey("settore")</b>: ' + elencoindividui[i].settore + '<br><b>@language.Getkey("collezione")</b>:  ' + elencoindividui[i].collezione + '<br> ';
-                        if (parseInt(elencoindividui[i].propagatodata.substring(6,10)) < 1950) {
+
+                         if (bandiera == "it"){
+
+                            if (parseInt(elencoindividui[i].propagatodata.substring(6,10)) < 1950) {
                             s += '<b>@language.Getkey("propagatodata")</b>: ' + elencoindividui[i].propagatodata.substring(6, 10)+ '<br>';
                         }
+
+                        } 
+                            if (bandiera == "en"){
+
+                                    if (parseInt(elencoindividui[i].propagatodata.substring(4,8)) < 1950) {
+                                    s += '<b>@language.Getkey("propagatodata")</b>: ' + elencoindividui[i].propagatodata.substring(4,8)+ '<br>';
+                            }
+
+                            } 
+
+
+
+
                         s += ' <a href ="@Url.Action("Details", "Home")?id=' + elencoindividui[i].id + '&percorso=yes&nome=' + data[0].titolo + '" class="link-success text-decoration-none fw-bold">' + det +' <i class="bi bi-zoom-in"></i></a> </td></tr>';
 
 

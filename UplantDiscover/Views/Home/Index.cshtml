@@ -511,7 +511,7 @@
                 type: "GET",
                 //                url: "getProvincie?codiceregione=" + codregionesel,
                 url: apiurl,
-                headers: { 'Authorization': token },
+             //   headers: { 'Authorization': token },
                 data: {
                     'codicesettore': codsettoresel,
                     'lingua': lingua
@@ -530,7 +530,7 @@
                             s += '<option value="' + data[i].id + '">' + data[i].collezione + '</option>';
                         }
                         if (lingua == 'en') {
-                            s += '<option value="' + data[i].id + '">' + data[i].collezioneEn + '</option>';
+                                s += '<option value="' + data[i].id + '">' + data[i].collezione_en + '</option>';
                         }
                     }
                   //  if (i == 0) {

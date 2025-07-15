@@ -128,7 +128,7 @@ namespace UplantDiscover.Controllers
             }
             if (lingua == "en-US")
             {
-                listasettori = (from product in _context.Settori.OrderBy(a => a.settore_en).Where(a => !notallowedsector.Contains(a.settore))
+                listasettori = (from product in _context.Settori.OrderBy(a => a.settore_en).Where(a => a.visualizzazioneweb == true)
                                 select new SelectListItem()
                                 {
 
@@ -177,7 +177,7 @@ namespace UplantDiscover.Controllers
             }
             if (lingua == "en-US")
             {
-                listacollezioni = (from product in _context.Collezioni.OrderBy(a => a.collezione_en).Where(a => !notallowedsector.Contains(a.settoreNavigation.settore_en)).Where(a => !a.collezione_en.Contains("Undefined")).Where(a => !a.collezione_en.ToUpper().Contains("NONE"))
+                listacollezioni = (from product in _context.Collezioni.OrderBy(a => a.collezione_en).Where(a => a.settoreNavigation.visualizzazioneweb==true).Where(a => !a.collezione_en.ToUpper().Contains("UNDEFINED")).Where(a => !a.collezione_en.ToUpper().Contains("NONE"))
                                    select new SelectListItem()
                                    {
                                        Text = product.collezione_en != null ? product.collezione_en : product.collezione_en,
@@ -201,7 +201,7 @@ namespace UplantDiscover.Controllers
             IEnumerable<Collezioni> col = null;
             if (lingua == "it")
             {
-                col =  _context.Collezioni.OrderBy(a => a.collezione).Where(a => !notallowedsector.Contains(a.settoreNavigation.settore)).Where(a => !a.collezione.Contains("Non Def"));
+                col = _context.Collezioni.OrderBy(a => a.collezione).Where(a => a.settoreNavigation.visualizzazioneweb == true).Where(a => !a.collezione.ToUpper().Contains("NON DEF")).Where(a => !a.collezione.ToUpper().Contains("NESSUNA"));
                 if (codicesettore != null)
                 {
                     col = col.Where(x => x.settore == codicesettore);
@@ -215,7 +215,7 @@ namespace UplantDiscover.Controllers
             }
             if (lingua == "en")
             {
-                col = _context.Collezioni.OrderBy(a => a.collezione_en).Where(a => !notallowedsector.Contains(a.settoreNavigation.settore)).Where(a => !a.collezione_en.Contains("Undefined"));
+                col = _context.Collezioni.OrderBy(a => a.collezione_en).Where(a => a.settoreNavigation.visualizzazioneweb == true).Where(a => !a.collezione_en.ToUpper().Contains("UNDEFINED")).Where(a => !a.collezione_en.ToUpper().Contains("NONE"));
                 if (codicesettore != null)
                 {
                     col = col.Where(x => x.settore == codicesettore);
