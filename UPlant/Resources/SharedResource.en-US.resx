@@ -210,4 +210,7 @@
   <data name="Global_Acquisition_Mode" xml:space="preserve">
     <value>Acquisition Mode</value>
   </data>
+  <data name="Global_Taxonymic_Identity" xml:space="preserve">
+    <value>Taxonymic Identity</value>
+  </data>
 </root>
