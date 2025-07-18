@@ -40,7 +40,7 @@
     <div class="col-xs-12">
         <div class="card card-outline card-primary">
             <div class="card-header with-border">
-            <h3 class="card-title">Dettaglio Accessione</h3>
+            <h3 class="card-title">@language.Getkey("Global_Detail") + " " + @language.Getkey("Global_Accession")</h3>
         </div>   <form role="form">
                 <div class="card-body">
                         <table style="height: 30px; width: 100% " class="table-striped table-bordered">
@@ -66,7 +66,7 @@
                                     <td style="width: 239px; height: 23px;">@Convert.ToDateTime(Model.dataUltimaModifica).ToString("dd/MM/yyyy")</td>
                                 </tr>
                                 <tr style="height: 12px;">
-                            <th style="width: 1195px; height: 12px; " colspan="5" rowspan="2" class="bg-lightblue">Dettagli</th>
+                            <th style="width: 1195px; height: 12px; " colspan="5" rowspan="2" class="bg-lightblue">@language.Getkey("Global_Details")</th>
                                 </tr>
                                 <tr style="height: 0px;">
                                     <th style="width: 1195px; height: 0px;" colspan="5"></th>
@@ -277,7 +277,7 @@
                                     <tr>
                                         <td>
                                           <a asp-action="Details" asp-controller="Individui" asp-route-id="@item.id" asp-route-tipo="@ViewBag.tipo">
-                                                            <span class="btn btn-primary btn-xs" title="dettaglio individuo">
+                                                            <span class="btn btn-primary btn-xs" title="@language.Getkey("Global_Detail") + ' ' + @language.Getkey("Global_Individual")">
                                                                 <i class="fa-solid fa-search"></i>
                                                             </span>
                                           </a>

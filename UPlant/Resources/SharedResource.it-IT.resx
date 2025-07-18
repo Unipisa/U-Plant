@@ -168,9 +168,6 @@
   <data name="Home_Index_16" xml:space="preserve">
     <value>Estrazione Dati</value>
   </data>
-  <data name="Global_Family" xml:space="preserve">
-    <value>Famiglia</value>
-  </data>
   <data name="Global_Scientific_Name" xml:space="preserve">
     <value>Nome Scientifico</value>
   </data>
@@ -205,12 +202,57 @@
     <value>Edit</value>
   </data>
   <data name="Global_Add" xml:space="preserve">
-    <value>Add</value>
+    <value>Aggiungi</value>
   </data>
   <data name="Global_Acquisition_Mode" xml:space="preserve">
     <value>Modalità di Acquisizione</value>
   </data>
   <data name="Global_Taxonymic_Identity" xml:space="preserve">
     <value>Identità Tassonomica</value>
+  </data>
+  <data name="Global_Genus" xml:space="preserve">
+    <value>Genere</value>
+  </data>
+  <data name="Global_Delete" xml:space="preserve">
+    <value>Cancella</value>
+  </data>
+  <data name="Global_Question_Delete" xml:space="preserve">
+    <value>Sei sicuro di voler cancellare questo/a</value>
+  </data>
+  <data name="Global_Select" xml:space="preserve">
+    <value>Seleziona</value>
+  </data>
+  <data name="Global_Species" xml:space="preserve">
+    <value>Specie</value>
+  </data>
+  <data name="Global_Country" xml:space="preserve">
+    <value>Nazione</value>
+  </data>
+  <data name="Global_Region" xml:space="preserve">
+    <value>Regione</value>
+  </data>
+  <data name="Global_Province" xml:space="preserve">
+    <value>Provincia</value>
+  </data>
+  <data name="Global_Details" xml:space="preserve">
+    <value>Dettagli</value>
+  </data>
+  <data name="Global_Detail" xml:space="preserve">
+    <value>Dettaglio</value>
+  </data>
+  <data name="Global_Accession" xml:space="preserve">
+    <value>Accessione</value>
+  </data>
+  <data name="Global_Individual" xml:space="preserve">
+    <value>Individuo</value>
+  </data>
+  <data name="Global_Role" xml:space="preserve">
+    <value>Ruolo</value>
+  </data>
+  <data name="Global_Family" xml:space="preserve">
+    <value>Famiglia</value>
+  </data>
+  <data name="Global_User" xml:space="preserve">
+    <value>Utente</value>
   </data>
 </root>

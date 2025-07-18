@@ -51,7 +51,7 @@
                                 <td style="width: 239px; height: 23px;">@Convert.ToDateTime(Model.dataUltimaModifica).ToString("dd/MM/yyyy")</td>
                             </tr>
                             <tr style="height: 12px;">
-                                <th style="width: 1195px; height: 12px; " colspan="5" rowspan="2" class="bg-light-blue-active">Dettagli</th>
+                            <th style="width: 1195px; height: 12px; " colspan="5" rowspan="2" class="bg-light-blue-active">@language.Getkey("Global_Details")</th>
                             </tr>
                             <tr style="height: 0px;">
                                 <th style="width: 1195px; height: 0px;" colspan="5"></th>
@@ -132,7 +132,7 @@
                             <tr style="height: 23px;">
                                 <th style="width: 239px; height: 23px;">Nazione</th>
                                 <td style="width: 239px; height: 23px;" colspan="2">
-                                    @Html.DropDownList("nazione", null, "Seleziona Nazione", htmlAttributes: new { @Id = "nazione", @class = "form-control", required = "Seleziona una Nazione" })
+                                @Html.DropDownList("nazione", null, @language.Getkey("Global_Select") + " " + @language.Getkey("Global_Country"), htmlAttributes: new { @Id = "nazione", @class = "form-control", required = "Seleziona una Nazione" })
                                     @*   @Html.DropDownList("nazione", null, htmlAttributes: new { @class = "form-control" })*@
                                     @Html.ValidationMessageFor(model => model.nazione, "", new { @class = "text-danger" })
                                 </td>
@@ -146,7 +146,7 @@
                             <tr style="height: 23px;">
                                 <th style="width: 239px; height: 23px;">Regione</th>
                                 <td style="width: 239px; height: 23px;" colspan="2">
-                                    @Html.DropDownList("regione", null, "Seleziona Regione", htmlAttributes: new { @Id = "regione", @class = "form-control" })
+                                @Html.DropDownList("regione", null, @language.Getkey("Global_Select") + " " + @language.Getkey("Global_Region"), htmlAttributes: new { @Id = "regione", @class = "form-control" })
                                     @*  @Html.DropDownList("regione", null, htmlAttributes: new { @class = "form-control" }))*@
                                     @Html.ValidationMessageFor(model => model.regione, "", new { @class = "text-danger" })
                                 </td>
@@ -161,7 +161,7 @@
                             <tr style="height: 23px;">
                                 <th style="width: 239px; height: 23px;">Provincia</th>
                                 <td style="width: 239px; height: 23px;" colspan="2">
-                                    @Html.DropDownList("provincia", null, "Seleziona Provincia", htmlAttributes: new { @Id = "provincia", @class = "form-control" })
+                                @Html.DropDownList("provincia", null, @language.Getkey("Global_Select") + " " + @language.Getkey("Global_Province"), htmlAttributes: new { @Id = "provincia", @class = "form-control" })
                                     @*     @Html.DropDownList("provincia", null, htmlAttributes: new { @class = "form-control" })*@
                                     @Html.ValidationMessageFor(model => model.provincia, "", new { @class = "text-danger" })
                                 </td>

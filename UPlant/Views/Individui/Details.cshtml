@@ -45,7 +45,7 @@
             
             <div class="card-header with-border">
                 <h3 class="card-title font-weight-bold">
-                    <span class="text-primary">Dettaglio Individuo</span> - @Html.DisplayFor(model => model.progressivo) 
+                    <span class="text-primary">@language.Getkey("Global_Detail")  @language.Getkey("Global_Individual")</span> - @Html.DisplayFor(model => model.progressivo) 
                     @if (!String.IsNullOrEmpty(Model.vecchioprogressivo))
                     {
 

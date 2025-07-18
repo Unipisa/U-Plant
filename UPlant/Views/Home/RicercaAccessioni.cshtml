@@ -128,7 +128,7 @@
                     </th>
 
                     <th>
-                        Genere
+                       @language.Getkey("Global_Genus")
                     </th>
 
                     <th>
@@ -168,7 +168,7 @@
                                 <td>
                                    
                                     <a asp-action="Details" asp-controller="Accessioni" asp-route-id="@item.id" asp-route-tipo="ricerca">
-                                        <span class="btn btn-primary btn-xs" title="dettaglio individuo">
+                                        <span class="btn btn-primary btn-xs" title="@language.Getkey("Global_Detail") + ' ' + @language.Getkey("Global_Individual")">
                                             <i class="fa-solid fa-search"></i>
                                         </span>
                                     </a>

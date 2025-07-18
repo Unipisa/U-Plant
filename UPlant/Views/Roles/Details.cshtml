@@ -1,12 +1,12 @@
 ﻿@model UPlant.Models.DB.Roles
-
+@inject LanguageService language
 @{
     ViewData["Title"] = "Details";
 }
 
 <div class="card card-outline card-primary">
     <div class="card-header with-border">
-        <h3 class="card-title">Dettaglio Ruolo</h3>
+        <h3 class="card-title">@language.Getkey("Global_Detail")  @language.Getkey("Global_Role")</h3>
     </div>
 
     <div class="col-md-12">

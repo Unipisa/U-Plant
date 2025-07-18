@@ -82,7 +82,7 @@
                                         <tr>
                                             <td>
                                 <a asp-action="Details" asp-controller="Accessioni" asp-route-id="@item.id" asp-route-tipo="accessione">
-                                                    <span class="btn btn-primary btn-xs" title="dettaglio accessione">
+                                    <span class="btn btn-primary btn-xs" title="@language.Getkey("Global_Detail") + ' ' + @language.Getkey("Global_Accession")">
                                                         <i class="fa-solid fa-search"></i>
                                                     </span>
                                                 </a>

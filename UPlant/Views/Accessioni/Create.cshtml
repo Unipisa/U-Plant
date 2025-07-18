@@ -46,7 +46,7 @@
                                 </tr>
                                 <tr style="width: 100% ; height: 23px;">
                                     <th>@language.Getkey("Global_Family")</th>
-                                    <th>Genere <a id="addlink2" href="#" style="display:none">+</a></th>
+                                    <th>@language.Getkey("Global_Genus") <a id="addlink2" href="#" style="display:none">+</a></th>
                                     <th colspan="2">Specie <a id="addlink" href="#" style="display:none">+</a></th>
 
 
@@ -54,19 +54,19 @@
                                 <tr style="width: 100% ;height: 12px;">
                                     <td>
 									 
-                                        @Html.DropDownList("famiglia", null, "Seleziona la Famiglia", htmlAttributes: new { @Id = "famiglia", @class = "form-control" })
+                                        @Html.DropDownList("famiglia", null, @language.Getkey("Global_Select") + " "+ @language.Getkey("Global_Family"), htmlAttributes: new { @Id = "famiglia", @class = "form-control" })
                                         @Html.ValidationMessageFor(model => model.specieNavigation.genereNavigation.famigliaNavigation.id, "", new { @class = "text-danger" })
                                     </td>
                                     <td>
                                         <span id="labelgenere" style="display: none;"></span>
                                         <span id="generespan">
-                                            @Html.DropDownList("genere", null, "Seleziona il genere", htmlAttributes: new { @Id = "genere", @class = "form-control", @disabled = true })
+                                            @Html.DropDownList("genere", null, @language.Getkey("Global_Select") + " " + @language.Getkey("Global_Genus"), htmlAttributes: new { @Id = "genere", @class = "form-control", @disabled = true })
                                             @Html.ValidationMessageFor(model => model.specieNavigation.genereNavigation.id, "", new { @class = "text-danger" })
                                         </span>
                                     </td>
                                     <td colspan="2">
 
-                                        @Html.DropDownList("specie", null, "Seleziona la specie", htmlAttributes: new { @Id = "specie", @class = "form-control", @disabled = true,
+                                        @Html.DropDownList("specie", null, @language.Getkey("Global_Select") + " "+ @language.Getkey("Global_Species"), htmlAttributes: new { @Id = "specie", @class = "form-control", @disabled = true,
                                        @style = "width: 100%;" })
                                         @Html.ValidationMessageFor(model => model.specieNavigation.id, "", new { @class = "text-danger" })
 
@@ -78,7 +78,7 @@
 
 
                                 <tr style="height: 12px;">
-                                    <th style="width: 100%; height: 12px; " colspan="4" rowspan="2" class="bg-light-blue-active">Dettagli</th>
+                                    <th style="width: 100%; height: 12px; " colspan="4" rowspan="2" class="bg-light-blue-active">@language.Getkey("Global_Details")</th>
                                 </tr>
                                 <tr style="height: 0px;">
                                     <th style="width: 100%; height: 0px;" colspan="4"></th>
@@ -143,7 +143,7 @@
                                 <tr style="height: 23px;">
                                     <th style="height: 23px;">Nazione</th>
                                     <td style="height: 23px;">
-                                        @Html.DropDownList("nazione", null, "Seleziona Nazione", htmlAttributes: new { @Id = "nazione", @class = "form-control", required = "Seleziona una Nazione" })
+                                        @Html.DropDownList("nazione", null, @language.Getkey("Global_Select") + " " + @language.Getkey("Global_Country"), htmlAttributes: new { @Id = "nazione", @class = "form-control", required = "Seleziona una Nazione" })
                                         @Html.ValidationMessageFor(model => model.nazione, "", new { @class = "text-danger" })
                                     </td>
                                     <td colspan="2" rowspan="9"> <div id="myMap"></div></td>
@@ -151,14 +151,14 @@
                                 <tr style="height: 23px;">
                                     <th style="height: 23px;">Regione</th>
                                     <td style="height: 23px;">
-                                        @Html.DropDownList("regione", null, "Seleziona Regione", htmlAttributes: new { @Id = "regione", @class = "form-control" })
+                                        @Html.DropDownList("regione", null, @language.Getkey("Global_Select") + " " + @language.Getkey("Global_Region"), htmlAttributes: new { @Id = "regione", @class = "form-control" })
                                     </td>
 
                                 </tr>
                                 <tr style="height: 23px;">
                                     <th style="height: 23px;">Provincia</th>
                                     <td style="height: 23px;">
-                                        @Html.DropDownList("provincia", null, "Seleziona Provincia", htmlAttributes: new { @Id = "provincia", @class = "form-control" })
+                                        @Html.DropDownList("provincia", null, @language.Getkey("Global_Select") + " " + @language.Getkey("Global_Province"), htmlAttributes: new { @Id = "provincia", @class = "form-control" })
                                     </td>
 
 
@@ -407,7 +407,7 @@
 
                 <table id="addGenere" name="addGenere" style="display: none;" align="left">
                     <tr>
-                        <th class="bg-light-blue-active">Aggiungi Genere</th>
+                        <th class="bg-light-blue-active">@language.Getkey("Global_Add") @language.Getkey("Global_Genus")</th>
 
                     </tr>
                     <tr>
