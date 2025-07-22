@@ -75,8 +75,8 @@
                             <th style="width: 478px; height: 23px;">@language.Getkey("Global_Scientific_Name")</th>
                                     <th style="width: 239px; height: 23px;">@language.Getkey("Global_Acquisition_Mode")</th>
                                     <th style="width: 239px; height: 23px;">@language.Getkey("Global_Material_Type")</th>
-                                    <th style="width: 239px; height: 23px;">Origine del materiale</th>
-                                    <th style="width: 478px; height: 23px;">Stato del materiale</th>
+                            <th style="width: 239px; height: 23px;">@language.Getkey("Global_Material_Origin")</th>
+                            <th style="width: 478px; height: 23px;">@language.Getkey("Global_Material_Status")</th>
 
                                 </tr>
                                 <tr style="height: 23px;">
@@ -88,8 +88,8 @@
 
                                 </tr>
                                 <tr style="height: 23px;">
-                                    <th style="width: 239px; height: 23px;">Quantità di esemplari</th>
-                                    <th style="width: 239px; height: 23px;">Incertezza Tassonomica</th>
+                            <th style="width: 239px; height: 23px;">@language.Getkey("Global_Quantity")</th>
+                            <th style="width: 239px; height: 23px;">@language.Getkey("Global_Taxonomic_Uncertainty")</th>
                                     <th style="width: 239px; height: 23px;">Erbario Associato</th>
                                     <th style="width: 239px; height: 23px;">IPEN</th>
                                     <th style="width: 239px; height: 23px;">&nbsp;</th>
@@ -145,13 +145,13 @@
                                     <th style="width: 239px; height: 23px;">Altitudine</th>
                                     <td style="width: 239px; height: 23px;">@Html.DisplayFor(model => model.altitudine)</td>
                                 <tr style="height: 23px;">
-                                    <th style="width: 239px; height: 23px;">Localit&agrave;</th>
+                            <th style="width: 239px; height: 23px;">@language.Getkey("Global_Location")</th>
                                     <td style="width: 239px; height: 23px;" colspan="2"> @Html.DisplayFor(model => model.localita)</td>
                                     <th style="width: 239px; height: 23px;">Habitat</th>
                                     <td style="width: 239px; height: 23px;">@Html.DisplayFor(model => model.habitat)</td>
                                 </tr>
                                 <tr style="height: 23px;">
-                                    <th style="width: 239px; height: 23px;">Data Raccolta</th>
+                            <th style="width: 239px; height: 23px;">@language.Getkey("Global_Collection_Date")</th>
                                     <td style="width: 239px; height: 23px;" colspan="2"> @Html.DisplayFor(model => model.dataraccolta)</td>
                                     <th style="width: 239px; height: 23px;"> </th>
                                     <td style="width: 239px; height: 23px;"> </td>

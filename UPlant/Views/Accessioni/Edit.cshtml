@@ -60,8 +60,8 @@
 
                                 <th style="width: 239px; height: 23px;">Specie</th>
                             <th style="width: 239px; height: 23px;">@language.Getkey("Global_Material_Type")</th>
-                                <th style="width: 239px; height: 23px;">Stato del materiale</th>
-                                <th style="width: 239px; height: 23px;">Origine del materiale</th>
+                            <th style="width: 239px; height: 23px;">@language.Getkey("Global_Material_Status")</th>
+                            <th style="width: 239px; height: 23px;">@language.Getkey("Global_Material_Origin")</th>
                             <th style="width: 239px; height: 23px;">@language.Getkey("Global_Acquisition_Mode")</th>
 
                             </tr>
@@ -91,8 +91,8 @@
                             </tr>
 
                             <tr style="height: 23px;">
-                                <th style="width: 239px; height: 23px;">Quantit&agrave;</th>
-                                <th style="width: 239px; height: 23px;">Incertezza Tassonomica</th>
+                            <th style="width: 239px; height: 23px;">@language.Getkey("Global_Quantity")</th>
+                            <th style="width: 239px; height: 23px;">@language.Getkey("Global_Taxonomic_Uncertainty")</th>
                                 <th style="width: 239px; height: 23px;">Erbario Associato</th>
                             <th style="width: 239px; height: 23px;">@language.Getkey("Global_Old_Progressive")</th>
                                 <th style="width: 239px; height: 23px;">&nbsp;</th>
@@ -171,7 +171,7 @@
                                     @Html.ValidationMessageFor(model => model.altitudine, "", new { @class = "text-danger" })
                                 </td>
                             <tr style="height: 23px;">
-                                <th style="width: 239px; height: 23px;">Localit&agrave;</th>
+                            <th style="width: 239px; height: 23px;">@language.Getkey("Global_Location")</th>
                                 <td style="width: 239px; height: 23px;" colspan="2">
                                         @Html.EditorFor(model => model.localita, new { htmlAttributes = new { @class = "form-control" } })
                                         @Html.ValidationMessageFor(model => model.localita, "", new { @class = "text-danger" })
@@ -183,7 +183,7 @@
                                 </td>
                             </tr>
                             <tr style="height: 23px;">
-                                <th style="width: 239px; height: 23px;">Data Raccolta</th>
+                            <th style="width: 239px; height: 23px;">@language.Getkey("Global_Collection_Date")</th>
                                 <td style="width: 239px; height: 23px;" colspan="2">
                                     <div id="labeldataraccolta" class="form-group  col-md-6">
                                         <span id="labeldata">

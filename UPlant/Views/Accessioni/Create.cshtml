@@ -84,10 +84,10 @@
                                     <th style="width: 100%; height: 0px;" colspan="4"></th>
                                 </tr>
                                 <tr style="height: 12px;">
-                                    <th>Data Acquisizione</th>
+                                    <th>@language.Getkey("Global_Acquisition_Date")</th>
                                     <th style=" height: 23px;">@language.Getkey("Global_Acquisition_Mode")</th>
-                                    <th style=" height: 23px;">Tipo di materiale</th>
-                                    <th style="height: 23px;">Origine del materiale</th>
+                                    <th style=" height: 23px;">@language.Getkey("Global_Material_Type")</th>
+                                    <th style="height: 23px;">@language.Getkey("Global_Material_Origin")</th>
                                 </tr>
                                 <tr style="height: 23px;">
                                     <td style=" height: 23px;">
@@ -109,10 +109,10 @@
                                     </td>
                                 </tr>
                                 <tr style="height: 12px;">
-                                    <th style="height: 23px;">Stato del materiale</th>
-                                    <th style="height: 23px;">Quantit&agrave;</th>
-                                    <th style="height: 23px;">Incertezza Tassonomica</th>
-                                    <th style="height: 23px;">IPEN di provenienza</th>
+                                    <th style="height: 23px;">@language.Getkey("Global_Material_Status")</th>
+                                    <th style="height: 23px;">@language.Getkey("Global_Quantity")</th>
+                                    <th style="height: 23px;">@language.Getkey("Global_Taxonomic_Uncertainty")</th>
+                                    <th style="height: 23px;">IPEN</th>
                                 </tr>
                                 <tr style="height: 23px;">
                                     <td style="height: 23px;">
@@ -141,7 +141,7 @@
                                 </tr>
 
                                 <tr style="height: 23px;">
-                                    <th style="height: 23px;">Nazione</th>
+                                    <th style="height: 23px;">@language.Getkey("Global_Country")</th>
                                     <td style="height: 23px;">
                                         @Html.DropDownList("nazione", null, @language.Getkey("Global_Select") + " " + @language.Getkey("Global_Country"), htmlAttributes: new { @Id = "nazione", @class = "form-control", required = "Seleziona una Nazione" })
                                         @Html.ValidationMessageFor(model => model.nazione, "", new { @class = "text-danger" })
@@ -149,14 +149,14 @@
                                     <td colspan="2" rowspan="9"> <div id="myMap"></div></td>
                                 </tr>
                                 <tr style="height: 23px;">
-                                    <th style="height: 23px;">Regione</th>
+                                    <th style="height: 23px;">@language.Getkey("Global_Region")</th>
                                     <td style="height: 23px;">
                                         @Html.DropDownList("regione", null, @language.Getkey("Global_Select") + " " + @language.Getkey("Global_Region"), htmlAttributes: new { @Id = "regione", @class = "form-control" })
                                     </td>
 
                                 </tr>
                                 <tr style="height: 23px;">
-                                    <th style="height: 23px;">Provincia</th>
+                                    <th style="height: 23px;">@language.Getkey("Global_Province")</th>
                                     <td style="height: 23px;">
                                         @Html.DropDownList("provincia", null, @language.Getkey("Global_Select") + " " + @language.Getkey("Global_Province"), htmlAttributes: new { @Id = "provincia", @class = "form-control" })
                                     </td>
@@ -164,7 +164,7 @@
 
                                 </tr>
                                 <tr style="height: 23px;">
-                                    <th style="height: 23px;">Data Raccolta</th>
+                                    <th style="height: 23px;">@language.Getkey("Global_Collection_Date")</th>
                                     <td style="height: 23px;">
                                         <input type="date" id="dataraccolta" name="dataraccolta" />
                                         @Html.ValidationMessageFor(model => model.dataraccolta, "", new { @class = "text-danger" })
@@ -172,7 +172,7 @@
 
                                 </tr>
                             <tr style="height: 23px;">
-                                <th style="height: 23px;">Localit&agrave;</th>
+                                    <th style="height: 23px;">@language.Getkey("Global_Location")</th>
                                 <td style="height: 23px;">
                                     @Html.EditorFor(model => model.localita, new { htmlAttributes = new { @class = "form-control" } })
                                     @Html.ValidationMessageFor(model => model.localita, "", new { @class = "text-danger" })

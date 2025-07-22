@@ -255,4 +255,25 @@
   <data name="Global_User" xml:space="preserve">
     <value>User</value>
   </data>
+  <data name="Global_Material_Origin" xml:space="preserve">
+    <value>Origine del Materiale</value>
+  </data>
+  <data name="Global_Acquisition_Date" xml:space="preserve">
+    <value>Acquisition Date</value>
+  </data>
+  <data name="Global_Material_Status" xml:space="preserve">
+    <value>Material Status</value>
+  </data>
+  <data name="Global_Quantity" xml:space="preserve">
+    <value>Quantity</value>
+  </data>
+  <data name="Global_Taxonomic_Uncertainty" xml:space="preserve">
+    <value>Taxonomic Uncertainty</value>
+  </data>
+  <data name="Global_Collection_Date" xml:space="preserve">
+    <value>Collection Date</value>
+  </data>
+  <data name="Global_Location" xml:space="preserve">
+    <value>Location</value>
+  </data>
 </root>
