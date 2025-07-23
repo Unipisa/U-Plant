@@ -90,7 +90,7 @@
                                 <tr style="height: 23px;">
                             <th style="width: 239px; height: 23px;">@language.Getkey("Global_Quantity")</th>
                             <th style="width: 239px; height: 23px;">@language.Getkey("Global_Taxonomic_Uncertainty")</th>
-                                    <th style="width: 239px; height: 23px;">Erbario Associato</th>
+                            <th style="width: 239px; height: 23px;">@language.Getkey("Global_Associated_Herbarium")</th>
                                     <th style="width: 239px; height: 23px;">IPEN</th>
                                     <th style="width: 239px; height: 23px;">&nbsp;</th>
                                 </tr>
@@ -122,32 +122,32 @@
                                 </tr>
 
                                 <tr style="height: 23px;">
-                                    <th style="width: 239px; height: 23px;">Nazione</th>
+                            <th style="width: 239px; height: 23px;">@language.Getkey("Global_Country")</th>
                                     <td style="width: 239px; height: 23px;" colspan="2">@Html.DisplayFor(model => model.nazioneNavigation.descrizione)</td>
-                                    <th style="width: 239px; height: 23px;">Longitudine</th>
+                            <th style="width: 239px; height: 23px;">@language.Getkey("Global_Longitude")</th>
                                     <td style="width: 239px; height: 23px;">
                                         @Html.DisplayFor(model => model.longitudine)
                                         @Html.HiddenFor(model => model.longitudine, new { @id = "longitudine", @name = "longitudine" })
                                     </td>
                                 </tr>
                                 <tr style="height: 23px;">
-                                    <th style="width: 239px; height: 23px;">Regione</th>
+                            <th style="width: 239px; height: 23px;">@language.Getkey("Global_Region")</th>
                                     <td style="width: 239px; height: 23px;" colspan="2">@Html.DisplayFor(model => model.regioneNavigation.descrizione)</td>
-                                    <th style="width: 239px; height: 23px;">Latitudine</th>
+                            <th style="width: 239px; height: 23px;">@language.Getkey("Global_Latitude")</th>
                                     <td style="width: 239px; height: 23px;">
                                         @Html.DisplayFor(model => model.latitudine)
                                         @Html.HiddenFor(model => model.latitudine, new { @id = "latitudine", @name = "latitudine" })
                                     </td>
                                 </tr>
                                 <tr style="height: 23px;">
-                                    <th style="width: 239px; height: 23px;">Provincia</th>
+                            <th style="width: 239px; height: 23px;">@language.Getkey("Global_Province")</th>
                                     <td style="width: 239px; height: 23px;" colspan="2"> @Html.DisplayFor(model => model.provinciaNavigation.descrizione)</td>
-                                    <th style="width: 239px; height: 23px;">Altitudine</th>
+                            <th style="width: 239px; height: 23px;">@language.Getkey("Global_Altitude")</th>
                                     <td style="width: 239px; height: 23px;">@Html.DisplayFor(model => model.altitudine)</td>
                                 <tr style="height: 23px;">
                             <th style="width: 239px; height: 23px;">@language.Getkey("Global_Location")</th>
                                     <td style="width: 239px; height: 23px;" colspan="2"> @Html.DisplayFor(model => model.localita)</td>
-                                    <th style="width: 239px; height: 23px;">Habitat</th>
+                            <th style="width: 239px; height: 23px;">@language.Getkey("Global_Habitat")</th>
                                     <td style="width: 239px; height: 23px;">@Html.DisplayFor(model => model.habitat)</td>
                                 </tr>
                                 <tr style="height: 23px;">
@@ -163,9 +163,9 @@
 
 
                                 <tr style="height: 23px;">
-                                    <th style="width: 239px; height: 23px;">Donatore/Fornitore</th>
-                                    <th style="width: 239px; height: 23px;">Raccoglitore</th>
-                                    <th style="width: 239px; height: 23px;">Identificato da</th>
+                            <th style="width: 239px; height: 23px;">@language.Getkey("Global_Donor_Supplier")</th>
+                            <th style="width: 239px; height: 23px;">@language.Getkey("Global_Collector")</th>
+                            <th style="width: 239px; height: 23px;">@language.Getkey("Global_Identified_By")</th>
                                     <th style="width: 239px; height: 23px;">Operatore inserimento</th>
                                     <th style="width: 239px; height: 23px;">Operatore ultima modifica</th>
                                 </tr>

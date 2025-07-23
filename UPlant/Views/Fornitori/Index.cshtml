@@ -1,5 +1,5 @@
 ﻿@model IEnumerable<UPlant.Models.DB.Fornitori>
-
+@inject LanguageService language
 @{
     ViewData["Title"] = "Index";
 }
@@ -12,8 +12,8 @@
             {
                 <div class="float-right success ">
                     <a asp-action="Create">
-                        <span class="btn btn-success" title="Aggiungi Donatore/Fornitore">
-                            Aggiungi Donatore/Fornitore
+                        <span class="btn btn-success" title="@language.Getkey("Global_Add") @language.Getkey("Global_Donor_Supplier")">
+                            @language.Getkey("Global_Add") @language.Getkey("Global_Donor_Supplier")
                         </span>
                     </a>
 
@@ -69,14 +69,14 @@
                 {
 
                     <a asp-action="Edit" asp-route-id="@item.id">
-                                        <span class="btn btn-warning btn-xs" title="Modifica Donatore/Fornitore">
+                                        <span class="btn btn-warning btn-xs" title="@language.Getkey("Global_Edit") @language.Getkey("Global_Donor_Supplier")">
                                             <i class="fa-solid fa-pencil" style="color: #fafafa;"></i>
                         </span>
                                     </a>
                                     if (@item.Accessioni.Count() == 0)
                                     {
                     <a asp-action="Delete" asp-route-id="@item.id">
-                                        <span class="btn btn-danger btn-xs" title="Cancella Donatore/Fornitore">
+                                            <span class="btn btn-danger btn-xs" title="@language.Getkey("Global_Donor_Delete") @language.Getkey("Global_Donor_Supplier")">
                             <i class="fa-solid fa-trash"></i>
                         </span>
                     </a>

@@ -59,7 +59,7 @@
                 @Html.DropDownList("tipoacquisizione", (IEnumerable<SelectListItem>)ViewBag.listatipoacquisizione, "Tutti", htmlAttributes: new { @Id = "tipoacquisizione", @class = "form-control" })
             </div>
             <div class="form-group col-md-4">
-                <label for="inputDonatoreFornitore">Donatore/Fornitore</label>
+                <label for="inputDonatoreFornitore">@language.Getkey("Global_Donor_Supplier")</label>
                 @Html.DropDownList("fornitore", (IEnumerable<SelectListItem>)ViewBag.listafornitore, "Tutti", htmlAttributes: new { @Id = "fornitore", @class = "form-control" })
             </div>
         </div>
@@ -70,7 +70,7 @@
                 @Html.DropDownList("gradoincertezza", (IEnumerable<SelectListItem>)ViewBag.listagradoincertezza, "Tutti", htmlAttributes: new { @Id = "gradoincertezza", @class = "form-control" })
             </div>
             <div class="form-group col-md-4">
-                <label for="inputRaccoglitore">Raccoglitore</label>
+                <label for="inputRaccoglitore">@language.Getkey("Global_Collector")</label>
                 @Html.DropDownList("raccoglitore", (IEnumerable<SelectListItem>)ViewBag.listaraccoglitore, "Tutti", htmlAttributes: new { @Id = "raccoglitore", @class = "form-control" })
             </div>
 

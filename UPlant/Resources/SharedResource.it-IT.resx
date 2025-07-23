@@ -276,4 +276,34 @@
   <data name="Global_Location" xml:space="preserve">
     <value>Località</value>
   </data>
+  <data name="Global_Altitude" xml:space="preserve">
+    <value>Altitudine</value>
+  </data>
+  <data name="Global_Habitat" xml:space="preserve">
+    <value>Habitat</value>
+  </data>
+  <data name="Global_Longitude" xml:space="preserve">
+    <value>Longitudine</value>
+  </data>
+  <data name="Global_Latitude" xml:space="preserve">
+    <value>Latitudine</value>
+  </data>
+  <data name="Global_Acquisition_Data" xml:space="preserve">
+    <value>Dati Acquisizione</value>
+  </data>
+  <data name="Global_Donor_Supplier" xml:space="preserve">
+    <value>Donatore/Fornitore</value>
+  </data>
+  <data name="Global_Collector" xml:space="preserve">
+    <value>Raccoglitore</value>
+  </data>
+  <data name="Global_Identified_By" xml:space="preserve">
+    <value>Identificato da</value>
+  </data>
+  <data name="Global_Notes" xml:space="preserve">
+    <value>Note</value>
+  </data>
+  <data name="Global_Associated_Herbarium" xml:space="preserve">
+    <value>Erbario Associato</value>
+  </data>
 </root>

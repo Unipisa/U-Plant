@@ -93,7 +93,7 @@
                             <tr style="height: 23px;">
                             <th style="width: 239px; height: 23px;">@language.Getkey("Global_Quantity")</th>
                             <th style="width: 239px; height: 23px;">@language.Getkey("Global_Taxonomic_Uncertainty")</th>
-                                <th style="width: 239px; height: 23px;">Erbario Associato</th>
+                            <th style="width: 239px; height: 23px;">@language.Getkey("Global_Associated_Herbarium")</th>
                             <th style="width: 239px; height: 23px;">@language.Getkey("Global_Old_Progressive")</th>
                                 <th style="width: 239px; height: 23px;">&nbsp;</th>
                             </tr>
@@ -136,7 +136,7 @@
                                     @*   @Html.DropDownList("nazione", null, htmlAttributes: new { @class = "form-control" })*@
                                     @Html.ValidationMessageFor(model => model.nazione, "", new { @class = "text-danger" })
                                 </td>
-                                <th style="width: 239px; height: 23px;">Longitudine</th>
+                            <th style="width: 239px; height: 23px;">@language.Getkey("Global_Longitude")</th>
                                 <td style="width: 239px; height: 23px;">
                                     @Html.EditorFor(model => model.longitudine, new { htmlAttributes = new { @class = "form-control" } })
                                     @Html.ValidationMessageFor(model => model.longitudine, "", new { @class = "text-danger" })
@@ -150,7 +150,7 @@
                                     @*  @Html.DropDownList("regione", null, htmlAttributes: new { @class = "form-control" }))*@
                                     @Html.ValidationMessageFor(model => model.regione, "", new { @class = "text-danger" })
                                 </td>
-                                <th style="width: 239px; height: 23px;">Latitudine</th>
+                            <th style="width: 239px; height: 23px;">@language.Getkey("Global_Latitude")</th>
                                 <td style="width: 239px; height: 23px;">
                                     @Html.EditorFor(model => model.latitudine, new { htmlAttributes = new { @class = "form-control" } })
                                     @Html.ValidationMessageFor(model => model.latitudine, "", new { @class = "text-danger" })
@@ -165,7 +165,7 @@
                                     @*     @Html.DropDownList("provincia", null, htmlAttributes: new { @class = "form-control" })*@
                                     @Html.ValidationMessageFor(model => model.provincia, "", new { @class = "text-danger" })
                                 </td>
-                                <th style="width: 239px; height: 23px;">Altitudine</th>
+                            <th style="width: 239px; height: 23px;">@language.Getkey("Global_Altitude")</th>
                                 <td style="width: 239px; height: 23px;">
                                     @Html.EditorFor(model => model.altitudine, new { htmlAttributes = new { @class = "form-control" } })
                                     @Html.ValidationMessageFor(model => model.altitudine, "", new { @class = "text-danger" })
@@ -176,7 +176,7 @@
                                         @Html.EditorFor(model => model.localita, new { htmlAttributes = new { @class = "form-control" } })
                                         @Html.ValidationMessageFor(model => model.localita, "", new { @class = "text-danger" })
                                 </td>
-                                <th style="width: 239px; height: 23px;">Habitat</th>
+                            <th style="width: 239px; height: 23px;">@language.Getkey("Global_Habitat")</th>
                                 <td style="width: 239px; height: 23px;">
                                         @Html.EditorFor(model => model.habitat, new { htmlAttributes = new { @class = "form-control" } })
                                         @Html.ValidationMessageFor(model => model.habitat, "", new { @class = "text-danger" })
@@ -225,9 +225,9 @@
                             </tr>
 
                             <tr style="height: 23px;">
-                                <th style="width: 239px; height: 23px;">Donatore/Fornitore</th>
-                                <th style="width: 239px; height: 23px;">Raccoglitore</th>
-                                <th style="width: 239px; height: 23px;">Identificato da</th>
+                            <th style="width: 239px; height: 23px;">@language.Getkey("Global_Donor_Supplier")</th>
+                            <th style="width: 239px; height: 23px;">@language.Getkey("Global_Collector")</th>
+                            <th style="width: 239px; height: 23px;">@language.Getkey("Global_Identified_By")</th>
                                 <th style="width: 239px; height: 23px;">Operatore inserimento</th>
                                 <th style="width: 239px; height: 23px;">Operatore ultima modifica</th>
                             </tr>
