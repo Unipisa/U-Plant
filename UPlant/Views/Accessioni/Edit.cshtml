@@ -421,15 +421,11 @@ $('#nazione').on("change", function () {
     $('#provincia').val('0');
     var country = $('#nazione').val();
     if (country != "IT") {
-        /*  $('#regione')
-              .empty()
-              .append('<option selected="selected" value="99"> NON DEFINITA</option>')
-              ;
-  */
+      
         $('#regione').val('99');
         $('#provincia')
             .empty()
-            .append('<option selected="selected" value="999"> NON DEFINITA</option>')
+                    .append('<option selected="selected" value="999">' + @language.Getkey("Global_Not_Defined") + '</option>')
             ;
 
         $('#regione').prop('disabled', 'disabled');

@@ -306,4 +306,10 @@
   <data name="Global_Associated_Herbarium" xml:space="preserve">
     <value>Erbario Associato</value>
   </data>
+  <data name="Global_Not_Defined" xml:space="preserve">
+    <value>Non Definita</value>
+  </data>
+  <data name="Global_Municipality" xml:space="preserve">
+    <value>Comune</value>
+  </data>
 </root>
