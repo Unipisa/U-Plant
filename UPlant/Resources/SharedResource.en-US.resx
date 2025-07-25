@@ -312,4 +312,43 @@
   <data name="Global_Municipality" xml:space="preserve">
     <value>Municipality</value>
   </data>
+  <data name="Global_Specific_Name" xml:space="preserve">
+    <value>Specific Name</value>
+  </data>
+  <data name="Global_Species_Authors" xml:space="preserve">
+    <value>Species Authors</value>
+  </data>
+  <data name="Global_Subspecies" xml:space="preserve">
+    <value>Subspecies</value>
+  </data>
+  <data name="Global_Subspecies_Authors" xml:space="preserve">
+    <value>Subspecies Authors</value>
+  </data>
+  <data name="Global_Variety" xml:space="preserve">
+    <value>Variety</value>
+  </data>
+  <data name="Global_Variety_Authors" xml:space="preserve">
+    <value>Variety Authors</value>
+  </data>
+  <data name="Global_Cultivar" xml:space="preserve">
+    <value>Cultivar</value>
+  </data>
+  <data name="Global_Cultivar_Authors" xml:space="preserve">
+    <value>Cultivar Authors</value>
+  </data>
+  <data name="Global_Vulgar_Name" xml:space="preserve">
+    <value>Vulgar Name</value>
+  </data>
+  <data name="Global_Common_Name" xml:space="preserve">
+    <value>Common Name</value>
+  </data>
+  <data name="Global_English_Common_Name" xml:space="preserve">
+    <value>English Common Name</value>
+  </data>
+  <data name="Global_Floristic_Kingdom" xml:space="preserve">
+    <value>Floristic Kingdom</value>
+  </data>
+  <data name="Global_Range" xml:space="preserve">
+    <value>Range</value>
+  </data>
 </root>

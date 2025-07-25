@@ -12,8 +12,8 @@
             {
                 <div class="float-right success ">
                     <a asp-action="Create">
-                        <span class="btn btn-success" title="Aggiungi Specie">
-                            Aggiungi Specie
+                        <span class="btn btn-success" title="@language.Getkey("Global_Add") @language.Getkey("Global_Species")">
+                            @language.Getkey("Global_Add") @language.Getkey("Global_Species")
                         </span>
                     </a>
 
@@ -31,10 +31,10 @@
                                         @language.Getkey("Global_Scientific_Name")
                                         </th>
                                         <th>
-                                            Nome Comune
+                                        @language.Getkey("Global_Common_Name")
                                         </th>
                                         <th>
-                                            Nome Comune Inglese
+                                        @language.Getkey("Global_English_Common_Name")
                                         </th>
                                         <th>
                                         @language.Getkey("Global_Family")
@@ -43,10 +43,10 @@
                                         @language.Getkey("Global_Genus")
                                         </th>
                                         <th>
-                                            Regno
+                                        @language.Getkey("Global_Floristic_Kingdom")
                                         </th>
                                         <th>
-                                            Areale
+                                        @language.Getkey("Global_Range")
                                         </th>
                                         <th>
                                             CITES

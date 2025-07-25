@@ -1,11 +1,11 @@
 ﻿@model UPlant.Models.DB.Regni
-
+@inject LanguageService language
 @{
     ViewData["Title"] = "Create";
 }
 <div class="card card-outline card-primary">
     <div class="card-header with-border">
-        <h3 class="card-title">Aggiungi Regno</h3>
+        <h3 class="card-title">@language.Getkey("Global_Add") @language.Getkey("Global_Floristic_Kingdom")</h3>
     </div>
     <div class="card-body">
 

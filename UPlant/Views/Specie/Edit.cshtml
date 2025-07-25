@@ -1,5 +1,5 @@
 ﻿@model UPlant.Models.DB.Specie
-
+@inject LanguageService language
 @{
     ViewData["Title"] = "Edit";
 }
@@ -17,64 +17,64 @@
                 <span asp-validation-for="genere" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="nome" class="control-label">Nome Specifico</label>
+                <label asp-for="nome" class="control-label">@language.Getkey("Global_Specific_Name")</label>
                 <input asp-for="nome" class="form-control" />
                 <span asp-validation-for="nome" class="text-danger"></span>
             </div>
             <input type="hidden" asp-for="nome_scientifico" />
             <div class="form-group">
-                <label asp-for="autori" class="control-label">Autori Specie</label>
+                <label asp-for="autori" class="control-label">@language.Getkey("Global_Species_Authors")</label>
                 <input asp-for="autori" class="form-control" />
                 <span asp-validation-for="autori" class="text-danger"></span>
             </div>
             
             <div class="form-group">
-                <label asp-for="subspecie" class="control-label">Subspecie</label>
+                <label asp-for="subspecie" class="control-label">@language.Getkey("Global_Subspecies")</label>
                 <input asp-for="subspecie" class="form-control" />
                 <span asp-validation-for="subspecie" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="autorisub" class="control-label">Autori Subspecie</label>
+                <label asp-for="autorisub" class="control-label">@language.Getkey("Global_Subspecies_Authors")</label>
                 <input asp-for="autorisub" class="form-control" />
                 <span asp-validation-for="autorisub" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="varieta" class="control-label">Varietà</label>
+                <label asp-for="varieta" class="control-label">@language.Getkey("Global_Variety")</label>
                 <input asp-for="varieta" class="form-control" />
                 <span asp-validation-for="varieta" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="autorivar" class="control-label">Autori Varietà</label>
+                <label asp-for="autorivar" class="control-label">@language.Getkey("Global_Variety_Authors")</label>
                 <input asp-for="autorivar" class="form-control" />
                 <span asp-validation-for="autorivar" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="cult" class="control-label">Cultivar</label>
+                <label asp-for="cult" class="control-label">@language.Getkey("Global_Cultivar")</label>
                 <input asp-for="cult" class="form-control" />
                 <span asp-validation-for="cult" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="autoricult" class="control-label">Autori Cultivar</label>
+                <label asp-for="autoricult" class="control-label">@language.Getkey("Global_Cultivar_Authors")</label>
                 <input asp-for="autoricult" class="form-control" />
                 <span asp-validation-for="autoricult" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="nome_comune" class="control-label">Nome Comune</label>
+                <label asp-for="nome_comune" class="control-label">@language.Getkey("Global_Common_Name")</label>
                 <input asp-for="nome_comune" class="form-control" />
                 <span asp-validation-for="nome_comune" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="nome_comune_en" class="control-label">Nome Comune Inglese</label>
+                <label asp-for="nome_comune_en" class="control-label">@language.Getkey("Global_English_Common_Name")</label>
                 <input asp-for="nome_comune_en" class="form-control" />
                 <span asp-validation-for="nome_comune_en" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="regno" class="control-label"></label>
+                <label asp-for="regno" class="control-label">@language.Getkey("Global_Floristic_Kingdom")</label>
                 <select asp-for="regno" class="form-control" asp-items="ViewBag.regno"></select>
                 <span asp-validation-for="regno" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="areale" class="control-label"></label>
+                <label asp-for="areale" class="control-label">@language.Getkey("Global_Range")</label>
                 <select asp-for="areale" class="form-control" asp-items="ViewBag.areale"></select>
                 <span asp-validation-for="areale" class="text-danger"></span>
             </div>

@@ -301,12 +301,12 @@
 
                 <table id="addSpecie" name="addSpecie" style="display: none;" align="left">
                     <tr>
-                        <th class="bg-light-blue-active">Aggiungi Specie</th>
+                        <th class="bg-light-blue-active">@language.Getkey("Global_Add") @language.Getkey("Global_Species")</th>
 
                     </tr>
                     <tr>
                         <th>
-                            Nome Specifico
+                            @language.Getkey("Global_Specific_Name")
                             @Html.EditorFor(model => model.specieNavigation.nome, new { htmlAttributes = new { @class = "form-control" } })
                             @Html.ValidationMessageFor(model => model.specieNavigation.nome, "", new { @class = "text-danger" })
                         </th>
@@ -314,84 +314,84 @@
 
                     <tr>
                         <th>
-                            Autori Specie
+                            @language.Getkey("Global_Species_Authors")
                             @Html.EditorFor(model => model.specieNavigation.autori, new { htmlAttributes = new { @class = "form-control" } })
                             @Html.ValidationMessageFor(model => model.specieNavigation.autori, "", new { @class = "text-danger" })
                         </th>
                     </tr>
                     <tr>
                         <th>
-                            Subspecie
+                            @language.Getkey("Global_Subspecies")
                             @Html.EditorFor(model => model.specieNavigation.subspecie, new { htmlAttributes = new { @class = "form-control" } })
                             @Html.ValidationMessageFor(model => model.specieNavigation.subspecie, "", new { @class = "text-danger" })
                         </th>
                     </tr>
                     <tr>
                         <th>
-                            Autori Subspecie
+                            @language.Getkey("Global_Subspecies_Authors")
                             @Html.EditorFor(model => model.specieNavigation.autorisub, new { htmlAttributes = new { @class = "form-control" } })
                             @Html.ValidationMessageFor(model => model.specieNavigation.autorisub, "", new { @class = "text-danger" })
                         </th>
                     </tr>
                     <tr>
                         <th>
-                            Varietà
+                            @language.Getkey("Global_Variety")
                             @Html.EditorFor(model => model.specieNavigation.varieta, new { htmlAttributes = new { @class = "form-control" } })
                             @Html.ValidationMessageFor(model => model.specieNavigation.varieta, "", new { @class = "text-danger" })
                         </th>
                     </tr>
                     <tr>
                         <th>
-                            Autori Varietà
+                            @language.Getkey("Global_Variety_Authors")
                             @Html.EditorFor(model => model.specieNavigation.autorivar, new { htmlAttributes = new { @class = "form-control" } })
                             @Html.ValidationMessageFor(model => model.specieNavigation.autorivar, "", new { @class = "text-danger" })
                         </th>
                     </tr>
                     <tr>
                         <th>
-                            Cultivar
+                            @language.Getkey("Global_Cultivar")
                             @Html.EditorFor(model => model.specieNavigation.cult, new { htmlAttributes = new { @class = "form-control" } })
                             @Html.ValidationMessageFor(model => model.specieNavigation.cult, "", new { @class = "text-danger" })
                         </th>
                     </tr>
                     <tr>
                         <th>
-                            Autori Cultivar
+                            @language.Getkey("Global_Cultivar_Authors")
                             @Html.EditorFor(model => model.specieNavigation.autoricult, new { htmlAttributes = new { @class = "form-control" } })
                             @Html.ValidationMessageFor(model => model.specieNavigation.autoricult, "", new { @class = "text-danger" })
                         </th>
                     </tr>
                     <tr>
                         <th>
-                            Nome Volgare
+                            @language.Getkey("Global_Vulgar_Name")
                             @Html.EditorFor(model => model.specieNavigation.nome_volgare, new { htmlAttributes = new { @class = "form-control" } })
                             @Html.ValidationMessageFor(model => model.specieNavigation.nome_volgare, "", new { @class = "text-danger" })
                         </th>
                     </tr>
                     <tr>
                         <th>
-                            Nome Comune
+                            @language.Getkey("Global_Common_Name")
                             @Html.EditorFor(model => model.specieNavigation.nome_comune, new { htmlAttributes = new { @class = "form-control" } })
                             @Html.ValidationMessageFor(model => model.specieNavigation.nome_comune, "", new { @class = "text-danger" })
                         </th>
                     </tr>
                     <tr>
                         <th>
-                            Nome Comune Inglese
+                            @language.Getkey("Global_English_Common_Name")
                             @Html.EditorFor(model => model.specieNavigation.nome_comune_en, new { htmlAttributes = new { @class = "form-control" } })
                             @Html.ValidationMessageFor(model => model.specieNavigation.nome_comune_en, "", new { @class = "text-danger" })
                         </th>
                     </tr>
                     <tr>
                         <th>
-                            Regno Floristico
+                            @language.Getkey("Global_Floristic_Kingdom")
                             @Html.DropDownList("regno", null, htmlAttributes: new { @Id = "regno", @class = "form-control" })
                             @Html.ValidationMessageFor(model => model.specieNavigation.regnoNavigation.id, "", new { @class = "text-danger" })
                         </th>
                     </tr>
                     <tr>
                         <th>
-                            Areale
+                            @language.Getkey("Global_Range")
                             @Html.DropDownList("areale", null, htmlAttributes: new { @Id = "areale", @class = "form-control" })
                             @Html.ValidationMessageFor(model => model.specieNavigation.arealeNavigation.id, "", new { @class = "text-danger" })
                         </th>
