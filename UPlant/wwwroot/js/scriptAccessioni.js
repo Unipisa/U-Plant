@@ -240,7 +240,7 @@ $('#addlink2').click(function () {
 });
 $('#insSpecie').click(function () {
     if (document.getElementById('specieNavigation_nome').value == "") {
-        alert("Campo Nome Specie Obbligatorio");
+        alert(@language.Getkey("Script_Accessioni_1")); 
     } else {
         var nomecomune = "";
         var nomecomuneen = "";
@@ -336,7 +336,7 @@ $('#insSpecie').click(function () {
                     //$("#famiglia").attr("disabled", "disabled");
                     //$('#addlink').hide();
                     alert(data.message);
-                    console.log("Specie Inserita con successo");
+                    console.log(@language.Getkey("Script_Accessioni_2"));
                 }
 
                 else {
@@ -346,7 +346,7 @@ $('#insSpecie').click(function () {
             },
             error: function () {
                 alert(data.message);
-                console.log('Qualcosa è andato storto!');
+                console.log(@language.Getkey("Script_Accessioni_3"));
             }
         });
     }
@@ -385,7 +385,7 @@ $('#settore').on("change", function () {
 $('#insGenere').click(function () {
 
     if (document.getElementById('specieNavigation_genereNavigation_descrizione').value == "") {
-        alert("Campo Descrizione Obbligatorio");
+        alert(@language.Getkey("Script_Accessioni_4"));
     } else {
         $.ajax({
             type: "GET",
@@ -450,7 +450,7 @@ $('#insGenere').click(function () {
             error: function (data) {
                 alert(data.message);
                 console.log(data);
-                console.log('Qualcosa è andato storto!');
+                console.log(@language.Getkey("Script_Accessioni_2"));
             }
         });
     }

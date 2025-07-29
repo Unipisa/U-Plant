@@ -101,7 +101,7 @@
     </div>
 </div>
 <div>
-    @Html.ActionLink("Torna Indietro", null, null, null, new { @class = "btn btn-info go_back" })
+    @Html.ActionLink(@language.Getkey("Global_Go_Back"), null, null, null, new { @class = "btn btn-info go_back" })
 </div>
 @section Styles {
     <link href="~/css/select2.min.css" rel="stylesheet" />

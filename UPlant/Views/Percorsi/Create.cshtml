@@ -1,4 +1,5 @@
 ﻿@model UPlant.Models.DB.Percorsi
+@inject LanguageService language
 @{
     ViewBag.Title = "Percorsi";
 }
@@ -7,7 +8,7 @@
 
 
         <button type="button" id="torna" class="btn btn-info btn-xs" onclick="window.location.href = '@Url.Action("Index", "Percorsi")';">
-            Torna Indietro
+            @language.Getkey("Global_Go_Back")
         </button>
     </div>
 </div>

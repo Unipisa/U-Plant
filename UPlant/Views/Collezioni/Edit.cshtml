@@ -1,5 +1,5 @@
 ﻿@model UPlant.Models.DB.Collezioni
-
+@inject LanguageService language
 @{
     ViewData["Title"] = "Edit";
 }
@@ -22,7 +22,7 @@
                 <span asp-validation-for="collezione_en" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="settore" class="control-label">Settore</label>
+                <label asp-for="settore" class="control-label">@language.Getkey("Global_Sector")</label>
                 <select asp-for="settore" class="form-control" asp-items="ViewBag.settore"></select>
                 <span asp-validation-for="settore" class="text-danger"></span>
             </div>
@@ -41,7 +41,7 @@
 </div>
 
 <div>
-    @Html.ActionLink("Torna Indietro", null, null, null, new { @class = "btn btn-info go_back" })
+    @Html.ActionLink(@language.Getkey("Global_Go_Back"), null, null, null, new { @class = "btn btn-info go_back" })
 </div>
 @section Styles {
     <link href="~/css/select2.min.css" rel="stylesheet" />

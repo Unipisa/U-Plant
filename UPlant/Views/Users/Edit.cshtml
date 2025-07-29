@@ -1,5 +1,5 @@
 ﻿@model UPlant.Models.DB.Users
-
+@inject LanguageService language
 @{
     ViewData["Title"] = "Edit";
 }
@@ -79,7 +79,7 @@
 </div>
 
 <div>
-    <a asp-action="Index" class="btn btn-secondary">Torna Indietro</a>
+    <a asp-action="Index" class="btn btn-secondary">@language.Getkey("Global_Go_Back")</a>
 </div>
 
 @section Scripts {

@@ -171,7 +171,7 @@
   <data name="Global_Scientific_Name" xml:space="preserve">
     <value>Nome Scientifico</value>
   </data>
-  <data name="Home_RicercaAccessioni_1" xml:space="preserve">
+  <data name="Home_Ricerca_Accessioni_1" xml:space="preserve">
     <value>Ricerca Accessioni</value>
   </data>
   <data name="Global_Progressive" xml:space="preserve">
@@ -189,7 +189,7 @@
   <data name="Global_Old_Individual_Progressive" xml:space="preserve">
     <value>Vecchio Progressivo Individuo</value>
   </data>
-  <data name="Home_RicercaAccessioni_2" xml:space="preserve">
+  <data name="Home_Ricerca_Accessioni_2" xml:space="preserve">
     <value>Data Inizio</value>
   </data>
   <data name="Home_Ricerca_Accessioni_3" xml:space="preserve">
@@ -350,5 +350,44 @@
   </data>
   <data name="Global_Range" xml:space="preserve">
     <value>Areale</value>
+  </data>
+  <data name="Script_Accessioni_1" xml:space="preserve">
+    <value>Campo Nome Specie Obbligatorio</value>
+  </data>
+  <data name="Script_Accessioni_2" xml:space="preserve">
+    <value>Specie Inserita con successo</value>
+  </data>
+  <data name="Script_Accessioni_3" xml:space="preserve">
+    <value>Qualcosa è andato storto!</value>
+  </data>
+  <data name="Script_Accessioni_4" xml:space="preserve">
+    <value>Campo Descrizione Obbligatorio</value>
+  </data>
+  <data name="Home_Ricerca_Accessioni_4" xml:space="preserve">
+    <value>Numero Individui</value>
+  </data>
+  <data name="Home_Ricerca_Accessioni_5" xml:space="preserve">
+    <value>Inserito da</value>
+  </data>
+  <data name="Home_Ricerca_Accessioni_6" xml:space="preserve">
+    <value>Modificato da</value>
+  </data>
+  <data name="Global_Valid" xml:space="preserve">
+    <value>Valida</value>
+  </data>
+  <data name="Global_Sector" xml:space="preserve">
+    <value>Settore</value>
+  </data>
+  <data name="Global_All" xml:space="preserve">
+    <value>Tutti</value>
+  </data>
+  <data name="Individui_ValidaTutto_1" xml:space="preserve">
+    <value>Validazione Individuo</value>
+  </data>
+  <data name="Individui_ValidaTutto_2" xml:space="preserve">
+    <value>Confermi la validazione di tutti gli individui</value>
+  </data>
+  <data name="Global_Go_Back" xml:space="preserve">
+    <value>Torna Indietro</value>
   </data>
 </root>

@@ -39,7 +39,7 @@
 
                     </div>
                     <input type="hidden" asp-for="id" />
-                    <input type="submit" value="Valida" class="btn btn-success" />
+                    <input type="submit" value="@language.Getkey("Global_Valid")" class="btn btn-success" />
                     
                 </form>
 			</div>
@@ -48,5 +48,5 @@
 
 </div>
 <div>
-    <input type="button" value="Torna indietro" class="btn alert-info" onclick="javascript:window.history.back();" />
+    <input type="button" value="@language.Getkey("Global_Go_Back")" class="btn alert-info" onclick="javascript:window.history.back();" />
 </div>

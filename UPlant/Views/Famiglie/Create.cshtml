@@ -1,5 +1,5 @@
 ﻿@model UPlant.Models.DB.Famiglie
-
+@inject LanguageService language
 @{
     ViewData["Title"] = "Create";
 }
@@ -28,7 +28,7 @@
 </div>
 
     <div>
-        @Html.ActionLink("Torna Indietro", null, null, null, new { @class = "btn btn-info go_back" })
+    @Html.ActionLink(@language.Getkey("Global_Go_Back"), null, null, null, new { @class = "btn btn-info go_back" })
     </div>
 
 

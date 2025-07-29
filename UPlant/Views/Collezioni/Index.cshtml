@@ -1,5 +1,5 @@
 ﻿@model IEnumerable<UPlant.Models.DB.Collezioni>
-
+@inject LanguageService language
 @{
     ViewData["Title"] = "Index";
 }
@@ -35,7 +35,7 @@
                 Collezione in Inglese
             </th>
             <th>
-                Settore
+                @language.Getkey("Global_Sector")
             </th>
             <th>
                 Organizzazione

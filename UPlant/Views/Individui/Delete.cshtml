@@ -34,7 +34,7 @@
 
                                 </tr>
                                 <tr style="height: 23px;">
-                                    <th style="width: 20% ">@Html.DisplayNameFor(model => model.settoreNavigation)</th>
+                                    <th style="width: 20% ">@language.Getkey("Global_Sector")</th>
                                     <th style="width: 20% ">@Html.DisplayNameFor(model => model.collezioneNavigation)</th>
                                 </tr>
                                 <tr style="height: 23px;">
@@ -59,7 +59,7 @@
                     
                 <input type="hidden" asp-for="id" />
                 <input type="submit" value="Cancella" class="btn btn-danger" />
-                <input type="button" value="Torna indietro" class="btn alert-info" onclick="javascript:window.history.back();" />
+                    <input type="button" value="@language.Getkey("Global_Go_Back")" class="btn alert-info" onclick="javascript:window.history.back();" />
             </form>
     </div>
     </div>

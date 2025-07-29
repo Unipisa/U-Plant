@@ -3,12 +3,12 @@
 
 @{
 
-    ViewBag.Title = "Ricerca Accessioni";
+    ViewBag.Title = @language.Getkey("Home_Ricerca_Accessioni_1");
 }
 
 
 <div class="title">
-    <h3>@language.Getkey("Home_RicercaAccessioni_1")</h3>
+    <h3>@language.Getkey("Home_Ricerca_Accessioni_1")</h3>
 </div>
 <div >
     &nbsp;
@@ -27,7 +27,7 @@
             </div>
             <div class="form-group col-md-4">
                 <label for="inputFamiglia">@language.Getkey("Global_Family")</label>
-                @Html.DropDownList("famiglia", (IEnumerable<SelectListItem>)ViewBag.listafamiglie, "Tutti", htmlAttributes: new { @Id = "famiglia", @class = "form-control" })
+                @Html.DropDownList("famiglia", (IEnumerable<SelectListItem>)ViewBag.listafamiglie, @language.Getkey("Global_All"), htmlAttributes: new { @Id = "famiglia", @class = "form-control" })
             </div>
             <div class="form-group col-md-4 autocomplete">
                 <label for="inputProgressivo">@language.Getkey("Global_Progressive")</label>
@@ -40,10 +40,10 @@
                 <input type="text" class="form-control" id="vecchioprogressivo" name="vecchioprogressivo" placeholder="@language.Getkey("Global_Old_Progressive")" value="@ViewBag.vecchioprogressivo" />
             </div>
             <div class="form-group col-sm-1">
-                <label for="inputDataInizio">@language.Getkey("Home_RicercaAccessioni_2")</label>
-                <input type="date" class="form-control" id="datainserimentoinizio" name="datainserimentoinizio" placeholder="@language.Getkey("Home_RicercaAccessioni_2")" value="@ViewBag.datainserimentoinizio.ToString("yyyy-MM-dd")" size="40" maxlength="50" />
+                <label for="inputDataInizio">@language.Getkey("Home_Ricerca_Accessioni_2")</label>
+                <input type="date" class="form-control" id="datainserimentoinizio" name="datainserimentoinizio" placeholder="@language.Getkey("Home_Ricerca_Accessioni_2")" value="@ViewBag.datainserimentoinizio.ToString("yyyy-MM-dd")" size="40" maxlength="50" />
             </div><span>&nbsp;</span><div class="form-group col-sm-1">
-                <label for="inputDatafine">@language.Getkey("Home_RicercaAccessioni_3")</label>
+                <label for="inputDatafine">@language.Getkey("Home_Ricerca_Accessioni_3")</label>
                 <input type="date" class="form-control" id="datainserimentofine" name="datainserimentofine" placeholder="Data Fine" value="@ViewBag.datainserimentofine.ToString("yyyy-MM-dd")" size="40" maxlength="50" />
             </div>
 
@@ -51,27 +51,27 @@
         <div class="form-row">
             <div class="form-group col-md-4">
                 <label for="inputTipodiMateriale">@language.Getkey("Global_Material_Type")</label>
-                @Html.DropDownList("tipomateriale", (IEnumerable<SelectListItem>)ViewBag.listatipomateriale, "Tutti", htmlAttributes: new { @Id = "tipomateriale", @class = "form-control" })
+                @Html.DropDownList("tipomateriale", (IEnumerable<SelectListItem>)ViewBag.listatipomateriale, @language.Getkey("Global_All"), htmlAttributes: new { @Id = "tipomateriale", @class = "form-control" })
             </div>
 
             <div class="form-group col-md-4">
                 <label for="inputModalitadiacquisizione">@language.Getkey("Global_Acquisition_Mode")</label>
-                @Html.DropDownList("tipoacquisizione", (IEnumerable<SelectListItem>)ViewBag.listatipoacquisizione, "Tutti", htmlAttributes: new { @Id = "tipoacquisizione", @class = "form-control" })
+                @Html.DropDownList("tipoacquisizione", (IEnumerable<SelectListItem>)ViewBag.listatipoacquisizione, @language.Getkey("Global_All"), htmlAttributes: new { @Id = "tipoacquisizione", @class = "form-control" })
             </div>
             <div class="form-group col-md-4">
                 <label for="inputDonatoreFornitore">@language.Getkey("Global_Donor_Supplier")</label>
-                @Html.DropDownList("fornitore", (IEnumerable<SelectListItem>)ViewBag.listafornitore, "Tutti", htmlAttributes: new { @Id = "fornitore", @class = "form-control" })
+                @Html.DropDownList("fornitore", (IEnumerable<SelectListItem>)ViewBag.listafornitore, @language.Getkey("Global_All"), htmlAttributes: new { @Id = "fornitore", @class = "form-control" })
             </div>
         </div>
 
         <div class="row">
             <div class="form-group col-md-4">
                 <label for="inputGradodiIncertezza">Grado di Incertezza</label>
-                @Html.DropDownList("gradoincertezza", (IEnumerable<SelectListItem>)ViewBag.listagradoincertezza, "Tutti", htmlAttributes: new { @Id = "gradoincertezza", @class = "form-control" })
+                @Html.DropDownList("gradoincertezza", (IEnumerable<SelectListItem>)ViewBag.listagradoincertezza, @language.Getkey("Global_All"), htmlAttributes: new { @Id = "gradoincertezza", @class = "form-control" })
             </div>
             <div class="form-group col-md-4">
                 <label for="inputRaccoglitore">@language.Getkey("Global_Collector")</label>
-                @Html.DropDownList("raccoglitore", (IEnumerable<SelectListItem>)ViewBag.listaraccoglitore, "Tutti", htmlAttributes: new { @Id = "raccoglitore", @class = "form-control" })
+                @Html.DropDownList("raccoglitore", (IEnumerable<SelectListItem>)ViewBag.listaraccoglitore, @language.Getkey("Global_All"), htmlAttributes: new { @Id = "raccoglitore", @class = "form-control" })
             </div>
 
 
@@ -138,16 +138,16 @@
                         Data per formato yyymmmdd
                     </th>
                     <th>
-                        Tipo Materiale
+                        @language.Getkey("Global_Material_Type")
                     </th>
                     <th>
-                        Numero Individui
+                        @language.Getkey("Home_Ricerca_Accessioni_4")
                     </th>
                     <th>
-                        Inserito da
+                        @language.Getkey("Home_Ricerca_Accessioni_5")
                     </th>
                     <th>
-                        Modificato da
+                        @language.Getkey("Home_Ricerca_Accessioni_6")
                     </th>
 
 
@@ -220,7 +220,7 @@
                                         if (User.IsInRole("Administrator") || User.IsInRole("Operator") || User.IsInRole("TreeKeeper") || User.IsInRole("Discover") || User.IsInRole("Seminum") || User.IsInRole("Utility"))
                                         {
                                             <a asp-action="Create" asp-controller="Individui" asp-route-idaccessione="@item.id">
-                                                <span class="btn btn-success btn-xs" title="aggiungi individuo">
+                                                <span class="btn btn-success btn-xs" title="@language.Getkey("Global_Add") + ' ' + @language.Getkey("Global_Individual")">
                                                     <i class="fa-solid fa-plus"></i>
                                                 </span>
                                             </a>
@@ -233,7 +233,7 @@
                                     {
 
                                         <a asp-action="Edit" asp-controller="Accessioni" asp-route-id="@item.id">
-                                            <span class="btn btn-warning btn-xs" title="modifica accessione">
+                                            <span class="btn btn-warning btn-xs" title="@language.Getkey("Global_Edit") + ' ' + @language.Getkey("Global_Accession")">
                                                 <i class="fa-solid fa-pencil" style="color: #fafafa;"></i>
                                             </span>
                                         </a>
@@ -244,7 +244,7 @@
                                     @if (User.IsInRole("Administrator"))
                                     {
                                         <a asp-action="Edit" asp-controller="Accessioni" asp-route-id="@item.id" >
-                                            <span class="btn btn-warning btn-xs" title="modifica accessione">
+                                            <span class="btn btn-warning btn-xs" title="@language.Getkey("Global_Edit") + ' ' + @language.Getkey("Global_Accession")">
                                                 <i class="fa-solid fa-pencil" style="color: #fafafa;"></i>
                                             </span>
                                         </a>
@@ -263,7 +263,7 @@
                                         if (Convert.ToInt32(item.countind) == 0)
                                         {
                                             <a asp-action="Delete" asp-controller="Accessioni" asp-route-id="@item.id" >
-                                                <span class="btn btn-danger btn-xs" title="cancella accessione">
+                                                <span class="btn btn-danger btn-xs" title="@language.Getkey("Global_Delete") + ' ' + @language.Getkey("Global_Accession")">
                                                     <i class="fa-solid fa-trash"></i>
                                                 </span>
                                             </a>
@@ -272,7 +272,7 @@
                                         if (item.validazione == false)
                                         {
                                             <a asp-action="ValidaAccessione" asp-controller="Accessioni" asp-route-id="@item.id">
-                                                <span class="btn btn-info btn-xs" title="Valida accessione">
+                                                <span class="btn btn-info btn-xs" title="@language.Getkey("Global_Valid") + ' ' + @language.Getkey("Global_Accession")">
                                                     <i class="fa-solid fa-check"></i>
                                                 </span>
                                             </a>
@@ -394,8 +394,7 @@
     </script>
     <script>
         $('#azzera').on("click", function () {
-            // document.getElementById("famiglia").value = "";
-            //document.getElementById("famiglia").textContent = "Tutti";
+            
             $('#famiglia').val('').trigger('change');
             $('#tipomateriale').val('').trigger('change');
             $('#tipoacquisizione').val('').trigger('change');

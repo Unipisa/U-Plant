@@ -171,7 +171,7 @@
   <data name="Global_Scientific_Name" xml:space="preserve">
     <value>Scientific Name</value>
   </data>
-  <data name="Home_RicercaAccessioni_1" xml:space="preserve">
+  <data name="Home_Ricerca_Accessioni_1" xml:space="preserve">
     <value>Accession search</value>
   </data>
   <data name="Global_Progressive" xml:space="preserve">
@@ -189,7 +189,7 @@
   <data name="Global_Old_Individual_Progressive" xml:space="preserve">
     <value>Old Individual Progressive</value>
   </data>
-  <data name="Home_RicercaAccessioni_2" xml:space="preserve">
+  <data name="Home_Ricerca_Accessioni_2" xml:space="preserve">
     <value>Start Date</value>
   </data>
   <data name="Home_Ricerca_Accessioni_3" xml:space="preserve">
@@ -350,5 +350,44 @@
   </data>
   <data name="Global_Range" xml:space="preserve">
     <value>Range</value>
+  </data>
+  <data name="Script_Accessioni_1" xml:space="preserve">
+    <value>Species Name Field Required</value>
+  </data>
+  <data name="Script_Accessioni_2" xml:space="preserve">
+    <value>Species successfully inserted</value>
+  </data>
+  <data name="Script_Accessioni_3" xml:space="preserve">
+    <value>Something went wrong!</value>
+  </data>
+  <data name="Script_Accessioni_4" xml:space="preserve">
+    <value>Field Description Required</value>
+  </data>
+  <data name="Home_Ricerca_Accessioni_4" xml:space="preserve">
+    <value>Number of Individuals</value>
+  </data>
+  <data name="Home_Ricerca_Accessioni_5" xml:space="preserve">
+    <value>Inserted by</value>
+  </data>
+  <data name="Home_Ricerca_Accessioni_6" xml:space="preserve">
+    <value>Modified by</value>
+  </data>
+  <data name="Global_Valid" xml:space="preserve">
+    <value>Valid</value>
+  </data>
+  <data name="Global_Sector" xml:space="preserve">
+    <value>Sector</value>
+  </data>
+  <data name="Global_All" xml:space="preserve">
+    <value>All</value>
+  </data>
+  <data name="Individui_ValidaTutto_1" xml:space="preserve">
+    <value>Individual Validation</value>
+  </data>
+  <data name="Individui_ValidaTutto_2" xml:space="preserve">
+    <value>Do you confirm the validation of all individuals</value>
+  </data>
+  <data name="Global_Go_Back" xml:space="preserve">
+    <value>Go Back</value>
   </data>
 </root>

@@ -27,7 +27,7 @@
             </div>
             <div class="form-group col-md-4">
                 <label for="inputFamiglia">@language.Getkey("Global_Family")</label>
-                @Html.DropDownList("famiglia", (IEnumerable<SelectListItem>)ViewBag.listafamiglie, "Tutti", htmlAttributes: new { @Id = "famiglia", @class = "form-control" })
+                @Html.DropDownList("famiglia", (IEnumerable<SelectListItem>)ViewBag.listafamiglie, @language.Getkey("Global_All"), htmlAttributes: new { @Id = "famiglia", @class = "form-control" })
             </div>
             <div class="form-group col-md-4 autocomplete">
                 <label for="inputProgressivoAccessioni">@language.Getkey("Global_Accession_Progressive")</label>
@@ -39,12 +39,12 @@
         </div>
         <div class="form-row">
             <div class="form-group col-md-4">
-                <label for="inputSettore">Settore</label>
-               @Html.DropDownList("settore", (IEnumerable<SelectListItem>)ViewBag.listasettori, "Tutti", htmlAttributes: new { @Id = "settore", @class = "form-control" })
+                <label for="inputSettore">@language.Getkey("Global_Sector")</label>
+                @Html.DropDownList("settore", (IEnumerable<SelectListItem>)ViewBag.listasettori, @language.Getkey("Global_All"), htmlAttributes: new { @Id = "settore", @class = "form-control" })
             </div>
             <div class="form-group col-md-4">
                 <label for="inputCollezione">Collezione</label>
-                @Html.DropDownList("collezione", (IEnumerable<SelectListItem>)ViewBag.listacollezioni, "Tutti", htmlAttributes: new { @Id = "collezione", @class = "form-control" })
+                @Html.DropDownList("collezione", (IEnumerable<SelectListItem>)ViewBag.listacollezioni, @language.Getkey("Global_All"), htmlAttributes: new { @Id = "collezione", @class = "form-control" })
             </div>
             <div class="form-group col-sm-1">
                 <label for="inputPropagazioneda">Propagazione da</label>
@@ -62,15 +62,15 @@
         <div class="form-row">
             <div class="form-group col-md-4">
                 <label for="inputStatodellIndividuo">Stato dell'Individuo</label>
-                @Html.DropDownList("statoindividuo", (IEnumerable<SelectListItem>)ViewBag.listastatoindividui, "Tutti", htmlAttributes: new { @Id = "statoindividuo", @class = "form-control" })
+                @Html.DropDownList("statoindividuo", (IEnumerable<SelectListItem>)ViewBag.listastatoindividui, @language.Getkey("Global_All"), htmlAttributes: new { @Id = "statoindividuo", @class = "form-control" })
             </div>
             <div class="form-group col-md-4">
                 <label for="inputCondizione">Condizione</label>
-                @Html.DropDownList("condizione", (IEnumerable<SelectListItem>)ViewBag.listacondizioni, "Tutti", htmlAttributes: new { @Id = "condizione", @class = "form-control" })
+                @Html.DropDownList("condizione", (IEnumerable<SelectListItem>)ViewBag.listacondizioni, @language.Getkey("Global_All"), htmlAttributes: new { @Id = "condizione", @class = "form-control" })
             </div>
             <div class="form-group col-md-4">
                 <label for="inputCartellino">Cartellino</label>
-                @Html.DropDownList("cartellino", (IEnumerable<SelectListItem>)ViewBag.listacartellini, "Tutti", htmlAttributes: new { @Id = "cartellino", @class = "form-control" })
+                @Html.DropDownList("cartellino", (IEnumerable<SelectListItem>)ViewBag.listacartellini, @language.Getkey("Global_All"), htmlAttributes: new { @Id = "cartellino", @class = "form-control" })
             </div>
         </div>
         <div class="row">
@@ -121,7 +121,7 @@
                         @language.Getkey("Global_Scientific_Name")
                     </th>
                     <th>
-                        Settore
+                        @language.Getkey("Global_Sector")
                     </th>
                     <th>
                         Collezione
@@ -381,7 +381,7 @@
                     },
                     success: function (data) {
 
-                        var s = '<option value="">Tutti</option>';
+                        var s = '<option value="">'+@language.Getkey("Global_All")+'</option>';
 
                         for (var i = 0; i < data.length; i++) {
                             if (viewbagcol == data[i].codicecollezione) {
@@ -456,7 +456,7 @@
                     },
                     success: function (data) {
 
-                        var s = '<option value="">Tutti</option>';
+                            var s = '<option value="">'+@language.Getkey("Global_All")+'</option>';
 
                         for (var i = 0; i < data.length; i++) {
 
@@ -482,8 +482,7 @@
     </script>
     <script>
         $('#azzera').on("click", function () {
-            // document.getElementById("famiglia").value = "";
-            //document.getElementById("famiglia").textContent = "Tutti";
+            
             $('#famiglia').val('').trigger('change');
             $('#settore').val('').trigger('change');
             $('#collezione').val('').trigger('change');
