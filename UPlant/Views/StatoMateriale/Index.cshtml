@@ -1,5 +1,5 @@
 ﻿@model IEnumerable<UPlant.Models.DB.StatoMateriale>
-
+@inject LanguageService language
 @{
     ViewData["Title"] = "Index";
 }
@@ -57,7 +57,7 @@
             {
 
                 <a asp-action="Edit" asp-route-id="@item.id">
-                    <span class="btn btn-warning btn-xs" title="Modifica Stato ">
+                                        <span class="btn btn-warning btn-xs" title="@language.Getkey("Global_Edit") Stato ">
                                             <i class="fa-solid fa-pencil" style="color: #fafafa;"></i>
                     </span>
                                     </a>

@@ -1,5 +1,5 @@
 ﻿@model IEnumerable<UPlant.Models.DB.UserRole>
-
+@inject LanguageService language
 @{
     ViewData["Title"] = "Index";
 }
@@ -31,7 +31,7 @@
                     @Html.DisplayFor(modelItem => item.UserFKNavigation.Name) @Html.DisplayFor(modelItem => item.UserFKNavigation.LastName)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Edit" asp-route-id="@item.Id">@language.Getkey("Global_Edit")</a> |
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
                 <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
             </td>

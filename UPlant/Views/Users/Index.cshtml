@@ -1,5 +1,5 @@
 ﻿@model IEnumerable<UPlant.Models.DB.UserRole>
-
+@inject LanguageService language
 @{
     ViewData["Title"] = "Utenti";
 }
@@ -111,7 +111,7 @@
                                                         </span>
                                                     </a>*/
                                             <a asp-action="Edit" asp-controller="Users" asp-route-id="@item.UserFKNavigation.Id">
-                                                    <span class="btn btn-warning btn-xs" title="Modifica Utente">
+                                        <span class="btn btn-warning btn-xs" title="@language.Getkey("Global_Edit") Utente">
                                                     <i class="fa-solid fa-pencil" style="color: #fafafa;"></i>
                                                     </span>
                                                     </a>

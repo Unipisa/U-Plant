@@ -196,10 +196,10 @@
     <value>Data Fine</value>
   </data>
   <data name="Global_Material_Type" xml:space="preserve">
-    <value>Material Type</value>
+    <value>Tipo di Materiale</value>
   </data>
   <data name="Global_Edit" xml:space="preserve">
-    <value>Edit</value>
+    <value>Modifica</value>
   </data>
   <data name="Global_Add" xml:space="preserve">
     <value>Aggiungi</value>
@@ -256,7 +256,7 @@
     <value>Utente</value>
   </data>
   <data name="Global_Material_Origin" xml:space="preserve">
-    <value>Material Origin</value>
+    <value />
   </data>
   <data name="Global_Acquisition_Date" xml:space="preserve">
     <value>Data Acquisizione</value>
@@ -389,5 +389,8 @@
   </data>
   <data name="Global_Go_Back" xml:space="preserve">
     <value>Torna Indietro</value>
+  </data>
+  <data name="Global_Save" xml:space="preserve">
+    <value>Salva</value>
   </data>
 </root>

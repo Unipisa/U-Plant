@@ -1,5 +1,5 @@
 ﻿@model IEnumerable<UPlant.Models.DB.Roles>
-
+@inject LanguageService language
 @{
     ViewData["Title"] = "Index";
 }
@@ -50,7 +50,7 @@
                                         {
                                         
                                             <a asp-action="Edit" asp-controller="Roles" asp-route-id="@item.Id">
-                                                <span class="btn btn-warning btn-xs" title="Modifica Ruolo">
+                                                <span class="btn btn-warning btn-xs" title="@language.Getkey("Global_Edit") Ruolo">
                                                     <i class="fa-solid fa-pencil" style="color: #fafafa;"></i>
                                                 </span>
                                             </a>

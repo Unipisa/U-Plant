@@ -1,5 +1,5 @@
 ﻿@model IEnumerable<UPlant.Models.DB.Province>
-
+@inject LanguageService language
 @{
     ViewData["Title"] = "Index";
 }
@@ -31,7 +31,7 @@
                 @Html.DisplayFor(modelItem => item.regioneNavigation.codice)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.codice">Edit</a> |
+                    <a asp-action="Edit" asp-route-id="@item.codice">@language.Getkey("Global_Edit")</a> |
                 <a asp-action="Details" asp-route-id="@item.codice">Details</a> |
                 <a asp-action="Delete" asp-route-id="@item.codice">Delete</a>
             </td>

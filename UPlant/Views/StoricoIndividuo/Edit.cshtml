@@ -1,5 +1,5 @@
 ﻿@model UPlant.Models.DB.StoricoIndividuo
-
+@inject LanguageService language
 @{
     ViewData["Title"] = "Edit";
 }
@@ -26,7 +26,7 @@
     <div class="card card-primary">
 
         <div class="card-header with-border">
-            <h3 class="card-title">Storico Individuo - Modifica</h3>
+            <h3 class="card-title">Storico Individuo - @language.Getkey("Global_Edit")</h3>
         </div>
 
 
@@ -57,7 +57,7 @@
            
                 @Html.Hidden("tipo", null, new { @tipo = "tipo" })
             <div class="form-group">
-                <input type="submit" value="Modifica Stato" class="btn btn-success" />
+                    <input type="submit" value="@language.Getkey("Global_Edit") Stato" class="btn btn-success" />
             </div>
         </form>
     </div>

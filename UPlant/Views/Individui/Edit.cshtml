@@ -35,7 +35,7 @@
         
     <div class="card card-outline card-primary">
         <div class="card-header with-border">
-                <h3 class="card-title font-weight-bold"> <span class="text-primary">Modifica</span> - @Html.DisplayFor(model => model.progressivo) - @Html.DisplayFor(model => model.accessioneNavigation.specieNavigation.nome_scientifico) </h3>
+                <h3 class="card-title font-weight-bold"> <span class="text-primary">@language.Getkey("Global_Edit")</span> - @Html.DisplayFor(model => model.progressivo) - @Html.DisplayFor(model => model.accessioneNavigation.specieNavigation.nome_scientifico) </h3>
                 
         </div>
 
@@ -157,7 +157,7 @@
                 <hr>
                 <div class="row">
                     <div class="form-group col">
-                        <input type="submit" value="Salva" class="btn btn-success" />
+                        <input type="submit" value="@language.Getkey("Global_Save")" class="btn btn-success" />
                     </div>
                 </div>
        </div>

@@ -28,9 +28,20 @@
                 <h3 class="card-title">Aggiungi</h3>
             </div>
 
-            
+            <div id="datsel" data-key="@language.Getkey("Global_Select")"></div>
+            <div id="datnaz" data-key="@language.Getkey("Global_Country")"></div>
+            <div id="datreg" data-key="@language.Getkey("Global_Region")"></div>
+            <div id="datprov" data-key="@language.Getkey("Global_Province")"></div>
+            <div id="datcom" data-key="@language.Getkey("Global_City")"></div>
+            <div id="datgen" data-key="@language.Getkey("Global_Genus")"></div>
+            <div id="datspe" data-key="@language.Getkey("Global_Species")"></div>
+            <div id="dat1" data-key="@language.Getkey("Script_Accessioni_1")"></div>
+            <div id="dat2" data-key="@language.Getkey("Script_Accessioni_2")"></div>
+            <div id="dat3" data-key="@language.Getkey("Script_Accessioni_3")"></div>
+            <div id="dat4" data-key="@language.Getkey("Script_Accessioni_4")"></div>
+            <div id="datnotdef" data-key="@language.Getkey("Global_Not_Defined")"></div>
 
-                @Html.AntiForgeryToken()
+            @Html.AntiForgeryToken()
             <div class="card-body">
                 
 				<form asp-action="Create">

@@ -63,10 +63,10 @@
                                             @Html.DisplayNameFor(model => model.Individui)
                                         </th>
                                         <th>
-                                            Inserito da
+                            @language.Getkey("Home_Ricerca_Accessioni_5")
                                         </th>
                                         <th>
-                                            Modificato da
+                            @language.Getkey("Home_Ricerca_Accessioni_6")
                                         </th>
 
 
@@ -148,7 +148,7 @@
                                     if (User.IsInRole("Operator") || User.IsInRole("TreeKeeper") || User.IsInRole("Discover") || User.IsInRole("Seminum") || User.IsInRole("Utility") && Convert.ToBoolean(item.validazione) == false)
                                                     {
                                                         <a asp-action="Edit" asp-controller="Accessioni" asp-route-id="@item.id">
-                                                            <span class="btn btn-warning btn-xs" title="modifica accessione">
+                                            <span class="btn btn-warning btn-xs" title="@language.Getkey("Global_Edit") @language.Getkey("Global_Accession")">
                                                 <i class="fa-solid fa-pencil" style="color: #fafafa;"></i>
                                                             </span>
                                                         </a>
@@ -160,7 +160,7 @@
                                                     if (User.IsInRole("Administrator"))
                                                     {
                                                         <a asp-action="Edit" asp-controller="Accessioni" asp-route-id="@item.id">
-                                                            <span class="btn btn-warning btn-xs" title="modifica accessione">
+                                            <span class="btn btn-warning btn-xs" title="@language.Getkey("Global_Edit") @language.Getkey("Global_Accession")">
                                                 <i class="fa-solid fa-pencil" style="color: #fafafa;"></i>
                                                             </span>
                                                         </a>

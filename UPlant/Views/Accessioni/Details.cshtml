@@ -16,11 +16,11 @@
         if (User.IsInRole("Administrator") || User.IsInRole("Operator") && Convert.ToBoolean(Model.validazione) == false)
         
         {
-            @Html.ActionLink("Modifica", "Edit", new { id = Model.id }, new { @class = "btn btn-primary" }) <span> </span>
+            @Html.ActionLink(@language.Getkey("Global_Edit"), "Edit", new { id = Model.id }, new { @class = "btn btn-primary" }) <span> </span>
         }
         if (User.IsInRole("Administrator")  && Convert.ToBoolean(Model.validazione) == false)
         {
-            @Html.ActionLink("ValidaAccessione", "ValidaAccessione", new { id = Model.id }, new { @class = "btn btn-warning" }) <span> </span>
+            @Html.ActionLink(@language.Getkey("Global_Valid") + @language.Getkey("Global_Accession"), "ValidaAccessione", new { id = Model.id }, new { @class = "btn btn-warning" }) <span> </span>
         }
         if (ViewBag.tipo == "ricerca")
         {
@@ -40,7 +40,7 @@
     <div class="col-xs-12">
         <div class="card card-outline card-primary">
             <div class="card-header with-border">
-            <h3 class="card-title">@language.Getkey("Global_Detail") + " " + @language.Getkey("Global_Accession")</h3>
+            <h3 class="card-title">@language.Getkey("Global_Detail")  @language.Getkey("Global_Accession")</h3>
         </div>   <form role="form">
                 <div class="card-body">
                         <table style="height: 30px; width: 100% " class="table-striped table-bordered">
@@ -347,7 +347,7 @@
                                                 {
 
                                                         <a asp-action="Edit" asp-controller="Individui" asp-route-id="@item.id" asp-route-accessione="@item.accessione" asp-route-tipo="@ViewBag.tipo">
-                                                                <span class="btn btn btn-warning btn-xs" title="modifica individuo">
+                                                            <span class="btn btn btn-warning btn-xs" title="@language.Getkey("Global_Edit") individuo">
                                                                 <i class="fa-solid fa-pencil" style="color: #fafafa;"></i>
                                                                 </span>
                                                             </a>
@@ -394,11 +394,11 @@
     @{
         if (User.IsInRole("Administrator") || (User.IsInRole("Operator") && Convert.ToBoolean(Model.validazione) == false))
         {
-            @Html.ActionLink("Modifica", "Edit", new { id = Model.id }, new { @class = "btn btn-primary" }) <span> </span>
+            @Html.ActionLink(@language.Getkey("Global_Edit"), "Edit", new { id = Model.id }, new { @class = "btn btn-primary" }) <span> </span>
         }
         if (User.IsInRole("Administrator") && Convert.ToBoolean(Model.validazione) == false)
         {
-            @Html.ActionLink("ValidaAccessione", "ValidaAccessione", new { id = Model.id }, new { @class = "btn btn-warning" }) <span> </span>
+            @Html.ActionLink(@language.Getkey("Global_Valid") + @language.Getkey("Global_Accession"), "ValidaAccessione", new { id = Model.id }, new { @class = "btn btn-warning" }) <span> </span>
         }
         if (ViewBag.tipo == "ricerca")
         {

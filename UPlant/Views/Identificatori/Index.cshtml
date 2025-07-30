@@ -1,5 +1,5 @@
 ﻿@model IEnumerable<UPlant.Models.DB.Identificatori>
-
+@inject LanguageService language
 @{
     ViewData["Title"] = "Index";
 }
@@ -69,7 +69,7 @@
             {
 
                 <a asp-action="Edit" asp-route-id="@item.id">
-                    <span class="btn btn-warning btn-xs" title="Modifica Modalità">
+                                        <span class="btn btn-warning btn-xs" title="@language.Getkey("Global_Edit") Modalità">
                                             <i class="fa-solid fa-pencil" style="color: #fafafa;"></i>
                     </span>
                                     </a>

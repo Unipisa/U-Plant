@@ -1,5 +1,5 @@
 ﻿@model UPlant.Models.DB.Specie
-
+@inject LanguageService language
 @{
     ViewData["Title"] = "Details";
 }
@@ -121,6 +121,6 @@
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.id">Edit</a> |
+    <a asp-action="Edit" asp-route-id="@Model?.id">@language.Getkey("Global_Edit")</a> |
     <a asp-action="Index">Back to List</a>
 </div>

@@ -1,4 +1,10 @@
 $(document).ready(function () {
+    var conSel = document.getElementById('datsel');
+    var opSel = conSel.getAttribute('data-key');
+ 
+    var conNaz = document.getElementById('datnaz');
+    var opNaz = conNaz.getAttribute('data-key');
+    
     $('#specie').select2();
     $('#regione').prop('disabled', 'disabled');
     $('#provincia').prop('disabled', 'disabled');
@@ -7,7 +13,8 @@ $(document).ready(function () {
         url: baseUrlNazioni,
         data: "{}",
         success: function (data) {
-            var s = '<option value="">' + @language.Getkey("Global_Select") + ' ' + @language.Getkey("Global_Country") +'</option>';
+            
+            var s = '<option value="">' + opSel + ' ' + opNaz +'</option>';
             for (var i = 0; i < data.length; i++) {
                 s += '<option value="' + data[i].codicenazione + '">' + data[i].descrizionenazione + '</option>';
             }
@@ -20,6 +27,19 @@ $(document).ready(function () {
 
 
 $('#nazione').on("change", function () {
+
+    var conSel = document.getElementById('datsel');
+    var opSel = conSel.getAttribute('data-key');
+
+    var conReg = document.getElementById('datreg');
+    var opReg = conReg.getAttribute('data-key');
+
+
+
+    var conNotDef = document.getElementById('datnotdef');
+    var opNotDef = conNotDef.getAttribute('data-key');
+
+ 
     $('#regione').val('0');
     $('#provincia').val('0');
     var country = $('#nazione').val();
@@ -28,7 +48,7 @@ $('#nazione').on("change", function () {
         $('#regione').val('99');
         $('#provincia')
             .empty()
-            .append('<option selected="selected" value="999">' + @language.Getkey("Global_Not_Defined") + '</option>')
+            .append('<option selected="selected" value="999">' + opNotDef + '</option>')
             ;
 
         $('#regione').prop('disabled', 'disabled');
@@ -42,7 +62,7 @@ $('#nazione').on("change", function () {
             url: baseUrlRegioni,
             data: "{}",
             success: function (data) {
-                var s = '<option value="-1">' + @language.Getkey("Global_Select") + ' ' + @language.Getkey("Global_Region") +'</option>';
+                var s = '<option value="-1">' + opSel + ' ' + opReg +'</option>';
                 for (var i = 0; i < data.length; i++) {
                     s += '<option value="' + data[i].codiceregione + '">' + data[i].descrizioneregione + '</option>';
                 }
@@ -53,6 +73,12 @@ $('#nazione').on("change", function () {
     }
 });
 $('#regione').on("change", function () {
+    var conSel = document.getElementById('datsel');
+    var opSel = conSel.getAttribute('data-key');
+
+    var conProv = document.getElementById('datprov');
+    var opProv = conProv.getAttribute('data-key');
+    
     var codregionesel = $('#regione :selected').val();
     $("#provincia").removeAttr("disabled");
     $('#provincia').val('0');
@@ -64,7 +90,7 @@ $('#regione').on("change", function () {
             'codiceregione': codregionesel
         },
         success: function (data) {
-            var s = '<option value="-1">' + @language.Getkey("Global_Select") + ' ' + @language.Getkey("Global_Province") +'</option>';
+            var s = '<option value="-1">' + opSel + ' ' + opProv +'</option>';
             for (var i = 0; i < data.length; i++) {
                 s += '<option value="' + data[i].codiceprovincia + '">' + data[i].descrizioneprovincia + '</option>';
             }
@@ -79,6 +105,12 @@ $('#regione').on("change", function () {
 $('#provincia').on("change", function () {
     var codprovinciasel = $('#provincia :selected').val();
 
+    var conSel = document.getElementById('datsel');
+    var opSel = conSel.getAttribute('data-key');
+
+    var conCom = document.getElementById('datcom');
+    var opCom = conCom.getAttribute('data-key');
+    
     $.ajax({
         type: "GET",
         //                url: "getProvincie?codiceregione=" + codregionesel,
@@ -87,7 +119,7 @@ $('#provincia').on("change", function () {
             'codiceprovincia': codprovinciasel
         },
         success: function (data) {
-            var s = '<option value="-1">' + @language.Getkey("Global_Select") + ' ' + @language.Getkey("Global_Municipality") +'</option>';
+            var s = '<option value="-1">' + opSel + ' ' + opCom +'</option>';
             for (var i = 0; i < data.length; i++) {
                 s += '<option value="' + data[i].codicecomune + '">' + data[i].descrizionecomune + '</option>';
             }
@@ -101,6 +133,18 @@ $('#provincia').on("change", function () {
 });
 $('#famiglia').on("change", function () {
     var codfamigliasel = $('#famiglia :selected').val();
+
+
+    var conSel = document.getElementById('datsel');
+    var opSel = conSel.getAttribute('data-key');
+
+    var conGen = document.getElementById('datgen');
+    var opGen = conGen.getAttribute('data-key');
+
+    var conSpe = document.getElementById('datspe');
+    var opSpe = conSpe.getAttribute('data-key');
+
+    
     $('#genere').val('0');
     // $('#specie').val('0');
     $('#addlink2').show();
@@ -114,7 +158,7 @@ $('#famiglia').on("change", function () {
             },
             success: function (data) {
                 $("#genere").disabled = false;
-                var s = '<option value="-1">' + @language.Getkey("Global_Select") + ' ' + @language.Getkey("Global_Genus") +'</option>';
+                var s = '<option value="-1">' + opSel + ' ' + opGen +'</option>';
                 for (var i = 0; i < data.length; i++) {
                     s += '<option value="' + data[i].codicegenere + '">' + data[i].descrizionegenere + '</option>';
                 }
@@ -128,10 +172,10 @@ $('#famiglia').on("change", function () {
 
 
     } else {
-        var g = '<option value="-1">' + @language.Getkey("Global_Select") + ' ' + @language.Getkey("Global_Genus") +'</option>';
+        var g = '<option value="-1">' + opSel + ' ' + opGen +'</option>';
         $("#genere").html(g);
         $("#genere").attr("disabled", "disabled");
-        var s = '<option value="-1">' + @language.Getkey("Global_Select") + ' ' + @language.Getkey("Global_Species") +'</option>';
+        var s = '<option value="-1">' + opSel + ' ' + opSpe +'</option>';
         $("#specie").html(s);
         $("#specie").attr("disabled", "disabled");
 
@@ -143,6 +187,11 @@ $('#genere').on("change", function () {
     $('#addlink2').show();
     $('#addlink').show();
     var codgeneresel = $('#genere :selected').val();
+    var conSel = document.getElementById('datsel');
+    var opSel = conSel.getAttribute('data-key');
+
+    var conSpe = document.getElementById('datspe');
+    var opSpe = conSpe.getAttribute('data-key');
     if (codgeneresel != "-1") {
         $('#specie').val('0');
         $('#addlink').show();
@@ -154,7 +203,7 @@ $('#genere').on("change", function () {
             },
             success: function (data) {
                 $("#specie").disabled = false;
-                var s = '<option value="-1">' + @language.Getkey("Global_Select") + ' ' + @language.Getkey("Global_Species") +'</option>';
+                var s = '<option value="-1">' + opSel + ' ' + opSpe +'</option>';
                 for (var i = 0; i < data.length; i++) {
                     s += '<option value="' + data[i].codicespecie + '">' + data[i].nomescientifico + '</option>';
                 }
@@ -167,7 +216,7 @@ $('#genere').on("change", function () {
             }
         });
     } else {//nel caso torno indietro e riazzero il genere devo riazzerare anche la specie
-        var s = '<option value="-1">' + @language.Getkey("Global_Select") + ' ' + @language.Getkey("Global_Species") +'</option>';
+        var s = '<option value="-1">' + opSel + ' ' + opSpe +'</option>';
         $("#specie").html(s);
     }
 });
@@ -239,8 +288,20 @@ $('#addlink2').click(function () {
 
 });
 $('#insSpecie').click(function () {
+
+    var con1 = document.getElementById('dat1');
+    var op1 = con1.getAttribute('data-key');
+
+    var con2 = document.getElementById('dat2');
+    var op2 = con2.getAttribute('data-key');
+
+    var con3 = document.getElementById('dat3');
+    var op3 = con3.getAttribute('data-key');
+
+
+
     if (document.getElementById('specieNavigation_nome').value == "") {
-        alert(@language.Getkey("Script_Accessioni_1")); 
+        alert(op1); 
     } else {
         var nomecomune = "";
         var nomecomuneen = "";
@@ -336,7 +397,7 @@ $('#insSpecie').click(function () {
                     //$("#famiglia").attr("disabled", "disabled");
                     //$('#addlink').hide();
                     alert(data.message);
-                    console.log(@language.Getkey("Script_Accessioni_2"));
+                    console.log(op2);
                 }
 
                 else {
@@ -346,7 +407,7 @@ $('#insSpecie').click(function () {
             },
             error: function () {
                 alert(data.message);
-                console.log(@language.Getkey("Script_Accessioni_3"));
+                console.log(op3);
             }
         });
     }
@@ -384,8 +445,20 @@ $('#settore').on("change", function () {
 
 $('#insGenere').click(function () {
 
+    var con2 = document.getElementById('dat2');
+    var op2 = con2.getAttribute('data-key');
+
+    var con4 = document.getElementById('dat4');
+    var op4 = con4.getAttribute('data-key');
+
+    var conSel = document.getElementById('datsel');
+    var opSel = conSel.getAttribute('data-key');
+
+    var conSpe = document.getElementById('datspe');
+    var opSpe = conSpe.getAttribute('data-key');
+
     if (document.getElementById('specieNavigation_genereNavigation_descrizione').value == "") {
-        alert(@language.Getkey("Script_Accessioni_4"));
+        alert(op4);
     } else {
         $.ajax({
             type: "GET",
@@ -429,7 +502,7 @@ $('#insGenere').click(function () {
                         },
                         success: function (data) {
                             $("#specie").disabled = false;
-                            var s = '<option value="-1">' + @language.Getkey("Global_Select") + ' ' + @language.Getkey("Global_Species") +'</option>';
+                            var s = '<option value="-1">' + opSel + ' ' + opSpe +'</option>';
                             for (var i = 0; i < data.length; i++) {
                                 s += '<option value="' + data[i].codicespecie + '">' + data[i].nomespecie + '</option>';
                             }
@@ -450,7 +523,7 @@ $('#insGenere').click(function () {
             error: function (data) {
                 alert(data.message);
                 console.log(data);
-                console.log(@language.Getkey("Script_Accessioni_2"));
+                console.log(op2);
             }
         });
     }

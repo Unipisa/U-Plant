@@ -5,7 +5,7 @@
 }
 <div class="card card-outline card-primary">
     <div class="card-header with-border">
-        <h3 class="card-title">Modifica Provenienza</h3>
+        <h3 class="card-title">@language.Getkey("Global_Edit") Provenienza</h3>
     </div>
     <div class="card-body">
         <form asp-action="Edit">
@@ -33,7 +33,7 @@
                 <span asp-validation-for="organizzazione" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Salva" class="btn btn-primary" />
+                <input type="submit" value="@language.Getkey("Global_Save")" class="btn btn-primary" />
             </div>
         </form>
     </div>

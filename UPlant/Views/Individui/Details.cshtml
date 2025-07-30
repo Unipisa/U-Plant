@@ -9,7 +9,7 @@
     @{
         if (User.IsInRole("Administrator") || User.IsInRole("Operator") || User.IsInRole("TreeKeeper") || User.IsInRole("Discover") || User.IsInRole("Seminum") || User.IsInRole("Utility"))
         {
-            @Html.ActionLink("Modifica", "Edit", new { id = Model.id, tipo = ViewBag.tipo }, new { @class = "btn btn-primary" }) <span> </span>
+            @Html.ActionLink(@language.Getkey("Global_Edit"), "Edit", new { id = Model.id, tipo = ViewBag.tipo }, new { @class = "btn btn-primary" }) <span> </span>
         }
 
         if (ViewBag.tipo == "ricerca")
@@ -307,7 +307,7 @@
                                                                         if (rowNo == 0)
                                                                         {
                                                                         <a asp-action="Edit" asp-controller="StoricoIndividuo" asp-route-id="@item.id" asp-route-individuo="@item.individuo" asp-route-tipo="@ViewBag.tipo">
-                                                                                <span class="btn btn-warning btn-xs" title="modifica storico">
+                                                                        <span class="btn btn-warning btn-xs" title="@language.Getkey("Global_Edit") storico">
                                                                             <i class="fa-solid fa-pencil" style="color: #fafafa;"></i>
                                                                                 </span>
                                                                             </a>
@@ -544,7 +544,7 @@
             @{
                 if (User.IsInRole("Administrator") || User.IsInRole("Operator") || User.IsInRole("TreeKeeper") || User.IsInRole("Discover") || User.IsInRole("Seminum") || User.IsInRole("Utility"))
                 {
-                    @Html.ActionLink("Modifica", "Edit", new { id = Model.id, tipo = ViewBag.tipo }, new { @class = "btn btn-primary" }) <span> </span>
+            @Html.ActionLink(@language.Getkey("Global_Edit"), "Edit", new { id = Model.id, tipo = ViewBag.tipo }, new { @class = "btn btn-primary" }) <span> </span>
                 }
 
                 if (ViewBag.tipo == "ricerca")

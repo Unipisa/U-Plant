@@ -168,7 +168,7 @@
                                 <td>
                                    
                                     <a asp-action="Details" asp-controller="Accessioni" asp-route-id="@item.id" asp-route-tipo="ricerca">
-                                        <span class="btn btn-primary btn-xs" title="@language.Getkey("Global_Detail") + ' ' + @language.Getkey("Global_Individual")">
+                                        <span class="btn btn-primary btn-xs" title="@language.Getkey("Global_Detail") @language.Getkey("Global_Individual")">
                                             <i class="fa-solid fa-search"></i>
                                         </span>
                                     </a>
@@ -220,7 +220,7 @@
                                         if (User.IsInRole("Administrator") || User.IsInRole("Operator") || User.IsInRole("TreeKeeper") || User.IsInRole("Discover") || User.IsInRole("Seminum") || User.IsInRole("Utility"))
                                         {
                                             <a asp-action="Create" asp-controller="Individui" asp-route-idaccessione="@item.id">
-                                                <span class="btn btn-success btn-xs" title="@language.Getkey("Global_Add") + ' ' + @language.Getkey("Global_Individual")">
+                                                <span class="btn btn-success btn-xs" title="@language.Getkey("Global_Add") @language.Getkey("Global_Individual")">
                                                     <i class="fa-solid fa-plus"></i>
                                                 </span>
                                             </a>
@@ -233,7 +233,7 @@
                                     {
 
                                         <a asp-action="Edit" asp-controller="Accessioni" asp-route-id="@item.id">
-                                            <span class="btn btn-warning btn-xs" title="@language.Getkey("Global_Edit") + ' ' + @language.Getkey("Global_Accession")">
+                                            <span class="btn btn-warning btn-xs" title="@language.Getkey("Global_Edit")  @language.Getkey("Global_Accession")">
                                                 <i class="fa-solid fa-pencil" style="color: #fafafa;"></i>
                                             </span>
                                         </a>
@@ -244,7 +244,7 @@
                                     @if (User.IsInRole("Administrator"))
                                     {
                                         <a asp-action="Edit" asp-controller="Accessioni" asp-route-id="@item.id" >
-                                            <span class="btn btn-warning btn-xs" title="@language.Getkey("Global_Edit") + ' ' + @language.Getkey("Global_Accession")">
+                                            <span class="btn btn-warning btn-xs" title="@language.Getkey("Global_Edit")  @language.Getkey("Global_Accession")">
                                                 <i class="fa-solid fa-pencil" style="color: #fafafa;"></i>
                                             </span>
                                         </a>
@@ -263,7 +263,7 @@
                                         if (Convert.ToInt32(item.countind) == 0)
                                         {
                                             <a asp-action="Delete" asp-controller="Accessioni" asp-route-id="@item.id" >
-                                                <span class="btn btn-danger btn-xs" title="@language.Getkey("Global_Delete") + ' ' + @language.Getkey("Global_Accession")">
+                                                <span class="btn btn-danger btn-xs" title="@language.Getkey("Global_Delete")  @language.Getkey("Global_Accession")">
                                                     <i class="fa-solid fa-trash"></i>
                                                 </span>
                                             </a>
@@ -272,7 +272,7 @@
                                         if (item.validazione == false)
                                         {
                                             <a asp-action="ValidaAccessione" asp-controller="Accessioni" asp-route-id="@item.id">
-                                                <span class="btn btn-info btn-xs" title="@language.Getkey("Global_Valid") + ' ' + @language.Getkey("Global_Accession")">
+                                                <span class="btn btn-info btn-xs" title="@language.Getkey("Global_Valid")  @language.Getkey("Global_Accession")">
                                                     <i class="fa-solid fa-check"></i>
                                                 </span>
                                             </a>
