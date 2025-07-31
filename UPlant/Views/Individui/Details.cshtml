@@ -230,7 +230,7 @@
                                     <div class="float-right">
                                     <a asp-action="Create" asp-controller="StoricoIndividuo" asp-route-idindividuo="@ViewBag.idindividuo" asp-route-tipo="@ViewBag.tipo">
                                                 <span class="btn btn btn-success" title="crea storico">
-                                                    Aggiungi
+                                            @language.Getkey("Global_Add")
                                                 </span>
                                             </a>
                                         </div>
@@ -361,7 +361,7 @@
                                     if (User.IsInRole("Administrator") || User.IsInRole("Operator") || User.IsInRole("TreeKeeper") || User.IsInRole("Discover") || User.IsInRole("Seminum") || User.IsInRole("Utility"))
                                     {
                                          <div class="float-right">
-                                            <button type="button" id="UploadImg" class="btn btn-success">Aggiungi</button>
+                                            <button type="button" id="UploadImg" class="btn btn-success">@language.Getkey("Global_Add")</button>
                                             <div class="modal fade" id="myModal" role="dialog" data-url='@Url.Action("UploadImg", "Individui", new { @id = ViewBag.idindividuo, tipo = ViewBag.tipo })'>
                                             </div>
 

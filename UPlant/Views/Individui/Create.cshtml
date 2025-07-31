@@ -16,7 +16,7 @@
     <div class="card card-outline card-primary">
         <div class="card-header with-border">
             <h3 class="card-title font-weight-bold">
-                <span class="text-primary">Aggiungi Individuo</span> - @language.Getkey("Global_Accession_Progressive") : @ViewBag.progressivo
+                <span class="text-primary">@language.Getkey("Global_Add") @language.Getkey("Global_Individual")</span> - @language.Getkey("Global_Accession_Progressive") : @ViewBag.progressivo
                 @if (!String.IsNullOrEmpty(ViewBag.accvecprog))
                 {
 
@@ -164,7 +164,7 @@
                    </div>
                 <hr>
                     <div class="form-group">
-                     <input type="submit" value="Aggiungi" class="btn btn-primary" />
+                    <input type="submit" value="@language.Getkey("Global_Add")" class="btn btn-primary" />
 
                     </div>
                

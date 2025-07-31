@@ -17,7 +17,7 @@
                     {
                         <div class="float-right success ">
                             <a asp-action="Create" asp-controller="Accessioni">
-                                <span class="btn btn-success" title="aggiungi accessione">
+                        <span class="btn btn-success" title="@language.Getkey("Global_Add") @language.Getkey("Global_Accession")">
                                     Crea Accessione
                                 </span>
                             </a>
@@ -137,7 +137,7 @@
                                                     {
 
                                                         <a asp-action="Create" asp-controller="Individui" asp-route-idaccessione="@item.id" >
-                                                            <span class="btn btn-success btn-xs" title="aggiungi individuo">
+                                            <span class="btn btn-success btn-xs" title="@language.Getkey("Global_Add") @language.Getkey("Global_Individual")">
                                                                 <i class="fa-solid fa-plus"></i>
                                                             </span>
                                                         </a>
