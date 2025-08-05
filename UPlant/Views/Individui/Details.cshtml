@@ -50,7 +50,7 @@
                     {
 
                         <span> - </span> <label asp-for="vecchioprogressivo" class="control-label">@language.Getkey("Global_Old_Progressive")</label>  @Html.DisplayFor(model => model.vecchioprogressivo)
-                    }<span> - </span> @Html.Label("Specie  :  ") @Html.DisplayFor(model => model.accessioneNavigation.specieNavigation.nome_scientifico)
+                    }<span> - </span>@language.Getkey("Global_Species") @Html.Label("  :  ") @Html.DisplayFor(model => model.accessioneNavigation.specieNavigation.nome_scientifico)
                 </h3>
 
             </div>
@@ -322,7 +322,7 @@
 
 
                                                                     <a asp-action="Delete" asp-controller="StoricoIndividuo" asp-route-id="@item.id" asp-route-individuo="@item.individuo" asp-route-tipo="@ViewBag.tipo">
-                                                                                <span class="btn btn-danger btn-xs" title="cancella storico">
+                                                                                <span class="btn btn-danger btn-xs" title="@language.Getkey("Global_Delete") storico">
                                                                                     <i class="fa-solid fa-trash"></i>
                                                                                 </span>
                                                                             </a>

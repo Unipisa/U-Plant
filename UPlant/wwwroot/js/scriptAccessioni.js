@@ -45,7 +45,9 @@ $('#nazione').on("change", function () {
     var country = $('#nazione').val();
     if (country != "IT") {
     
-        $('#regione').val('99');
+        $('#regione').empty()
+            .append('<option selected="selected" value="99">' + opNotDef + '</option>')
+            ;
         $('#provincia')
             .empty()
             .append('<option selected="selected" value="999">' + opNotDef + '</option>')

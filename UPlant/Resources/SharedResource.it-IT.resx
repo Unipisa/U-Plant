@@ -393,4 +393,16 @@
   <data name="Global_Save" xml:space="preserve">
     <value>Salva</value>
   </data>
+  <data name="Global_Global" xml:space="preserve">
+    <value>Globale</value>
+  </data>
+  <data name="Global_Local" xml:space="preserve">
+    <value>Italia</value>
+  </data>
+  <data name="Global_Occurrences" xml:space="preserve">
+    <value>Non ci sono occorrenze</value>
+  </data>
+  <data name="Individui_Delete" xml:space="preserve">
+    <value>Ti ricordo che cancellando l'individuo andrai a cancellare anche tutto lo storico e le immagini</value>
+  </data>
 </root>

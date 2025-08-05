@@ -79,12 +79,12 @@
                 <span asp-validation-for="areale" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="iucn_globale" class="control-label"></label>
+                <label asp-for="iucn_globale" class="control-label">IUCN @language.Getkey("Global_Global")</label>
                 <select asp-for="iucn_globale" class="form-control" asp-items="ViewBag.iucn_globale"></select>
                 <span asp-validation-for="iucn_globale" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="iucn_italia" class="control-label"></label>
+                <label asp-for="iucn_italia" class="control-label">IUCN @language.Getkey("Global_Local")</label>
                 <select asp-for="iucn_italia" class="form-control" asp-items="ViewBag.iucn_italia"></select>
                 <span asp-validation-for="iucn_italia" class="text-danger"></span>
             </div>

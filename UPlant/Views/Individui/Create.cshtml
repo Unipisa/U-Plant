@@ -1,7 +1,7 @@
 ﻿@model UPlant.Models.DB.StoricoIndividuo
 @inject LanguageService language
 @{
-    ViewBag.Title = "Individui";
+    ViewBag.Title = @language.Getkey("Global_Individual");
 }
 <p>
     <a asp-action="Details" asp-controller="Accessioni" asp-route-id="@ViewBag.accessione">
@@ -23,7 +23,8 @@
                     <span> - </span>
                     <label asp-for="individuoNavigation.accessioneNavigation.vecchioprogressivo" class="control-label">@language.Getkey("Global_Old_Accession_Progressive")</label>
                      @ViewBag.accvecprog
-                }<span> - </span> @Html.Label("Specie  :  ") @ViewBag.nome_scientifico
+                }
+<span> - </span> @language.Getkey("Global_Species")@Html.Label(" :  ") @ViewBag.nome_scientifico
             </h3>
             </div>
             @using (Html.BeginForm())

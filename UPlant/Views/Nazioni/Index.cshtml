@@ -52,14 +52,14 @@
                 {
 
                     <a asp-action="Edit" asp-route-id="@item.codice">
-                                        <span class="btn btn-warning btn-xs" title="@language.Getkey("Global_Edit") Nazione">
+                                        <span class="btn btn-warning btn-xs" title="@language.Getkey("Global_Edit") @language.Getkey("Global_Country")">
                                             <i class="fa-solid fa-pencil" style="color: #fafafa;"></i>
                         </span>
                                     </a>
                                     if (@item.Accessioni.Count() == 0)
                                     {
                     <a asp-action="Delete" asp-route-id="@item.codice">
-                        <span class="btn btn-danger btn-xs" title="Cancella Nazione">
+                                            <span class="btn btn-danger btn-xs" title="@language.Getkey("Global_Delete") @language.Getkey("Global_Country")">
                             <i class="fa-solid fa-trash"></i>
                         </span>
                     </a>

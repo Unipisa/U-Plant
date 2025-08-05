@@ -63,14 +63,14 @@
                 {
 
                     <a asp-action="Edit" asp-route-id="@item.id">
-                                        <span class="btn btn-warning btn-xs" title="@language.Getkey("Global_Edit") Modalità">
+                                        <span class="btn btn-warning btn-xs" title="@language.Getkey("Global_Edit") Tipo Acquisizione">
                                             <i class="fa-solid fa-pencil" style="color: #fafafa;"></i>
                         </span>
                                     </a>
                                     if (@item.Accessioni.Count() == 0)
                                     {
                     <a asp-action="Delete" asp-route-id="@item.id">
-                        <span class="btn btn-danger btn-xs" title="Cancella Modalità">
+                                            <span class="btn btn-danger btn-xs" title="@language.Getkey("Global_Delete") Tipo Acquisizione">
                             <i class="fa-solid fa-trash"></i>
                         </span>
                     </a>

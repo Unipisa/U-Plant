@@ -66,7 +66,7 @@
                                     if (@item.Users.Count() == 0)
                                     {
                     <a asp-action="Delete" asp-route-id="@item.id">
-                                        <span class="btn btn-danger btn-xs" title="Cancella Tipologia Utente">
+                                            <span class="btn btn-danger btn-xs" title="@language.Getkey("Global_Delete") Tipologia Utente">
                             <i class="fa-solid fa-trash"></i>
                         </span>
                     </a>

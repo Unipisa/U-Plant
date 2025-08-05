@@ -58,7 +58,7 @@
                             </tr>
                             <tr style="height: 23px;">
 
-                                <th style="width: 239px; height: 23px;">Specie</th>
+                            <th style="width: 239px; height: 23px;">@language.Getkey("Global_Species")</th>
                             <th style="width: 239px; height: 23px;">@language.Getkey("Global_Material_Type")</th>
                             <th style="width: 239px; height: 23px;">@language.Getkey("Global_Material_Status")</th>
                             <th style="width: 239px; height: 23px;">@language.Getkey("Global_Material_Origin")</th>
@@ -408,14 +408,16 @@
         var baseUrlProvince = '@Url.Action("GetProvince", "Common")';
     </script>
     <script type="text/javascript">
-
-        var country = $('#nazione').val();
+    $('#nazione').on("ready", function()   {
+            var country = $('#nazione').val();
         if (country != "IT") {
             $('#regione').val('0');
             $('#provincia').val('0');
             $('#regione').prop('disabled', 'disabled');
             $('#provincia').prop('disabled', 'disabled');
-        }
+                }
+            });
+        
 $('#nazione').on("change", function () {
     $('#regione').val('0');
     $('#provincia').val('0');
@@ -426,7 +428,7 @@ $('#nazione').on("change", function () {
         $('#provincia')
             .empty()
                     .append('<option selected="selected" value="999">' + @language.Getkey("Global_Not_Defined") + '</option>')
-            ;
+;
 
         $('#regione').prop('disabled', 'disabled');
 

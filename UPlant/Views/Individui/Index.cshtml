@@ -84,12 +84,12 @@
                                             if (item.StoricoIndividuo.Count() == 0)
                                                 {
                                                     <td>
-                                                        Non ci sono occorrenze
+                                                    @language.Getkey("Global_Occurrences")
                                                     </td>
 
 
                                                     <td>
-                                                        Non ci sono occorrenze
+                                                    @language.Getkey("Global_Occurrences")
                                                     </td>
                                                 }
                                                 else
@@ -110,7 +110,7 @@
                                             if (item.StoricoIndividuo.Count() == 0)
                                                 {
                                                     <td>
-                                                        Non ci sono occorrenze
+                                                    @language.Getkey("Global_Occurrences")
                                                     </td>
                                                 }
                                                 else
@@ -122,7 +122,7 @@
                                                 if (User.IsInRole("Administrator"))
                                                 {
                                                     <td>
-                                                        @Html.ActionLink("Cancella", "../Individui/Delete", new { id = item.id })
+                                                    @Html.ActionLink(@language.Getkey("Global_Delete"), "../Individui/Delete", new { id = item.id })
                                                     </td>
 
                                                 }

@@ -57,7 +57,7 @@
                                             if (@item.UserRole.Count() == 0)
                                             {
                                             <a asp-action="Delete" asp-controller="Roles" asp-route-id="@item.Id">
-                                                <span class="btn btn-danger btn-xs" title="Cancella Ruolo">
+                                                    <span class="btn btn-danger btn-xs" title="@language.Getkey("Global_Delete") Ruolo">
                                                     <i class="fa-solid fa-trash"></i>
                                                 </span>
                                             </a>

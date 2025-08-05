@@ -64,7 +64,7 @@
                                     if (@item.StoricoIndividuo.Count() == 0)
                                     {
                                         <a asp-action="Delete" asp-route-id="@item.id">
-                                            <span class="btn btn-danger btn-xs" title="Cancella Condizione">
+                                            <span class="btn btn-danger btn-xs" title="@language.Getkey("Global_Delete") Condizione">
                                                 <i class="fa-solid fa-trash"></i>
                                             </span>
                                         </a>

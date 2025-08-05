@@ -8,7 +8,7 @@
         <div class="card card-outline card-primary">
             <div class="card-header with-border">
                  <form asp-action="Delete">
-                <h3 class="card-title text-red">Confermi la cancellazione?</h3>
+                    <h3 class="card-title text-red">@language.Getkey("Global_Delete") @language.Getkey("Global_Accession") - @language.Getkey("Global_Question_Delete") @language.Getkey("Global_Accession") ?</h3>
                     <br />
                 <div class="card-body">
                         <table style="height: 30px; width: 100% " class="table-striped table-bordered">

@@ -361,7 +361,7 @@
                                                     if (User.IsInRole("Administrator"))
                                                 {
                                                         <a asp-action="Delete" asp-controller="Individui" asp-route-id="@item.id">
-                                                            <span class="btn btn btn-danger btn-xs" title="cancella individuo">
+                                                            <span class="btn btn btn-danger btn-xs" title="@language.Getkey("Global_Delete") @language.Getkey("Global_Individual")">
                                                                 <i class="fa-solid fa-trash"></i>
                                                             </span>
                                                         </a>

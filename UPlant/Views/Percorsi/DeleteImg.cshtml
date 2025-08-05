@@ -1,5 +1,5 @@
 ﻿@model IEnumerable<UPlant.Models.DB.Percorsi>
-
+@inject LanguageService language
 @{
   
     ViewBag.Title = "Cancellazione immagine";
@@ -11,11 +11,11 @@
             <div class="modal-content">
                 <div class="modal-header" style="background-color: #3c8dbc; ">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title" id="myModaldel-label" style="color: azure">Cancellazione Immagine</h4>
+                    <h4 class="modal-title" id="myModaldel-label" style="color: azure">@language.Getkey("Global_Delete") Immagine</h4>
                 </div>
                 <div class="modal-body">
 
-                    <h4>Sicuro di voler Cancellare l'immagine?</h4>
+                    <h4>@language.Getkey("Global_Question_Delete") Immagine?</h4>
                     <hr />
                     <div>
                         <img src="@Url.Action("ViewBigImg","Percorsi", new { percorso = ViewBag.percorso, nomefile = ViewBag.nomefile  })" title="@ViewBag.nomefile" height="300" />
@@ -33,7 +33,7 @@
 
                         <div class="form-actions no-color">
                             <input type="hidden" autocomplete="off" name="id" value="@ViewBag.percorso" required />
-                            <input type="submit" value="Cancella" class="btn btn-warning" />
+                            <input type="submit" value="@language.Getkey("Global_Delete")" class="btn btn-warning" />
 
                         </div>
                     }

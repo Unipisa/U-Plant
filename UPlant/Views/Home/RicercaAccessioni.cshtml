@@ -251,15 +251,7 @@
                                       
 
 
-                                     @*  if (Convert.ToInt32(item.countind) > 0)
-                                        {
-
-                                            <button class="btn btn-basic btn-xs" title="non puoi cancellare perchè l'accessione ha degli individui figli">
-                                                <i class="fa-solid fa-trash"></i>
-                                            </button>
-
-                                        }
-                        else*@
+                            
                                         if (Convert.ToInt32(item.countind) == 0)
                                         {
                                             <a asp-action="Delete" asp-controller="Accessioni" asp-route-id="@item.id" >

@@ -8,10 +8,10 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-using System;
-
-namespace UPlant.Resources
-{
+namespace UPlant.Resources {
+    using System;
+    
+    
     /// <summary>
     ///   Classe di risorse fortemente tipizzata per la ricerca di stringhe localizzate e così via.
     /// </summary>
@@ -22,235 +22,193 @@ namespace UPlant.Resources
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public class Resource
-    {
-
+    public class Resource {
+        
         private static global::System.Resources.ResourceManager resourceMan;
-
+        
         private static global::System.Globalization.CultureInfo resourceCulture;
-
+        
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal Resource()
-        {
+        internal Resource() {
         }
-
+        
         /// <summary>
         ///   Restituisce l'istanza di ResourceManager nella cache utilizzata da questa classe.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        public static global::System.Resources.ResourceManager ResourceManager
-        {
-            get
-            {
-                if (object.ReferenceEquals(resourceMan, null))
-                {
+        public static global::System.Resources.ResourceManager ResourceManager {
+            get {
+                if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("UPlant.Resources.Resource", typeof(Resource).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
             }
         }
-
+        
         /// <summary>
         ///   Esegue l'override della proprietà CurrentUICulture del thread corrente per tutte le
         ///   ricerche di risorse eseguite utilizzando questa classe di risorse fortemente tipizzata.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        public static global::System.Globalization.CultureInfo Culture
-        {
-            get
-            {
+        public static global::System.Globalization.CultureInfo Culture {
+            get {
                 return resourceCulture;
             }
-            set
-            {
+            set {
                 resourceCulture = value;
             }
         }
-
+        
         /// <summary>
         ///   Cerca una stringa localizzata simile a Inserisci.
         /// </summary>
-        public static string BtnCreate
-        {
-            get
-            {
+        public static string BtnCreate {
+            get {
                 return ResourceManager.GetString("BtnCreate", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Cerca una stringa localizzata simile a Impersona.
         /// </summary>
-        public static string BtnImpersonate
-        {
-            get
-            {
+        public static string BtnImpersonate {
+            get {
                 return ResourceManager.GetString("BtnImpersonate", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Cerca una stringa localizzata simile a Elenco.
         /// </summary>
-        public static string BtnList
-        {
-            get
-            {
+        public static string BtnList {
+            get {
                 return ResourceManager.GetString("BtnList", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Cerca una stringa localizzata simile a Esci.
         /// </summary>
-        public static string BtnLogoff
-        {
-            get
-            {
+        public static string BtnLogoff {
+            get {
                 return ResourceManager.GetString("BtnLogoff", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Cerca una stringa localizzata simile a Logout.
         /// </summary>
-        public static string BtnLogout
-        {
-            get
-            {
+        public static string BtnLogout {
+            get {
                 return ResourceManager.GetString("BtnLogout", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Cerca una stringa localizzata simile a Salva.
         /// </summary>
-        public static string BtnSave
-        {
-            get
-            {
+        public static string BtnSave {
+            get {
                 return ResourceManager.GetString("BtnSave", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Cerca una stringa localizzata simile a Esporta.
         /// </summary>
-        public static string BtnSaveAs_Excel
-        {
-            get
-            {
+        public static string BtnSaveAs_Excel {
+            get {
                 return ResourceManager.GetString("BtnSaveAs_Excel", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Cerca una stringa localizzata simile a Stampa.
         /// </summary>
-        public static string BtnSaveAs_Pdf
-        {
-            get
-            {
+        public static string BtnSaveAs_Pdf {
+            get {
                 return ResourceManager.GetString("BtnSaveAs_Pdf", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Cerca una stringa localizzata simile a Carica file.
         /// </summary>
-        public static string BtnUpload_File
-        {
-            get
-            {
+        public static string BtnUpload_File {
+            get {
                 return ResourceManager.GetString("BtnUpload_File", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Cerca una stringa localizzata simile a Home.
         /// </summary>
-        public static string MenuMain_Home
-        {
-            get
-            {
+        public static string MenuMain_Home {
+            get {
                 return ResourceManager.GetString("MenuMain_Home", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Cerca una stringa localizzata simile a Utenti.
         /// </summary>
-        public static string MenuMain_Users
-        {
-            get
-            {
+        public static string MenuMain_Users {
+            get {
                 return ResourceManager.GetString("MenuMain_Users", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Cerca una stringa localizzata simile a Logout.
         /// </summary>
-        public static string MenuTop_Logout
-        {
-            get
-            {
+        public static string MenuTop_Logout {
+            get {
                 return ResourceManager.GetString("MenuTop_Logout", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Cerca una stringa localizzata simile a Inserisci.
         /// </summary>
-        public static string TltCreate
-        {
-            get
-            {
+        public static string TltCreate {
+            get {
                 return ResourceManager.GetString("TltCreate", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Cerca una stringa localizzata simile a Cancella.
         /// </summary>
-        public static string TltDelete
-        {
-            get
-            {
+        public static string TltDelete {
+            get {
                 return ResourceManager.GetString("TltDelete", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Cerca una stringa localizzata simile a Dettagli.
         /// </summary>
-        public static string TltDetails
-        {
-            get
-            {
+        public static string TltDetails {
+            get {
                 return ResourceManager.GetString("TltDetails", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Cerca una stringa localizzata simile a Modifica.
         /// </summary>
-        public static string TltEdit
-        {
-            get
-            {
+        public static string TltEdit {
+            get {
                 return ResourceManager.GetString("TltEdit", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Cerca una stringa localizzata simile a Elenco.
         /// </summary>
-        public static string TltList
-        {
-            get
-            {
+        public static string TltList {
+            get {
                 return ResourceManager.GetString("TltList", resourceCulture);
             }
         }

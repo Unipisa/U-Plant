@@ -52,10 +52,10 @@
                                             CITES
                                         </th>
                                         <th>
-                                            IUCN Globale
+                            IUCN @language.Getkey("Global_Global")
                                         </th>
                                         <th>
-                                            IUCN Italia
+                            IUCN @language.Getkey("Global_Local")
                                         </th>
                                         <th style="width:25%"></th>
                                     </tr>
@@ -108,7 +108,7 @@
                                       if (@item.Accessioni.Count() == 0)
                                                 {
                                     <a asp-action="Delete" asp-route-id="@item.id">
-                                        <span class="btn btn-danger btn-xs" title="Cancella Specie">
+                                            <span class="btn btn-danger btn-xs" title="@language.Getkey("Global_Delete") @language.Getkey("Global_Spicies")">
                                             <i class="fa-solid fa-trash"></i>
                                         </span>
                                     </a>

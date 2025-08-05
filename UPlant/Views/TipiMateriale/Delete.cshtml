@@ -6,7 +6,7 @@
 
 <div class="card card-outline card-primary">
     <div class="card-header with-border">
-        <h3 class="card-title">Cancella Materiale - Sei sicuro di voler cancellare questo Materiale?</h3>
+        <h3 class="card-title">@language.Getkey("Global_Delete") Tipo Materiale - @language.Getkey("Global_Question_Delete") Tipo Materiale?</h3>
     </div>
     <div class="card-body">
     <dl class="row">
@@ -25,7 +25,7 @@
         </dl><p>
             <form asp-action="Delete">
                 <input type="hidden" asp-for="id" />
-                <input type="submit" value="Cancella" class="btn btn-danger" />
+                <input type="submit" value="@language.Getkey("Global_Delete")" class="btn btn-danger" />
             </form>
         </p>
     </div>
