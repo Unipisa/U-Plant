@@ -11,7 +11,7 @@
     <div class="col-lg-12">
     <div class="form-group">
             <input type="submit" value="@language.Getkey("Global_Save")" class="btn btn-success" /> <span> </span>   @Html.ActionLink("Torna all'elenco", "Index", null, null, new { @class = "btn btn-info" })
-
+            <div id="datnotdef" data-key="@language.Getkey("Global_Not_Defined")"></div>
 
     </div>
         <div class="card card-primary">
@@ -408,27 +408,28 @@
         var baseUrlProvince = '@Url.Action("GetProvince", "Common")';
     </script>
     <script type="text/javascript">
-    $('#nazione').on("ready", function()   {
-            var country = $('#nazione').val();
-        if (country != "IT") {
-            $('#regione').val('0');
-            $('#provincia').val('0');
-            $('#regione').prop('disabled', 'disabled');
-            $('#provincia').prop('disabled', 'disabled');
-                }
-            });
+                 document.addEventListener('DOMContentLoaded', function() {
+
+                            var country = $('#nazione').val();
+                        if (country != "IT") {
+                            $('#regione').val('99');
+                            $('#provincia').val('999');
+                            $('#regione').prop('disabled', 'disabled');
+                            $('#provincia').prop('disabled', 'disabled');
+                                }
+                            });
         
 $('#nazione').on("change", function () {
     $('#regione').val('0');
     $('#provincia').val('0');
     var country = $('#nazione').val();
+    var conNotDef = document.getElementById('datnotdef');
+    var opNotDef = conNotDef.getAttribute('data-key');
+    
     if (country != "IT") {
       
         $('#regione').val('99');
-        $('#provincia')
-            .empty()
-                    .append('<option selected="selected" value="999">' + @language.Getkey("Global_Not_Defined") + '</option>')
-;
+        $('#provincia').val('999');
 
         $('#regione').prop('disabled', 'disabled');
 
