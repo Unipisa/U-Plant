@@ -405,4 +405,16 @@
   <data name="Individui_Delete" xml:space="preserve">
     <value>Ti ricordo che cancellando l'individuo andrai a cancellare anche tutto lo storico e le immagini</value>
   </data>
+  <data name="Global_Return_To_Search" xml:space="preserve">
+    <value>Torna alla Ricerca</value>
+  </data>
+  <data name="Global_Return_To_The_Individual" xml:space="preserve">
+    <value>Torna all'individuo</value>
+  </data>
+  <data name="Global_Return_To_Parent_Accession" xml:space="preserve">
+    <value>Torna all'accessione padre</value>
+  </data>
+  <data name="Accession_Details_List_Of_Individuals" xml:space="preserve">
+    <value>Elenco degli individui</value>
+  </data>
 </root>

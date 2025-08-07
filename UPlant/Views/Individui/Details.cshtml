@@ -16,14 +16,14 @@
         {
             @Html.ActionLink("Vai all'accessione padre", "Details", "Accessioni", new { id = Model.accessione, tipo = "ricerca" }, new { @class = "btn btn-warning" }) <span> </span>
             <button type="button" id="ricerca" class="btn btn-info" onclick="window.location.href = '@Url.Action("RicercaIndividui", "Home", new {  tipo  = ViewBag.tipo })';">
-                Torna alla ricerca
+                @language.Getkey("Global_Return_To_Search")
             </button>
 
         }
         else
         {
 
-            @Html.ActionLink("Torna all'accessione padre", "Details", "Accessioni", new
+            @Html.ActionLink(@language.Getkey("Global_Return_To_Parent_Accession"), "Details", "Accessioni", new
             {
                 id = Model.accessione,
                     tipo = ViewBag.tipo
@@ -551,14 +551,14 @@
                 {
                     @Html.ActionLink("Vai all'accessione padre", "Details", "Accessioni", new { id = Model.accessione, tipo = "ricerca" }, new { @class = "btn btn-warning" }) <span> </span>
                     <button type="button" id="ricerca" class="btn btn-info" onclick="window.location.href = '@Url.Action("RicercaIndividui", "Home", new {  tipo  = ViewBag.tipo })';">
-                        Torna alla ricerca
+                        @language.Getkey("Global_Return_To_Search")
                     </button>
 
                 }
                 else
                 {
 
-                    @Html.ActionLink("Torna all'accessione padre", "Details", "Accessioni", new
+            @Html.ActionLink(@language.Getkey("Global_Return_To_Parent_Accession"), "Details", "Accessioni", new
                         {
                             id = Model.accessione,
                             tipo = ViewBag.tipo

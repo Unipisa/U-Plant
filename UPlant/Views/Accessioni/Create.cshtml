@@ -18,7 +18,14 @@
         </div>
     </div>
 }
+<p>
+    <a asp-action="Index" asp-controller="Accessioni">
+        <span class="btn btn btn-info " title="@language.Getkey("Global_Go_Back")">
+            @language.Getkey("Global_Go_Back")
+        </span>
+    </a>
 
+</p>
 <div class="rownew">
     <div class="col-lg-9">
 
@@ -446,7 +453,14 @@
     </div>
 </div>
 <div>
-    @Html.ActionLink("Torna all'elenco", "Index")
+    <p>
+        <a asp-action="Index" asp-controller="Accessioni" >
+            <span class="btn btn btn-info " title="@language.Getkey("Global_Go_Back")">
+                @language.Getkey("Global_Go_Back")
+            </span>
+        </a>
+
+    </p>
 </div>
 
 

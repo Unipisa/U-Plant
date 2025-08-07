@@ -9,13 +9,13 @@
     @{
         if (ViewBag.tipo == "ricerca")
         {
-            @Html.ActionLink("Torna alla ricerca", null, null, null, new { @class = "btn btn-info go_back" })
+                @Html.ActionLink(@language.Getkey("Global_Return_To_Search"), null, null, null, new { @class = "btn btn-info go_back" })
 
 
         }
         else
         {
-            @Html.ActionLink("Torna all'individuo", "Details", "Individui", new { id = ViewBag.individuo, tipo = ViewBag.tipo }, new { @class = "btn btn-info " })
+                @Html.ActionLink(@language.Getkey("Global_Return_To_The_Individual"), "Details", "Individui", new { id = ViewBag.individuo, tipo = ViewBag.tipo }, new { @class = "btn btn-info " })
 
         }
 
@@ -66,13 +66,13 @@
         @{
             if (ViewBag.tipo == "ricerca")
             {
-                @Html.ActionLink("Torna alla ricerca", null, null, null, new { @class = "btn btn-info go_back" })
+                @Html.ActionLink(@language.Getkey("Global_Return_To_Search"), null, null, null, new { @class = "btn btn-info go_back" })
 
 
             }
             else
             {
-                @Html.ActionLink("Torna all'individuo", "Details", "Individui", new { id = ViewBag.individuo, tipo = ViewBag.tipo }, new { @class = "btn btn-info " })
+                @Html.ActionLink(@language.Getkey("Global_Return_To_The_Individual"), "Details", "Individui", new { id = ViewBag.individuo, tipo = ViewBag.tipo }, new { @class = "btn btn-info " })
 
             }
 

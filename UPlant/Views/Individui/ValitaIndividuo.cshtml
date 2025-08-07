@@ -52,6 +52,6 @@
 
     <div class="form-actions no-color">
         <input type="submit" value="Valida" class="btn btn-success" /> |
-        @Html.ActionLink("Torna all'elenco", "../Accessioni/Details", new { id = Model.accessione  })
+        @Html.ActionLink(@language.Getkey("Global_Go_Back"), "../Accessioni/Details", new { id = Model.accessione })
     </div>
 }

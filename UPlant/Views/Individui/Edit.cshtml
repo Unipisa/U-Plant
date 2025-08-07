@@ -13,20 +13,20 @@
             @{
                 if (ViewBag.tipo == "ricerca")
                 {
-                    @Html.ActionLink("Torna alla ricerca", null, null, null, new { @class = "btn btn-info go_back" })
+                    @Html.ActionLink(@language.Getkey("Global_Return_To_Search"), null, null, null, new { @class = "btn btn-info go_back" })
                     
 
                 }
                 else
                 {
-                    @Html.ActionLink("Torna all'individuo", null, null, null, new { @class = "btn btn-info go_back" })
+                    @Html.ActionLink(@language.Getkey("Global_Return_To_Search"), null, null, null, new { @class = "btn btn-info go_back" })
                    
                 }
 
 
             }
             <span> </span>
-            @Html.ActionLink("Torna all'accessione padre", "Details", "Accessioni", new { id = Model.accessione }, new { @class = "btn btn-warning" })
+            @Html.ActionLink(@language.Getkey("Global_Return_To_Parent_Accession"), "Details", "Accessioni", new { id = Model.accessione }, new { @class = "btn btn-warning" })
            
             
             
@@ -170,20 +170,21 @@
             @{
                 if (ViewBag.tipo == "ricerca")
                 {
-                    @Html.ActionLink("Torna alla ricerca", null, null, null, new { @class = "btn btn-info go_back" })
+                    @Html.ActionLink(@language.Getkey("Global_Return_To_Search"), null, null, null, new { @class = "btn btn-info go_back" })
 
 
                 }
                 else
                 {
-                    @Html.ActionLink("Torna all'individuo", null, null, null, new { @class = "btn btn-info go_back" })
+
+                    @Html.ActionLink(@language.Getkey("Global_Return_To_The_Individual"), null, null, null, new { @class = "btn btn-info go_back" })
 
                 }
 
 
             }
             <span> </span>
-            @Html.ActionLink("Torna all'accessione padre", "Details", "Accessioni", new { id = Model.accessione }, new { @class = "btn btn-warning" })
+            @Html.ActionLink(@language.Getkey("Global_Return_To_Parent_Accession"), "Details", "Accessioni", new { id = Model.accessione }, new { @class = "btn btn-warning" })
 
 
 

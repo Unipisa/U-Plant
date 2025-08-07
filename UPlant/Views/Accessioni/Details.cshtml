@@ -25,13 +25,13 @@
         if (ViewBag.tipo == "ricerca")
         {
             <button type="button" id="ricerca" class="btn btn-info " onclick="window.location.href = '@Url.Action("RicercaAccessioni", "Home", new {  tipo  = ViewBag.tipo })';" >
-                Torna alla ricerca
+                @language.Getkey("Global_Return_To_Search")
             </button>
             
         }
         else
         {
-            <span> </span> @Html.ActionLink("Torna all'elenco", "Index", null, null, new { @class = "btn btn-info" })
+            <span> </span> @Html.ActionLink(@language.Getkey("Global_Go_Back"), "Index", null, null, new { @class = "btn btn-info" })
         }
 
     }
@@ -211,7 +211,7 @@
         <div class="card card-outline card-primary col-xs-12">
         <div class="card-header with-border ml-2  col-xs-12" id="headingOne">
 
-            <h3 class="card-title mb-0"><button class="btn btn-light active" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">Elenco degli individui</button></h3>
+            <h3 class="card-title mb-0"><button class="btn btn-light active" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">@language.Getkey("Accession_Details_List_Of_Individuals")</button></h3>
                 @{
                     if (User.IsInRole("Administrator") || User.IsInRole("Operator") || User.IsInRole("TreeKeeper") || User.IsInRole("Discover") || User.IsInRole("Seminum") || User.IsInRole("Utility"))
                     {
@@ -403,12 +403,12 @@
         if (ViewBag.tipo == "ricerca")
         {
             <button type="button" id="ricerca" class="btn btn-info" onclick="window.location.href = '@Url.Action("RicercaAccessioni", "Home", new {  tipo  = ViewBag.tipo })';">
-                Torna alla ricerca
+                @language.Getkey("Global_Return_To_Search")
             </button>
         }
         else
         {
-            <span> </span> @Html.ActionLink("Torna all'elenco", "Index", null,null, new { @class = "btn btn-info" })
+            <span> </span> @Html.ActionLink(@language.Getkey("Global_Go_Back"), "Index", null, null, new { @class = "btn btn-info" })
         }
 
     }
