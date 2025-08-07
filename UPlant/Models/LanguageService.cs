@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Localization;
+using System.Globalization;
 using System.Reflection;
 
 namespace UPlant.Models
@@ -17,6 +18,10 @@ namespace UPlant.Models
         public LocalizedString Getkey(string key)
         {
             return _localizer[key];
+        }
+        public string GetCurrentCulture()
+        {
+            return CultureInfo.CurrentUICulture.Name;
         }
 
     }

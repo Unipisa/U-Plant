@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using UPlant.Models.DB;
 using DymoSDK.Implementations;
 using DymoSDK.Interfaces;
-
+using UPlant.Models;
 using System.Configuration;
 using Microsoft.AspNetCore.Localization;
 
@@ -21,11 +21,11 @@ namespace UPlant.Controllers
     public class CommonController : BaseController
     {
         private readonly Entities _context;
-        
-        public CommonController(Entities context)
+        private readonly LanguageService _languageService;
+        public CommonController(Entities context, LanguageService languageService)
         {
             _context = context;
-          
+            _languageService = languageService;
 
 
         }
@@ -44,22 +44,64 @@ namespace UPlant.Controllers
 
         public JsonResult GetNazioni()
         {
+            var linguacorrente = _languageService.GetCurrentCulture();
 
-            return Json(_context.Nazioni.OrderBy(x => x.descrizione).Select(x => new
+            if (linguacorrente == "en-US")
             {
-                codicenazione = x.codice,
-                descrizionenazione = x.descrizione
-            }).ToList(), new System.Text.Json.JsonSerializerOptions());  //, JsonRequestBehavior.AllowGet deprecato
+
+                return Json(_context.Nazioni.OrderBy(x => x.descrizione).Select(x => new
+                {
+                    codicenazione = x.codice,
+                    descrizionenazione = x.descrizione_en == null ? x.descrizione : x.descrizione_en, // Se la descrizione in inglese è null, usa quella in italiano
+                   
+                }).ToList(), new System.Text.Json.JsonSerializerOptions());  //, JsonRequestBehavior.AllowGet deprecato
+
+            }
+            else
+            {
+
+                return Json(_context.Nazioni.OrderBy(x => x.descrizione).Select(x => new
+                {
+                    codicenazione = x.codice,
+                    descrizionenazione = x.descrizione
+                }).ToList(), new System.Text.Json.JsonSerializerOptions());  //, JsonRequestBehavior.AllowGet deprecato
+
+            }
+
+
+          
 
         }
         public JsonResult GetRegioni()
         {
-
-            return Json(_context.Regioni.OrderBy(x => x.descrizione).Select(x => new
+            var linguacorrente = _languageService.GetCurrentCulture();
+            
+            if (linguacorrente == "en-US")
             {
-                codiceregione = x.codice,
-                descrizioneregione = x.descrizione
-            }).ToList(), new System.Text.Json.JsonSerializerOptions());//, JsonRequestBehavior.AllowGet deprecato
+
+                return Json(_context.Regioni.OrderBy(x => x.descrizione).Select(x => new
+                {
+                    codiceregione = x.codice,
+                    descrizioneregione = x.descrizione_en
+                }).ToList(), new System.Text.Json.JsonSerializerOptions());//, JsonRequestBehavior.AllowGet deprecato
+
+
+            }
+            else
+            {
+
+                return Json(_context.Regioni.OrderBy(x => x.descrizione).Select(x => new
+                {
+                    codiceregione = x.codice,
+                    descrizioneregione = x.descrizione
+                }).ToList(), new System.Text.Json.JsonSerializerOptions());//, JsonRequestBehavior.AllowGet deprecato
+
+            }
+
+
+
+
+           
 
         }
 

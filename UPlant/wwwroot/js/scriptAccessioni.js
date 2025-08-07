@@ -1,4 +1,4 @@
-$(document).ready(function () {
+document.addEventListener('DOMContentLoaded', function () {
     var conSel = document.getElementById('datsel');
     var opSel = conSel.getAttribute('data-key');
  

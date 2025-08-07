@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using System.Globalization;
 using UPlant.Models;
 using UPlant.Models.DB;
 
@@ -17,17 +18,20 @@ namespace UPlant.Controllers
         
         private readonly IOptions<Application> _appOpt;
         private readonly IOptions<MapSettings> _googlemap;
-        
+        private readonly LanguageService _languageService;
 
-        public AccessioniController(Entities context, IConfiguration Configuration,  IOptions<Application> appOpt, IOptions<MapSettings> googlemap)
+
+        public AccessioniController(Entities context, IConfiguration Configuration,  IOptions<Application> appOpt, IOptions<MapSettings> googlemap, LanguageService languageService)
         {
             _context = context;
             _configuration = Configuration;
-         
+            _languageService = languageService;
 
-          
+
             _appOpt = appOpt;
             _googlemap = googlemap;
+
+           
         }
 
         // GET: Accessioni
@@ -147,10 +151,20 @@ namespace UPlant.Controllers
         // GET: Accessioni/Create
         public IActionResult Create()
         {
+            var linguacorrente = _languageService.GetCurrentCulture();
 
-           
 
-           
+            if (linguacorrente == "en-US")
+            {
+                ViewData["regione"] = new SelectList(_context.Regioni.OrderBy(a => a.descrizione), "codice", "descrizione_en");
+
+            } else
+            {
+                ViewData["regione"] = new SelectList(_context.Regioni.OrderBy(a => a.descrizione), "codice", "descrizione");
+            }
+
+
+            ViewData["provincia"] = new SelectList(_context.Province.OrderBy(a => a.descrizione), "codice", "descrizione");
             ViewData["famiglia"] = new SelectList(_context.Famiglie.OrderBy(e => e.descrizione), "id", "descrizione");
             ViewData["areale"] = new SelectList(_context.Areali.OrderBy(e => e.descrizione), "id", "descrizione");
             ViewData["regno"] = new SelectList(_context.Regni.OrderBy(e => e.ordinamento), "id", "descrizione");
@@ -229,7 +243,6 @@ namespace UPlant.Controllers
             // TODO: da ricavare da dataAcquisizione...
             accessioni.vecchioprogressivo = vecchioprogressivo; // TODO: da inserire in form
             accessioni.identificatore = identificatore; //Not Null
-
             accessioni.fornitore = fornitore;
             accessioni.raccoglitore = raccoglitore;
             accessioni.provenienza = provenienza;
