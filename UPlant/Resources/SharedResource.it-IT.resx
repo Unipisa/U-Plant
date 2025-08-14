@@ -417,4 +417,19 @@
   <data name="Accession_Details_List_Of_Individuals" xml:space="preserve">
     <value>Elenco degli individui</value>
   </data>
+  <data name="Global_Collection" xml:space="preserve">
+    <value>Collezione</value>
+  </data>
+  <data name="Global_Collection_In_English" xml:space="preserve">
+    <value>Collezione in Inglese</value>
+  </data>
+  <data name="Global_Label" xml:space="preserve">
+    <value>Cartellino</value>
+  </data>
+  <data name="Global_Image" xml:space="preserve">
+    <value>Immagine</value>
+  </data>
+  <data name="Global_Images" xml:space="preserve">
+    <value>Immagini</value>
+  </data>
 </root>

@@ -12,12 +12,12 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="id" />
             <div class="form-group">
-                <label asp-for="collezione" class="control-label">Collezione</label>
+                <label asp-for="collezione" class="control-label">@language.Getkey("Global_Collection")</label>
                 <input asp-for="collezione" class="form-control" />
                 <span asp-validation-for="collezione" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="collezione_en" class="control-label">Collezione in Inglese</label>
+                <label asp-for="collezione_en" class="control-label">@language.Getkey("Global_Collection_In_English")</label>
                 <input asp-for="collezione_en" class="form-control" />
                 <span asp-validation-for="collezione_en" class="text-danger"></span>
             </div>

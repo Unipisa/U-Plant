@@ -138,7 +138,7 @@
                                                 Settore
                                             </th>
                                             <th>
-                                                Collezione
+                                "@language.Getkey("Global_Collection")
                                             </th>
                                             <th>
                                                 Cartellino
@@ -407,9 +407,16 @@
                         'progressivo': prog
                     },
                     success: function (data) {
-
+                var  namesc = "@language.Getkey("Global_Scientific_Name")";
+             var  oldprog = "@language.Getkey("Global_Old_Progressive")";
+         var sector = "@language.Getkey("Global_Sector")";
+           var coll = "@language.Getkey("Global_Collection")";
+     var lab = "@language.Getkey("Global_Label")";
+           var imgs = "@language.Getkey("Global_Images")";
+                 var add = "@language.Getkey("Global_Add")";
+                     var ind = "@language.Getkey("Global_Individual")";
                         var s = '<div class="col-sm-12"><table id="table1" class="table table-bordered table-striped dataTable">';
-                        s += '<thead><tr><th></th><th>Progressivo</th><th>Vecchio Progressivo</th><th>Nome Scientifico</th><th>Settore</th><th>Collezione</th><th>Cartellino</th><th>Immagini</th></tr></thead>';
+                                 s += '<thead><tr><th></th><th>Progressivo</th><th>'+oldprog+'</th><th>'+names+'</th><th>'+sector+'</th><th>'+coll+'</th><th>'+lab+'</th><th>'+imgs+'</th></tr></thead>';
                         s += '<tbody>';
                         for (var i = 0; i < data.length; i++) {
                             var per = data[i].idpercorso;
@@ -419,7 +426,7 @@
 
 
                             s += '<tr><td><a href="'+action+'">';
-                            s += ' <button class="btn btn-success btn-xs" title="aggiungi individuo" onclick="window.location.href =' + action +'"><i class="fa-solid fa-plus"></i></button></a></td>';
+                            s += ' <button class="btn btn-success btn-xs" title="'+add+ ' ' + ind+ '" onclick="window.location.href =' + action +'"><i class="fa-solid fa-plus"></i></button></a></td>';
                             s += '<td>' + data[i].progressivo + '</td>';
 
                             if (data[i].vecchioprogressivo == null) {

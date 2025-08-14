@@ -43,7 +43,7 @@
                 @Html.DropDownList("settore", (IEnumerable<SelectListItem>)ViewBag.listasettori, @language.Getkey("Global_All"), htmlAttributes: new { @Id = "settore", @class = "form-control" })
             </div>
             <div class="form-group col-md-4">
-                <label for="inputCollezione">Collezione</label>
+                <label for="inputCollezione">@language.Getkey("Global_Collection")</label>
                 @Html.DropDownList("collezione", (IEnumerable<SelectListItem>)ViewBag.listacollezioni, @language.Getkey("Global_All"), htmlAttributes: new { @Id = "collezione", @class = "form-control" })
             </div>
             <div class="form-group col-sm-1">
@@ -124,7 +124,7 @@
                         @language.Getkey("Global_Sector")
                     </th>
                     <th>
-                        Collezione
+                        @language.Getkey("Global_Collection")
                     </th>
                     <th>
                         Cartellino
@@ -369,7 +369,7 @@
             var codsettoresel = $('#settore :selected').val();
             if (codsettoresel != '') {
                 var viewbagcol = "@ViewBag.collezione";
-
+                var all= "@language.Getkey("Global_All")";
                 $("#collezione").removeAttr("disabled");
                 $.ajax({
                     type: "GET",
@@ -380,7 +380,7 @@
                     },
                     success: function (data) {
 
-                        var s = '<option value="">'+@language.Getkey("Global_All")+'</option>';
+                        var s = '<option value="">'+all+'</option>';
 
                         for (var i = 0; i < data.length; i++) {
                             if (viewbagcol == data[i].codicecollezione) {
@@ -442,6 +442,7 @@
 
         $('#settore').on("change", function () {
             var codsettoresel = $('#settore :selected').val();
+                  var all= "@language.Getkey("Global_All")";
             if (codsettoresel != '') {
 
                 $('#collezione').val('').trigger('change');
@@ -455,7 +456,7 @@
                     },
                     success: function (data) {
 
-                            var s = '<option value="">'+@language.Getkey("Global_All")+'</option>';
+                                var s = '<option value="">'+all+'</option>';
 
                         for (var i = 0; i < data.length; i++) {
 
@@ -591,14 +592,6 @@
                 window.attachEvent("onload", initTests);
             else
                 window.onload = initTests;
-
-        
-
-
-
-
-
-
 
     </script>
 
