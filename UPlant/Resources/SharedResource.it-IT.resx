@@ -432,4 +432,34 @@
   <data name="Global_Images" xml:space="preserve">
     <value>Immagini</value>
   </data>
+  <data name="Global_Location_Garden" xml:space="preserve">
+    <value>Posizione nell' Ortobotanico</value>
+  </data>
+  <data name="Global_Sector_In_English" xml:space="preserve">
+    <value>Settore In Inglese</value>
+  </data>
+  <data name="Global_Individual_Status" xml:space="preserve">
+    <value>Stato Individuo</value>
+  </data>
+  <data name="Home_Ricerca_Individui_1" xml:space="preserve">
+    <value>Nominativo ultima modifica</value>
+  </data>
+  <data name="Global_Last_Modified_Date" xml:space="preserve">
+    <value>Data Ultima Modifica</value>
+  </data>
+  <data name="Global_Number_Of_Images" xml:space="preserve">
+    <value>Numero Immagini</value>
+  </data>
+  <data name="Global_Title" xml:space="preserve">
+    <value>Titolo</value>
+  </data>
+  <data name="Global_English_Title" xml:space="preserve">
+    <value>Titolo Inglese</value>
+  </data>
+  <data name="Global_Description" xml:space="preserve">
+    <value>Descrizione</value>
+  </data>
+  <data name="Global_English_Description" xml:space="preserve">
+    <value>Descrizione Inglese</value>
+  </data>
 </root>

@@ -12,7 +12,7 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="id" />
             <div class="form-group">
-                <label asp-for="stato" class="control-label">Stato Individuo</label>
+                <label asp-for="stato" class="control-label">@language.Getkey("Global_Individual_Status")</label>
                 <input asp-for="stato" class="form-control" />
                 <span asp-validation-for="stato" class="text-danger"></span>
             </div>

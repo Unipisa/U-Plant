@@ -69,7 +69,7 @@
                 @Html.DropDownList("condizione", (IEnumerable<SelectListItem>)ViewBag.listacondizioni, @language.Getkey("Global_All"), htmlAttributes: new { @Id = "condizione", @class = "form-control" })
             </div>
             <div class="form-group col-md-4">
-                <label for="inputCartellino">Cartellino</label>
+                <label for="inputCartellino">@language.Getkey("Global_Label")</label>
                 @Html.DropDownList("cartellino", (IEnumerable<SelectListItem>)ViewBag.listacartellini, @language.Getkey("Global_All"), htmlAttributes: new { @Id = "cartellino", @class = "form-control" })
             </div>
         </div>
@@ -127,22 +127,21 @@
                         @language.Getkey("Global_Collection")
                     </th>
                     <th>
-                        Cartellino
+                        @language.Getkey("Global_Label")
                     </th>
                     <th>
-                        Stato Individuo
+                        @language.Getkey("Global_Individual_Status")
                     </th>
                     <th>
-                        Nominativo ultima modifica
-                    </th>
+                        @language.Getkey("Home_Ricerca_Individui_1")  
                     <th>
-                        Data Ultima Modifica
+                            @language.Getkey("Global_Last_Modified_Date")
                     </th>
                     <th>
                         Data per formato yyymmmdd
                     </th>
                     <th style="width:5%">
-                        Numero Immagini
+                            @language.Getkey("Global_Number_Of_Images")
                     </th>
 
                     <th>

@@ -75,13 +75,13 @@
                 </div>
                 <hr>
                 <div class="row">
-                    <div class="form-group col font-weight-bold"> Posizione nell' Ortobotanico</div>
+                    <div class="form-group col font-weight-bold"> @language.Getkey("Global_Location_Garden")</div>
                 </div>
                 <hr>
                 <div class="row"> 
 
                     <div class="form-group col">
-                        <label asp-for="settore" class="control-label">Settore</label>
+                        <label asp-for="settore" class="control-label">@language.Getkey("Global_Sector")</label>
                         <select asp-for="settore" class="form-control" asp-items="ViewBag.settore"></select>
                         <span asp-validation-for="settore" class="text-danger"></span>
                     </div>
@@ -91,7 +91,7 @@
                         <span asp-validation-for="collezione" class="text-danger"></span>
                     </div>
                     <div class="form-group col">
-                        <label asp-for="cartellino" class="control-label">Cartellino</label>
+                        <label asp-for="cartellino" class="control-label">@language.Getkey("Global_Label")</label>
                         <select asp-for="cartellino" class="form-control" asp-items="ViewBag.cartellino"></select>
                         <span asp-validation-for="cartellino" class="text-danger"></span>
                     </div>
@@ -146,7 +146,7 @@
                 @Html.DisplayFor(model => model.StoricoIndividuo.ToList().Last().condizioneNavigation.condizione)
                 </div>
                 <div class="form-group col">
-                    @Html.Label("Stato Individuo")<br />
+                        @Html.Label(@language.Getkey("Global_Individual_Status"))<br />
                     @Html.DisplayFor(model => model.StoricoIndividuo.ToList().Last().statoIndividuoNavigation.stato)
                 </div>
                 <div class="form-group col">

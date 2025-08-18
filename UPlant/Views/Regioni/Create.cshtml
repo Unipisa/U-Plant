@@ -1,5 +1,5 @@
 ﻿@model UPlant.Models.DB.Regioni
-
+@inject LanguageService language
 @{
     ViewData["Title"] = "Create";
 }
@@ -18,12 +18,12 @@
                 <span asp-validation-for="codice" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="descrizione" class="control-label"></label>
+                <label asp-for="descrizione" class="control-label"> @language.Getkey("Global_Description")</label>
                 <input asp-for="descrizione" class="form-control" />
                 <span asp-validation-for="descrizione" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="descrizione_en" class="control-label"></label>
+                <label asp-for="descrizione_en" class="control-label">@language.Getkey("Global_English_Description")</label>
                 <input asp-for="descrizione_en" class="form-control" />
                 <span asp-validation-for="descrizione_en" class="text-danger"></span>
             </div>

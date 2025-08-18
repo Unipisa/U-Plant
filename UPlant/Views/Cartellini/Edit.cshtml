@@ -5,14 +5,14 @@
 }
 <div class="card card-outline card-primary">
     <div class="card-header with-border">
-        <h3 class="card-title">@language.Getkey("Global_Edit") Cartellino</h3>
+        <h3 class="card-title">@language.Getkey("Global_Edit") @language.Getkey("Global_Label")</h3>
     </div>
     <div class="card-body">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="id" />
             <div class="form-group">
-                <label asp-for="descrizione" class="control-label">Descrizione</label>
+                <label asp-for="descrizione" class="control-label">@language.Getkey("Global_Description")</label>
                 <input asp-for="descrizione" class="form-control" />
                 <span asp-validation-for="descrizione" class="text-danger"></span>
             </div>

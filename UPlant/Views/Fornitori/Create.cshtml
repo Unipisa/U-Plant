@@ -16,7 +16,7 @@
                 <select asp-for="organizzazione" class ="form-control" asp-items="ViewBag.organizzazione"></select>
             </div>
             <div class="form-group">
-                <label asp-for="descrizione" class="control-label"></label>
+                <label asp-for="descrizione" class="control-label">@language.Getkey("Global_Description")</label>
                 <input asp-for="descrizione" class="form-control" />
                 <span asp-validation-for="descrizione" class="text-danger"></span>
             </div>

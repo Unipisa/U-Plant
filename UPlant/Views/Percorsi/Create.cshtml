@@ -25,12 +25,12 @@
         <div class="box-body">
                     <div asp-validation-summary="None" class="text-danger"></div>
             <div class="form-group">
-                <b>Titolo</b><br>
+                        <b>@language.Getkey("Global_Title")</b><br>
                 @Html.EditorFor(model => model.titolo, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.titolo, "", new { @class = "text-danger" })
             </div>
             <div class="form-group">
-                        <b>Descrizione</b><br>
+                        <b>@language.Getkey("Global_Description")</b><br>
                         @Html.TextAreaFor(model => model.descrizione, new { htmlAttributes = new { @class = "form-control", @rows = 10 , @cols = 80 } })
                         @Html.ValidationMessageFor(model => model.descrizione, "", new { @class = "text-danger" })
                         <br />Caratteri da aggiungere al testo : [br]ritorno a capo - [p] nuovo paragrafo
@@ -38,13 +38,13 @@
                 
             </div>
             <div class="form-group">
-                        <b>Titolo Inglese</b><br>
+                        <b>@language.Getkey("Global_English_Title")</b><br>
                 <input type="text" id="titolo_en" name="titolo_en" />
 
                 @Html.ValidationMessageFor(model => model.titolo_en, "", new { @class = "text-danger" })
             </div>
             <div class="form-group">
-                        <b>Descrizione Inglese</b><br>
+                        <b>@language.Getkey("Global_English_Description")</b><br>
                 <textarea id="descrizione_en" name="descrizione_en" rows="10" cols="80"></textarea>
                         <br />Caratteri da aggiungere al testo : [br]ritorno a capo - [p] nuovo paragrafo
 

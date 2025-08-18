@@ -6,19 +6,19 @@
 
 <div class="card card-outline card-primary">
     <div class="card-header with-border">
-        <h3 class="card-title">@language.Getkey("Global_Add") Settore</h3>
+        <h3 class="card-title">@language.Getkey("Global_Add") @language.Getkey("Global_Sector")</h3>
     </div>
     <div class="card-body">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="settore" class="control-label">Settore</label>
+                <label asp-for="settore" class="control-label">@language.Getkey("Global_Sector")</label>
                 <input asp-for="settore" class="form-control" />
                 <span asp-validation-for="settore" class="text-danger"></span>
             </div>
           
             <div class="form-group">
-                <label asp-for="settore_en" class="control-label">Settore in Inglese</label>
+                <label asp-for="settore_en" class="control-label">@language.Getkey("Global_Sector_In_English")</label>
                 <input asp-for="settore_en" class="form-control" />
                 <span asp-validation-for="settore_en" class="text-danger"></span>
             </div>

@@ -12,7 +12,7 @@
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="descrizione" class="control-label">Descrizione</label>
+                <label asp-for="descrizione" class="control-label">@language.Getkey("Global_Description")</label>
                 <input asp-for="descrizione" class="form-control" />
                 <span asp-validation-for="descrizione" class="text-danger"></span>
             </div>

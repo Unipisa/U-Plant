@@ -13,7 +13,7 @@
             {
                 <div class="float-right success ">
                     <a asp-action="Create">
-                        <span class="btn btn-success" title="@language.Getkey("Global_Add") Settore">
+                        <span class="btn btn-success" title="@language.Getkey("Global_Add") @language.Getkey("Global_Sector")">
                             @language.Getkey("Global_Add") Settore
                         </span>
                     </a>
@@ -29,10 +29,10 @@
     <thead>
         <tr>
             <th>
-               Settore
+                            @language.Getkey("Global_Sector")
             </th>
             <th>
-                Settore in Inglese
+                            @language.Getkey("Global_Sector_In_English")
             </th>
                         <th>
                             Visualizzazione Web
@@ -78,14 +78,14 @@
                                 {
 
                                     <a asp-action="Edit" asp-route-id="@item.id">
-                                        <span class="btn btn-warning btn-xs" title="@language.Getkey("Global_Edit") Settore">
+                                        <span class="btn btn-warning btn-xs" title="@language.Getkey("Global_Edit") @language.Getkey("Global_Sector")">
                                             <i class="fa-solid fa-pencil" style="color: #fafafa;"></i>
                                         </span>
                                     </a>
                                     if (@item.Individui.Count() == 0)
                                     {
                                         <a asp-action="Delete" asp-route-id="@item.id">
-                                            <span class="btn btn-danger btn-xs" title="@language.Getkey("Global_Delete") Settore">
+                                            <span class="btn btn-danger btn-xs" title="@language.Getkey("Global_Delete") @language.Getkey("Global_Sector")">
                                                 <i class="fa-solid fa-trash"></i>
                                             </span>
                                         </a>

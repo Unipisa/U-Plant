@@ -79,7 +79,7 @@
 
 
                 <hr>
-                        <div class="row" align="center"> Posizione nell' Ortobotanico</div>
+                <div class="row" align="center"> @language.Getkey("Global_Location_Garden")</div>
                 <hr>
                 <div class="row">
                         <div class="form-group col">
@@ -91,7 +91,7 @@
                         <select asp-for="individuoNavigation.collezione" class="form-control" asp-items="ViewBag.collezione" id="collezione" name="collezione"></select>
                         </div>
                         <div class="form-group  col">
-                        <label asp-for="individuoNavigation.cartellino" class="control-label">Cartellino</label>
+                        <label asp-for="individuoNavigation.cartellino" class="control-label">@language.Getkey("Global_Label")</label>
                         <select asp-for="individuoNavigation.cartellino" class="form-control" asp-items="ViewBag.cartellino" id="cartellino" name="cartellino"></select>
                         </div>
                         <div class="form-group col">

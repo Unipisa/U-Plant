@@ -432,4 +432,34 @@
   <data name="Global_Images" xml:space="preserve">
     <value>Images</value>
   </data>
+  <data name="Global_Location_Garden" xml:space="preserve">
+    <value>Location in the Botanical Garden</value>
+  </data>
+  <data name="Global_Sector_In_English" xml:space="preserve">
+    <value>Sector In English</value>
+  </data>
+  <data name="Global_Individual_Status" xml:space="preserve">
+    <value>Individual Status</value>
+  </data>
+  <data name="Home_Ricerca_Individui_1" xml:space="preserve">
+    <value>Last modified name</value>
+  </data>
+  <data name="Global_Last_Modified_Date" xml:space="preserve">
+    <value>Last Modified Date</value>
+  </data>
+  <data name="Global_Number_Of_Images" xml:space="preserve">
+    <value>Number of Images</value>
+  </data>
+  <data name="Global_Title" xml:space="preserve">
+    <value>Title</value>
+  </data>
+  <data name="Global_English_Title" xml:space="preserve">
+    <value>English Title</value>
+  </data>
+  <data name="Global_Description" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="Global_English_Description" xml:space="preserve">
+    <value>English Description</value>
+  </data>
 </root>

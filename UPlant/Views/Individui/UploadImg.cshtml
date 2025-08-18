@@ -38,8 +38,8 @@
                         <input type="hidden" autocomplete="off" name="tipo" value="@ViewBag.tipo" required />
                         <label id="errore" class="alert-danger" style="display:none"></label>
                         <input type="file" name="files" multiple required />
-                        
-                        <textarea name="descrizione" rows="4" cols="50" autocomplete="off" placeholder="Descrizione" required></textarea>
+
+                        <textarea name="descrizione" rows="4" cols="50" autocomplete="off" placeholder="@language.Getkey("Global_Description")" required></textarea>
                         <br />
                         <input type="text" name="credits" placeholder="Credits" />
                         <br />
