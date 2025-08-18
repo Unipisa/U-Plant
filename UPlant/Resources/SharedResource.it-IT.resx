@@ -462,4 +462,7 @@
   <data name="Global_English_Description" xml:space="preserve">
     <value>Descrizione Inglese</value>
   </data>
+  <data name="Global_Organization" xml:space="preserve">
+    <value>Organizzazione</value>
+  </data>
 </root>
