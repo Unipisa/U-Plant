@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using UPlant.Models.DB;
-
+using UPlant.Models;
 
 
 namespace UPlant.Controllers
@@ -15,10 +15,11 @@ namespace UPlant.Controllers
     public class UsersController : BaseController
     {
         private readonly Entities _context;
-
-        public UsersController(Entities context)
+        private readonly LanguageService _languageService;
+        public UsersController(Entities context, LanguageService languageService)
         {
             _context = context;
+            _languageService = languageService;
         }
 
         // GET: Users
@@ -74,15 +75,26 @@ namespace UPlant.Controllers
             
             string hostName = Dns.GetHostName();
             string Ip = Dns.GetHostEntry(hostName).AddressList[1].ToString();
-           
-            var utenteesistente = _context.Users.Where(a => a.UnipiUserName == users.UnipiUserName);
+            
+
+
+                var utenteesistente = _context.Users.Where(a => a.UnipiUserName == users.UnipiUserName);
             if (utenteesistente.Count() >0)
             {
                 ///avverti che stai inserendo un nominativo già presente
-                AddPageAlerts(PageAlertType.Warning, "L'account Unipi è già presente nella tabella utenti");
-                TempData["message"] = "L'account Unipi è già presente nella tabella utenti";
-              // return RedirectToAction(nameof(Index));
+                ///
+              
+
+                var msg = _languageService.Getkey("UsersController_1").Value;
+                AddPageAlerts(PageAlertType.Warning, msg); 
+                TempData["message"] = msg;
+                
+               
+               
+                // return RedirectToAction(nameof(Index));
                 ViewData["Organizzazione"] = new SelectList(_context.Organizzazioni.OrderBy(x => x.descrizione), "id", "descrizione", users.Organizzazione);
+                ViewData["Ruolo"] = new SelectList(_context.Roles.OrderBy(x => x.Descr), "Id", "Descr");
+                ViewData["TipologiaUtente"] = new SelectList(_context.TipologiaUtente.OrderBy(x => x.descrizione), "id", "descrizione", users.TipologiaUtente);
                 return View(users);
             }
             if (ModelState.IsValid)

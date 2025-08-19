@@ -54,15 +54,15 @@
                                         <ul class="nav nav-treeview">
                                             <li class="nav-item">
                                                 <a asp-action="Index" asp-controller="Users" class="nav-link ">
-                                                    <span title="Utenti">
-                                                        <i class="fa fa-angle-right mt-2"></i> Utenti
+                                                    <span title="@language.Getkey("Global_Users")">
+                                                        <i class="fa fa-angle-right mt-2"></i> @language.Getkey("Global_Users")
                                                     </span>
                                                 </a>
                                             </li>
 
                                             <li class="nav-item">
                                                 <a asp-action="Index" asp-controller="TipologiaUtente" class="nav-link ">
-                                                    <span title="Tipologia Utente">
+                                                    <span title="@language.Getkey("Global_User_Type")">
                                                         <i class="fa fa-angle-right mt-2"></i> Tipologia Utente
                                                     </span>
                                                 </a>
@@ -106,7 +106,7 @@
                                             <li class="nav-item">
                                                 <a asp-action="Index" asp-controller="StatoMateriale" class="nav-link active">
                                                     <span>
-                                                        <i class="far fa-circle nav-icon"></i> Stato Materiale
+                                                        <i class="far fa-circle nav-icon"></i> @language.Getkey("Global_Material_Status")
                                                     </span>
                                                 </a>
                                             </li>

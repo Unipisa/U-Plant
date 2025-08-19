@@ -14,7 +14,7 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="id" />
             <div class="form-group">
-                <label asp-for="individuo" class="control-label"></label>
+                <label asp-for="individuo" class="control-label">@language.Getkey("Global_Individual")</label>
                 <select asp-for="individuo" class="form-control" asp-items="ViewBag.individuo"></select>
                 <span asp-validation-for="individuo" class="text-danger"></span>
             </div>

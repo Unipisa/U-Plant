@@ -1,5 +1,5 @@
 ﻿@model UPlant.Models.DB.IndividuiPercorso
-
+@inject LanguageService language
 @{
     ViewData["Title"] = "Create";
 }
@@ -17,7 +17,7 @@
                 <select asp-for="percorso" class ="form-control" asp-items="ViewBag.percorso"></select>
             </div>
             <div class="form-group">
-                <label asp-for="individuo" class="control-label"></label>
+                <label asp-for="individuo" class="control-label">@language.Getkey("Global_Individual")</label>
                 <select asp-for="individuo" class ="form-control" asp-items="ViewBag.individuo"></select>
             </div>
             <div class="form-group">

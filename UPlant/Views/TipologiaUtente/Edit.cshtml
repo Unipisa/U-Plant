@@ -5,7 +5,7 @@
 }
 <div class="card card-outline card-primary">
     <div class="card-header with-border">
-        <h3 class="card-title">@language.Getkey("Global_Edit") Tipologia Utente</h3>
+        <h3 class="card-title">@language.Getkey("Global_Edit") @language.Getkey("Global_User_Type")</h3>
     </div>
     <div class="card-body">
         <form asp-action="Edit">
@@ -17,7 +17,7 @@
                 <span asp-validation-for="descrizione" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ordinamento" class="control-label">Ordinamento</label>
+                <label asp-for="ordinamento" class="control-label">@language.Getkey("Global_Sorting")</label>
                 <input asp-for="ordinamento" class="form-control" />
                 <span asp-validation-for="ordinamento" class="text-danger"></span>
             </div>

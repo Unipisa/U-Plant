@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<UPlant.Models.DB.UserRole>
 @inject LanguageService language
 @{
-    ViewData["Title"] = "Utenti";
+    ViewData["Title"] = @language.Getkey("Global_Users");
 }
 
 
@@ -33,29 +33,29 @@
 
 
                                         <th>
-                                           Nome
+                                    @language.Getkey("Global_Name")
                                         </th>
                                         <th>
-                                            Cognome
+                                    @language.Getkey("Global_Surname")
                                         </th>
                                         <th>
-                                           Email
+                                    @language.Getkey("Global_Email")
                                         </th>
                                         <th>
-                                           Abilitato
+                                    @language.Getkey("Global_Enabled")
                                         </th>
 
                                         <th>
-                                            Ruolo
+                                    @language.Getkey("Global_Role")
                                         </th>
                                         <th>
-                                            Utente (es:user dell'email)
+                                    @language.Getkey("Global_Username") es:a012345
                                         </th>
                                         <th>
-                                            Codice Fiscale (necessario per SAML2)
+                                    @language.Getkey("Global_Tax_Code") (SAML2)
                                          </th>
                                 <th>
-                                    Tipologia Utente
+                                    @language.Getkey("Global_User_Type")
                                 </th>
                                         <th>
                                     @language.Getkey("Global_Organization")
@@ -119,7 +119,7 @@
                                             {
                                             
                                             <a asp-action="Delete" asp-controller="Users" asp-route-id="@item.UserFKNavigation.Id">
-                                                    <span class="btn btn-danger btn-xs" title="@language.Getkey("Global_Delete") Utente">
+                                        <span class="btn btn-danger btn-xs" title="@language.Getkey("Global_Delete") @language.Getkey("Global_User")">
                                                     <i class="fa-solid fa-trash"></i>
                                                         </span>
                                                     </a>

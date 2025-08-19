@@ -465,4 +465,52 @@
   <data name="Global_Organization" xml:space="preserve">
     <value>Organizzazione</value>
   </data>
+  <data name="Global_Sorting" xml:space="preserve">
+    <value>Ordinamento</value>
+  </data>
+  <data name="Global_Web_View" xml:space="preserve">
+    <value>Visualizzazione Web</value>
+  </data>
+  <data name="Global_User_Type" xml:space="preserve">
+    <value>Tipologia Utente</value>
+  </data>
+  <data name="Global_Users" xml:space="preserve">
+    <value>Users</value>
+  </data>
+  <data name="UsersController_1" xml:space="preserve">
+    <value>L'account è già presente nella tabella utenti</value>
+  </data>
+  <data name="Global_Name" xml:space="preserve">
+    <value>Nome</value>
+  </data>
+  <data name="Global_Surname" xml:space="preserve">
+    <value>Cognome</value>
+  </data>
+  <data name="Global_Tax_Code" xml:space="preserve">
+    <value>Codice Fiscale</value>
+  </data>
+  <data name="Global_Enabled" xml:space="preserve">
+    <value>Abilitato</value>
+  </data>
+  <data name="Global_Email" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="Global_Username" xml:space="preserve">
+    <value>Username</value>
+  </data>
+  <data name="Global_Created_At" xml:space="preserve">
+    <value>Creato il</value>
+  </data>
+  <data name="Global_Created_By" xml:space="preserve">
+    <value>Creato Da</value>
+  </data>
+  <data name="Global_Historical" xml:space="preserve">
+    <value>Storico</value>
+  </data>
+  <data name="Individui_Validazione_1" xml:space="preserve">
+    <value>Confermi la validazione dell'individuo</value>
+  </data>
+  <data name="Individui_Validazione_0" xml:space="preserve">
+    <value>Validazione Individuo</value>
+  </data>
 </root>

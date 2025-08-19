@@ -14,31 +14,31 @@
     
     <dl class="row">
         <dt class = "col-sm-2">
-            Nome
+                @language.Getkey("Global_Name")
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Name)
         </dd>
         <dt class = "col-sm-2">
-            Cognome
+                @language.Getkey("Global_Surname")
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.LastName)
         </dd>
         <dt class = "col-sm-2">
-            Email
+                @language.Getkey("Global_Email")
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Email)
         </dd>
         <dt class = "col-sm-2">
-          Account 
-        </dt>
+                @language.Getkey("Global_Username")
+            </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.UnipiUserName)
         </dd>
         <dt class = "col-sm-2">
-            Codice Fiscale
+                @language.Getkey("Global_Tax_Code")
         </dt>
         <dd class = "col-sm-10">
                 @{
@@ -53,7 +53,7 @@
                 }
         </dd>
         <dt class = "col-sm-2">
-            Abilitato
+                @language.Getkey("Global_Enabled")
         </dt>
         <dd class = "col-sm-10">
                 @{
@@ -68,13 +68,13 @@
                 }
             </dd>
         <dt class = "col-sm-2">
-            Creato il
+                @language.Getkey("Global_Created_At")
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.CreatedAt)
         </dd>
         <dt class = "col-sm-2">
-            Creato da
+                @language.Getkey("Global_Created_By")
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.CreatedBy)

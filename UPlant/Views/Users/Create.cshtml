@@ -1,7 +1,7 @@
 ﻿@model UPlant.Models.DB.Users
 @inject LanguageService language
 @{
-    ViewBag.Title = "Utenti";
+    ViewBag.Title = @language.Getkey("Global_Users");
    
 }
 
@@ -14,42 +14,42 @@
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label  class="control-label">Nome</label>
+                <label class="control-label">@language.Getkey("Global_Name")</label>
                 <input asp-for="Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label class="control-label">Cognome</label>
+                <label class="control-label">@language.Getkey("Global_Surname")</label>
                 <input asp-for="LastName" class="form-control" />
                 <span asp-validation-for="LastName" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Email" class="control-label"></label>
+                <label asp-for="Email" class="control-label">@language.Getkey("Global_Email")</label>
                 <input asp-for="Email" class="form-control" />
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="UnipiUserName" class="control-label"> </label> <i>es:a012345</i>
+                <label asp-for="UnipiUserName" class="control-label">@language.Getkey("Global_Username") </label> <i>es:a012345</i>
                 <input asp-for="UnipiUserName" class="form-control" />
                 <span asp-validation-for="UnipiUserName" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label  class="control-label">Codice Fiscale</label>
+                <label class="control-label">@language.Getkey("Global_Tax_Code")</label>
                 <input asp-for="CF" class="form-control" />
                 <span asp-validation-for="CF" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label  class="control-label">Ruolo</label>
+                <label class="control-label">@language.Getkey("Global_Role")</label>
                <select name="ruolo" class="form-control" asp-items="ViewBag.Ruolo"></select>
             </div>
             <div class="form-group">
-                <label asp-for="TipologiaUtente" class="control-label"></label>
+                <label asp-for="TipologiaUtente" class="control-label">@language.Getkey("Global_User_Type")</label>
                 <select asp-for="TipologiaUtente" class="form-control" asp-items="ViewBag.TipologiaUtente"></select>
                 <span asp-validation-for="TipologiaUtente" class="text-danger"></span>
             </div>
             <div class="form-group form-check">
                 <label class="form-check-label">
-                    <input class="form-check-input" asp-for="IsEnabled" /> Attivo
+                    <input class="form-check-input" asp-for="IsEnabled" /> @language.Getkey("Global_Enabled")
                 </label>
             </div>
            @* <div class="form-group">
@@ -70,7 +70,7 @@
             </div>
 
             <div class="form-group">
-                <input type="submit" value="Crea" class="btn btn-success" />
+                <input type="submit" value="@language.Getkey("Global_Add")" class="btn btn-success" />
             </div>
         </form>
     </div>

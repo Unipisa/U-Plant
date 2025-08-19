@@ -8,7 +8,7 @@
 
 <h3>@language.Getkey("Global_Question_Delete")?</h3>
 <div>
-    <h4>StoricoIndividuo</h4>
+    <h4>@language.Getkey("Global_Historical") @language.Getkey("Global_Individuals")</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
@@ -36,13 +36,13 @@
             @Html.DisplayFor(model => model.individuoNavigation.progressivo)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.statoIndividuoNavigation)
+            @language.Getkey("Global_Individual_Status")
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.statoIndividuoNavigation.stato)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.utenteNavigation)
+            @language.Getkey("Global_Created_By")
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.utenteNavigation.CreatedBy)

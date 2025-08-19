@@ -23,12 +23,12 @@
                 <span asp-validation-for="settore_en" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="visualizzazioneweb" class="control-label">Visualizzazione Web</label><br />
+                <label asp-for="visualizzazioneweb" class="control-label">@language.Getkey("Global_Web_View")</label><br />
                 <input asp-for="visualizzazioneweb" class="form-check-input mx-auto" id="visualizzazioneweb" name="visualizzazioneweb" />
                 <span asp-validation-for="visualizzazioneweb" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ordinamento" class="control-label">Ordinamento</label>
+                <label asp-for="ordinamento" class="control-label">@language.Getkey("Global_Sorting")</label>
                 <input asp-for="ordinamento" class="form-control" value="@ViewData["ordinesuccessivo"]" />
                 <span asp-validation-for="ordinamento" class="text-danger"></span>
             </div>

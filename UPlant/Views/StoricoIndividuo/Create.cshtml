@@ -25,7 +25,7 @@
     <div class="card card-primary">
         
         <div class="card-header with-border">
-            <h3 class="card-title">Storico Individuo - @language.Getkey("Global_Add")</h3>
+            <h3 class="card-title">@language.Getkey("Global_Historical") @language.Getkey("Global_Individual") - @language.Getkey("Global_Add")</h3>
         </div>
         
             <div class="card-body">
@@ -37,7 +37,7 @@
                     @Html.Hidden("tipo", null, new { @tipo = "tipo" })
                 </div>
             <div class="form-group">
-                <label asp-for="statoIndividuo" class="control-label"></label>
+                    <label asp-for="statoIndividuo" class="control-label">@language.Getkey("Global_Individual_Status")</label>
                 <select asp-for="statoIndividuo" class ="form-control" asp-items="ViewBag.statoIndividuo"></select>
             </div>
             <div class="form-group">
