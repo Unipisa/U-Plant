@@ -45,7 +45,7 @@
                    
                   <div class="row">
                         <div class="form-group col">
-                        <label asp-for="individuoNavigation.propagatoData" class="control-label">Propagato Data</label>
+                        <label asp-for="individuoNavigation.propagatoData" class="control-label">@language.Getkey("Global_Propagation_Data")</label>
                         <input asp-for="individuoNavigation.propagatoData" class="form-control" id="propagatoData" name="propagatoData" type="date" />
                         <span asp-validation-for="individuoNavigation.propagatoData" class="text-danger"></span>
                         </div>
@@ -54,7 +54,7 @@
                         <select asp-for="individuoNavigation.propagatoModalita" class="form-control" id="propagatoModalita" name="propagatoModalita" asp-items="ViewBag.propagatoModalita"></select>
                         </div>
                         <div class="form-group col">
-                        <label asp-for="individuoNavigation.sesso" class="control-label">Sesso</label>
+                        <label asp-for="individuoNavigation.sesso" class="control-label">@language.Getkey("Global_Sex")</label>
                         <select asp-for="individuoNavigation.sesso" class="form-control" asp-items="ViewBag.sesso" id="sesso" name="sesso"></select>
                         </div>
 
@@ -132,7 +132,7 @@
                     </div>
                    
                     <div class="form-group col">
-                        <label asp-for="individuoNavigation.note" class="control-label"></label>
+                        <label asp-for="individuoNavigation.note" class="control-label">@language.Getkey("Global_Notes")</label>
                         <input asp-for="individuoNavigation.note" class="form-control" id="note" name="note" />
                         <span asp-validation-for="individuoNavigation.note" class="text-danger"></span>
                     </div>
@@ -148,15 +148,15 @@
                 <div class="row">
                     <div class="form-group col">
 
-                        <label asp-for="condizione" class="control-label">Condizione</label>
+                        <label asp-for="condizione" class="control-label">@language.Getkey("Global_Condition")</label>
                         <select asp-for="condizione" class="form-control" asp-items="ViewBag.condizione" id="condizione" name="condizione"></select>
                     </div>
                     <div class="form-group col">
-                        <label asp-for="statoIndividuoNavigation.stato" class="control-label">Stato</label>
+                        <label asp-for="statoIndividuoNavigation.stato" class="control-label">@language.Getkey("Global_Individual_Status")</label>
                         <select asp-for="statoIndividuoNavigation.stato" class="form-control" asp-items="ViewBag.statoindividuo" id="statoindividuo" name="statoindividuo"></select>
                     </div>
                     <div class="form-group col">
-                        <label asp-for="operazioniColturali" class="control-label">Operazioni Colturali</label>
+                        <label asp-for="operazioniColturali" class="control-label">@language.Getkey("Global_Horticultural_Operations")</label>
                         <input asp-for="operazioniColturali" class="form-control" id="operazioniColturali" name="operazioniColturali" />
                         <span asp-validation-for="operazioniColturali" class="text-danger"></span>
                     </div>

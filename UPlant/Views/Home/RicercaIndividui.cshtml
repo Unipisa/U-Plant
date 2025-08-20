@@ -47,13 +47,13 @@
                 @Html.DropDownList("collezione", (IEnumerable<SelectListItem>)ViewBag.listacollezioni, @language.Getkey("Global_All"), htmlAttributes: new { @Id = "collezione", @class = "form-control" })
             </div>
             <div class="form-group col-sm-1">
-                <label for="inputPropagazioneda">Propagazione da</label>
+                <label for="inputPropagazioneda">@language.Getkey("Global_Propagation_Data") @language.Getkey("Global_From")</label>
                 <input id="datapropagazioneinizio" name="datapropagazioneinizio" value="@ViewBag.datapropagazioneinizio.ToString("yyyy-MM-dd")" type="date" size="40" maxlength="50" />
             </div>
             <div class="form-group col-sm-1">
             </div>
             <div class="form-group col-sm-1">
-                <label for="inputPropagazionea">a</label>
+                <label for="inputPropagazionea">@language.Getkey("Global_To")</label>
                 <br />
                 <input id="datapropagazionefine" name="datapropagazionefine" value="@ViewBag.datapropagazionefine.ToString("yyyy-MM-dd")" type="date" size="40" maxlength="50" />
             </div>
@@ -61,11 +61,11 @@
         </div>
         <div class="form-row">
             <div class="form-group col-md-4">
-                <label for="inputStatodellIndividuo">Stato dell'Individuo</label>
+                <label for="inputStatodellIndividuo">@language.Getkey("Global_Individual_Status")</label>
                 @Html.DropDownList("statoindividuo", (IEnumerable<SelectListItem>)ViewBag.listastatoindividui, @language.Getkey("Global_All"), htmlAttributes: new { @Id = "statoindividuo", @class = "form-control" })
             </div>
             <div class="form-group col-md-4">
-                <label for="inputCondizione">Condizione</label>
+                    <label for="inputCondizione">@language.Getkey("Global_Condition")</label>
                 @Html.DropDownList("condizione", (IEnumerable<SelectListItem>)ViewBag.listacondizioni, @language.Getkey("Global_All"), htmlAttributes: new { @Id = "condizione", @class = "form-control" })
             </div>
             <div class="form-group col-md-4">

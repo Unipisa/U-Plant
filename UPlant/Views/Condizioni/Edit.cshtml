@@ -6,14 +6,14 @@
 
 <div class="card card-outline card-primary">
     <div class="card-header with-border">
-        <h3 class="card-title">@language.Getkey("Global_Edit") Condizione</h3>
+        <h3 class="card-title">@language.Getkey("Global_Edit") @language.Getkey("Global_Condition")</h3>
     </div>
     <div class="card-body">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="id" />
             <div class="form-group">
-                <label asp-for="condizione" class="control-label">Condizione</label>
+                <label asp-for="condizione" class="control-label">@language.Getkey("Global_Condition")</label>
                 <input asp-for="condizione" class="form-control" />
                 <span asp-validation-for="condizione" class="text-danger"></span>
             </div>

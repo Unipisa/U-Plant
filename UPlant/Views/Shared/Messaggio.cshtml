@@ -1,6 +1,6 @@
-﻿
+﻿@inject LanguageService language
 @{
 
 }
-<h1 class="text-danger">@User.Identity.Name: non sei autorizzato</h1>
-<h2 class="text-danger">Si prega di far riferimento al menu di sinistra per proseguire nella navigazione dove il tuo profilo lo consente<br />oppure <br />effettua il login con le credenziali dell'università</h2>
+<h1 class="text-danger">@User.Identity.Name: @language.Getkey("Global_Not_Authorized")</h1>
+<h2 class="text-danger">@language.Getkey("Shared_Messaggio") </h2>

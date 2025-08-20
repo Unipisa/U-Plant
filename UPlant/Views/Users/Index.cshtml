@@ -13,7 +13,7 @@
                 {
                     <div class="float-right success ">
                         <a asp-action="Create" asp-controller="Users">
-                    <span class="btn btn-success" title="@language.Getkey("Global_Add") Utente">
+                    <span class="btn btn-success" title="@language.Getkey("Global_Add") @language.Getkey("Global_User")">
                         @language.Getkey("Global_Add") Utente
                             </span>
                         </a>
@@ -111,7 +111,7 @@
                                                         </span>
                                                     </a>*/
                                             <a asp-action="Edit" asp-controller="Users" asp-route-id="@item.UserFKNavigation.Id">
-                                        <span class="btn btn-warning btn-xs" title="@language.Getkey("Global_Edit") Utente">
+                                        <span class="btn btn-warning btn-xs" title="@language.Getkey("Global_Edit") @language.Getkey("Global_User")">
                                                     <i class="fa-solid fa-pencil" style="color: #fafafa;"></i>
                                                     </span>
                                                     </a>

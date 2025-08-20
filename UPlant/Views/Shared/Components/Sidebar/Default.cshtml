@@ -63,7 +63,7 @@
                                             <li class="nav-item">
                                                 <a asp-action="Index" asp-controller="TipologiaUtente" class="nav-link ">
                                                     <span title="@language.Getkey("Global_User_Type")">
-                                                        <i class="fa fa-angle-right mt-2"></i> Tipologia Utente
+                                                                <i class="fa fa-angle-right mt-2"></i> @language.Getkey("Global_User_Type")
                                                     </span>
                                                 </a>
                                             </li>
@@ -164,7 +164,7 @@
                                             <li class="nav-item">
                                                 <a asp-action="Index" asp-controller="Sesso" class="nav-link active">
                                                     <span>
-                                                        <i class="far fa-circle nav-icon"></i> Sesso
+                                                        <i class="far fa-circle nav-icon"></i> @language.Getkey("Global_Sex")
                                                     </span>
                                                 </a>
                                             </li>
@@ -412,7 +412,7 @@
                                         <li class="nav-item">
                                             <a asp-action="CreaThumb" asp-controller="Home" class="nav-link ">
                                                 <span>
-                                                    <i class="fa fa-angle-right mt-2"></i> Crea Thumb
+                                                    <i class="fa fa-angle-right mt-2"></i> @language.Getkey("Global_Add") @language.Getkey("Global_Thumb")
                                                 </span>
                                             </a>
                                         </li>

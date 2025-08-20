@@ -46,7 +46,7 @@
                         <table style="height: 30px; width: 100% " class="table-striped table-bordered">
                             <tbody>
                                 <tr style="height: 12px;">
-                            <th style="width: 100% ; font: xx-large" colspan="5" rowspan="2" class="bg-lightblue">Dati Principali</th>
+                            <th style="width: 100% ; font: xx-large" colspan="5" rowspan="2" class="bg-lightblue">@language.Getkey("Global_Main_Data")</th>
                                 </tr>
                                 <tr style="height: 0px;">
                                     <th style="width: 100% " colspan="5"></th>
@@ -55,7 +55,7 @@
                                     <th style="width: 20% ">@language.Getkey("Global_Progressive")</th>
                                     <th style="width: 20% ">@language.Getkey("Global_Old_Progressive")</th>
                                     <th style="width: 20%">@language.Getkey("Global_Organization")</th>
-                                    <th style="width: 20% ">Data acquisizione</th>
+                                    <th style="width: 20% ">@language.Getkey("Global_Acquisition_Date")</th>
                             <th style="width: 20% ">@language.Getkey("Global_Last_Modified_Date")</th>
                                 </tr>
                                 <tr style="height: 23px;">
@@ -115,7 +115,7 @@
                                 </tr>
 
                                 <tr style="height: 12px;">
-                            <th style="width: 1195px; height: 12px; " colspan="5" rowspan="2" class="bg-lightblue">Provenienza</th>
+                            <th style="width: 1195px; height: 12px; " colspan="5" rowspan="2" class="bg-lightblue">@language.Getkey("Accession_Details_3")</th>
                                 </tr>
                                 <tr style="height: 0px;">
                                     <th style="width: 1195px; height: 0px;" colspan="5"></th>
@@ -158,7 +158,7 @@
                                 </tr>
                                 <tr><td colspan="5"><div id="myMap"></div></td></tr>
                                 <tr style="height: 12px;">
-                            <th style="width: 1195px; height: 12px; " colspan="5" class="bg-lightblue">Identit&agrave;&nbsp;</th>
+                            <th style="width: 1195px; height: 12px; " colspan="5" class="bg-lightblue">@language.Getkey("Accession_Details_4")</th>
                                 </tr>
 
 
@@ -166,8 +166,8 @@
                             <th style="width: 239px; height: 23px;">@language.Getkey("Global_Donor_Supplier")</th>
                             <th style="width: 239px; height: 23px;">@language.Getkey("Global_Collector")</th>
                             <th style="width: 239px; height: 23px;">@language.Getkey("Global_Identified_By")</th>
-                                    <th style="width: 239px; height: 23px;">Operatore inserimento</th>
-                                    <th style="width: 239px; height: 23px;">Operatore ultima modifica</th>
+                            <th style="width: 239px; height: 23px;">@language.Getkey("Global_Entry_Operator")</th>
+                            <th style="width: 239px; height: 23px;">@language.Getkey("Global_Operator_Last_Modified")</th>
                                 </tr>
                                 <tr style="height: 23px;">
                                     <td style="width: 239px; height: 23px;">@Html.DisplayFor(model => model.fornitoreNavigation.descrizione)</td>
@@ -177,14 +177,14 @@
                                     <td style="width: 239px; height: 23px;">@Html.DisplayFor(model => model.utenteUltimaModificaNavigation.NomeCognome)</td> @*Utenti1 è l'utente di modifica*@
                                 </tr>
                                 <tr style="height: 12px;">
-                            <th style="width: 1195px; height: 12px; " colspan="5" rowspan="2" class="bg-lightblue">Dati accessori</th>
+                            <th style="width: 1195px; height: 12px; " colspan="5" rowspan="2" class="bg-lightblue">@language.Getkey("Global_Additional_Data")</th>
                                 </tr>
                                 <tr style="height: 0px;">
                                     <th style="width: 1195px; height: 0px;" colspan="5"></th>
                                 </tr>
 
                                 <tr style="height: 23px;">
-                                    <th style="width: 239px; height: 23px;">Note</th>
+                            <th style="width: 239px; height: 23px;">@language.Getkey("Global_Notes")</th>
                                     <td style="width: 239px; height: 23px;" colspan="4"> @Html.DisplayFor(model => model.note)</td>
                                 </tr>
                             </tbody>
@@ -211,15 +211,15 @@
         <div class="card card-outline card-primary col-xs-12">
         <div class="card-header with-border ml-2  col-xs-12" id="headingOne">
 
-            <h3 class="card-title mb-0"><button class="btn btn-light active" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">@language.Getkey("Accession_Details_List_Of_Individuals")</button></h3>
+            <h3 class="card-title mb-0"><button class="btn btn-light active" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">@language.Getkey("Accession_Details_1")</button></h3>
                 @{
                     if (User.IsInRole("Administrator") || User.IsInRole("Operator") || User.IsInRole("TreeKeeper") || User.IsInRole("Discover") || User.IsInRole("Seminum") || User.IsInRole("Utility"))
                     {
                         
                             <div class="float-right">
                         <a asp-action="Create" asp-controller="Individui" asp-route-idaccessione="@ViewBag.idaccessione" asp-route-tipo="@ViewBag.tipo">
-                                <span class="btn btn btn-success" title="crea individuo">
-                                    Aggiungi
+                            <span class="btn btn btn-success" title="@language.Getkey("Global_Add") @language.Getkey("Global_Individual")">
+                                @language.Getkey("Global_Add")
                                 </span>
                             </a>
                             </div>
@@ -261,10 +261,10 @@
                                             @language.Getkey("Global_Individual_Status")
                                         </th>
                                         <th>
-                                            Ultima Modifica
+                                            @language.Getkey("Global_Last_Modified_Date")
                                         </th>
                                         <th>
-                                           Utente
+                                            @language.Getkey("Global_User")
                                         </th>
 
 
@@ -313,13 +313,13 @@
                                             if (item.StoricoIndividuo.Count() == 0)
                                             {
                                                 <td>
-                                                    N.D.
+                                                        @language.Getkey("Global_Empty")
                                                 </td>
                                                 <td>
-                                                    N.D.
+                                                        @language.Getkey("Global_Empty")
                                                 </td>
                                                 <td>
-                                                    N.D.
+                                                        @language.Getkey("Global_Empty")
                                                 </td>
                                             }
                                             else
@@ -347,7 +347,7 @@
                                                 {
 
                                                         <a asp-action="Edit" asp-controller="Individui" asp-route-id="@item.id" asp-route-accessione="@item.accessione" asp-route-tipo="@ViewBag.tipo">
-                                                            <span class="btn btn btn-warning btn-xs" title="@language.Getkey("Global_Edit") individuo">
+                                                            <span class="btn btn btn-warning btn-xs" title="@language.Getkey("Global_Edit") @language.Getkey("Global_Individual")">
                                                                 <i class="fa-solid fa-pencil" style="color: #fafafa;"></i>
                                                                 </span>
                                                             </a>
@@ -383,7 +383,7 @@
                 else
                 {
                 <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#individui">
-                    <div>nessuno</div>
+                    <div>@language.Getkey("Global_Empty")</div>
                 </div>
                 }
             } 

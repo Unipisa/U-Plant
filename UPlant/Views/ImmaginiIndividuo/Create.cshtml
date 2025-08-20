@@ -22,12 +22,12 @@
                 <span asp-validation-for="descrizione" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="dataInserimento" class="control-label"></label>
+                <label asp-for="dataInserimento" class="control-label">@language.Getkey("Global_Entry_Date")</label>
                 <input asp-for="dataInserimento" class="form-control" />
                 <span asp-validation-for="dataInserimento" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="autore" class="control-label"></label>
+                <label asp-for="autore" class="control-label">@language.Getkey("Global_Author")</label>
                 <input asp-for="autore" class="form-control" />
                 <span asp-validation-for="autore" class="text-danger"></span>
             </div>
@@ -42,12 +42,14 @@
                 </label>
             </div>
             <div class="form-group">
-                <label asp-for="predefinita" class="control-label"></label>
+                <label asp-for="predefinita" class="control-label">
+                    @language.Getkey("Global_Default")
+                </label>
                 <input asp-for="predefinita" class="form-control" />
                 <span asp-validation-for="predefinita" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="credits" class="control-label"></label>
+                <label asp-for="credits" class="control-label">@language.Getkey("Global_Credits")</label>
                 <input asp-for="credits" class="form-control" />
                 <span asp-validation-for="credits" class="text-danger"></span>
             </div>

@@ -414,7 +414,7 @@
   <data name="Global_Return_To_Parent_Accession" xml:space="preserve">
     <value>Torna all'accessione padre</value>
   </data>
-  <data name="Accession_Details_List_Of_Individuals" xml:space="preserve">
+  <data name="Accession_Details_1" xml:space="preserve">
     <value>Elenco degli individui</value>
   </data>
   <data name="Global_Collection" xml:space="preserve">
@@ -512,5 +512,86 @@
   </data>
   <data name="Individui_Validazione_0" xml:space="preserve">
     <value>Validazione Individuo</value>
+  </data>
+  <data name="Global_Condition" xml:space="preserve">
+    <value>Condizione</value>
+  </data>
+  <data name="Global_Sex" xml:space="preserve">
+    <value>Sesso</value>
+  </data>
+  <data name="Global_Horticultural_Operations" xml:space="preserve">
+    <value>Operazioni Culturali</value>
+  </data>
+  <data name="Global_Propagation_Data" xml:space="preserve">
+    <value>Propagato Data</value>
+  </data>
+  <data name="Global_Yes" xml:space="preserve">
+    <value>Si</value>
+  </data>
+  <data name="Global_No" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="Global_From" xml:space="preserve">
+    <value>Da</value>
+  </data>
+  <data name="Global_To" xml:space="preserve">
+    <value>A</value>
+  </data>
+  <data name="Global_Entry_Date" xml:space="preserve">
+    <value>Data Inserimento</value>
+  </data>
+  <data name="Global_Default" xml:space="preserve">
+    <value>Predefinita</value>
+  </data>
+  <data name="Global_Thumb" xml:space="preserve">
+    <value>Thumb</value>
+  </data>
+  <data name="Global_Credits" xml:space="preserve">
+    <value>Credits</value>
+  </data>
+  <data name="Global_Author" xml:space="preserve">
+    <value>Autore</value>
+  </data>
+  <data name="Global_Determiner" xml:space="preserve">
+    <value>Identificatore</value>
+  </data>
+  <data name="Global_Determiner_Type" xml:space="preserve">
+    <value>Tipo Identificatore</value>
+  </data>
+  <data name="Percorsi_Create_1" xml:space="preserve">
+    <value>Caratteri da aggiungere al testo : [br]ritorno a capo - [p] nuovo paragrafo</value>
+  </data>
+  <data name="Global_Main_Data" xml:space="preserve">
+    <value>Dati Principali</value>
+  </data>
+  <data name="Accession_Details_3" xml:space="preserve">
+    <value>Provenienza</value>
+  </data>
+  <data name="Accession_Details_4" xml:space="preserve">
+    <value>Identità</value>
+  </data>
+  <data name="Global_Additional_Data" xml:space="preserve">
+    <value>Dati accessori</value>
+  </data>
+  <data name="Global_Operator_Last_Modified" xml:space="preserve">
+    <value>Operatore ultima modifica</value>
+  </data>
+  <data name="Global_Entry_Operator" xml:space="preserve">
+    <value>Operatore Inserimento</value>
+  </data>
+  <data name="Global_Empty" xml:space="preserve">
+    <value>Vuoto</value>
+  </data>
+  <data name="Global_Propagation_Method" xml:space="preserve">
+    <value>Modalità di Propagazione</value>
+  </data>
+  <data name="Global_Not_Authorized" xml:space="preserve">
+    <value>Non sei autorizzato</value>
+  </data>
+  <data name="Shared_Messaggio" xml:space="preserve">
+    <value>Si prega di far riferimento al menu di sinistra per proseguire nella navigazione dove il tuo profilo lo consente oppure effettua il login con le tue credenziali corrette</value>
+  </data>
+  <data name="Project_Name" xml:space="preserve">
+    <value>U-Plant / Sistema di documentazione delle collezioni viventi</value>
   </data>
 </root>

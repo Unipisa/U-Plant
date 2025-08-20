@@ -71,7 +71,7 @@
                 @Html.ValidationMessageFor(model => model.descrizione_en, "", new { @class = "text-danger" })
             </div>
             <div class="form-group">
-                        <b>Credits</b><br>
+                        <b>@language.Getkey("Global_Credits")</b><br>
                 @Html.EditorFor(model => model.credits, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.credits, "", new { @class = "text-danger" })
             </div>

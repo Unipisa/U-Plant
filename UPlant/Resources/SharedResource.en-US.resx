@@ -136,10 +136,10 @@
     <value>Search Accessions</value>
   </data>
   <data name="Home_Index_6" xml:space="preserve">
-    <value>Extraction of Individuals</value>
+    <value>Individuals Extraction</value>
   </data>
   <data name="Home_Index_7" xml:space="preserve">
-    <value>Individual Search</value>
+    <value>Search Individuals</value>
   </data>
   <data name="Home_Index_8" xml:space="preserve">
     <value>Species Extraction</value>
@@ -154,7 +154,7 @@
     <value>Number of families cultivated in the garden</value>
   </data>
   <data name="Home_Index_12" xml:space="preserve">
-    <value>Number of crops grown in the garden</value>
+    <value>Number of genera grown in the garden</value>
   </data>
   <data name="Home_Index_13" xml:space="preserve">
     <value>Number of species grown in the garden</value>
@@ -414,7 +414,7 @@
   <data name="Global_Return_To_Parent_Accession" xml:space="preserve">
     <value>Return To Parent Accession</value>
   </data>
-  <data name="Accession_Details_List_Of_Individuals" xml:space="preserve">
+  <data name="Accession_Details_1" xml:space="preserve">
     <value>List of Individuals</value>
   </data>
   <data name="Global_Collection" xml:space="preserve">
@@ -512,5 +512,86 @@
   </data>
   <data name="Individui_Validazione_0" xml:space="preserve">
     <value>Individual Validation</value>
+  </data>
+  <data name="Global_Condition" xml:space="preserve">
+    <value>Condition</value>
+  </data>
+  <data name="Global_Sex" xml:space="preserve">
+    <value>Sex</value>
+  </data>
+  <data name="Global_Horticultural_Operations" xml:space="preserve">
+    <value>Horticultural Operations</value>
+  </data>
+  <data name="Global_Propagation_Data" xml:space="preserve">
+    <value>Propagation Data</value>
+  </data>
+  <data name="Global_Yes" xml:space="preserve">
+    <value>Yes</value>
+  </data>
+  <data name="Global_No" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="Global_From" xml:space="preserve">
+    <value>From</value>
+  </data>
+  <data name="Global_To" xml:space="preserve">
+    <value>To</value>
+  </data>
+  <data name="Global_Entry_Date" xml:space="preserve">
+    <value>Entry Date</value>
+  </data>
+  <data name="Global_Default" xml:space="preserve">
+    <value>Default</value>
+  </data>
+  <data name="Global_Thumb" xml:space="preserve">
+    <value>Thumb</value>
+  </data>
+  <data name="Global_Credits" xml:space="preserve">
+    <value>Credits</value>
+  </data>
+  <data name="Global_Author" xml:space="preserve">
+    <value>Author</value>
+  </data>
+  <data name="Global_Determiner" xml:space="preserve">
+    <value>Determiner</value>
+  </data>
+  <data name="Global_Determiner_Type" xml:space="preserve">
+    <value>Determiner Type</value>
+  </data>
+  <data name="Percorsi_Create_1" xml:space="preserve">
+    <value>Characters to add to the text: [br]carriage return - [p] new paragraph</value>
+  </data>
+  <data name="Global_Main_Data" xml:space="preserve">
+    <value>Main Data</value>
+  </data>
+  <data name="Accession_Details_3" xml:space="preserve">
+    <value>Origin</value>
+  </data>
+  <data name="Accession_Details_4" xml:space="preserve">
+    <value>Identity</value>
+  </data>
+  <data name="Global_Additional_Data" xml:space="preserve">
+    <value>Additional data</value>
+  </data>
+  <data name="Global_Operator_Last_Modified" xml:space="preserve">
+    <value>Operator Last Modified</value>
+  </data>
+  <data name="Global_Entry_Operator" xml:space="preserve">
+    <value>Entry Operator</value>
+  </data>
+  <data name="Global_Empty" xml:space="preserve">
+    <value>Empty</value>
+  </data>
+  <data name="Global_Propagation_Method" xml:space="preserve">
+    <value>Propagation Method</value>
+  </data>
+  <data name="Global_Not_Authorized" xml:space="preserve">
+    <value>You are not authorized</value>
+  </data>
+  <data name="Shared_Messaggio" xml:space="preserve">
+    <value>Please refer to the left menu to continue browsing where your profile allows it or log in with your correct credentials.</value>
+  </data>
+  <data name="Project_Name" xml:space="preserve">
+    <value>U-Plant / Living Collections Documentation System</value>
   </data>
 </root>

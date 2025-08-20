@@ -21,13 +21,13 @@
                 <span asp-validation-for="descrizione" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="note" class="control-label"></label>
+                <label asp-for="note" class="control-label">@language.Getkey("Global_Notes")</label>
                 <input asp-for="note" class="form-control" />
                 <span asp-validation-for="note" class="text-danger"></span>
             </div>
             <div class="form-group form-check">
                 <label class="form-check-label">
-                    <input class="form-check-input" asp-for="attivo" /> @Html.DisplayNameFor(model => model.attivo)
+                    <input class="form-check-input" asp-for="attivo" />@language.Getkey("Global_Enabled")
                 </label>
             </div>
             <div class="form-group">

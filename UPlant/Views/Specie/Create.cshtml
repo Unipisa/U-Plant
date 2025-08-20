@@ -11,7 +11,7 @@
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="genere" class="control-label"></label>
+                <label asp-for="genere" class="control-label">@language.Getkey("Global_Genus")</label>
                 <select asp-for="genere" class ="form-control" asp-items="ViewBag.genere"></select>
             </div>
             

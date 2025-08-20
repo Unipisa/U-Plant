@@ -9,22 +9,14 @@
    
 <div class="col-lg-12">
         <div class="form-group">
-            
-            @{
-                if (ViewBag.tipo == "ricerca")
-                {
-                    @Html.ActionLink(@language.Getkey("Global_Return_To_Search"), null, null, null, new { @class = "btn btn-info go_back" })
+
+
+            @Html.ActionLink(@language.Getkey("Global_Go_Back"), null, null, null, new { @class = "btn btn-info go_back" })
                     
 
-                }
-                else
-                {
-                    @Html.ActionLink(@language.Getkey("Global_Return_To_Search"), null, null, null, new { @class = "btn btn-info go_back" })
-                   
-                }
 
 
-            }
+           
             <span> </span>
             @Html.ActionLink(@language.Getkey("Global_Return_To_Parent_Accession"), "Details", "Accessioni", new { id = Model.accessione }, new { @class = "btn btn-warning" })
            
@@ -50,7 +42,7 @@
                 </div>
                 <div class="row">
                     <div class="form-group col">
-                        <label asp-for="propagatoData" class="control-label">Propagato Data</label>
+                        <label asp-for="propagatoData" class="control-label">@language.Getkey("Global_Propagation_Data")</label>
                         <input asp-for="propagatoData" class="form-control" />
                         <span asp-validation-for="propagatoData" class="text-danger"></span>
                     </div>
@@ -61,7 +53,7 @@
                         <span asp-validation-for="propagatoModalita" class="text-danger"></span>
                     </div>
                     <div class="form-group col">
-                        <label asp-for="sesso" class="control-label">Sesso</label>
+                        <label asp-for="sesso" class="control-label">@language.Getkey("Global_Sex")</label>
                         <select asp-for="sesso" class="form-control" asp-items="ViewBag.sesso"></select>
                         <span asp-validation-for="sesso" class="text-danger"></span>
                     </div>
@@ -125,7 +117,7 @@
                     </div>
 
                     <div class="form-group col">
-                        <label asp-for="note" class="control-label">Note</label>
+                        <label asp-for="note" class="control-label">@language.Getkey("Global_Notes")</label>
                         <input asp-for="note" class="form-control" id="note" name="note" />
                         <span asp-validation-for="note" class="text-danger"></span>
                     </div>
@@ -142,7 +134,7 @@
                 <hr>
                 <div class="row">
                 <div class="form-group col">
-                    @Html.Label("Condizione")<br />
+                        @Html.Label(@language.Getkey("Global_Condition"))<br />
                 @Html.DisplayFor(model => model.StoricoIndividuo.ToList().Last().condizioneNavigation.condizione)
                 </div>
                 <div class="form-group col">
@@ -167,22 +159,7 @@
 
         <div class="form-group">
 
-            @{
-                if (ViewBag.tipo == "ricerca")
-                {
-                    @Html.ActionLink(@language.Getkey("Global_Return_To_Search"), null, null, null, new { @class = "btn btn-info go_back" })
-
-
-                }
-                else
-                {
-
-                    @Html.ActionLink(@language.Getkey("Global_Return_To_The_Individual"), null, null, null, new { @class = "btn btn-info go_back" })
-
-                }
-
-
-            }
+            @Html.ActionLink(@language.Getkey("Global_Go_Back"), null, null, null, new { @class = "btn btn-info go_back" })
             <span> </span>
             @Html.ActionLink(@language.Getkey("Global_Return_To_Parent_Accession"), "Details", "Accessioni", new { id = Model.accessione }, new { @class = "btn btn-warning" })
 

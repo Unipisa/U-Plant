@@ -31,10 +31,10 @@
                             @language.Getkey("Global_Description")
             </th>
             <th>
-                Note
+                            @language.Getkey("Global_Notes")
             </th>
             <th>
-                Attivo
+                            @language.Getkey("Global_Enabled")
             </th>
             <th>
                             @language.Getkey("Global_Organization")
@@ -54,11 +54,11 @@
             <td>
                                 @if (item.attivo == true)
                                 {
-                                    <span> Si </span>
+                                    <span> @language.Getkey("Global_Yes") </span>
                                 }
                                 else
                                 {
-                                    <span> No </span>
+                                    <span> @language.Getkey("Global_No") </span>
                                 }
             </td>
             <td>

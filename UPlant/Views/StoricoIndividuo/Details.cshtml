@@ -11,19 +11,19 @@
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.operazioniColturali)
+            @language.Getkey("Global_Horticultural_Operations")
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.operazioniColturali)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.dataInserimento)
+            @language.Getkey("Global_Entry_Date")
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.dataInserimento)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.condizioneNavigation)
+            @Html.Label(@language.Getkey("Global_Condition"))
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.condizioneNavigation.condizione)

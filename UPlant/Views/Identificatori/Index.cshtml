@@ -12,8 +12,8 @@
             {
                 <div class="float-right success ">
                     <a asp-action="Create">
-                        <span class="btn btn-success" title="@language.Getkey("Global_Add") Identificatore">
-                            @language.Getkey("Global_Add") Identificatore
+                        <span class="btn btn-success" title="@language.Getkey("Global_Add") @language.Getkey("Global_Determiner")">
+                            @language.Getkey("Global_Add") @language.Getkey("Global_Determiner")
                         </span>
                     </a>
 
@@ -28,10 +28,10 @@
     <thead>
         <tr>
             <th>
-                Nominativo
+                            @language.Getkey("Global_Name")
             </th>
             <th>
-                Attivo
+                            @language.Getkey("Global_Enabled")
             </th>
             <th>
                 @language.Getkey("Global_Organization")
@@ -51,11 +51,11 @@
             <td>
             @if (item.attivo == true)
             {
-                <span> Si </span>
+                                    <span> @language.Getkey("Global_Yes") </span>
             }
             else
             {
-                <span> No </span>
+                                    <span> @language.Getkey("Global_No") </span>
             }
             </td>
             <td>
