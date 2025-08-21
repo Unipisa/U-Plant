@@ -3,6 +3,7 @@
 @{
     
     ViewBag.Title = @language.Getkey("Global_Path");
+    ViewBag.lang = language.GetCurrentCulture();
 }
 
 <div class="row">
@@ -360,6 +361,19 @@
 
     <script type="text/javascript">
             $(document).ready(function () {
+                    // Set the language for DataTables based on the ViewBag.lang value
+                var lingua = "@ViewBag.lang";
+               if (lingua == "en-US"){
+                   $.extend($.fn.dataTable.defaults, {
+                   language: { url: "/js/dataTables.english.json" }
+                   });
+               } else {
+                   $.extend($.fn.dataTable.defaults, {
+                   language: { url: "/js/dataTables.default.json" }
+                   });
+               }
+                
+                
                 var baseUrlauto = '@Url.Action("AutoComplete", "Percorsi")';
 
                

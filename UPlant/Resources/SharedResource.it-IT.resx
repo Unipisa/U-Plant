@@ -636,4 +636,7 @@
   <data name="Global_Code" xml:space="preserve">
     <value>Codice</value>
   </data>
+  <data name="Global_Taxonomic_Backbone" xml:space="preserve">
+    <value>Struttura Tassonomica</value>
+  </data>
 </root>

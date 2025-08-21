@@ -2,6 +2,7 @@
 @inject LanguageService language
 @{
     ViewData["Title"] = @language.Getkey("Global_Users");
+    ViewBag.lang = language.GetCurrentCulture();
 }
 
 
@@ -156,6 +157,23 @@
 
 
 @section CustomScripts {
+<script type="text/javascript">
+    $(document).ready(function () {
+    var lingua = "@ViewBag.lang";
+        if (lingua == "en-US"){
+          $.extend($.fn.dataTable.defaults, {
+      language: { url: "/js/dataTables.english.json" }
+    });
+        } else {
+             $.extend($.fn.dataTable.defaults, {
+      language: { url: "/js/dataTables.default.json" }
+    });
+        }
+    });
+</script>
+
+
+
     <script>
         jQuery(function () {
             jQuery('#table1').DataTable({

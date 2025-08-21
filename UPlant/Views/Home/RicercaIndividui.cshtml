@@ -3,10 +3,11 @@
 @inject LanguageService language
 
 @{
-    ViewBag.Title = "Ricerca Individui";
+    ViewBag.Title = @language.Getkey("Home_Index_7");
+    ViewBag.lang = language.GetCurrentCulture();
 }
 <div class="title">
-    <h3>Ricerca Individui</h3>
+    <h3>@language.Getkey("Home_Index_7")</h3>
 </div>
 <div>
     &nbsp;
@@ -318,8 +319,20 @@
                 $('#gifricerca').show();
                 //    $('.modal').modal('show');
             });
+
+            // Set the language for DataTables based on the ViewBag.lang value
+             var lingua = "@ViewBag.lang";
+            if (lingua == "en-US"){
+                $.extend($.fn.dataTable.defaults, {
+                language: { url: "/js/dataTables.english.json" }
+                });
+            } else {
+                $.extend($.fn.dataTable.defaults, {
+                language: { url: "/js/dataTables.default.json" }
+                });
+            }
         });
-     
+           
             
         
 

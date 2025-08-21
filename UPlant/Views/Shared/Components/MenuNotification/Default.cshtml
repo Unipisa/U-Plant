@@ -1,13 +1,15 @@
 ﻿@model IEnumerable<Message>
 @using System.Globalization
 
-
+@{
+    var currentUrl = Context.Request.Path + Context.Request.QueryString;
+}
 
 
 @if (@CultureInfo.CurrentCulture.Name == "it-IT")
 {
 
-    <a asp-controller="Common" asp-action="SetLanguage" asp-route-culture="en-US" asp-route-returnUrl="~/" class="nav-link">
+    <a asp-controller="Common" asp-action="SetLanguage" asp-route-culture="en-US" asp-route-returnUrl="@currentUrl" class="nav-link">
         <img src="~/img/en-EN.png" alt="" width="20" height="15" class="align-content-md-between">
     </a>
 
@@ -15,7 +17,7 @@
 else
 {
 
-    <a asp-controller="Common" asp-action="SetLanguage" asp-route-culture="it-IT" asp-route-returnUrl="~/" class="nav-link">
+    <a asp-controller="Common" asp-action="SetLanguage" asp-route-culture="it-IT" asp-route-returnUrl="@currentUrl" class="nav-link">
         <img src="~/img/it-IT.png" alt="" width="20" height="15" class="align-content-md-between">
     </a>
 

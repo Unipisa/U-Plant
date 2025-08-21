@@ -4,6 +4,7 @@
 @{
 
     ViewBag.Title = @language.Getkey("Home_Ricerca_Accessioni_1");
+    ViewBag.lang = language.GetCurrentCulture();
 }
 
 
@@ -314,8 +315,13 @@
     <script src="~/js/datatables.min.js"></script>
 }
 @section CustomScripts {
+   
+
+
     <script type="text/javascript">
         $(document).ready(function () {
+            
+           
             $('#gifricerca').hide();
             //  $('.modal').modal('hide');
             $('#risultato').show();
@@ -324,6 +330,17 @@
                 $('#gifricerca').show();
                 //    $('.modal').modal('show');
             });
+
+                var lingua = "@ViewBag.lang";
+            if (lingua == "en-US"){
+              $.extend($.fn.dataTable.defaults, {
+          language: { url: "/js/dataTables.english.json" }
+        });
+            } else {
+                 $.extend($.fn.dataTable.defaults, {
+          language: { url: "/js/dataTables.default.json" }
+        });
+            }
         });
     </script>
 

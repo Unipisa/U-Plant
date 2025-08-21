@@ -2,6 +2,7 @@
 @inject LanguageService language
 @{
     ViewData["Title"] = "Accessioni";
+    ViewBag.lang = language.GetCurrentCulture();
     string url = string.Empty;
     var setting = AppSettings.Value;
     var map = setting.GoogleMap;
@@ -445,6 +446,23 @@
     <script src="~/js/dymo.connect.framework.js"></script>
 }
 @section CustomScripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+        var lingua = "@ViewBag.lang";
+            if (lingua == "en-US"){
+              $.extend($.fn.dataTable.defaults, {
+          language: { url: "/js/dataTables.english.json" }
+        });
+            } else {
+                 $.extend($.fn.dataTable.defaults, {
+          language: { url: "/js/dataTables.default.json" }
+        });
+            }
+        });
+    </script>
+
+
+
     <script type="text/javascript">
     let map;
         if (document.getElementById("latitudine").value != '' && document.getElementById("longitudine").value != '') {
