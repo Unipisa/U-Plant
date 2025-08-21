@@ -1,4 +1,5 @@
-﻿<footer class="main-footer bg-unipi">
+﻿@inject LanguageService language
+<footer class="main-footer bg-unipi">
     <!-- To the right -->
     <div class="float-right hidden-xs">
         <environment names="Development, Staging">
@@ -7,6 +8,6 @@
     </div>
     <!-- Default to the left -->
     <div style=" color: #ffffff">
-        &copy; <small>2020-@DateTime.Now.ToString("yy")</small> @AppSettings.Value.Application.NomeAppLong - <a style="font-weight: normal !important; color: #ffffff" target="_blank" href="https://www.unipi.it/">@Html.Raw(AppSettings.Value.Application.Universita)</a>
+        &copy; <small>2020-@DateTime.Now.ToString("yy")</small> @language.Getkey("Project_Name") @* @AppSettings.Value.Application.NomeAppLong*@ - <a style="font-weight: normal !important; color: #ffffff" target="_blank" href="https://www.unipi.it/">@Html.Raw(AppSettings.Value.Application.Universita)</a>
     </div>
 </footer>

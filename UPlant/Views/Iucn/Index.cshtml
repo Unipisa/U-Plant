@@ -5,7 +5,7 @@
 }
 <div class="card card-outline card-primary">
     <div class="card-header with-border">
-        <h1 class="card-title">Elenco</h1>
+        <h1 class="card-title">@language.Getkey("Global_List")</h1>
         @{
 
             if (User.IsInRole("Administrator"))
@@ -28,7 +28,7 @@
     <thead>
         <tr>
             <th>
-                Codice
+                            @language.Getkey("Global_Code")
             </th>
             <th>
                             @language.Getkey("Global_Description")

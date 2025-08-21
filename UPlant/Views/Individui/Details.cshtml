@@ -356,7 +356,7 @@
                     <div id="immagini">
                         <div class="card card-outline card-primary col-xs-12">
                             <div class="card-header with-border ml-2  col-xs-12" id="headingOne">
-                                <h3 class="card-title mb-0"><button class="btn btn-link" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">Elenco Immagini</button></h3>
+                                <h3 class="card-title mb-0"><button class="btn btn-link" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">@language.Getkey("Global_List") @language.Getkey("Global_Images")</button></h3>
                                 @{
                                     if (User.IsInRole("Administrator") || User.IsInRole("Operator") || User.IsInRole("TreeKeeper") || User.IsInRole("Discover") || User.IsInRole("Seminum") || User.IsInRole("Utility"))
                                     {
@@ -391,7 +391,7 @@
                                                                 @language.Getkey("Global_Thumb")
                                                                 </th>
                                                                 <th>
-                                                                    Nome Immagine
+                                                                @language.Getkey("Global_Name") @language.Getkey("Global_Image")
                                                                 </th>
                                                                 <th>
                                                                 @language.Getkey("Global_Description")
@@ -517,7 +517,7 @@
                             </div>
                             }else{
                                     <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#immagini">
-                                        <div>Nessuna Immagine</div>
+                                        <div>@language.Getkey("Global_No") @language.Getkey("Global_Image")</div>
                                     </div>
                             }
                             }

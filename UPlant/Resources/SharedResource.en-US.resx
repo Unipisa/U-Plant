@@ -145,7 +145,7 @@
     <value>Species Extraction</value>
   </data>
   <data name="Home_Index_9" xml:space="preserve">
-    <value>Pisa Botanic Garden Data</value>
+    <value>Orto Botanico di Pisa Data</value>
   </data>
   <data name="Home_Index_10" xml:space="preserve">
     <value>Number of names accepted in U-Plant</value>
@@ -592,7 +592,7 @@
     <value>Please refer to the left menu to continue browsing where your profile allows it or log in with your correct credentials.</value>
   </data>
   <data name="Project_Name" xml:space="preserve">
-    <value>U-Plant / Living Collections Documentation System</value>
+    <value>U-Plant / Documentation System For Living Collections </value>
   </data>
   <data name="Shared_Comp_Sb_User_Management" xml:space="preserve">
     <value>User Management</value>
@@ -629,5 +629,11 @@
   </data>
   <data name="Shared_Comp_Sb_Data_Entry" xml:space="preserve">
     <value>Data Entry</value>
+  </data>
+  <data name="Global_List" xml:space="preserve">
+    <value>List</value>
+  </data>
+  <data name="Global_Code" xml:space="preserve">
+    <value>Code</value>
   </data>
 </root>

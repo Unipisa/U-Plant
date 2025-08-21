@@ -24,7 +24,7 @@
                     {
                         <div class="float-center success">
                             <img src="@Url.Action("ViewImg","Percorsi", new { percorso = Model.id,nomefile = Model.nomefile  })" title="@Html.DisplayFor(model => model.nomefile)" height="200" />
-                            <button type="button" id="DeleteImg" class="btn btn-danger btn-xs">Rimuovi Immagine <i class="fa-regular fa-trash"></i></button>
+                            <button type="button" id="DeleteImg" class="btn btn-danger btn-xs">@language.Getkey("Global_Delete") @language.Getkey("Global_Image") <i class="fa-regular fa-trash"></i></button>
                             <div class="modal fade" id="myModal2" role="dialog" data-url='@Url.Action("DeleteImg","Percorsi",new { id =  Model.id,nomefile = Model.nomefile})'>
                             </div>
                         </div>
@@ -32,7 +32,7 @@
                     else
                     {
                         <div class="float-center success">
-                            <button type="button" id="UploadImg" class="btn btn-primary btn-xs">@language.Getkey("Global_Add") Immagine <i class="fa-regular fa-image"> </i></button>
+                            <button type="button" id="UploadImg" class="btn btn-primary btn-xs">@language.Getkey("Global_Add") @language.Getkey("Global_Image") <i class="fa-regular fa-image"> </i></button>
                             <div class="modal fade" id="myModal" role="dialog" data-url='@Url.Action("UploadImg","Percorsi",new { id =  Model.id})'>
                             </div>
                         </div>

@@ -1,4 +1,5 @@
-﻿@{
+﻿@inject LanguageService language
+@{
    var logo = AppSettings.Value.Application.UrlLogoU;
     var alt = AppSettings.Value.Application.AltUrlLogoU;
     var clas = AppSettings.Value.Application.ClassUrlLogoU;
@@ -12,7 +13,7 @@
                            rel="home"
                            href="/"
                            title="Home"
-                           itemprop="url">@AppSettings.Value.Application.NomeAppLong</a>
+                           itemprop="url">@language.Getkey("Project_Name")@*@AppSettings.Value.Application.NomeAppLong*@</a>
                     </div>
                 </div>
                 <div class="col-5 col-sm-4 d-flex align-items-center justify-content-end">

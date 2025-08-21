@@ -13,7 +13,7 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="id" />
             <div class="form-group">
-                <label asp-for="codice" class="control-label">Codice</label>
+                <label asp-for="codice" class="control-label">@language.Getkey("Global_Code")</label>
                 <input asp-for="codice" class="form-control" />
                 <span asp-validation-for="codice" class="text-danger"></span>
             </div>
