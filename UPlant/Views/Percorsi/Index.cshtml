@@ -2,7 +2,7 @@
 @inject LanguageService language
 @{
   
-    ViewBag.Title = "Percorsi";
+    ViewBag.Title = @language.Getkey("Global_Path");
 }
 
 <div class="card card-outline card-primary">
@@ -11,7 +11,7 @@
         <div class="float-right success">
                     <a asp-action="Create" asp-controller="Percorsi">
                         <span class="btn btn btn-success" title="crea percorso">
-                    @language.Getkey("Global_Add")
+                    @language.Getkey("Global_Add") 
                         </span>
                     </a>
                 </div>
@@ -111,7 +111,7 @@
                                                             </button>
                                                         }
                                                         <a asp-action="Edit" asp-controller="Percorsi" asp-route-id="@item.id">
-                                                    <span class="btn btn-warning btn-xs" title="@language.Getkey("Global_Edit") percorso">
+                                                    <span class="btn btn-warning btn-xs" title="@language.Getkey("Global_Edit") @language.Getkey("Global_Path")">
                                                                 <i class="fa-solid fa-pencil" style="color: #fafafa;"></i>
                                                             </span>
                                                         </a>
@@ -121,7 +121,7 @@
                                                     
                                                     {
                                                         <a asp-action="Delete" asp-controller="Percorsi" asp-route-id="@item.id">
-                                                    <span class="btn btn-danger btn-xs" title="@language.Getkey("Global_Delete") percorso">
+                                                    <span class="btn btn-danger btn-xs" title="@language.Getkey("Global_Delete") @language.Getkey("Global_Path")">
                                                                 <i class="fa-solid fa-trash"></i>
                                                             </span>
                                                         </a>

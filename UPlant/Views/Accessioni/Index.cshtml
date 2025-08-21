@@ -18,7 +18,7 @@
                         <div class="float-right success ">
                             <a asp-action="Create" asp-controller="Accessioni">
                         <span class="btn btn-success" title="@language.Getkey("Global_Add") @language.Getkey("Global_Accession")">
-                                    Crea Accessione
+                            @language.Getkey("Global_Add") @language.Getkey("Global_Accession")
                                 </span>
                             </a>
                 
@@ -60,7 +60,7 @@
                                             @language.Getkey("Global_Material_Type")
                                         </th>
                                         <th>
-                                            @Html.DisplayNameFor(model => model.Individui)
+                             @language.Getkey("Global_Individual")
                                         </th>
                                         <th>
                             @language.Getkey("Home_Ricerca_Accessioni_5")

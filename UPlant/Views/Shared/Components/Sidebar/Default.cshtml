@@ -40,7 +40,7 @@
                                 <a href="#" class="nav-link">
                                     <i class="fa fa-light fa-table-list"></i>
 
-                                    <p class="text-xs-right">Amministrazione</p>
+                                    <p class="text-xs-right">@language.Getkey("Shared_Comp_Sb_Administration")</p>
 
                                     <i class="right fa fa-angle-left"></i>
                                 </a>
@@ -49,7 +49,7 @@
                                     @*un albero*@
                                     <li class="nav-item has-treeview ">
                                         <a href="#" class="nav-link">
-                                            <i class="nav-icon fa fa-table" style="color :beige"></i><p style="color :beige">Gestione Utenze</p><i class="right fa fa-angle-left"></i>
+                                            <i class="nav-icon fa fa-table" style="color :beige"></i><p style="color :beige">@language.Getkey("Shared_Comp_Sb_User_Management")</p><i class="right fa fa-angle-left"></i>
                                         </a>
                                         <ul class="nav nav-treeview">
                                             <li class="nav-item">
@@ -72,7 +72,7 @@
                                     @*un albero*@
                                     <li class="nav-item has-treeview ">
                                         <a href="#" class="nav-link">
-                                            <i class="nav-icon fa fa-table" style="color :aqua"></i><p style="color :aqua">Tabelle di Accessioni</p><i class="right fa fa-angle-left"></i>
+                                            <i class="nav-icon fa fa-table" style="color :aqua"></i><p style="color :aqua">@language.Getkey("Shared_Comp_Sb_Accession_Tables")</p><i class="right fa fa-angle-left"></i>
                                         </a>
                                         <ul class="nav nav-treeview">
                                             <li class="nav-item">
@@ -85,21 +85,21 @@
                                             <li class="nav-item">
                                                 <a asp-action="Index" asp-controller="TipiMateriale" class="nav-link ">
                                                     <span>
-                                                        <i class="far fa-circle nav-icon"></i> Tipi Materiale
+                                                        <i class="far fa-circle nav-icon"></i> @language.Getkey("Global_Material_Type")
                                                     </span>
                                                 </a>
                                             </li>
                                             <li class="nav-item">
                                                 <a asp-action="Index" asp-controller="Nazioni" class="nav-link active">
                                                     <span>
-                                                        <i class="far fa-circle nav-icon"></i> Nazioni
+                                                        <i class="far fa-circle nav-icon"></i> @language.Getkey("Global_Country")
                                                     </span>
                                                 </a>
                                             </li>
                                             <li class="nav-item">
                                                 <a asp-action="Index" asp-controller="Provenienze" class="nav-link active">
                                                     <span>
-                                                        <i class="far fa-circle nav-icon"></i> Provenienze
+                                                        <i class="far fa-circle nav-icon"></i> @language.Getkey("Global_Origin")
                                                     </span>
                                                 </a>
                                             </li>
@@ -113,35 +113,35 @@
                                             <li class="nav-item">
                                                 <a asp-action="Index" asp-controller="GradoIncertezza" class="nav-link active">
                                                     <span>
-                                                        <i class="far fa-circle nav-icon"></i> GradoIncertezza
+                                                        <i class="far fa-circle nav-icon"></i> @language.Getkey("Global_Taxonomic_Uncertainty")
                                                     </span>
                                                 </a>
                                             </li>
                                             <li class="nav-item">
                                                 <a asp-action="Index" asp-controller="Fornitori" class="nav-link active">
                                                     <span>
-                                                        <i class="far fa-circle nav-icon"></i> Donatore/Fornitori
+                                                        <i class="far fa-circle nav-icon"></i> @language.Getkey("Global_Donor_Supplier")
                                                     </span>
                                                 </a>
                                             </li>
                                             <li class="nav-item">
                                                 <a asp-action="Index" asp-controller="Raccoglitori" class="nav-link active">
                                                     <span>
-                                                        <i class="far fa-circle nav-icon"></i> Raccoglitori
+                                                        <i class="far fa-circle nav-icon"></i> @language.Getkey("Global_Collector")
                                                     </span>
                                                 </a>
                                             </li>
                                             <li class="nav-item">
                                                 <a asp-action="Index" asp-controller="Identificatori" class="nav-link active">
                                                     <span>
-                                                        <i class="far fa-circle nav-icon"></i> Identificatori
+                                                        <i class="far fa-circle nav-icon"></i> @language.Getkey("Global_Determiner")
                                                     </span>
                                                 </a>
                                             </li>
                                             <li class="nav-item">
                                                 <a asp-action="Index" asp-controller="TipoIdentificatore" class="nav-link active">
                                                     <span>
-                                                        <i class="far fa-circle nav-icon"></i> TipoIdentificatore
+                                                        <i class="far fa-circle nav-icon"></i> @language.Getkey("Global_Determiner_Type")
                                                     </span>
                                                 </a>
                                             </li>
@@ -151,13 +151,13 @@
                                     @*un albero*@
                                     <li class="nav-item has-treeview">
                                         <a href="#" class="nav-link">
-                                            <i class="nav-icon fa fa-table" style="color :orangered"></i><p style="color :orangered">Tabelle di Individui</p><i class="right fa fa-angle-left"></i>
+                                            <i class="nav-icon fa fa-table" style="color :orangered"></i><p style="color :orangered">@language.Getkey("Shared_Comp_Sb_Individual_Tables")</p><i class="right fa fa-angle-left"></i>
                                         </a>
                                         <ul class="nav nav-treeview">
                                             <li class="nav-item">
                                                 <a asp-action="Index" asp-controller="ModalitaPropagazione" class="nav-link active">
                                                     <span>
-                                                        <i class="far fa-circle nav-icon"></i> Modalità Propagazione
+                                                        <i class="far fa-circle nav-icon"></i> @language.Getkey("Global_Propagation_Method")
                                                     </span>
                                                 </a>
                                             </li>
@@ -171,28 +171,28 @@
                                             <li class="nav-item">
                                                 <a asp-action="Index" asp-controller="Settori" class="nav-link active">
                                                     <span>
-                                                        <i class="far fa-circle nav-icon"></i> Settori
+                                                        <i class="far fa-circle nav-icon"></i> @language.Getkey("Global_Sector")
                                                     </span>
                                                 </a>
                                             </li>
                                             <li class="nav-item">
                                                 <a asp-action="Index" asp-controller="Collezioni" class="nav-link active">
                                                     <span>
-                                                        <i class="far fa-circle nav-icon"></i> Collezioni
+                                                        <i class="far fa-circle nav-icon"></i> @language.Getkey("Global_Collection")
                                                     </span>
                                                 </a>
                                             </li>
                                             <li class="nav-item">
                                                 <a asp-action="Index" asp-controller="Cartellini" class="nav-link active">
                                                     <span>
-                                                        <i class="far fa-circle nav-icon"></i> Cartellini
+                                                        <i class="far fa-circle nav-icon"></i> @language.Getkey("Global_Label")
                                                     </span>
                                                 </a>
                                             </li>
                                             <li class="nav-item">
                                                 <a asp-action="Index" asp-controller="Condizioni" class="nav-link active">
                                                     <span>
-                                                        <i class="far fa-circle nav-icon"></i> Condizioni
+                                                        <i class="far fa-circle nav-icon"></i> @language.Getkey("Global_Condition")
                                                     </span>
                                                 </a>
                                             </li>
@@ -208,55 +208,55 @@
                                     @*un albero*@
                                     <li class="nav-item has-treeview">
                                         <a href="#" class="nav-link">
-                                            <i class="nav-icon fa fa-table" style="color :forestgreen"></i><p style="color :forestgreen">Famiglie-Generi-Specie</p><i class="right fa fa-angle-left"></i>
+                                            <i class="nav-icon fa fa-table" style="color :forestgreen"></i><p style="color :forestgreen">@language.Getkey("Global_Family")-@language.Getkey("Global_Genus")-@language.Getkey("Global_Species")</p><i class="right fa fa-angle-left"></i>
                                         </a>
                                         <ul class="nav nav-treeview">
                                             <li class="nav-item">
                                                 <a asp-action="Index" asp-controller="Famiglie" class="nav-link active">
                                                     <span>
-                                                        <i class="far fa-circle nav-icon"></i> Famiglie
+                                                        <i class="far fa-circle nav-icon"></i> @language.Getkey("Global_Family")
                                                     </span>
                                                 </a>
                                             </li>
                                             <li class="nav-item">
                                                 <a asp-action="Index" asp-controller="Generi" class="nav-link active">
                                                     <span>
-                                                        <i class="far fa-circle nav-icon"></i> Generi
+                                                        <i class="far fa-circle nav-icon"></i> @language.Getkey("Global_Genus")
                                                     </span>
                                                 </a>
                                             </li>
                                             <li class="nav-item">
                                                 <a asp-action="Index" asp-controller="Specie" class="nav-link active">
                                                     <span>
-                                                        <i class="far fa-circle nav-icon"></i> Specie
+                                                        <i class="far fa-circle nav-icon"></i> @language.Getkey("Global_Species")
                                                     </span>
                                                 </a>
                                             </li>
                                             <li class="nav-item">
                                                 <a asp-action="Index" asp-controller="Areali" class="nav-link active">
                                                     <span>
-                                                        <i class="far fa-circle nav-icon"></i> Areali
+                                                        <i class="far fa-circle nav-icon"></i> @language.Getkey("Global_Range")
                                                     </span>
                                                 </a>
                                             </li>
                                             <li class="nav-item">
                                                 <a asp-action="Index" asp-controller="Regni" class="nav-link active">
                                                     <span>
-                                                        <i class="far fa-circle nav-icon"></i> Regni
+                                                        <i class="far fa-circle nav-icon"></i> @language.Getkey("Global_Floristic_Kingdom")
                                                     </span>
                                                 </a>
                                             </li>
                                             <li class="nav-item">
                                                 <a asp-action="Index" asp-controller="Cites" class="nav-link active">
                                                     <span>
-                                                        <i class="far fa-circle nav-icon"></i> Cites
+                                                        <i class="far fa-circle nav-icon"></i> @language.Getkey("Global_Cites")
                                                     </span>
                                                 </a>
                                             </li>
                                             <li class="nav-item">
                                                 <a asp-action="Index" asp-controller="Iucn" class="nav-link active">
                                                     <span>
-                                                        <i class="far fa-circle nav-icon"></i> Iucn
+                                                        <i class="far fa-circle nav-icon"></i> @language.Getkey("Global_Iucn")
                                                     </span>
                                                 </a>
                                             </li>
@@ -273,7 +273,7 @@
                             <li class="nav-item has-treeview">
                                 <a href="#" class="nav-link">
                                     <i class="fa fa-light fa-table-list">
-                                    </i><p class="text-xs-right">  Inserimento</p>
+                                    </i><p class="text-xs-right">  @language.Getkey("Shared_Comp_Sb_Data_Entry")</p>
                                     <i class="right fa fa-angle-left"></i>
                                 </a>
 
@@ -282,7 +282,7 @@
                                     <li class="nav-item">
                                         <a asp-action="Create" asp-controller="Accessioni" class="nav-link ">
                                             <span>
-                                                <i class="far fa-circle nav-icon"></i> Nuova Accessione
+                                                <i class="far fa-circle nav-icon"></i> @language.Getkey("Home_Index_2")
                                             </span>
                                         </a>
                                     </li>
@@ -291,7 +291,7 @@
 
                             <li class="nav-item has-treeview">
                                 <a href="#" class="nav-link">
-                                    <i class="fa fa-light fa-table-list"></i><p class="text-xs-right"> Moduli di Ricerca</p>
+                                    <i class="fa fa-light fa-table-list"></i><p class="text-xs-right">  @language.Getkey("Global_Search_Modules")</p>
                                     <i class="right fa fa-angle-left"></i>
                                 </a>
 
@@ -300,42 +300,42 @@
                                     <li class="nav-item">
                                         <a asp-action="Index" asp-controller="Accessioni" class="nav-link ">
                                             <span>
-                                                <i class="far fa-circle nav-icon"></i> Accessioni Recenti
+                                                <i class="far fa-circle nav-icon"></i> @language.Getkey("Home_Index_17")
                                             </span>
                                         </a>
                                     </li>
                                     <li class="nav-item">
                                         <a asp-action="RicercaAccessioni" asp-controller="Home" class="nav-link ">
                                             <span>
-                                                <i class="far fa-circle nav-icon"></i> Ricerca Accessioni
+                                                <i class="far fa-circle nav-icon"></i> @language.Getkey("Home_Index_5")
                                             </span>
                                         </a>
                                     </li>
                                     <li class="nav-item">
                                         <a asp-action="Ricercaindividui" asp-controller="Home" class="nav-link ">
                                             <span>
-                                                <i class="far fa-circle nav-icon"></i> Ricerca Individui
+                                                <i class="far fa-circle nav-icon"></i> @language.Getkey("Home_Index_7")
                                             </span>
                                         </a>
                                     </li>
                                     <li class="nav-item">
                                         <a asp-action="EstraiAccessioniTotale" asp-controller="Home" class="nav-link ">
                                             <span>
-                                                <i class="far fa-circle nav-icon"></i> Estrazione Accessioni
+                                                <i class="far fa-circle nav-icon"></i> @language.Getkey("Home_Index_3")
                                             </span>
                                         </a>
                                     </li>
                                     <li class="nav-item">
                                         <a asp-action="EstraiIndividuiTotale" asp-controller="Home" class="nav-link ">
                                             <span>
-                                                <i class="far fa-circle nav-icon"></i> Estrazione Individui
+                                                <i class="far fa-circle nav-icon"></i> @language.Getkey("Home_Index_6")
                                             </span>
                                         </a>
                                     </li>
                                     <li class="nav-item">
                                         <a asp-action="EstraiSpecieTotale" asp-controller="Home" class="nav-link ">
                                             <span>
-                                                <i class="far fa-circle nav-icon"></i> Estrazione Specie
+                                                <i class="far fa-circle nav-icon"></i> @language.Getkey("Home_Index_8")
                                             </span>
                                         </a>
                                     </li>
@@ -347,8 +347,9 @@
 
                             <li class="nav-item has-treeview">
                                 <a href="#" class="nav-link">
-                                    <i class="fa fa-light fa-table-list"></i><p class="text-xs-right"> Moduli di Ricerca</p>
-                                    <i class="right fa fa-angle-left"></i>
+                                            <i class="fa fa-light fa-table-list"></i>
+                                                    <p class="text-xs-right">@language.Getkey("Global_Search_Modules")</p><i class="right fa fa-angle-left"></i>
+                                    
                                 </a>
 
 
@@ -357,14 +358,14 @@
                                     <li class="nav-item">
                                         <a asp-action="RicercaAccessioni" asp-controller="Home" class="nav-link ">
                                             <span>
-                                                <i class="far fa-circle nav-icon"></i> Ricerca Accessioni
+                                                <i class="far fa-circle nav-icon"></i> @language.Getkey("Home_Index_5")
                                             </span>
                                         </a>
                                     </li>
                                     <li class="nav-item">
                                         <a asp-action="Ricercaindividui" asp-controller="Home" class="nav-link ">
                                             <span>
-                                                <i class="far fa-circle nav-icon"></i> Ricerca Individui
+                                                <i class="far fa-circle nav-icon"></i> @language.Getkey("Home_Index_7")
                                             </span>
                                         </a>
                                     </li>
@@ -379,7 +380,7 @@
                             <li class="nav-item has-treeview">
                                 <a href="#" class="nav-link">
                                     <i class="fa fa-light fa-table-list"></i>
-                                    <p class="text-xs-right">Strumenti di Supporto</p><i class="right fa fa-angle-left"></i>
+                                    <p class="text-xs-right">@language.Getkey("Shared_Comp_Sb_Support_Tools")</p><i class="right fa fa-angle-left"></i>
                                 </a>
                                 <ul class="nav nav-treeview">
                                     @if (User.IsInRole("Administrator") || User.IsInRole("Operator"))
@@ -387,13 +388,13 @@
                                         <li class="nav-item has-treeview">
                                             <a href="#" class="nav-link">
                                                 <i class="nav-icon fa fa-table" style="color :orange"></i>
-                                                <p class="text-xs-right" style="color :orange">Uplant Discover</p><i class="right fa fa-angle-left"></i>
+                                                <p class="text-xs-right" style="color :orange">@language.Getkey("Shared_Comp_Sb_UPlant_Discover")</p><i class="right fa fa-angle-left"></i>
                                             </a>
                                             <ul class="nav nav-treeview">
                                                 <li class="nav-item">
                                                     <a asp-action="Index" asp-controller="Percorsi" class="nav-link ">
                                                         <span>
-                                                            <i class="far fa-circle nav-icon"></i> Percorsi
+                                                            <i class="far fa-circle nav-icon"></i> @language.Getkey("Global_Path")
                                                         </span>
                                                     </a>
                                                 </li>
@@ -405,7 +406,7 @@
                                         <li class="nav-item">
                                             <a asp-action="ElencoNomi" asp-controller="Specie" class="nav-link ">
                                                 <span>
-                                                    <i class="fa fa-angle-right mt-2"></i> Nome Comuni Specie
+                                                    <i class="fa fa-angle-right mt-2"></i>@language.Getkey("Global_Common_Name") @language.Getkey("Global_Species")
                                                 </span>
                                             </a>
                                         </li>
@@ -419,14 +420,14 @@
                                         <li class="nav-item">
                                             <a asp-action="Index" asp-controller="Roles" class="nav-link ">
                                                 <span title="Ruoli">
-                                                    <i class="fa fa-angle-right mt-2"></i> Ruoli
+                                                    <i class="fa fa-angle-right mt-2"></i> @language.Getkey("Global_Role")
                                                 </span>
                                             </a>
                                         </li>
                                         <li class="nav-item">
                                             <a asp-action="Index" asp-controller="Organizzazioni" class="nav-link ">
                                                 <span title="Organizzazioni">
-                                                    <i class="fa fa-angle-right mt-2"></i> Organizzazioni
+                                                    <i class="fa fa-angle-right mt-2"></i> @language.Getkey("Global_Organization")
                                                 </span>
                                             </a>
                                         </li>

@@ -5,7 +5,7 @@
 }
 <div class="card card-outline card-primary">
     <div class="card-header with-border">
-        <h3 class="card-title">@language.Getkey("Global_Edit") Specie</h3>
+        <h3 class="card-title">@language.Getkey("Global_Edit") @language.Getkey("Global_Species")</h3>
     </div>
     <div class="card-body">
         <form asp-action="Edit">
@@ -79,17 +79,17 @@
                 <span asp-validation-for="areale" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="iucn_globale" class="control-label">IUCN @language.Getkey("Global_Global")</label>
+                <label asp-for="iucn_globale" class="control-label">@language.Getkey("Global_Iucn") @language.Getkey("Global_Global")</label>
                 <select asp-for="iucn_globale" class="form-control" asp-items="ViewBag.iucn_globale"></select>
                 <span asp-validation-for="iucn_globale" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="iucn_italia" class="control-label">IUCN @language.Getkey("Global_Local")</label>
+                <label asp-for="iucn_italia" class="control-label">@language.Getkey("Global_Iucn") @language.Getkey("Global_Local")</label>
                 <select asp-for="iucn_italia" class="form-control" asp-items="ViewBag.iucn_italia"></select>
                 <span asp-validation-for="iucn_italia" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="cites" class="control-label"></label>
+                <label asp-for="cites" class="control-label">@language.Getkey("Global_Cites")</label>
                 <select asp-for="cites" class="form-control" asp-items="ViewBag.cites"></select>
                 <span asp-validation-for="cites" class="text-danger"></span>
             </div>

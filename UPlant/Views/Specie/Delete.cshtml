@@ -6,7 +6,7 @@
 
 <div class="card card-outline card-primary">
     <div class="card-header with-border">
-        <h3 class="card-title">@language.Getkey("Global_Delete") @language.Getkey("Global_Species") - @language.Getkey("Global_Question_Delete") Specie?</h3>
+        <h3 class="card-title">@language.Getkey("Global_Delete") @language.Getkey("Global_Species") - @language.Getkey("Global_Question_Delete") @language.Getkey("Global_Species")?</h3>
     </div>
     <div class="card-body">
     <dl class="row">
@@ -97,20 +97,20 @@
         </dd>
         
         <dt class = "col-sm-2">
-            CITES
+                @language.Getkey("Global_Cites")
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.citesNavigation.codice)
         </dd>
        
         <dt class = "col-sm-2">
-                IUCN @language.Getkey("Global_Global")
+                @language.Getkey("Global_Iucn") @language.Getkey("Global_Global")
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.iucn_globaleNavigation.codice)
         </dd>
         <dt class = "col-sm-2">
-                IUCN @language.Getkey("Global_Local")
+                @language.Getkey("Global_Iucn") @language.Getkey("Global_Local")
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.iucn_italiaNavigation.codice)

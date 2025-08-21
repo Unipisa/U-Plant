@@ -2,7 +2,7 @@
 @inject LanguageService language
 @{
     
-    ViewBag.Title = "Percorsi";
+    ViewBag.Title = @language.Getkey("Global_Path");
 }
 
 <div class="row">
@@ -94,7 +94,7 @@
                                                 if (User.IsInRole("Administrator") || User.IsInRole("Discover"))
                                                 {
                                                             <a asp-action="Edit" asp-controller="Percorsi" asp-route-id="@Model.id">
-                                                <span class="btn btn-warning btn-xs" title="@language.Getkey("Global_Edit") percorso">
+                                                <span class="btn btn-warning btn-xs" title="@language.Getkey("Global_Edit") @language.Getkey("Global_Path")">
                                                                     <i class="fa-solid fa-pencil" style="color: #fafafa;"></i>
                                                                 </span>
                                                             </a>

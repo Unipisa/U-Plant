@@ -11,8 +11,8 @@
         {
             <div class="float-right success ">
                 <a asp-action="Create" asp-controller="Roles">
-                    <span class="btn btn-success" title="@language.Getkey("Global_Add") Ruolo">
-                        @language.Getkey("Global_Add") Ruolo
+                    <span class="btn btn-success" title="@language.Getkey("Global_Add") @language.Getkey("Global_Role")">
+                        @language.Getkey("Global_Add") @language.Getkey("Global_Role")
                     </span>
                 </a>
 
@@ -34,7 +34,7 @@
                             <tr>
 
             <th>
-                Ruolo
+                                    @language.Getkey("Global_Role")
             </th>
             <th></th>
         </tr>
@@ -50,14 +50,14 @@
                                         {
                                         
                                             <a asp-action="Edit" asp-controller="Roles" asp-route-id="@item.Id">
-                                                <span class="btn btn-warning btn-xs" title="@language.Getkey("Global_Edit") Ruolo">
+                                                <span class="btn btn-warning btn-xs" title="@language.Getkey("Global_Edit") @language.Getkey("Global_Role")">
                                                     <i class="fa-solid fa-pencil" style="color: #fafafa;"></i>
                                                 </span>
                                             </a>
                                             if (@item.UserRole.Count() == 0)
                                             {
                                             <a asp-action="Delete" asp-controller="Roles" asp-route-id="@item.Id">
-                                                    <span class="btn btn-danger btn-xs" title="@language.Getkey("Global_Delete") Ruolo">
+                                                    <span class="btn btn-danger btn-xs" title="@language.Getkey("Global_Delete") @language.Getkey("Global_Role")">
                                                     <i class="fa-solid fa-trash"></i>
                                                 </span>
                                             </a>

@@ -6,13 +6,13 @@
 
 <div class="card card-outline card-primary">
     <div class="card-header with-border">
-        <h3 class="card-title">@language.Getkey("Global_Add") Ruolo</h3>
+        <h3 class="card-title">@language.Getkey("Global_Add") @language.Getkey("Global_Role")</h3>
     </div>
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Descr" class="control-label">@language.Getkey("Global_Description") Ruolo</label>
+                <label asp-for="Descr" class="control-label">@language.Getkey("Global_Description") @language.Getkey("Global_Role")</label>
                 <input asp-for="Descr" class="form-control" />
                 <span asp-validation-for="Descr" class="text-danger"></span>
             </div>

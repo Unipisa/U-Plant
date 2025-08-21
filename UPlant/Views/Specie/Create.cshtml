@@ -76,15 +76,15 @@
                 <select asp-for="areale" class ="form-control" asp-items="ViewBag.areale"></select>
             </div>
             <div class="form-group">
-                <label asp-for="cites" class="control-label">CITES</label>
+                <label asp-for="cites" class="control-label">@language.Getkey("Global_Cites")</label>
                 <select asp-for="cites" class="form-control" asp-items="ViewBag.cites"></select>
             </div>
             <div class="form-group">
-                <label asp-for="iucn_globale" class="control-label">IUCN @language.Getkey("Global_Global")</label>
+                <label asp-for="iucn_globale" class="control-label">@language.Getkey("Global_Iucn") @language.Getkey("Global_Global")</label>
                 <select asp-for="iucn_globale" class ="form-control" asp-items="ViewBag.iucn_globale"></select>
             </div>
             <div class="form-group">
-                <label asp-for="iucn_italia" class="control-label">IUCN @language.Getkey("Global_Local")</label>
+                <label asp-for="iucn_italia" class="control-label">@language.Getkey("Global_Iucn") @language.Getkey("Global_Local")</label>
                 <select asp-for="iucn_italia" class ="form-control" asp-items="ViewBag.iucn_italia"></select>
             </div>
            

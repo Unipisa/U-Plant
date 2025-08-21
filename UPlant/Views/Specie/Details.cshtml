@@ -7,7 +7,7 @@
 <h1>Details</h1>
 
 <div>
-    <h4>Specie</h4>
+    <h4>@language.Getkey("Global_Species")</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
@@ -83,37 +83,37 @@
             @Html.DisplayFor(model => model.nome_comune_en)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.arealeNavigation)
+            @language.Getkey("Global_Range")
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.arealeNavigation.descrizione)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.citesNavigation)
+            @language.Getkey("Global_Cites")
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.citesNavigation.codice)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.genereNavigation)
+            @language.Getkey("Global_Genus")
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.genereNavigation.descrizione)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.iucn_globaleNavigation)
+            @language.Getkey("Global_Iucn") @language.Getkey("Global_Global")
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.iucn_globaleNavigation.codice)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.iucn_italiaNavigation)
+            @language.Getkey("Global_Iucn") @language.Getkey("Global_Local")
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.iucn_italiaNavigation.codice)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.regnoNavigation)
+            @language.Getkey("Global_Floristic_Kingdom")
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.regnoNavigation.descrizione)

@@ -145,7 +145,7 @@
     <value>Species Extraction</value>
   </data>
   <data name="Home_Index_9" xml:space="preserve">
-    <value>Pisa Botanical Garden Data</value>
+    <value>Pisa Botanic Garden Data</value>
   </data>
   <data name="Home_Index_10" xml:space="preserve">
     <value>Number of names accepted in U-Plant</value>
@@ -433,7 +433,7 @@
     <value>Images</value>
   </data>
   <data name="Global_Location_Garden" xml:space="preserve">
-    <value>Location in the Botanical Garden</value>
+    <value>Location in the Botanic Garden</value>
   </data>
   <data name="Global_Sector_In_English" xml:space="preserve">
     <value>Sector In English</value>
@@ -573,11 +573,11 @@
   <data name="Global_Additional_Data" xml:space="preserve">
     <value>Additional data</value>
   </data>
-  <data name="Global_Operator_Last_Modified" xml:space="preserve">
-    <value>Operator Last Modified</value>
+  <data name="Global_Last_Modified_User" xml:space="preserve">
+    <value>Last Modified User </value>
   </data>
-  <data name="Global_Entry_Operator" xml:space="preserve">
-    <value>Entry Operator</value>
+  <data name="Global_Entry_User" xml:space="preserve">
+    <value>Entry User</value>
   </data>
   <data name="Global_Empty" xml:space="preserve">
     <value>Empty</value>
@@ -593,5 +593,41 @@
   </data>
   <data name="Project_Name" xml:space="preserve">
     <value>U-Plant / Living Collections Documentation System</value>
+  </data>
+  <data name="Shared_Comp_Sb_User_Management" xml:space="preserve">
+    <value>User Management</value>
+  </data>
+  <data name="Shared_Comp_Sb_Accession_Tables" xml:space="preserve">
+    <value>Accession Tables</value>
+  </data>
+  <data name="Shared_Comp_Sb_Individual_Tables" xml:space="preserve">
+    <value>Individual Tables</value>
+  </data>
+  <data name="Global_Search_Modules" xml:space="preserve">
+    <value>Search Modules</value>
+  </data>
+  <data name="Global_Cites" xml:space="preserve">
+    <value>CITES</value>
+  </data>
+  <data name="Global_Iucn" xml:space="preserve">
+    <value>IUCN</value>
+  </data>
+  <data name="Home_Index_17" xml:space="preserve">
+    <value>Recent accessions</value>
+  </data>
+  <data name="Shared_Comp_Sb_Support_Tools" xml:space="preserve">
+    <value>Support Tools</value>
+  </data>
+  <data name="Global_Path" xml:space="preserve">
+    <value>Path</value>
+  </data>
+  <data name="Shared_Comp_Sb_UPlant_Discover" xml:space="preserve">
+    <value>UPlant Discover</value>
+  </data>
+  <data name="Shared_Comp_Sb_Administration" xml:space="preserve">
+    <value>Administration</value>
+  </data>
+  <data name="Shared_Comp_Sb_Data_Entry" xml:space="preserve">
+    <value>Data Entry</value>
   </data>
 </root>

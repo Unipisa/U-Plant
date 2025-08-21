@@ -49,13 +49,13 @@
                                         @language.Getkey("Global_Range")
                                         </th>
                                         <th>
-                                            CITES
+                            @language.Getkey("Global_Cites")
                                         </th>
                                         <th>
-                            IUCN @language.Getkey("Global_Global")
+                            @language.Getkey("Global_Iucn") @language.Getkey("Global_Global")
                                         </th>
                                         <th>
-                            IUCN @language.Getkey("Global_Local")
+                            @language.Getkey("Global_Iucn") @language.Getkey("Global_Local")
                                         </th>
                                         <th style="width:25%"></th>
                                     </tr>
@@ -101,7 +101,7 @@
                                 {
 
                                     <a asp-action="Edit" asp-route-id="@item.id">
-                                        <span class="btn btn-warning btn-xs" title="@language.Getkey("Global_Edit") Specie ">
+                                        <span class="btn btn-warning btn-xs" title="@language.Getkey("Global_Edit") @language.Getkey("Global_Species") ">
                                             <i class="fa-solid fa-pencil" style="color: #fafafa;"></i>
                                         </span>
                                     </a>

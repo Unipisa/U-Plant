@@ -573,10 +573,10 @@
   <data name="Global_Additional_Data" xml:space="preserve">
     <value>Dati accessori</value>
   </data>
-  <data name="Global_Operator_Last_Modified" xml:space="preserve">
+  <data name="Global_Last_Modified_User" xml:space="preserve">
     <value>Operatore ultima modifica</value>
   </data>
-  <data name="Global_Entry_Operator" xml:space="preserve">
+  <data name="Global_Entry_User" xml:space="preserve">
     <value>Operatore Inserimento</value>
   </data>
   <data name="Global_Empty" xml:space="preserve">
@@ -593,5 +593,41 @@
   </data>
   <data name="Project_Name" xml:space="preserve">
     <value>U-Plant / Sistema di documentazione delle collezioni viventi</value>
+  </data>
+  <data name="Shared_Comp_Sb_User_Management" xml:space="preserve">
+    <value>Gestione Utenza</value>
+  </data>
+  <data name="Shared_Comp_Sb_Accession_Tables" xml:space="preserve">
+    <value>Tabelle Accessioni</value>
+  </data>
+  <data name="Shared_Comp_Sb_Individual_Tables" xml:space="preserve">
+    <value>Tabelle Individui</value>
+  </data>
+  <data name="Global_Search_Modules" xml:space="preserve">
+    <value>Moduli di Ricerca</value>
+  </data>
+  <data name="Global_Cites" xml:space="preserve">
+    <value>CITES</value>
+  </data>
+  <data name="Global_Iucn" xml:space="preserve">
+    <value>IUCN</value>
+  </data>
+  <data name="Home_Index_17" xml:space="preserve">
+    <value>Accessioni Recenti</value>
+  </data>
+  <data name="Shared_Comp_Sb_Support_Tools" xml:space="preserve">
+    <value>Strumenti di Supporto</value>
+  </data>
+  <data name="Global_Path" xml:space="preserve">
+    <value>Percorso</value>
+  </data>
+  <data name="Shared_Comp_Sb_UPlant_Discover" xml:space="preserve">
+    <value>UPlant Discover</value>
+  </data>
+  <data name="Shared_Comp_Sb_Administration" xml:space="preserve">
+    <value>Amministrazione</value>
+  </data>
+  <data name="Shared_Comp_Sb_Data_Entry" xml:space="preserve">
+    <value>Inserimento</value>
   </data>
 </root>
