@@ -130,7 +130,7 @@
                             </tr>
 
                             <tr style="height: 23px;">
-                                <th style="width: 239px; height: 23px;">Nazione</th>
+                            <th style="width: 239px; height: 23px;">@language.Getkey("Global_Country")</th>
                                 <td style="width: 239px; height: 23px;" colspan="2">
                                 @Html.DropDownList("nazione", null, @language.Getkey("Global_Select") + " " + @language.Getkey("Global_Country"), htmlAttributes: new { @Id = "nazione", @class = "form-control", required = "Seleziona una Nazione" })
                                     @*   @Html.DropDownList("nazione", null, htmlAttributes: new { @class = "form-control" })*@
