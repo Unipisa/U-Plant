@@ -564,8 +564,8 @@
   <data name="Global_Main_Data" xml:space="preserve">
     <value>Dati Principali</value>
   </data>
-  <data name="Accession_Details_3" xml:space="preserve">
-    <value>Provenienza</value>
+  <data name="Accession_Create_Details_1" xml:space="preserve">
+    <value>Dati di Campionamento</value>
   </data>
   <data name="Accession_Details_4" xml:space="preserve">
     <value>Identità</value>

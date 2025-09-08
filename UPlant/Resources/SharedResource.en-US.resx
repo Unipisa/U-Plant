@@ -564,8 +564,8 @@
   <data name="Global_Main_Data" xml:space="preserve">
     <value>Main Data</value>
   </data>
-  <data name="Accession_Details_3" xml:space="preserve">
-    <value>Origin</value>
+  <data name="Accession_Create_Details_1" xml:space="preserve">
+    <value>Sampling Data</value>
   </data>
   <data name="Accession_Details_4" xml:space="preserve">
     <value>Identity</value>
