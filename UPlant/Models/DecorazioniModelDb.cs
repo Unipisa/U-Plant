@@ -62,9 +62,6 @@ namespace UPlant.Models.DB
     public partial class Condizioni
     { }
 
-
-
-        
     public partial class IucnCustom
     {
         public Guid id { get; set; }
@@ -79,8 +76,6 @@ namespace UPlant.Models.DB
     [ModelMetadataType(typeof(IucnCustom))]
     public partial class Iucn
     { }
-
-
 
 
         public partial class ModalitaPropagazioneCustom
@@ -155,9 +150,6 @@ namespace UPlant.Models.DB
     public partial class Settori
     { }
 
-
-
-
     public partial class StatoIndividuoCustom
     {
         public Guid id { get; set; }
@@ -175,8 +167,6 @@ namespace UPlant.Models.DB
     public partial class StatoIndividuo { }
 
 
-
-
     public partial class StatoMaterialeCustom
     {
         public Guid id { get; set; }
@@ -191,9 +181,6 @@ namespace UPlant.Models.DB
     }
     [ModelMetadataType(typeof(StatoMaterialeCustom))]
     public partial class StatoMateriale { }
-
-
-
 
 
     public partial class TipiMaterialeCustom
@@ -263,6 +250,12 @@ namespace UPlant.Models.DB
     }
     [ModelMetadataType(typeof(AccessioniCustom))]
     public partial class Accessioni { }
+
+
+
+
+
+
 
 
 

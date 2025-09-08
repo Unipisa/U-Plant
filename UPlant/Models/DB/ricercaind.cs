@@ -9,7 +9,7 @@ public partial class Ricercaind
 
     public string progressivoacc { get; set; }
 
-    public DateTime datainserimento { get; set; }
+    public DateTime? datainserimento { get; set; }
 
     public DateTime? datapropagazione { get; set; }
 

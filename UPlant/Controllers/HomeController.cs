@@ -1155,7 +1155,7 @@ namespace UPlant.Controllers
                 tRow.Append(CreateCell(v.cartellino));
                 tRow.Append(CreateCell(v.statoindividuo));
                 tRow.Append(CreateCell(v.nomecognome));
-                tRow.Append(CreateCell(v.datainserimento.ToShortDateString()));
+                tRow.Append(CreateCell(v.datainserimento?.ToShortDateString()));
                 
                 return tRow;
             

@@ -1,16 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+
 namespace UPlant.Models.DB;
 
 public partial class Percorsi
 {
     public Guid id { get; set; }
 
-    [Required()]
-    
-    public string titolo { get; set; } 
-    
+    public string titolo { get; set; }
+
     public string descrizione { get; set; }
 
     public DateTime datacreazione { get; set; }
