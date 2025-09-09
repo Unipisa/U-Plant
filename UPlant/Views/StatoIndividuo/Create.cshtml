@@ -16,6 +16,11 @@
                 <span asp-validation-for="stato" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="descrizione_en" class="control-label">@language.Getkey("Global_English_Description") </label>
+                <input asp-for="descrizione_en" class="form-control" />
+                <span asp-validation-for="descrizione_en" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <label asp-for="visualizzazioneweb" class="control-label">@language.Getkey("Global_Web_View")</label><br />
                 <input asp-for="visualizzazioneweb" class="form-check-input mx-auto" id="visualizzazioneweb" name="visualizzazioneweb" />
                 <span asp-validation-for="visualizzazioneweb" class="text-danger"></span>

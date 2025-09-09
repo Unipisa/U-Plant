@@ -34,6 +34,9 @@
                             @language.Getkey("Global_Propagation_Method")
             </th>
                         <th>
+                            @language.Getkey("Global_English_Description")
+                        </th>
+                        <th>
                             @language.Getkey("Global_Sorting")
                         </th>
             <th>
@@ -49,6 +52,9 @@
             <td>
                 @Html.DisplayFor(modelItem => item.propagatoModalita)
             </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.descrizione_en)
+                            </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.ordinamento)
                             </td>

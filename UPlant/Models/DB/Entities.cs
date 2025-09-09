@@ -225,6 +225,9 @@ public partial class Entities : DbContext
                 .IsRequired()
                 .HasMaxLength(50)
                 .IsUnicode(false);
+            entity.Property(e => e.descrizione_en)
+                .HasMaxLength(50)
+                .IsUnicode(false);
 
             entity.HasOne(d => d.organizzazioneNavigation).WithMany(p => p.Cartellini)
                 .HasForeignKey(d => d.organizzazione)
@@ -268,6 +271,9 @@ public partial class Entities : DbContext
             entity.Property(e => e.id).HasDefaultValueSql("(newid())");
             entity.Property(e => e.condizione)
                 .IsRequired()
+                .HasMaxLength(100)
+                .IsUnicode(false);
+            entity.Property(e => e.descrizione_en)
                 .HasMaxLength(100)
                 .IsUnicode(false);
 
@@ -363,6 +369,7 @@ public partial class Entities : DbContext
             entity.Property(e => e.descrizione)
                 .IsRequired()
                 .IsUnicode(false);
+            entity.Property(e => e.descrizione_en).IsUnicode(false);
 
             entity.HasOne(d => d.organizzazioneNavigation).WithMany(p => p.GradoIncertezza)
                 .HasForeignKey(d => d.organizzazione)
@@ -484,6 +491,9 @@ public partial class Entities : DbContext
         modelBuilder.Entity<ModalitaPropagazione>(entity =>
         {
             entity.Property(e => e.id).HasDefaultValueSql("(newid())");
+            entity.Property(e => e.descrizione_en)
+                .HasMaxLength(50)
+                .IsUnicode(false);
             entity.Property(e => e.propagatoModalita)
                 .IsRequired()
                 .HasMaxLength(50)
@@ -738,6 +748,7 @@ public partial class Entities : DbContext
                 .IsRequired()
                 .HasMaxLength(50)
                 .IsUnicode(false);
+            entity.Property(e => e.descrizione_en).IsUnicode(false);
 
             entity.HasOne(d => d.organizzazioneNavigation).WithMany(p => p.Sesso)
                 .HasForeignKey(d => d.organizzazione)
@@ -832,6 +843,9 @@ public partial class Entities : DbContext
         modelBuilder.Entity<StatoIndividuo>(entity =>
         {
             entity.Property(e => e.id).HasDefaultValueSql("(newid())");
+            entity.Property(e => e.descrizione_en)
+                .HasMaxLength(50)
+                .IsUnicode(false);
             entity.Property(e => e.stato)
                 .IsRequired()
                 .HasMaxLength(50)
@@ -849,6 +863,7 @@ public partial class Entities : DbContext
             entity.Property(e => e.descrizione)
                 .IsRequired()
                 .IsUnicode(false);
+            entity.Property(e => e.descrizione_en).IsUnicode(false);
 
             entity.HasOne(d => d.organizzazioneNavigation).WithMany(p => p.StatoMateriale)
                 .HasForeignKey(d => d.organizzazione)
@@ -889,6 +904,7 @@ public partial class Entities : DbContext
             entity.Property(e => e.descrizione)
                 .IsRequired()
                 .IsUnicode(false);
+            entity.Property(e => e.descrizione_en).IsUnicode(false);
 
             entity.HasOne(d => d.organizzazioneNavigation).WithMany(p => p.TipiMateriale)
                 .HasForeignKey(d => d.organizzazione)

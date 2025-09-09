@@ -32,6 +32,9 @@
                             @language.Getkey("Global_Condition")
             </th>
                         <th>
+                            @language.Getkey("Global_English_Description")
+                        </th>
+                        <th>
                             @language.Getkey("Global_Sorting")
                         </th>
             <th>
@@ -45,7 +48,10 @@
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.condizione)
-            </td>
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.descrizione_en)
+                            </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.ordinamento)
                             </td>

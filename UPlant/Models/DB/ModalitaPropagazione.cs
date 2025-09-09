@@ -13,6 +13,8 @@ public partial class ModalitaPropagazione
 
     public int ordinamento { get; set; }
 
+    public string descrizione_en { get; set; }
+
     public virtual ICollection<Individui> Individui { get; set; } = new List<Individui>();
 
     public virtual Organizzazioni organizzazioneNavigation { get; set; }

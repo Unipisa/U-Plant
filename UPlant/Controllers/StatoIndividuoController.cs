@@ -59,7 +59,7 @@ namespace UPlant.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("id,stato,ordinamento,visualizzazioneweb,organizzazione")] StatoIndividuo statoIndividuo)
+        public async Task<IActionResult> Create([Bind("id,stato,descrizione_en,ordinamento,visualizzazioneweb,organizzazione")] StatoIndividuo statoIndividuo)
         {
             if (ModelState.IsValid)
             {
@@ -94,7 +94,7 @@ namespace UPlant.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("id,stato,ordinamento,visualizzazioneweb,organizzazione")] StatoIndividuo statoIndividuo)
+        public async Task<IActionResult> Edit(Guid id, [Bind("id,stato,descrizione_en,ordinamento,visualizzazioneweb,organizzazione")] StatoIndividuo statoIndividuo)
         {
             if (id != statoIndividuo.id)
             {
