@@ -82,7 +82,7 @@ namespace UPlant.Controllers
                 return Json(_context.Regioni.OrderBy(x => x.descrizione).Select(x => new
                 {
                     codiceregione = x.codice,
-                    descrizioneregione = x.descrizione_en
+                    descrizioneregione = string.IsNullOrEmpty(x.descrizione_en) ? x.descrizione : x.descrizione_en
                 }).ToList(), new System.Text.Json.JsonSerializerOptions());//, JsonRequestBehavior.AllowGet deprecato
 
 
@@ -322,24 +322,47 @@ namespace UPlant.Controllers
         }
         public JsonResult GetSettori()
         {
+            var linguacorrente = _languageService.GetCurrentCulture();
 
-            return Json(_context.Settori.Select(x => new
+            if (linguacorrente == "en-US")
             {
-                codicesettore = x.id,
-                descrizionesettore = x.settore
-            }).ToList(), new System.Text.Json.JsonSerializerOptions());
-
+                return Json(_context.Settori.Select(x => new
+                {
+                    codicesettore = x.id,
+                    descrizionesettore = string.IsNullOrEmpty(x.settore_en) ? x.settore : x.settore_en
+                }).ToList(), new System.Text.Json.JsonSerializerOptions());
+            }
+            else
+            {
+                return Json(_context.Settori.Select(x => new
+                {
+                    codicesettore = x.id,
+                    descrizionesettore = x.settore
+                }).ToList(), new System.Text.Json.JsonSerializerOptions());
+            }
         }
 
         public JsonResult GetCollezioni(Guid? codicesettore)
         {
+            var linguacorrente = _languageService.GetCurrentCulture();
 
-            return Json(_context.Collezioni.OrderBy(a => a.collezione).Where(x => x.settore == codicesettore).Select(x => new
+            if (linguacorrente == "en-US")
             {
-                codicecollezione = x.id,
-                descrizionecollezione = x.collezione
-            }).ToList(), new System.Text.Json.JsonSerializerOptions());
 
+                return Json(_context.Collezioni.OrderBy(a => a.collezione).Where(x => x.settore == codicesettore).Select(x => new
+                {
+                    codicecollezione = x.id,
+                    descrizionecollezione = string.IsNullOrEmpty(x.collezione_en) ? x.collezione : x.collezione_en
+                }).ToList(), new System.Text.Json.JsonSerializerOptions());
+            }
+            else
+            {
+                return Json(_context.Collezioni.OrderBy(a => a.collezione).Where(x => x.settore == codicesettore).Select(x => new
+                {
+                    codicecollezione = x.id,
+                    descrizionecollezione = x.collezione
+                }).ToList(), new System.Text.Json.JsonSerializerOptions());
+            }
         }
 
 
@@ -556,29 +579,38 @@ namespace UPlant.Controllers
 
         private void SetViewBag(Accessioni accessioni, string genere, string famiglia, bool edit = false)
         {
+            var linguacorrente = _languageService.GetCurrentCulture();
+
+
+            if (linguacorrente == "en-US")
+            {
+                ViewBag.regione = new SelectList(_context.Regioni.OrderBy(a => a.descrizione).Select(a => new { a.codice, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.descrizione : a.descrizione_en }), "codice", "Desc", accessioni.regione);
+                ViewBag.nazione = new SelectList(_context.Nazioni.OrderBy(a => a.descrizione).Select(a => new { a.codice, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.descrizione : a.descrizione_en }), "codice", "Desc", accessioni.nazione);
+                ViewBag.gradoIncertezza = new SelectList(_context.GradoIncertezza.OrderBy(a => a.descrizione).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.descrizione : a.descrizione_en }), "id", "Desc", accessioni.gradoIncertezza);
+                ViewBag.provenienza = new SelectList(_context.Provenienze.OrderBy(a => a.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.descrizione : a.descrizione_en }), "id", "Desc", accessioni.provenienza);
+                ViewBag.statoMateriale = new SelectList(_context.StatoMateriale.OrderBy(a => a.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.descrizione : a.descrizione_en }), "id", "Desc", accessioni.statoMateriale);
+                ViewBag.tipoAcquisizione = new SelectList(_context.TipoAcquisizione.OrderBy(a => a.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.descrizione : a.descrizione_en }), "id", "Desc", accessioni.tipoAcquisizione);
+                ViewBag.tipoMateriale = new SelectList(_context.TipiMateriale.OrderBy(a => a.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.descrizione : a.descrizione_en }), "id", "Desc", accessioni.tipoMateriale);
+                ViewBag.regno = new SelectList(_context.Regni.OrderBy(e => e.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.descrizione : a.descrizione_en }), "id", "Desc");
+            }
+            else
+            {
+                ViewBag.regione = new SelectList(_context.Regioni.OrderBy(a => a.descrizione), "codice", "descrizione", accessioni.regione);
+                ViewBag.nazione = new SelectList(_context.Nazioni.OrderBy(a => a.descrizione), "codice", "descrizione", accessioni.nazione);
+                ViewBag.gradoIncertezza = new SelectList(_context.GradoIncertezza.OrderBy(a => a.descrizione), "id", "descrizione", accessioni.gradoIncertezza);
+                ViewBag.provenienza = new SelectList(_context.Provenienze.OrderBy(a => a.descrizione), "id", "descrizione", accessioni.provenienza);
+                ViewBag.statoMateriale = new SelectList(_context.StatoMateriale.OrderBy(a => a.descrizione), "id", "descrizione", accessioni.statoMateriale);
+                ViewBag.tipoAcquisizione = new SelectList(_context.TipoAcquisizione.OrderBy(a => a.descrizione), "id", "descrizione", accessioni.tipoAcquisizione);
+                ViewBag.tipoMateriale = new SelectList(_context.TipiMateriale.OrderBy(a => a.descrizione), "id", "descrizione", accessioni.tipoMateriale);
+                ViewBag.regno = new SelectList(_context.Regni.OrderBy(r => r.codiceInterno), "id", "descrizione");
+
+
+            }
             ViewBag.fornitore = new SelectList(_context.Fornitori.OrderBy(a => a.descrizione), "id", "descrizione", accessioni.fornitore);
-
-            ViewBag.provenienza = new SelectList(_context.Provenienze.OrderBy(a => a.descrizione), "id", "descrizione", accessioni.provenienza);
-
             ViewBag.raccoglitore = new SelectList(_context.Raccoglitori.OrderBy(a => a.nominativo), "id", "nominativo", accessioni.raccoglitore);
-            ViewBag.nazione = new SelectList(_context.Nazioni.OrderBy(a => a.descrizione), "codice", "descrizione", accessioni.nazione);
             ViewBag.provincia = new SelectList(_context.Province.OrderBy(a => a.descrizione), "codice", "descrizione", accessioni.provincia);
-            ViewBag.regione = new SelectList(_context.Regioni.OrderBy(a => a.descrizione), "codice", "descrizione", accessioni.regione);
-            //ViewBag.specie = new List<SelectListItem>();
-
-            /* ViewBag.specie = db.Specie.OrderBy(n => n.nome_scientifico).Select(n=> new SelectListItem
-             {
-
-                 Value = n.id.ToString(),
-                 Text = n.nome_scientifico + n.nome
-
-             }).ToList();*/
-            ViewBag.tipoAcquisizione = new SelectList(_context.TipoAcquisizione.OrderBy(a => a.descrizione), "id", "descrizione", accessioni.tipoAcquisizione);
-            ViewBag.tipoMateriale = new SelectList(_context.TipiMateriale.OrderBy(a => a.descrizione), "id", "descrizione", accessioni.tipoMateriale);
-            ViewBag.statoMateriale = new SelectList(_context.StatoMateriale.OrderBy(a => a.descrizione), "id", "descrizione", accessioni.statoMateriale);
-            ViewBag.gradoIncertezza = new SelectList(_context.GradoIncertezza.OrderBy(a => a.descrizione), "id", "descrizione", accessioni.gradoIncertezza);
-            ViewBag.identificatore = new SelectList(_context.Identificatori.OrderBy(a => a.nominativo), "id", "nominativo", accessioni.identificatore);
-            ViewBag.regno = new SelectList(_context.Regni.OrderBy(r => r.codiceInterno), "id", "descrizione");
+           ViewBag.identificatore = new SelectList(_context.Identificatori.OrderBy(a => a.nominativo), "id", "nominativo", accessioni.identificatore);
+            
             ViewBag.areale = new SelectList(_context.Areali.OrderBy(a => a.codiceInterno), "id", "descrizione");
 
             if (accessioni.specie != new Guid("{00000000-0000-0000-0000-000000000000}"))
@@ -586,8 +618,15 @@ namespace UPlant.Controllers
                 Specie s = _context.Specie.Find(accessioni.specie);
                 if (s != null)
                 {
-                    ViewBag.famiglia = new SelectList(_context.Famiglie.OrderBy(e => e.descrizione), "id", "descrizione", s.genereNavigation.famigliaNavigation.id);
-                    ViewBag.genere = new SelectList(_context.Generi.Where(e => e.famiglia == s.genereNavigation.famigliaNavigation.id).OrderBy(e => e.descrizione), "id", "descrizione", s.genereNavigation.id);
+                    if (linguacorrente == "en-US")
+                    {
+                        ViewBag.famiglia = new SelectList(_context.Famiglie.OrderBy(e => e.descrizione).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.descrizione : a.descrizione_en }), "id", "Desc", s.genereNavigation.famigliaNavigation.id);
+                    }
+                    else
+                    {
+                        ViewBag.famiglia = new SelectList(_context.Famiglie.OrderBy(e => e.descrizione), "id", "descrizione", s.genereNavigation.famigliaNavigation.id);
+                    }
+                        ViewBag.genere = new SelectList(_context.Generi.Where(e => e.famiglia == s.genereNavigation.famigliaNavigation.id).OrderBy(e => e.descrizione), "id", "descrizione", s.genereNavigation.id);
                     ViewBag.specie = new SelectList(_context.Specie.Where(e => e.genere == s.genere).OrderBy(e => e.nome), "id", "nome", s.id);
                 }
             }
@@ -596,8 +635,18 @@ namespace UPlant.Controllers
                 if (genere != "-1" && genere != null)
                 {
                     Generi g = _context.Generi.Find(genere);
-                    ViewBag.famiglia = new SelectList(_context.Famiglie.OrderBy(e => e.descrizione), "id", "descrizione", g.famigliaNavigation.id);
-                    ViewBag.genere = new SelectList(_context.Generi.Where(e => e.famiglia == g.famigliaNavigation.id).OrderBy(e => e.descrizione), "id", "descrizione", g.id);
+
+                    if (linguacorrente == "en-US")
+                    {
+                        ViewBag.famiglia = new SelectList(_context.Famiglie.OrderBy(e => e.descrizione).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.descrizione : a.descrizione_en }), "id", "Desc", g.famigliaNavigation.id);
+                    }
+                    else
+                    {
+                        ViewBag.famiglia = new SelectList(_context.Famiglie.OrderBy(e => e.descrizione), "id", "descrizione", g.famigliaNavigation.id);
+                    }
+                        
+                        
+                        ViewBag.genere = new SelectList(_context.Generi.Where(e => e.famiglia == g.famigliaNavigation.id).OrderBy(e => e.descrizione), "id", "descrizione", g.id);
                 }
                 else
                 {

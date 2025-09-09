@@ -21,16 +21,16 @@ namespace UPlant.Controllers
     public class IndividuiController : BaseController
     {
         private readonly Entities _context;
-
         private readonly IOptions<AppSettings> _opt;
         private readonly IWebHostEnvironment _env;
+        private readonly LanguageService _languageService;
 
-       public IndividuiController(Entities context, IOptions<AppSettings> opt,IWebHostEnvironment env)
+        public IndividuiController(Entities context, IOptions<AppSettings> opt,IWebHostEnvironment env, LanguageService languageService)
         {
             _context = context;
             _opt = opt;
             _env = env;
-
+            _languageService = languageService;
 
         }
         public async Task<IActionResult> Index(string valida)
@@ -418,15 +418,40 @@ namespace UPlant.Controllers
             ViewBag.nome_scientifico = accessione.specieNavigation.nome_scientifico;
             //ViewBag.individuo = idindividuo;
             ViewBag.progressivo = accessione.progressivo;
-            ViewBag.sesso = new SelectList(_context.Sesso.OrderByDescending(a => a.descrizione), "id", "descrizione");
-            ViewBag.collezione = new SelectList(_context.Collezioni.OrderBy(a => a.collezione), "id", "collezione");
-            ViewBag.settore = new SelectList(_context.Settori.OrderBy(a => a.ordinamento), "id", "settore");
 
-            ViewBag.cartellino = new SelectList(_context.Cartellini.OrderBy(a => a.ordinamento), "id", "descrizione");
-            ViewBag.propagatoModalita = new SelectList(_context.ModalitaPropagazione.OrderBy(a => a.ordinamento), "id", "propagatoModalita");
-            ViewBag.statoindividuo = new SelectList(_context.StatoIndividuo.OrderBy(a => a.ordinamento), "id", "stato");
-            // ViewBag.statoindividuo = new SelectList(_context.StatoIndividuo.Where(x => x.stato.ToLower().Contains("non definito")).Concat(source2: _context.StatoIndividuo.OrderByDescending(a => a.stato).Where(x => !x.stato.ToLower().Contains("non definito"))), "id", "stato");
-            ViewBag.condizione = new SelectList(_context.Condizioni.OrderBy(p => p.ordinamento), "id", "condizione");
+
+            var linguacorrente = _languageService.GetCurrentCulture();
+
+            if (linguacorrente == "en-US")
+            {
+                ViewBag.sesso = new SelectList(_context.Sesso.OrderByDescending(a => a.descrizione).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.descrizione : a.descrizione_en }), "id", "Desc");
+                ViewBag.collezione = new SelectList(_context.Collezioni.OrderBy(a => a.collezione).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.collezione_en) ? a.collezione : a.collezione_en }), "id", "Desc");
+                ViewBag.settore = new SelectList(_context.Settori.OrderBy(a => a.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.settore_en) ? a.settore : a.settore_en }), "id", "Desc");
+                ViewBag.cartellino = new SelectList(_context.Cartellini.OrderBy(a => a.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.descrizione : a.descrizione_en }), "id", "Desc");
+                ViewBag.propagatoModalita = new SelectList(_context.ModalitaPropagazione.OrderBy(a => a.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.propagatoModalita : a.descrizione_en }), "id", "Desc");
+                ViewBag.statoindividuo = new SelectList(_context.StatoIndividuo.OrderBy(a => a.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.stato : a.descrizione_en }), "id", "Desc");
+                ViewBag.condizione = new SelectList(_context.Condizioni.OrderBy(p => p.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.condizione : a.descrizione_en }), "id", "Desc");
+
+            }
+            else
+            {
+                ViewBag.sesso = new SelectList(_context.Sesso.OrderByDescending(a => a.descrizione), "id", "descrizione");
+                ViewBag.collezione = new SelectList(_context.Collezioni.OrderBy(a => a.collezione), "id", "collezione");
+                ViewBag.settore = new SelectList(_context.Settori.OrderBy(a => a.ordinamento), "id", "settore");
+                ViewBag.cartellino = new SelectList(_context.Cartellini.OrderBy(a => a.ordinamento), "id", "descrizione");
+                ViewBag.propagatoModalita = new SelectList(_context.ModalitaPropagazione.OrderBy(a => a.ordinamento), "id", "propagatoModalita");
+                ViewBag.statoindividuo = new SelectList(_context.StatoIndividuo.OrderBy(a => a.ordinamento), "id", "stato");
+                ViewBag.condizione = new SelectList(_context.Condizioni.OrderBy(p => p.ordinamento), "id", "condizione");
+
+            }
+
+
+
+
+           
+
+
+
             ViewBag.accvecprog = accessione.vecchioprogressivo;
             return View();
         }
@@ -524,15 +549,37 @@ namespace UPlant.Controllers
 
             }
 
+            var linguacorrente = _languageService.GetCurrentCulture();
+
+            if (linguacorrente == "en-US")
+            {
+                ViewBag.sesso = new SelectList(_context.Sesso.OrderByDescending(a => a.descrizione).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.descrizione : a.descrizione_en }), "id", "Desc", individuo.sesso);
+                ViewBag.collezione = new SelectList(_context.Collezioni.OrderBy(a => a.collezione).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.collezione_en) ? a.collezione : a.collezione_en }), "id", "Desc", collezione);
+                ViewBag.settore = new SelectList(_context.Settori.OrderBy(a => a.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.settore_en) ? a.settore : a.settore_en }), "id", "Desc", settore);
+                ViewBag.cartellino = new SelectList(_context.Cartellini.OrderBy(a => a.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.descrizione : a.descrizione_en }), "id", "Desc", individuo.cartellino);
+                ViewBag.propagatoModalita = new SelectList(_context.ModalitaPropagazione.OrderBy(a => a.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.propagatoModalita : a.descrizione_en }), "id", "Desc", propagatoModalita);
+                ViewBag.statoindividuo = new SelectList(_context.StatoIndividuo.OrderBy(a => a.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.stato : a.descrizione_en }), "id", "Desc", statoindividuo);
+                ViewBag.condizione = new SelectList(_context.Condizioni.OrderBy(p => p.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.condizione : a.descrizione_en }), "id", "Desc", condizione);
+
+            }
+            else
+            {
+                ViewBag.sesso = new SelectList(_context.Sesso.OrderByDescending(a => a.descrizione), "id", "descrizione", individuo.sesso);
+                ViewBag.collezione = new SelectList(_context.Collezioni.OrderBy(a => a.collezione), "id", "collezione", collezione);
+                ViewBag.settore = new SelectList(_context.Settori.OrderBy(a => a.ordinamento), "id", "settore", settore);
+                ViewBag.cartellino = new SelectList(_context.Cartellini.OrderBy(a => a.ordinamento), "id", "descrizione", individuo.cartellino);
+                ViewBag.propagatoModalita = new SelectList(_context.ModalitaPropagazione.OrderBy(a => a.ordinamento), "id", "propagatoModalita", propagatoModalita);
+                ViewBag.statoindividuo = new SelectList(_context.StatoIndividuo.OrderBy(a => a.ordinamento), "id", "stato", statoindividuo);
+                ViewBag.condizione = new SelectList(_context.Condizioni.OrderBy(p => p.ordinamento), "id", "condizione", condizione);
+
+            }
 
 
-            ViewBag.propagatoModalita = new SelectList(_context.ModalitaPropagazione, "id", "propagatoModalita", propagatoModalita);
-            ViewBag.sesso = new SelectList(_context.Sesso, "id", "descrizione", individuo.sesso);
-            ViewBag.collezione = new SelectList(_context.Collezioni.OrderBy(a => a.collezione), "id", "collezione", collezione);
-            ViewBag.settore = new SelectList(_context.Settori.OrderBy(a => a.ordinamento), "id", "settore", settore);
-            ViewBag.cartellino = new SelectList(_context.Cartellini, "id", "descrizione", individuo.cartellino);
-            ViewBag.statoindividuo = new SelectList(_context.StatoIndividuo.OrderByDescending(p => p.ordinamento), "id", "stato", statoindividuo);
-            ViewBag.condizione = new SelectList(_context.Condizioni, "id", "condizione", condizione);
+
+
+
+
+
             ViewBag.latitudine = latitudine;
             ViewBag.longitudine = longitudine;
             return View(individuo);
@@ -559,18 +606,52 @@ namespace UPlant.Controllers
                 return NotFound();
             }
             ViewBag.tipo = tipo;
-            ViewBag.propagatoModalita = new SelectList(_context.ModalitaPropagazione.OrderBy(a => a.ordinamento), "id", "propagatoModalita", individui.propagatoModalita);
-            ViewBag.sesso = new SelectList(_context.Sesso, "id", "descrizione", individui.sesso);
-            ViewBag.settore = new SelectList(_context.Settori.OrderBy(a => a.ordinamento), "id", "settore", individui.settore);
-            ViewBag.collezione = new SelectList(_context.Collezioni.Where(x => x.settore == individui.settore).OrderBy(a => a.collezione), "id", "collezione", individui.collezione);
-            ViewBag.cartellino = new SelectList(_context.Cartellini.OrderBy(a => a.ordinamento), "id", "descrizione", individui.cartellino);
+
+            var linguacorrente = _languageService.GetCurrentCulture();
+
+            if (linguacorrente == "en-US")
+            {
+                ViewBag.propagatoModalita = new SelectList(_context.ModalitaPropagazione.OrderBy(a => a.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.propagatoModalita : a.descrizione_en }), "id", "Desc", individui.propagatoModalita);
+                ViewBag.sesso = new SelectList(_context.Sesso.OrderByDescending(a => a.descrizione).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.descrizione : a.descrizione_en }), "id", "Desc", individui.sesso);
+                ViewBag.collezione = new SelectList(_context.Collezioni.Where(x => x.settore == individui.settore).OrderBy(a => a.collezione).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.collezione_en) ? a.collezione : a.collezione_en }), "id", "Desc", individui.collezione);
+                ViewBag.settore = new SelectList(_context.Settori.OrderBy(a => a.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.settore_en) ? a.settore : a.settore_en }), "id", "Desc", individui.settore);
+                ViewBag.cartellino = new SelectList(_context.Cartellini.OrderBy(a => a.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.descrizione : a.descrizione_en }), "id", "Desc", individui.cartellino);
+                
+            }
+            else
+            {
+                ViewBag.propagatoModalita = new SelectList(_context.ModalitaPropagazione.OrderBy(a => a.ordinamento), "id", "propagatoModalita", individui.propagatoModalita);
+                ViewBag.sesso = new SelectList(_context.Sesso.OrderByDescending(a => a.descrizione), "id", "descrizione", individui.sesso);
+                
+                ViewBag.collezione = new SelectList(_context.Collezioni.Where(x => x.settore == individui.settore).OrderBy(a => a.collezione), "id", "collezione", individui.collezione);
+                ViewBag.settore = new SelectList(_context.Settori.OrderBy(a => a.ordinamento), "id", "settore", individui.settore);
+                ViewBag.cartellino = new SelectList(_context.Cartellini.OrderBy(a => a.ordinamento), "id", "descrizione", individui.cartellino);
+                
+                
+
+            }
+
+
+
 
             var storicoesite = _context.StoricoIndividuo.Where(x => x.individuo == individui.id).FirstOrDefault();
             if (storicoesite != null)
             {
                 StoricoIndividuo storico = _context.StoricoIndividuo.Where(x => x.individuo == individui.id).OrderByDescending(x => x.dataInserimento).First();
-                ViewBag.statoindividuo = _context.StatoIndividuo.Where(x => x.id == storico.statoIndividuo).Single().stato;
-                ViewBag.condizione = _context.Condizioni.Where(x => x.id == storico.condizione).Single().condizione;
+
+                if (linguacorrente == "en-US")
+                {
+                    ViewBag.statoindividuo = _context.StatoIndividuo.Where(x => x.id == storico.statoIndividuo).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.stato : a.descrizione_en }).Single().Desc;
+                    ViewBag.condizione = _context.Condizioni.Where(x => x.id == storico.condizione).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.condizione : a.descrizione_en }).Single().Desc;
+                }
+                else
+                {
+                    ViewBag.statoindividuo = _context.StatoIndividuo.Where(x => x.id == storico.statoIndividuo).Single().stato;
+                    ViewBag.condizione = _context.Condizioni.Where(x => x.id == storico.condizione).Single().condizione;
+                }
+
+
+                
                 ViewBag.operazioniColturali = storico.operazioniColturali;
                 ViewBag.esiste = "ok";
             }
@@ -641,18 +722,51 @@ namespace UPlant.Controllers
                 return RedirectToAction(nameof(Create), nameof(StoricoIndividuo), new { idindividuo = individui.id, tipo= tipo ,damodifica = "ok" });
               //  return RedirectToAction("../StoricoIndivi/Create", new { idindividuo = individui.id, damodifica = "ok" });
             }
-            ViewBag.propagatoModalita = new SelectList(_context.ModalitaPropagazione.OrderBy(a => a.ordinamento), "id", "propagatoModalita", individui.propagatoModalita);
-            ViewBag.sesso = new SelectList(_context.Sesso, "id", "descrizione", individui.sesso);
-            ViewBag.settore = new SelectList(_context.Settori.OrderBy(a => a.ordinamento), "id", "settore", individui.settore);
-            ViewBag.collezione = new SelectList(_context.Collezioni.Where(x => x.settore == individui.settore).OrderBy(a => a.collezione), "id", "collezione", individui.collezione);
-            ViewBag.cartellino = new SelectList(_context.Cartellini.OrderBy(a => a.ordinamento), "id", "descrizione", individui.cartellino);
-            //ViewBag.statoindividuo = new SelectList(_context.StatoIndividuo.OrderByDescending(p => p.stato), "id", "stato", individui.statoindividuo);
-            // ViewBag.condizione = new SelectList(_context.Condizioni, "id", "condizione", individui.condizione);
+
+            var linguacorrente = _languageService.GetCurrentCulture();
+
+            if (linguacorrente == "en-US")
+            {
+                ViewBag.propagatoModalita = new SelectList(_context.ModalitaPropagazione.OrderBy(a => a.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.propagatoModalita : a.descrizione_en }), "id", "Desc", individui.propagatoModalita);
+                ViewBag.sesso = new SelectList(_context.Sesso.OrderByDescending(a => a.descrizione).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.descrizione : a.descrizione_en }), "id", "Desc", individui.sesso);
+                ViewBag.collezione = new SelectList(_context.Collezioni.Where(x => x.settore == individui.settore).OrderBy(a => a.collezione).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.collezione_en) ? a.collezione : a.collezione_en }), "id", "Desc", individui.collezione);
+                ViewBag.settore = new SelectList(_context.Settori.OrderBy(a => a.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.settore_en) ? a.settore : a.settore_en }), "id", "Desc", individui.settore);
+                ViewBag.cartellino = new SelectList(_context.Cartellini.OrderBy(a => a.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.descrizione : a.descrizione_en }), "id", "Desc", individui.cartellino);
+
+               
+            }
+            else {
+                ViewBag.propagatoModalita = new SelectList(_context.ModalitaPropagazione.OrderBy(a => a.ordinamento), "id", "propagatoModalita", individui.propagatoModalita);
+                ViewBag.sesso = new SelectList(_context.Sesso, "id", "descrizione", individui.sesso);
+                ViewBag.settore = new SelectList(_context.Settori.OrderBy(a => a.ordinamento), "id", "settore", individui.settore);
+                ViewBag.collezione = new SelectList(_context.Collezioni.Where(x => x.settore == individui.settore).OrderBy(a => a.collezione), "id", "collezione", individui.collezione);
+                ViewBag.cartellino = new SelectList(_context.Cartellini.OrderBy(a => a.ordinamento), "id", "descrizione", individui.cartellino);
+
+            }
+
+
+
+           
+            
             if (storico != null)
             {
-                // Storico storico = _context.Storico.Where(x => x.individuo == individui.id).OrderByDescending(x => x.dataInserimento).First();
-                ViewBag.statoindividuo = _context.StatoIndividuo.Where(x => x.id == storico.statoIndividuo).Single().stato;
-                ViewBag.condizione = _context.Condizioni.Where(x => x.id == storico.condizione).Single().condizione;
+                if (linguacorrente == "en-US")
+                {
+                    ViewBag.statoindividuo = _context.StatoIndividuo.Where(x => x.id == storico.statoIndividuo).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.stato : a.descrizione_en }).Single().Desc;
+                    ViewBag.condizione = _context.Condizioni.Where(x => x.id == storico.condizione).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.condizione : a.descrizione_en }).Single().Desc;
+                }
+                else {
+                    ViewBag.statoindividuo = _context.StatoIndividuo.Where(x => x.id == storico.statoIndividuo).Single().stato;
+                    ViewBag.condizione = _context.Condizioni.Where(x => x.id == storico.condizione).Single().condizione;
+                }
+
+
+
+                    // Storico storico = _context.Storico.Where(x => x.individuo == individui.id).OrderByDescending(x => x.dataInserimento).First();
+                  
+                
+                
+                
                 ViewBag.operazioniColturali = storico.operazioniColturali;
                 ViewBag.esiste = "ok";
             }

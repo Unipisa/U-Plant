@@ -13,8 +13,8 @@
             {
                 <div class="float-right success ">
                     <a asp-action="Create">
-                        <span class="btn btn-success" title="Aggiungi Provenienza">
-                            @language.Getkey("Global_Add") Provenienza
+                        <span class="btn btn-success" title="@language.Getkey("Global_Add") @language.Getkey("Global_Material_Origin")">
+                            @language.Getkey("Global_Add") @language.Getkey("Global_Material_Origin")
                         </span>
                     </a>
 
@@ -63,14 +63,14 @@
                                 {
 
                                     <a asp-action="Edit" asp-route-id="@item.id">
-                                        <span class="btn btn-warning btn-xs" title="@language.Getkey("Global_Edit") Provenienza">
+                                        <span class="btn btn-warning btn-xs" title="@language.Getkey("Global_Edit") @language.Getkey("Global_Material_Origin")">
                                             <i class="fa-solid fa-pencil" style="color: #fafafa;"></i>
                                         </span>
                                     </a>
                                     if (@item.Accessioni.Count() == 0)
                                     {
                                         <a asp-action="Delete" asp-route-id="@item.id">
-                                            <span class="btn btn-danger btn-xs" title="@language.Getkey("Global_Delete") Provenienza">
+                                            <span class="btn btn-danger btn-xs" title="@language.Getkey("Global_Delete") @language.Getkey("Global_Material_Origin")">
                                                 <i class="fa-solid fa-trash"></i>
                                             </span>
                                         </a>

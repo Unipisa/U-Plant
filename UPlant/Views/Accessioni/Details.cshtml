@@ -21,7 +21,7 @@
         }
         if (User.IsInRole("Administrator")  && Convert.ToBoolean(Model.validazione) == false)
         {
-            @Html.ActionLink(@language.Getkey("Global_Valid") + @language.Getkey("Global_Accession"), "ValidaAccessione", new { id = Model.id }, new { @class = "btn btn-warning" }) <span> </span>
+            @Html.ActionLink(@language.Getkey("Global_Validate") +' '+ @language.Getkey("Global_Accession"), "ValidaAccessione", new { id = Model.id }, new { @class = "btn btn-warning" }) <span> </span>
         }
         if (ViewBag.tipo == "ricerca")
         {
@@ -399,7 +399,7 @@
         }
         if (User.IsInRole("Administrator") && Convert.ToBoolean(Model.validazione) == false)
         {
-            @Html.ActionLink(@language.Getkey("Global_Valid") + @language.Getkey("Global_Accession"), "ValidaAccessione", new { id = Model.id }, new { @class = "btn btn-warning" }) <span> </span>
+            @Html.ActionLink(@language.Getkey("Global_Validate") + ' ' + @language.Getkey("Global_Accession"), "ValidaAccessione", new { id = Model.id }, new { @class = "btn btn-warning" }) <span> </span>
         }
         if (ViewBag.tipo == "ricerca")
         {

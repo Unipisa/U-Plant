@@ -372,8 +372,8 @@
   <data name="Home_Ricerca_Accessioni_6" xml:space="preserve">
     <value>Modified by</value>
   </data>
-  <data name="Global_Valid" xml:space="preserve">
-    <value>Valid</value>
+  <data name="Global_Validate" xml:space="preserve">
+    <value>Validate</value>
   </data>
   <data name="Global_Sector" xml:space="preserve">
     <value>Sector</value>
