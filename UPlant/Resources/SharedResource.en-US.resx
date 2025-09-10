@@ -639,4 +639,16 @@
   <data name="Global_Taxonomic_Backbone" xml:space="preserve">
     <value>Taxonomic Backbone</value>
   </data>
+  <data name="Message_1" xml:space="preserve">
+    <value>Have you just made a change to an individual? Do you want to update their status? Otherwise, go back to the individual's page.</value>
+  </data>
+  <data name="Global_Current_Situation" xml:space="preserve">
+    <value>Current Situation</value>
+  </data>
+  <data name="Global_Last_Updated_Date" xml:space="preserve">
+    <value>Last Updated Date</value>
+  </data>
+  <data name="Global_Destinations" xml:space="preserve">
+    <value>Destinations</value>
+  </data>
 </root>

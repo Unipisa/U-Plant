@@ -639,4 +639,16 @@
   <data name="Global_Taxonomic_Backbone" xml:space="preserve">
     <value>Struttura Tassonomica</value>
   </data>
+  <data name="Message_1" xml:space="preserve">
+    <value>Hai appena fatto una modifica all'individuo vuoi aggiornare il suo stato?Altrimenti torna alla pagina dell'individuo</value>
+  </data>
+  <data name="Global_Current_Situation" xml:space="preserve">
+    <value>Situazione Attuale</value>
+  </data>
+  <data name="Global_Last_Updated_Date" xml:space="preserve">
+    <value>Data Ultimo Aggiornamento</value>
+  </data>
+  <data name="Global_Destinations" xml:space="preserve">
+    <value>Destinazioni</value>
+  </data>
 </root>

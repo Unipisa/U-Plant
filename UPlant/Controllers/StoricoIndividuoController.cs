@@ -16,16 +16,16 @@ namespace UPlant.Controllers
     public class StoricoIndividuoController : BaseController
     {
         private readonly Entities _context;
-        
-
-  
+        private readonly LanguageService _languageService;
 
 
 
-        public StoricoIndividuoController(Entities context)
+
+
+        public StoricoIndividuoController(Entities context, LanguageService languageService)
         {
             _context = context;
-
+            _languageService = languageService;
 
         }
 
@@ -61,8 +61,8 @@ namespace UPlant.Controllers
         // GET: StoricoIndividuo/Create
         public IActionResult Create(Guid idindividuo,string tipo,string damodifica)
         {
-        if (damodifica== "ok") { 
-            var messaggio = "Hai appena fatto una modifica all'individuo vuoi aggiornare il suo stato?Altrimenti torna alla pagina dell'individuo";
+        if (damodifica== "ok") {
+                var messaggio = _languageService.Getkey("Message_1");
             AddPageAlerts(PageAlertType.Success, messaggio);
             }
             var storicoindividuo = _context.StoricoIndividuo.Where(x => x.individuo == idindividuo).ToList().OrderByDescending(x => x.dataInserimento).FirstOrDefault();

@@ -632,8 +632,6 @@ namespace UPlant.Controllers
             }
 
 
-
-
             var storicoesite = _context.StoricoIndividuo.Where(x => x.individuo == individui.id).FirstOrDefault();
             if (storicoesite != null)
             {
@@ -641,8 +639,10 @@ namespace UPlant.Controllers
 
                 if (linguacorrente == "en-US")
                 {
-                    ViewBag.statoindividuo = _context.StatoIndividuo.Where(x => x.id == storico.statoIndividuo).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.stato : a.descrizione_en }).Single().Desc;
-                    ViewBag.condizione = _context.Condizioni.Where(x => x.id == storico.condizione).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.condizione : a.descrizione_en }).Single().Desc;
+                   
+                   
+                    ViewBag.statoindividuo = _context.StatoIndividuo.Where(x => x.id == storico.statoIndividuo).Select(a => new { stato = string.IsNullOrEmpty(a.descrizione_en) ? a.stato : a.descrizione_en }).Single().stato;
+                    ViewBag.condizione = _context.Condizioni.Where(x => x.id == storico.condizione).Select(a => new { condizione = string.IsNullOrEmpty(a.descrizione_en) ? a.condizione : a.descrizione_en }).Single().condizione;
                 }
                 else
                 {

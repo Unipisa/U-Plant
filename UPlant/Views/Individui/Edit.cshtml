@@ -48,7 +48,7 @@
                     </div>
 
                     <div class="form-group col">
-                        <label asp-for="propagatoModalita" class="control-label">Propagato Modalità</label>
+                        <label asp-for="propagatoModalita" class="control-label"> @language.Getkey("Global_Propagation_Method")</label>
                         <select asp-for="propagatoModalita" class="form-control" asp-items="ViewBag.propagatoModalita"></select>
                         <span asp-validation-for="propagatoModalita" class="text-danger"></span>
                     </div>
@@ -106,7 +106,7 @@
                 <hr>
                 <div class="row">
                     <div class="form-group col">
-                        <label asp-for="destinazioni" class="control-label">Destinazioni</label>
+                        <label asp-for="destinazioni" class="control-label">@language.Getkey("Global_Destinations")</label>
                         <input asp-for="destinazioni" class="form-control" id="destinazioni" name="destinazioni" />
                         <span asp-validation-for="destinazioni" class="text-danger"></span>
                     </div>
@@ -129,20 +129,22 @@
                 </div>
                 <hr>
                 <div class="row">
-                    <div class="form-group col font-weight-bold"> Situazione Attuale</div>
+                    <div class="form-group col font-weight-bold"> @language.Getkey("Global_Current_Situation")</div>
                 </div>
                 <hr>
                 <div class="row">
                 <div class="form-group col">
                         @Html.Label(@language.Getkey("Global_Condition"))<br />
-                @Html.DisplayFor(model => model.StoricoIndividuo.ToList().Last().condizioneNavigation.condizione)
+                        @ViewBag.condizione
+                        @*Html.DisplayFor(model => model.StoricoIndividuo.ToList().Last().condizioneNavigation.condizione)*@
                 </div>
                 <div class="form-group col">
                         @Html.Label(@language.Getkey("Global_Individual_Status"))<br />
-                    @Html.DisplayFor(model => model.StoricoIndividuo.ToList().Last().statoIndividuoNavigation.stato)
+                        @ViewBag.statoindividuo
+                        @* @Html.DisplayFor(model => model.StoricoIndividuo.ToList().Last().statoIndividuoNavigation.stato)*@
                 </div>
                 <div class="form-group col">
-                    @Html.Label("Operazioni Culturali")<br />
+                        @Html.Label(@language.Getkey("Global_Horticultural_Operations"))<br />
                     @Html.DisplayFor(model => model.StoricoIndividuo.ToList().Last().operazioniColturali)
                 </div>
                 </div>
