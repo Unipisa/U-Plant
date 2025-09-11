@@ -252,6 +252,7 @@ CREATE TABLE [dbo].[StatoIndividuo](
 	[organizzazione] [uniqueidentifier] NOT NULL,
 	[visualizzazioneweb] [bit] NOT NULL,
 	[ordinamento] [int] NOT NULL,
+	[descrizione_en] [varchar](50) NULL,
  CONSTRAINT [PK_StatoIndividuo] PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
@@ -416,6 +417,7 @@ CREATE TABLE [dbo].[GradoIncertezza](
 	[id] [uniqueidentifier] NOT NULL,
 	[descrizione] [varchar](max) NOT NULL,
 	[organizzazione] [uniqueidentifier] NOT NULL,
+	[descrizione_en] [varchar](max) NULL,
  CONSTRAINT [PK_GradoIncertezza] PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
@@ -465,6 +467,7 @@ CREATE TABLE [dbo].[TipiMateriale](
 	[organizzazione] [uniqueidentifier] NOT NULL,
 	[descrizione] [varchar](max) NOT NULL,
 	[ordinamento] [int] NOT NULL,
+	[descrizione_en] [varchar](max) NULL,
  CONSTRAINT [PK_TipiMateriale] PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
@@ -521,6 +524,7 @@ CREATE TABLE [dbo].[Cartellini](
 	[descrizione] [varchar](50) NOT NULL,
 	[organizzazione] [uniqueidentifier] NOT NULL,
 	[ordinamento] [int] NOT NULL,
+	[descrizione_en] [varchar](50) NULL,
  CONSTRAINT [PK_Cartellini] PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
@@ -537,6 +541,7 @@ CREATE TABLE [dbo].[Condizioni](
 	[condizione] [varchar](100) NOT NULL,
 	[organizzazione] [uniqueidentifier] NOT NULL,
 	[ordinamento] [int] NOT NULL,
+	[descrizione_en] [varchar](100) NULL,
  CONSTRAINT [PK_Condizioni] PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
@@ -701,6 +706,7 @@ CREATE TABLE [dbo].[ModalitaPropagazione](
 	[propagatoModalita] [varchar](50) NOT NULL,
 	[organizzazione] [uniqueidentifier] NOT NULL,
 	[ordinamento] [int] NOT NULL,
+	[descrizione_en] [varchar](50) NULL,
  CONSTRAINT [PK_ModalitaPropagazione] PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
@@ -848,6 +854,7 @@ CREATE TABLE [dbo].[Sesso](
 	[id] [uniqueidentifier] NOT NULL,
 	[descrizione] [varchar](50) NOT NULL,
 	[organizzazione] [uniqueidentifier] NOT NULL,
+	[descrizione_en] [varchar](max) NULL,
  CONSTRAINT [PK_Sesso] PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
@@ -864,6 +871,7 @@ CREATE TABLE [dbo].[StatoMateriale](
 	[organizzazione] [uniqueidentifier] NOT NULL,
 	[descrizione] [varchar](max) NOT NULL,
 	[ordinamento] [int] NOT NULL,
+	[descrizione_en] [varchar](max) NULL,
  CONSTRAINT [PK_StatoMateriale] PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
@@ -1743,14 +1751,14 @@ INSERT [dbo].[Areali] ([id], [descrizione], [codiceInterno]) VALUES (N'08ce6421-
 INSERT [dbo].[Areali] ([id], [descrizione], [codiceInterno]) VALUES (N'751a3618-4302-40c0-8784-ff72cb1b7e5e', N'C Europa - Romania', NULL)
 INSERT [dbo].[Areali] ([id], [descrizione], [codiceInterno]) VALUES (N'3b68f67a-6618-4776-84a9-fff51398688e', N'C Malesia-SW Pacifico', NULL)
 GO
-INSERT [dbo].[Cartellini] ([id], [descrizione], [organizzazione], [ordinamento]) VALUES (N'0eacedde-870f-44af-9853-01da4c609d00', N'Non presente', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', 0)
-INSERT [dbo].[Cartellini] ([id], [descrizione], [organizzazione], [ordinamento]) VALUES (N'26543c27-ee57-4147-8bb9-3c94bc3708b8', N'Da aggiustare', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', 1)
-INSERT [dbo].[Cartellini] ([id], [descrizione], [organizzazione], [ordinamento]) VALUES (N'49669931-2cc3-471c-942d-51973bae980a', N'Pronto da posizionare', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', 6)
-INSERT [dbo].[Cartellini] ([id], [descrizione], [organizzazione], [ordinamento]) VALUES (N'19231c2a-4c8b-4407-925c-753c5fa0595a', N'In stock (deposito periodico)', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', 4)
-INSERT [dbo].[Cartellini] ([id], [descrizione], [organizzazione], [ordinamento]) VALUES (N'e59c6366-66eb-4457-a296-79f664783c13', N'Striscia da aggiornare', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', 7)
-INSERT [dbo].[Cartellini] ([id], [descrizione], [organizzazione], [ordinamento]) VALUES (N'29d91888-03d7-4cf2-93cd-99af317c1c13', N'Presente', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', 5)
-INSERT [dbo].[Cartellini] ([id], [descrizione], [organizzazione], [ordinamento]) VALUES (N'0e67ee1c-0a56-4436-a725-a8554475e9c0', N'Da modificare', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', 2)
-INSERT [dbo].[Cartellini] ([id], [descrizione], [organizzazione], [ordinamento]) VALUES (N'c8451383-7460-45cd-b06e-fa0dcfacdbd3', N'In preparazione', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', 3)
+INSERT [dbo].[Cartellini] ([id], [descrizione], [organizzazione], [ordinamento], [descrizione_en]) VALUES (N'0eacedde-870f-44af-9853-01da4c609d00', N'Non presente', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', 0, N'Not present')
+INSERT [dbo].[Cartellini] ([id], [descrizione], [organizzazione], [ordinamento], [descrizione_en]) VALUES (N'26543c27-ee57-4147-8bb9-3c94bc3708b8', N'Da aggiustare', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', 1, N'Needs repair')
+INSERT [dbo].[Cartellini] ([id], [descrizione], [organizzazione], [ordinamento], [descrizione_en]) VALUES (N'49669931-2cc3-471c-942d-51973bae980a', N'Pronto da posizionare', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', 6, N'Ready for placement')
+INSERT [dbo].[Cartellini] ([id], [descrizione], [organizzazione], [ordinamento], [descrizione_en]) VALUES (N'19231c2a-4c8b-4407-925c-753c5fa0595a', N'In stock (deposito periodico)', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', 4, N'In stock (periodic storage)')
+INSERT [dbo].[Cartellini] ([id], [descrizione], [organizzazione], [ordinamento], [descrizione_en]) VALUES (N'e59c6366-66eb-4457-a296-79f664783c13', N'Striscia da aggiornare', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', 7, N'Update code')
+INSERT [dbo].[Cartellini] ([id], [descrizione], [organizzazione], [ordinamento], [descrizione_en]) VALUES (N'29d91888-03d7-4cf2-93cd-99af317c1c13', N'Presente', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', 5, N'Present')
+INSERT [dbo].[Cartellini] ([id], [descrizione], [organizzazione], [ordinamento], [descrizione_en]) VALUES (N'0e67ee1c-0a56-4436-a725-a8554475e9c0', N'Da modificare', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', 2, N'To be modified')
+INSERT [dbo].[Cartellini] ([id], [descrizione], [organizzazione], [ordinamento], [descrizione_en]) VALUES (N'c8451383-7460-45cd-b06e-fa0dcfacdbd3', N'In preparazione', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', 3, N'In preparation')
 GO
 INSERT [dbo].[Cites] ([id], [codice], [descrizione], [ordinamento]) VALUES (N'cc92c5f9-3d3f-4dcf-8604-2b6cf4736878', N'All. I', N'Allegato I', 1)
 INSERT [dbo].[Cites] ([id], [codice], [descrizione], [ordinamento]) VALUES (N'72734a18-17b7-43a1-94eb-44f21495fc84', N'NO CITES', N'NO CITES', 5)
@@ -1761,11 +1769,11 @@ INSERT [dbo].[Cites] ([id], [codice], [descrizione], [ordinamento]) VALUES (N'07
 GO
 INSERT [dbo].[Collezioni] ([id], [collezione], [organizzazione], [settore], [collezione_en]) VALUES (N'6f78cf61-c63c-4866-9ab5-7bf2de7721e9', N' Non Definita', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', N'900fdc0e-c2de-4509-8ccc-5013e796b14f', N'undefined')
 GO
-INSERT [dbo].[Condizioni] ([id], [condizione], [organizzazione], [ordinamento]) VALUES (N'dfece162-4871-466c-a021-08c5cba93d49', N'Buona', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', 2)
-INSERT [dbo].[Condizioni] ([id], [condizione], [organizzazione], [ordinamento]) VALUES (N'b48eb5d3-b965-4a8c-b123-2a972e5ad9e4', N'Ottima', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', 1)
-INSERT [dbo].[Condizioni] ([id], [condizione], [organizzazione], [ordinamento]) VALUES (N'089335b2-0c77-4a8f-b791-c4a544828bac', N' Non definita', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', 0)
-INSERT [dbo].[Condizioni] ([id], [condizione], [organizzazione], [ordinamento]) VALUES (N'bbbc9f58-4e9c-4142-9932-ee624c00d038', N'Media', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', 3)
-INSERT [dbo].[Condizioni] ([id], [condizione], [organizzazione], [ordinamento]) VALUES (N'8ef00f8b-3f05-4d5d-985e-eff328b9530e', N'Scarsa', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', 4)
+INSERT [dbo].[Condizioni] ([id], [condizione], [organizzazione], [ordinamento], [descrizione_en]) VALUES (N'dfece162-4871-466c-a021-08c5cba93d49', N'Buona', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', 2, N'Good')
+INSERT [dbo].[Condizioni] ([id], [condizione], [organizzazione], [ordinamento], [descrizione_en]) VALUES (N'b48eb5d3-b965-4a8c-b123-2a972e5ad9e4', N'Ottima', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', 1, N'Optimal')
+INSERT [dbo].[Condizioni] ([id], [condizione], [organizzazione], [ordinamento], [descrizione_en]) VALUES (N'089335b2-0c77-4a8f-b791-c4a544828bac', N' Non definita', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', 0, N'Undefined')
+INSERT [dbo].[Condizioni] ([id], [condizione], [organizzazione], [ordinamento], [descrizione_en]) VALUES (N'bbbc9f58-4e9c-4142-9932-ee624c00d038', N'Discreto', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', 3, N'Average')
+INSERT [dbo].[Condizioni] ([id], [condizione], [organizzazione], [ordinamento], [descrizione_en]) VALUES (N'8ef00f8b-3f05-4d5d-985e-eff328b9530e', N'Scarsa', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', 4, N'Poor')
 GO
 INSERT [dbo].[Famiglie] ([id], [descrizione], [descrizione_en]) VALUES (N'b4e03834-a3d3-4f5c-a163-00674df00253', N'Bromeliaceae', NULL)
 INSERT [dbo].[Famiglie] ([id], [descrizione], [descrizione_en]) VALUES (N'd514bd72-8e2e-403d-9710-0150d09bc42b', N'Magnoliaceae', NULL)
@@ -3464,10 +3472,10 @@ INSERT [dbo].[Generi] ([id], [descrizione], [famiglia]) VALUES (N'674febc2-93a6-
 INSERT [dbo].[Generi] ([id], [descrizione], [famiglia]) VALUES (N'b89ac41c-ca27-4122-8951-ffc178062d81', N'Miscanthus', N'223bebbd-be18-4df1-a105-aa4bd6fa71f4')
 INSERT [dbo].[Generi] ([id], [descrizione], [famiglia]) VALUES (N'4c8d6bf7-3136-4a21-a820-ffeb4ddf0b92', N'Mandevilla', N'27d21ab4-096a-4be7-a2c7-574f6be5a168')
 GO
-INSERT [dbo].[GradoIncertezza] ([id], [descrizione], [organizzazione]) VALUES (N'2a075e52-53aa-4a2d-a26a-0b97ddc2dcb6', N'In attesa di identificazione', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587')
-INSERT [dbo].[GradoIncertezza] ([id], [descrizione], [organizzazione]) VALUES (N'f03a21d0-a265-4b12-8ac1-0f2f6d6a4b6f', N'Identificazione dubbia', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587')
-INSERT [dbo].[GradoIncertezza] ([id], [descrizione], [organizzazione]) VALUES (N'6f4278b7-0cf0-4ad7-b232-d0345fa831e7', N'Identificazione certa', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587')
-INSERT [dbo].[GradoIncertezza] ([id], [descrizione], [organizzazione]) VALUES (N'ebaf9902-6822-4231-a799-f414e6f6b21c', N'Verificare sottospecie', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587')
+INSERT [dbo].[GradoIncertezza] ([id], [descrizione], [organizzazione], [descrizione_en]) VALUES (N'2a075e52-53aa-4a2d-a26a-0b97ddc2dcb6', N'In attesa di identificazione', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', N'Pending identification')
+INSERT [dbo].[GradoIncertezza] ([id], [descrizione], [organizzazione], [descrizione_en]) VALUES (N'f03a21d0-a265-4b12-8ac1-0f2f6d6a4b6f', N'Identificazione dubbia', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', N'Uncertain identification')
+INSERT [dbo].[GradoIncertezza] ([id], [descrizione], [organizzazione], [descrizione_en]) VALUES (N'6f4278b7-0cf0-4ad7-b232-d0345fa831e7', N'Identificazione certa', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', N'Confirmed identification')
+INSERT [dbo].[GradoIncertezza] ([id], [descrizione], [organizzazione], [descrizione_en]) VALUES (N'ebaf9902-6822-4231-a799-f414e6f6b21c', N'Verificare sottospecie', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', N'Verify subspecies')
 GO
 INSERT [dbo].[Identificatori] ([id], [organizzazione], [nominativo], [tipoIdentificatore], [attivo]) VALUES (N'3642890e-fce4-4e4e-a0a9-488d849d60c5', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', N' Non definito', N'970c3bf9-828e-476d-ac6a-d56c0fb15b05', 1)
 
@@ -3484,14 +3492,14 @@ INSERT [dbo].[Iucn] ([id], [codice], [descrizione], [ordinamento]) VALUES (N'45f
 INSERT [dbo].[Iucn] ([id], [codice], [descrizione], [ordinamento]) VALUES (N'3a1c6c16-8e98-4df4-aec5-ecc75d794db2', N'NE', N'Not Evaluated', 11)
 INSERT [dbo].[Iucn] ([id], [codice], [descrizione], [ordinamento]) VALUES (N'84dde102-f935-42e9-93d3-f1e9b37da1ea', N'LC', N'Least Concern', 3)
 GO
-INSERT [dbo].[ModalitaPropagazione] ([id], [propagatoModalita], [organizzazione], [ordinamento]) VALUES (N'c700a308-bdf1-4103-a5e9-2e414d8e6d2f', N'divisione', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', 1)
-INSERT [dbo].[ModalitaPropagazione] ([id], [propagatoModalita], [organizzazione], [ordinamento]) VALUES (N'b257bcc7-6dc3-47dd-8569-50c7947ab405', N'talea', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', 1)
-INSERT [dbo].[ModalitaPropagazione] ([id], [propagatoModalita], [organizzazione], [ordinamento]) VALUES (N'734e9773-99f0-4e2b-9826-6ce3ca815a10', N'creato lotto semi', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', 1)
-INSERT [dbo].[ModalitaPropagazione] ([id], [propagatoModalita], [organizzazione], [ordinamento]) VALUES (N'd64d76ad-1caa-41b1-bed1-a6d98494bb8d', N'trapiantato in vaso', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', 1)
-INSERT [dbo].[ModalitaPropagazione] ([id], [propagatoModalita], [organizzazione], [ordinamento]) VALUES (N'63afc522-6917-4754-a09a-a77096132695', N'innesto', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', 1)
-INSERT [dbo].[ModalitaPropagazione] ([id], [propagatoModalita], [organizzazione], [ordinamento]) VALUES (N'ffa15703-4c6f-452a-945c-a8ffcbcf8e2d', N'seminato', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', 1)
-INSERT [dbo].[ModalitaPropagazione] ([id], [propagatoModalita], [organizzazione], [ordinamento]) VALUES (N'026af361-3f00-4a23-819b-d2d79b87bff3', N' Non definito', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', 1)
-INSERT [dbo].[ModalitaPropagazione] ([id], [propagatoModalita], [organizzazione], [ordinamento]) VALUES (N'caf7ce09-efba-4c3a-8837-d643b8aa2871', N'trapiantato in terra', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', 1)
+INSERT [dbo].[ModalitaPropagazione] ([id], [propagatoModalita], [organizzazione], [ordinamento], [descrizione_en]) VALUES (N'c700a308-bdf1-4103-a5e9-2e414d8e6d2f', N'Divisione', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', 3, N'Division')
+INSERT [dbo].[ModalitaPropagazione] ([id], [propagatoModalita], [organizzazione], [ordinamento], [descrizione_en]) VALUES (N'b257bcc7-6dc3-47dd-8569-50c7947ab405', N'Talea', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', 6, N'Cutting')
+INSERT [dbo].[ModalitaPropagazione] ([id], [propagatoModalita], [organizzazione], [ordinamento], [descrizione_en]) VALUES (N'734e9773-99f0-4e2b-9826-6ce3ca815a10', N'Creato lotto semi', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', 2, N'Seed packet created')
+INSERT [dbo].[ModalitaPropagazione] ([id], [propagatoModalita], [organizzazione], [ordinamento], [descrizione_en]) VALUES (N'd64d76ad-1caa-41b1-bed1-a6d98494bb8d', N'Trapiantato in vaso', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', 8, N'Potted')
+INSERT [dbo].[ModalitaPropagazione] ([id], [propagatoModalita], [organizzazione], [ordinamento], [descrizione_en]) VALUES (N'63afc522-6917-4754-a09a-a77096132695', N'Innesto', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', 4, N'Grafting')
+INSERT [dbo].[ModalitaPropagazione] ([id], [propagatoModalita], [organizzazione], [ordinamento], [descrizione_en]) VALUES (N'ffa15703-4c6f-452a-945c-a8ffcbcf8e2d', N'Seminato', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', 5, N'Sown')
+INSERT [dbo].[ModalitaPropagazione] ([id], [propagatoModalita], [organizzazione], [ordinamento], [descrizione_en]) VALUES (N'026af361-3f00-4a23-819b-d2d79b87bff3', N' Non definito', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', 1, N'Undefined')
+INSERT [dbo].[ModalitaPropagazione] ([id], [propagatoModalita], [organizzazione], [ordinamento], [descrizione_en]) VALUES (N'caf7ce09-efba-4c3a-8837-d643b8aa2871', N'Trapiantato in terra', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', 7, N'Field transplanted')
 GO
 INSERT [dbo].[Nazioni] ([codice], [descrizione], [descrizione_en]) VALUES (N'AD', N'Andorra', N'Andorra')
 INSERT [dbo].[Nazioni] ([codice], [descrizione], [descrizione_en]) VALUES (N'AE', N'Emirati Arabi Uniti	', NULL)
@@ -3922,10 +3930,10 @@ INSERT [dbo].[Roles] ([Id], [Descr]) VALUES (N'2f2a7928-4e0a-40f4-80d2-967837c3c
 INSERT [dbo].[Roles] ([Id], [Descr]) VALUES (N'0dc6e7d1-cb46-4923-8221-ee4f5c695d3d', N'Administrator')
 INSERT [dbo].[Roles] ([Id], [Descr]) VALUES (N'8a7fca05-0304-478b-bb2f-fd487909e2b4', N'Operator')
 GO
-INSERT [dbo].[Sesso] ([id], [descrizione], [organizzazione]) VALUES (N'60afba20-8da9-4fad-a163-06122c53d4d8', N'F', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587')
-INSERT [dbo].[Sesso] ([id], [descrizione], [organizzazione]) VALUES (N'a0b5eb40-7601-4f13-bba4-48619bf7f9e5', N'M', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587')
-INSERT [dbo].[Sesso] ([id], [descrizione], [organizzazione]) VALUES (N'004414c9-ae64-4569-a697-ad1cdd963a8c', N'N/A', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587')
-INSERT [dbo].[Sesso] ([id], [descrizione], [organizzazione]) VALUES (N'60c2626b-87b7-4c3d-ba19-d9071dc55442', N'E', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587')
+INSERT [dbo].[Sesso] ([id], [descrizione], [organizzazione], [descrizione_en]) VALUES (N'60afba20-8da9-4fad-a163-06122c53d4d8', N'F', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', N'F')
+INSERT [dbo].[Sesso] ([id], [descrizione], [organizzazione], [descrizione_en]) VALUES (N'a0b5eb40-7601-4f13-bba4-48619bf7f9e5', N'M', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', N'M')
+INSERT [dbo].[Sesso] ([id], [descrizione], [organizzazione], [descrizione_en]) VALUES (N'004414c9-ae64-4569-a697-ad1cdd963a8c', N'Non definito', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', N'Undefined')
+INSERT [dbo].[Sesso] ([id], [descrizione], [organizzazione], [descrizione_en]) VALUES (N'60c2626b-87b7-4c3d-ba19-d9071dc55442', N'E', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', N'H')
 GO
 INSERT [dbo].[Settori] ([id], [settore], [organizzazione], [settore_en], [visualizzazioneweb], [ordinamento]) VALUES (N'900fdc0e-c2de-4509-8ccc-5013e796b14f', N'Non Definito', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', N'Undefined', 0, N'1')
 GO
@@ -7405,34 +7413,34 @@ INSERT [dbo].[Specie] ([id], [genere], [nome], [nome_scientifico], [nome_volgare
 INSERT [dbo].[Specie] ([id], [genere], [nome], [nome_scientifico], [nome_volgare], [autori], [regno], [areale], [subspecie], [autorisub], [varieta], [autorivar], [cult], [autoricult], [nome_comune], [nome_comune_en], [iucn_globale], [iucn_italia], [cites]) VALUES (N'376ed7ba-4692-4e6d-92ae-ffcd6c99caaf', N'81a2364e-4911-4819-a097-1daedae54154', N'drummondii', N'Marsilea drummondii A.Braun', NULL, N'A.Braun', N'343b8a46-5dfa-4127-9ab4-29eb0d1d1ad5', N'473a0041-c4ee-406f-892e-1728997f45fa', NULL, NULL, NULL, NULL, NULL, NULL, N'', N'', N'b3cbcd45-e1c2-4e67-9079-0bafb148b0ed', N'b3cbcd45-e1c2-4e67-9079-0bafb148b0ed', N'97b25404-29a6-40ba-8c94-526c54d34203')
 INSERT [dbo].[Specie] ([id], [genere], [nome], [nome_scientifico], [nome_volgare], [autori], [regno], [areale], [subspecie], [autorisub], [varieta], [autorivar], [cult], [autoricult], [nome_comune], [nome_comune_en], [iucn_globale], [iucn_italia], [cites]) VALUES (N'45f4667c-598c-4f26-b98d-ffee2d04e7ae', N'ad67882f-278c-4651-8d91-9b526da343ed', N'angustifolia', N'Fraxinus angustifolia Vahl subsp. oxycarpa (Willd.) Franco & Rocha Afonso', N'Frassino meridionale', N'Vahl', N'96b9e098-b54e-4714-9aa9-386bb6d22e11', N'3e23f379-f68c-4f4b-ab98-cf03a05aa08c', N'oxycarpa', N'(Willd.) Franco & Rocha Afonso', NULL, NULL, NULL, NULL, N'Frassino meridionale, Frassino a frutti acuminati', N'Desert Ash, Golden Stem Ash, Phoenix Ash', N'b3cbcd45-e1c2-4e67-9079-0bafb148b0ed', N'b3cbcd45-e1c2-4e67-9079-0bafb148b0ed', N'97b25404-29a6-40ba-8c94-526c54d34203')
 GO
-INSERT [dbo].[StatoIndividuo] ([id], [stato], [organizzazione], [visualizzazioneweb], [ordinamento]) VALUES (N'a82c5848-578f-4528-ac0d-1597f6da58e0', N'Ceduto', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', 0, 1)
-INSERT [dbo].[StatoIndividuo] ([id], [stato], [organizzazione], [visualizzazioneweb], [ordinamento]) VALUES (N'30e70f7c-1377-4994-ac92-15b3543ebd7b', N'  Vivo', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', 1, 8)
-INSERT [dbo].[StatoIndividuo] ([id], [stato], [organizzazione], [visualizzazioneweb], [ordinamento]) VALUES (N'e68d673c-ab3e-4929-ae3d-5072ec201b93', N' Non Definito', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', 0, 0)
-INSERT [dbo].[StatoIndividuo] ([id], [stato], [organizzazione], [visualizzazioneweb], [ordinamento]) VALUES (N'e343232a-6236-4beb-9c28-6b97803dfcba', N'Morto', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', 0, 7)
-INSERT [dbo].[StatoIndividuo] ([id], [stato], [organizzazione], [visualizzazioneweb], [ordinamento]) VALUES (N'01474cf2-89a2-4646-aa8c-9878f39d877c', N'Integrato', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', 0, 5)
-INSERT [dbo].[StatoIndividuo] ([id], [stato], [organizzazione], [visualizzazioneweb], [ordinamento]) VALUES (N'3d91514f-ecb3-4737-83ed-a3d3f8a63457', N'Incerto', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', 0, 4)
-INSERT [dbo].[StatoIndividuo] ([id], [stato], [organizzazione], [visualizzazioneweb], [ordinamento]) VALUES (N'429773f8-ba56-4e2b-87a0-b775935c3ff7', N'Malato', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', 0, 6)
-INSERT [dbo].[StatoIndividuo] ([id], [stato], [organizzazione], [visualizzazioneweb], [ordinamento]) VALUES (N'c010a010-7d6a-4fe1-933d-e5abc4c66ac3', N'Esaurito', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', 0, 3)
-INSERT [dbo].[StatoIndividuo] ([id], [stato], [organizzazione], [visualizzazioneweb], [ordinamento]) VALUES (N'36c0cf16-6534-40e7-bf6f-ed5c5198fe5e', N'Disponibile', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', 0, 2)
+INSERT [dbo].[StatoIndividuo] ([id], [stato], [organizzazione], [visualizzazioneweb], [ordinamento], [descrizione_en]) VALUES (N'a82c5848-578f-4528-ac0d-1597f6da58e0', N'Ceduto', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', 0, 1, N'Donated')
+INSERT [dbo].[StatoIndividuo] ([id], [stato], [organizzazione], [visualizzazioneweb], [ordinamento], [descrizione_en]) VALUES (N'30e70f7c-1377-4994-ac92-15b3543ebd7b', N'  Vivo', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', 1, 8, N'Alive')
+INSERT [dbo].[StatoIndividuo] ([id], [stato], [organizzazione], [visualizzazioneweb], [ordinamento], [descrizione_en]) VALUES (N'e68d673c-ab3e-4929-ae3d-5072ec201b93', N' Non Definito', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', 0, 0, N'Undefined')
+INSERT [dbo].[StatoIndividuo] ([id], [stato], [organizzazione], [visualizzazioneweb], [ordinamento], [descrizione_en]) VALUES (N'e343232a-6236-4beb-9c28-6b97803dfcba', N'Morto', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', 0, 7, N'Dead')
+INSERT [dbo].[StatoIndividuo] ([id], [stato], [organizzazione], [visualizzazioneweb], [ordinamento], [descrizione_en]) VALUES (N'01474cf2-89a2-4646-aa8c-9878f39d877c', N'Integrato', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', 0, 5, N'Mixed')
+INSERT [dbo].[StatoIndividuo] ([id], [stato], [organizzazione], [visualizzazioneweb], [ordinamento], [descrizione_en]) VALUES (N'3d91514f-ecb3-4737-83ed-a3d3f8a63457', N'Incerto', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', 0, 4, N'Uncertain')
+INSERT [dbo].[StatoIndividuo] ([id], [stato], [organizzazione], [visualizzazioneweb], [ordinamento], [descrizione_en]) VALUES (N'429773f8-ba56-4e2b-87a0-b775935c3ff7', N'Malato', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', 0, 6, N'Diseased')
+INSERT [dbo].[StatoIndividuo] ([id], [stato], [organizzazione], [visualizzazioneweb], [ordinamento], [descrizione_en]) VALUES (N'c010a010-7d6a-4fe1-933d-e5abc4c66ac3', N'Esaurito', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', 0, 3, N'Out of stock')
+INSERT [dbo].[StatoIndividuo] ([id], [stato], [organizzazione], [visualizzazioneweb], [ordinamento], [descrizione_en]) VALUES (N'36c0cf16-6534-40e7-bf6f-ed5c5198fe5e', N'Disponibile', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', 0, 2, N'Available')
+O
+INSERT [dbo].[StatoMateriale] ([id], [organizzazione], [descrizione], [ordinamento], [descrizione_en]) VALUES (N'6af88037-aba8-4c95-b7c4-434aeebe00e4', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', N'Scarso', 4, N'Poor')
+INSERT [dbo].[StatoMateriale] ([id], [organizzazione], [descrizione], [ordinamento], [descrizione_en]) VALUES (N'4d42c566-9b2d-408b-b20d-7cf46608f294', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', N'Buono', 2, N'Good')
+INSERT [dbo].[StatoMateriale] ([id], [organizzazione], [descrizione], [ordinamento], [descrizione_en]) VALUES (N'f096204d-ba60-4532-8635-91a84dc180be', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', N'Ottimo', 1, N'Optimal')
+INSERT [dbo].[StatoMateriale] ([id], [organizzazione], [descrizione], [ordinamento], [descrizione_en]) VALUES (N'1ae1ff08-e6e0-4b93-99ad-b5b88e89a49c', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', N'Discreto', 3, N'Average')
+INSERT [dbo].[StatoMateriale] ([id], [organizzazione], [descrizione], [ordinamento], [descrizione_en]) VALUES (N'0f76ae79-44c1-43df-aa3f-f208b42a156e', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', N' Non definito', 0, N'Undefined')
 GO
-INSERT [dbo].[StatoMateriale] ([id], [organizzazione], [descrizione], [ordinamento]) VALUES (N'6af88037-aba8-4c95-b7c4-434aeebe00e4', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', N'Scarso', 4)
-INSERT [dbo].[StatoMateriale] ([id], [organizzazione], [descrizione], [ordinamento]) VALUES (N'4d42c566-9b2d-408b-b20d-7cf46608f294', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', N'Buono', 2)
-INSERT [dbo].[StatoMateriale] ([id], [organizzazione], [descrizione], [ordinamento]) VALUES (N'f096204d-ba60-4532-8635-91a84dc180be', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', N'Ottimo', 1)
-INSERT [dbo].[StatoMateriale] ([id], [organizzazione], [descrizione], [ordinamento]) VALUES (N'1ae1ff08-e6e0-4b93-99ad-b5b88e89a49c', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', N'Discreto', 3)
-INSERT [dbo].[StatoMateriale] ([id], [organizzazione], [descrizione], [ordinamento]) VALUES (N'0f76ae79-44c1-43df-aa3f-f208b42a156e', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', N' Non definito', 0)
-GO
-INSERT [dbo].[TipiMateriale] ([id], [organizzazione], [descrizione], [ordinamento]) VALUES (N'd988a3e2-28bd-453b-b0e0-07157f4de34e', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', N'seme', 6)
-INSERT [dbo].[TipiMateriale] ([id], [organizzazione], [descrizione], [ordinamento]) VALUES (N'84324b8e-ad35-48d6-a23e-33abcffc9d0e', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', N'zolla', 11)
-INSERT [dbo].[TipiMateriale] ([id], [organizzazione], [descrizione], [ordinamento]) VALUES (N'ac97f6f7-969d-4687-b008-4fcc9d5578e4', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', N'tubero', 9)
-INSERT [dbo].[TipiMateriale] ([id], [organizzazione], [descrizione], [ordinamento]) VALUES (N'ca945c0d-7cd5-4ce4-99fc-5ffe953cb400', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', N'vaso', 10)
-INSERT [dbo].[TipiMateriale] ([id], [organizzazione], [descrizione], [ordinamento]) VALUES (N'52e12ea8-435a-45fe-a9e7-92f319dd1a75', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', N'bulbillo', 1)
-INSERT [dbo].[TipiMateriale] ([id], [organizzazione], [descrizione], [ordinamento]) VALUES (N'a916f8f4-4bea-4095-9317-aaa7e67ffacb', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', N'bulbo', 2)
-INSERT [dbo].[TipiMateriale] ([id], [organizzazione], [descrizione], [ordinamento]) VALUES (N'28902c38-3be2-4ac4-b0b8-ae41776cf7b4', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', N' Non definito', 0)
-INSERT [dbo].[TipiMateriale] ([id], [organizzazione], [descrizione], [ordinamento]) VALUES (N'1f1db1fb-150e-4adc-9d4e-b6dc980dae2e', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', N'radice nuda', 4)
-INSERT [dbo].[TipiMateriale] ([id], [organizzazione], [descrizione], [ordinamento]) VALUES (N'274992fc-76dc-4366-a65e-bffbac3f50f3', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', N'spore', 7)
-INSERT [dbo].[TipiMateriale] ([id], [organizzazione], [descrizione], [ordinamento]) VALUES (N'dca8c393-a9da-4c5e-94a9-dbd8eb85014e', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', N'talea', 8)
-INSERT [dbo].[TipiMateriale] ([id], [organizzazione], [descrizione], [ordinamento]) VALUES (N'e13d306b-1b09-46da-8e29-de1ef97abf76', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', N'cormo', 3)
-INSERT [dbo].[TipiMateriale] ([id], [organizzazione], [descrizione], [ordinamento]) VALUES (N'f9f401bc-abc9-4618-8313-fd1f684b6bc0', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', N'rizoma', 5)
+INSERT [dbo].[TipiMateriale] ([id], [organizzazione], [descrizione], [ordinamento], [descrizione_en]) VALUES (N'd988a3e2-28bd-453b-b0e0-07157f4de34e', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', N'Seme', 6, N'Seed')
+INSERT [dbo].[TipiMateriale] ([id], [organizzazione], [descrizione], [ordinamento], [descrizione_en]) VALUES (N'84324b8e-ad35-48d6-a23e-33abcffc9d0e', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', N'Zolla', 11, N'Soil clump')
+INSERT [dbo].[TipiMateriale] ([id], [organizzazione], [descrizione], [ordinamento], [descrizione_en]) VALUES (N'ac97f6f7-969d-4687-b008-4fcc9d5578e4', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', N'Tubero', 9, N'Tuber')
+INSERT [dbo].[TipiMateriale] ([id], [organizzazione], [descrizione], [ordinamento], [descrizione_en]) VALUES (N'ca945c0d-7cd5-4ce4-99fc-5ffe953cb400', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', N'Vaso', 10, N'Pot')
+INSERT [dbo].[TipiMateriale] ([id], [organizzazione], [descrizione], [ordinamento], [descrizione_en]) VALUES (N'52e12ea8-435a-45fe-a9e7-92f319dd1a75', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', N'Bulbillo', 1, N'Bulbil')
+INSERT [dbo].[TipiMateriale] ([id], [organizzazione], [descrizione], [ordinamento], [descrizione_en]) VALUES (N'a916f8f4-4bea-4095-9317-aaa7e67ffacb', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', N'Bulbo', 2, N'Bulb')
+INSERT [dbo].[TipiMateriale] ([id], [organizzazione], [descrizione], [ordinamento], [descrizione_en]) VALUES (N'28902c38-3be2-4ac4-b0b8-ae41776cf7b4', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', N' Non definito', 0, N'Undefined')
+INSERT [dbo].[TipiMateriale] ([id], [organizzazione], [descrizione], [ordinamento], [descrizione_en]) VALUES (N'1f1db1fb-150e-4adc-9d4e-b6dc980dae2e', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', N'Radice nuda', 4, N'Bare root')
+INSERT [dbo].[TipiMateriale] ([id], [organizzazione], [descrizione], [ordinamento], [descrizione_en]) VALUES (N'274992fc-76dc-4366-a65e-bffbac3f50f3', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', N'Spore', 7, N'Spore')
+INSERT [dbo].[TipiMateriale] ([id], [organizzazione], [descrizione], [ordinamento], [descrizione_en]) VALUES (N'dca8c393-a9da-4c5e-94a9-dbd8eb85014e', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', N'Talea', 8, N'Cutting')
+INSERT [dbo].[TipiMateriale] ([id], [organizzazione], [descrizione], [ordinamento], [descrizione_en]) VALUES (N'e13d306b-1b09-46da-8e29-de1ef97abf76', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', N'Cormo', 3, N'Corm')
+INSERT [dbo].[TipiMateriale] ([id], [organizzazione], [descrizione], [ordinamento], [descrizione_en]) VALUES (N'f9f401bc-abc9-4618-8313-fd1f684b6bc0', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', N'Rizoma', 5, N'Rhizome')
 GO
 INSERT [dbo].[TipoAcquisizione] ([id], [descrizione], [organizzazione], [descrizione_en], [ordinamento]) VALUES (N'62fc9f20-c80d-442c-91f6-4044fa382827', N'donazione privato', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', N'private donation', 4)
 INSERT [dbo].[TipoAcquisizione] ([id], [descrizione], [organizzazione], [descrizione_en], [ordinamento]) VALUES (N'68b88d39-a0ff-40cf-9759-4f3156cdb13c', N'derivante da attività ricerca', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', N'deriving from research activities', 2)
