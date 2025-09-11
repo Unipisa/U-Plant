@@ -197,18 +197,20 @@ namespace UPlant.Controllers
                             StaticUtils.ResizeAndSave(filename, filenamethumb, 400, true);
 
                         }
-
-                        TempData["MsgSuc"] = "Immagine inserita con successo";
+                        AddPageAlerts(PageAlertType.Success, _languageService.Getkey("Message_9").ToString());
+                        TempData["MsgSuc"] = _languageService.Getkey("Message_9").ToString();
 
                     }
                     catch (Exception ex)
                     {
-                        TempData["MsgErr"] = "Errore nel salvataggio del file o nel DB, dettagli :" + ex.Message.ToString();
+                        AddPageAlerts(PageAlertType.Success, _languageService.Getkey("Message_13").ToString());
+                        TempData["MsgErr"] = _languageService.Getkey("Message_13").ToString() + ex.Message.ToString();
                         return RedirectToAction("Details", "Individui", new { id = idindividuo, tipo = tipo });
                     }
                 else
                 {
-                    TempData["MsgErr"] = "File vuoto o troppo grande";
+                    AddPageAlerts(PageAlertType.Success, _languageService.Getkey("Message_15").ToString());
+                    TempData["MsgErr"] = _languageService.Getkey("Message_15").ToString();
                     return RedirectToAction("Details", "Individui", new { id = idindividuo, tipo = tipo });
                 }
 
@@ -236,8 +238,8 @@ namespace UPlant.Controllers
             }
             else
             {
-                AddPageAlerts(PageAlertType.Warning, "Immagine dell'individuo non presente");
-                TempData["message"] = "Immagine dell'individuo non presente";
+                AddPageAlerts(PageAlertType.Warning, _languageService.Getkey("Message_11").ToString());
+                TempData["message"] = _languageService.Getkey("Message_11").ToString();
 
                 return RedirectToAction("Details", "Individui", new { id = individuo });
             }
@@ -328,8 +330,8 @@ namespace UPlant.Controllers
         {
             if (id == null)
             {
-                AddPageAlerts(PageAlertType.Error, "Errore nella cancellazione");
-                TempData["message"] = "Errore nella cancellazione";
+                AddPageAlerts(PageAlertType.Error, _languageService.Getkey("Message_12").ToString());
+                TempData["message"] = _languageService.Getkey("Message_12").ToString();
                 return PartialView();
             }
             ViewBag.individuo = id;

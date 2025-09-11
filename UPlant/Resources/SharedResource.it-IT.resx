@@ -558,7 +558,7 @@
   <data name="Global_Determiner_Type" xml:space="preserve">
     <value>Tipo Identificatore</value>
   </data>
-  <data name="Percorsi_Create_1" xml:space="preserve">
+  <data name="Percorsi_Create_Edit_1" xml:space="preserve">
     <value>Caratteri da aggiungere al testo : [br]ritorno a capo - [p] nuovo paragrafo</value>
   </data>
   <data name="Global_Main_Data" xml:space="preserve">
@@ -650,5 +650,59 @@
   </data>
   <data name="Global_Destinations" xml:space="preserve">
     <value>Destinazioni</value>
+  </data>
+  <data name="Message_2" xml:space="preserve">
+    <value>Individuo già presente nel percorso</value>
+  </data>
+  <data name="Message_3" xml:space="preserve">
+    <value>Attenzione hai un individuo in</value>
+  </data>
+  <data name="Message_4" xml:space="preserve">
+    <value>Attenzione hai un individuo con uno stato diverso da vivo nel percorso</value>
+  </data>
+  <data name="Message_5" xml:space="preserve">
+    <value>Individuo aggiunto</value>
+  </data>
+  <data name="Message_6" xml:space="preserve">
+    <value>Individuo cancellato</value>
+  </data>
+  <data name="Message_7" xml:space="preserve">
+    <value>Accessione inserita correttamente, puoi inserire l'individuo figlio</value>
+  </data>
+  <data name="Message_8" xml:space="preserve">
+    <value>Accessione modificata correttamente</value>
+  </data>
+  <data name="Message_9" xml:space="preserve">
+    <value>Immagine inserita con successo</value>
+  </data>
+  <data name="Message_10" xml:space="preserve">
+    <value>Immagine del percorso non presente</value>
+  </data>
+  <data name="Message_11" xml:space="preserve">
+    <value>Immagine dell'individuo non presente</value>
+  </data>
+  <data name="Message_12" xml:space="preserve">
+    <value>Errore nella cancellazione</value>
+  </data>
+  <data name="Message_13" xml:space="preserve">
+    <value>Errore nel salvataggio del file o nel DB, Dettagli:</value>
+  </data>
+  <data name="Message_14" xml:space="preserve">
+    <value>Qualcosa nell'inserimento è andato storto</value>
+  </data>
+  <data name="Message_15" xml:space="preserve">
+    <value>File vuoto o troppo grande</value>
+  </data>
+  <data name="Message_16" xml:space="preserve">
+    <value>Controlla i campi inseriti</value>
+  </data>
+  <data name="Message_17" xml:space="preserve">
+    <value>Controlla i campi modificati</value>
+  </data>
+  <data name="Message_18" xml:space="preserve">
+    <value>con uno stato differente da vivo in uno o più percorsi</value>
+  </data>
+  <data name="Message_19" xml:space="preserve">
+    <value>Controlla i campi modificati verifica che siano valorizzati</value>
   </data>
 </root>

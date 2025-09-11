@@ -23,13 +23,14 @@ namespace U_Plant.Controllers
         private readonly Entities _context;
         private readonly IOptions<AppSettings> _opt;
         private readonly IWebHostEnvironment _env;
+        private readonly LanguageService _languageService;
 
-        public PercorsiController(Entities context, IOptions<AppSettings> opt, IWebHostEnvironment env)
+        public PercorsiController(Entities context, IOptions<AppSettings> opt, IWebHostEnvironment env, LanguageService languageService)
         {
             _context = context;
             _opt = opt;
             _env = env;
-
+            _languageService = languageService;
 
         }
         public ActionResult Index()
@@ -44,9 +45,9 @@ namespace U_Plant.Controllers
                 if (StatoIndanomalo(i.id) && i.attivo == true)
                 {
                     perindmorto.Add(i.id);
-                    AddPageAlerts(PageAlertType.Warning, "Attenzione hai un individuo in '" + i.titolo +"' con uno stato differente da vivo in uno o più percorsi");
-                    TempData["message"] = "Attenzione hai un individuo con uno stato differente da vivo in uno o più percorsi";
-                 
+                    AddPageAlerts(PageAlertType.Warning, _languageService.Getkey("Message_3").ToString() + ' ' + i.titolo + ' ' + _languageService.Getkey("Message_18").ToString());
+                    TempData["message"] = _languageService.Getkey("Message_3").ToString() + ' ' + i.titolo + ' ' + _languageService.Getkey("Message_18").ToString();
+
 
                 }
 
@@ -60,11 +61,11 @@ namespace U_Plant.Controllers
         {
             if (StatoIndanomalo(id))
             {
-                AddPageAlerts(PageAlertType.Warning, "Attenzione hai un individuo con uno stato diverso da vivo nel percorso");
-                TempData["message"] = "Attenzione hai un individuo con uno stato diverso da vivo nel percorso";
-                
+                AddPageAlerts(PageAlertType.Warning, _languageService.Getkey("Message_4").ToString());
+                TempData["message"] = _languageService.Getkey("Message_4").ToString();
+
             }
-            
+
             if (id == null)
             {
                 return new StatusCodeResult(400);
@@ -85,9 +86,6 @@ namespace U_Plant.Controllers
             ViewBag.list = percorsi.IndividuiPercorso.OrderBy(x => x.individuoNavigation.accessioneNavigation.specieNavigation.nome_scientifico).ToList();
             percorsi.IndividuiPercorso = ViewBag.list;
             ViewBag.indmorto = StatoIndanomalo(percorsi.id);
-
-
-
 
             if (percorsi == null)
             {
@@ -137,7 +135,7 @@ namespace U_Plant.Controllers
             percorsi.autore = autore;
             if (ModelState.IsValid)
             {
-            
+
                 _context.Percorsi.Add(percorsi);
                 _context.SaveChanges();
                 return RedirectToAction("Index");
@@ -150,7 +148,7 @@ namespace U_Plant.Controllers
         {
             if (id == null)
             {
-                return new StatusCodeResult(400); 
+                return new StatusCodeResult(400);
             }
             Percorsi percorsi = _context.Percorsi.Find(id);
             if (percorsi == null)
@@ -193,8 +191,8 @@ namespace U_Plant.Controllers
         {
             if (id == null)
             {
-                AddPageAlerts(PageAlertType.Error, "Errore nella cancellazione");
-                TempData["message"] = "Errore nella cancellazione";
+                AddPageAlerts(PageAlertType.Error, _languageService.Getkey("Message_12").ToString());
+                TempData["message"] = _languageService.Getkey("Message_12").ToString();
                 return new StatusCodeResult(400);
             }
             Percorsi percorsi = _context.Percorsi.Find(id);
@@ -218,8 +216,8 @@ namespace U_Plant.Controllers
             }
             if (!String.IsNullOrEmpty(percorsi.nomefile))
             {
-                
-              //  string path = StaticUtils.SetImgPath("Percorsi\\" + percorsi.id, percorsi.nomefile, _opt.Value.Pathfile.Basepath);
+
+                //  string path = StaticUtils.SetImgPath("Percorsi\\" + percorsi.id, percorsi.nomefile, _opt.Value.Pathfile.Basepath);
                 //  string paththumb = StaticUtils.SetThumbImgPath("Percorsi\\" + percorsi.id, percorsi.nomefile, _opt.Value.Pathfile.Basepath);
                 string path = StaticUtils.SetImgPath(percorsi.id.ToString(), percorsi.nomefile, _opt.Value.Pathfile.Basepath + "\\Percorsi\\");
                 string paththumb = StaticUtils.SetThumbImgPath(percorsi.id.ToString(), percorsi.nomefile, _opt.Value.Pathfile.Basepath + "\\Percorsi\\");
@@ -260,19 +258,19 @@ namespace U_Plant.Controllers
             IndividuiPercorso individuopercorso = _context.IndividuiPercorso.Find(id);
             _context.IndividuiPercorso.Remove(individuopercorso);
             _context.SaveChanges();
-            AddPageAlerts(PageAlertType.Success, "Individuo cancellato");
-            TempData["message"] = "Individuo cancellato";
+            AddPageAlerts(PageAlertType.Success, _languageService.Getkey("Message_6").ToString());
+            TempData["message"] = _languageService.Getkey("Message_6").ToString();
             return RedirectToAction("Details", "Percorsi", new { id = percorso });
-           
+
         }
 
         public JsonResult AutoComplete()
         {
-          //  var allowedStatus = new[] { "30e70f7c13774994ac9215b3543ebd7b", "3d91514fecb3473783eda3d3f8a63457", "429773f8ba564e2b87a0b775935c3ff7" }; //Vivo e incerto, malato
+            //  var allowedStatus = new[] { "30e70f7c13774994ac9215b3543ebd7b", "3d91514fecb3473783eda3d3f8a63457", "429773f8ba564e2b87a0b775935c3ff7" }; //Vivo e incerto, malato
             var notallowedsector = new[] { "0ba85efcea3544e485141f7e311d82e2", "0e551835b07642f88540a4ff9d15e84e" }; //Nursery e Banca Semi
             string term = HttpContext.Request.Query["term"].ToString();
 
-            IEnumerable <StoricoIndividuo> prog = 
+            IEnumerable<StoricoIndividuo> prog =
                 _context.StoricoIndividuo
                 .Include(x => x.individuoNavigation)
                 .Include(x => x.individuoNavigation).ThenInclude(x => x.settoreNavigation)
@@ -284,7 +282,7 @@ namespace U_Plant.Controllers
                         .Where(x => x.individuoNavigation.progressivo.StartsWith(term))
             .Where(x => x.statoIndividuoNavigation.visualizzazioneweb == true)
             .Where(x => x.individuoNavigation.settoreNavigation.visualizzazioneweb == true).ToList();
-         
+
             var result = prog.Take(10).Select(x => x.individuoNavigation.progressivo);
 
 
@@ -309,7 +307,7 @@ namespace U_Plant.Controllers
             if (indicerca.Count() == 0)
             {
                 IndividuiPercorso indiper = new IndividuiPercorso();
-                
+
                 indiper.percorso = percorso;
                 indiper.individuo = individuo;
 
@@ -319,15 +317,15 @@ namespace U_Plant.Controllers
 
                     _context.IndividuiPercorso.Add(indiper);
                     _context.SaveChanges();
-                    AddPageAlerts(PageAlertType.Success, "Individuo aggiunto");
-                    TempData["message"] = "Individuo aggiunto";
+                    AddPageAlerts(PageAlertType.Success, _languageService.Getkey("Message_5").ToString());
+                    TempData["message"] = _languageService.Getkey("Message_5").ToString();
 
                     return RedirectToAction("Details", "Percorsi", new { id = percorso });
 
                 }
             }
-            AddPageAlerts(PageAlertType.Warning, "Individuo già presente nel percorso");
-            TempData["message"] = "Individuo già presente nel percorso";
+            AddPageAlerts(PageAlertType.Warning, _languageService.Getkey("Message_2").ToString());
+            TempData["message"] = _languageService.Getkey("Message_2").ToString();
 
 
 
@@ -407,9 +405,9 @@ namespace U_Plant.Controllers
                         {
                             estensione = ".jpg";
                         }
-                      //  string filename = StaticUtils.SetImgPath("Percorsi\\", percorsi.id.ToString() + estensione,t.Pathfile.Basepath);
+                        //  string filename = StaticUtils.SetImgPath("Percorsi\\", percorsi.id.ToString() + estensione,t.Pathfile.Basepath);
                         string filename = StaticUtils.SetImgPath(percorsi.id.ToString(), percorsi.nomefile, _opt.Value.Pathfile.Basepath + "\\Percorsi\\");
-                      
+
                         {
                             string filePath = Path.Combine(t.Pathfile.Basepath, filename);
                             using (Stream fileStream = new FileStream(filePath, FileMode.Create))
@@ -418,10 +416,10 @@ namespace U_Plant.Controllers
                             }
                         }
 
-                        
+
                         if (System.IO.File.Exists(filename))
                         {
-                            string filenamethumb = StaticUtils.SetThumbImgPath(percorsi.id.ToString() , percorsi.nomefile, _opt.Value.Pathfile.Basepath + "\\Percorsi\\");
+                            string filenamethumb = StaticUtils.SetThumbImgPath(percorsi.id.ToString(), percorsi.nomefile, _opt.Value.Pathfile.Basepath + "\\Percorsi\\");
                             //string filenamethumb = StaticUtils.SetThumbImgPath("Percorsi\\", percorsi.id + estensione, t.Pathfile.Basepath);
                             StaticUtils.ResizeAndSave(filename, filenamethumb, 400, true);
 
@@ -429,23 +427,23 @@ namespace U_Plant.Controllers
 
 
 
-                        AddPageAlerts(PageAlertType.Success, "Immagine inserita con successo");
-                        TempData["message"] = "Immagine inserita con successo";
+                        AddPageAlerts(PageAlertType.Success, _languageService.Getkey("Message_9").ToString());
+                        TempData["message"] = _languageService.Getkey("Message_9").ToString();
 
 
                     }
                     catch (Exception ex)
                     {
-                        AddPageAlerts(PageAlertType.Error, "Errore nel salvataggio del file o nel DB, dettagli :" + ex.Message.ToString());
-                        TempData["message"] = "Errore nel salvataggio del file o nel DB, dettagli :" + ex.Message.ToString();
-                      
+                        AddPageAlerts(PageAlertType.Error, _languageService.Getkey("Message_13").ToString() + ex.Message.ToString());
+                        TempData["message"] = _languageService.Getkey("Message_13").ToString() + ex.Message.ToString();
+
                         return RedirectToAction("Details", "Percorsi", new { id = id });
                     }
                 else
                 {
-                    AddPageAlerts(PageAlertType.Error, "File vuoto o troppo grande");
-                    TempData["message"] = "File vuoto o troppo grande";
-                  
+                    AddPageAlerts(PageAlertType.Error, _languageService.Getkey("Message_15").ToString());
+                    TempData["message"] = _languageService.Getkey("Message_15").ToString();
+
                     return RedirectToAction("Details", "Percorsi", new { id = id });
                 }
 
@@ -464,23 +462,24 @@ namespace U_Plant.Controllers
         {
             //string path = StaticUtils.GetThumbImgPath("Percorsi\\", percorso.ToString(), nomefile, _opt.Value.Pathfile.Basepath);
             // string path = StaticUtils.SetThumbImgPath("Percorsi\\" + percorso.ToString(), nomefile);
-            string path= StaticUtils.SetThumbImgPath(percorso.ToString(), nomefile, _opt.Value.Pathfile.Basepath + "\\Percorsi\\");
+            string path = StaticUtils.SetThumbImgPath(percorso.ToString(), nomefile, _opt.Value.Pathfile.Basepath + "\\Percorsi\\");
             //completare con case se immagini hanno nome jpg
             //return base.File(path, "image/jpeg");
             var fileExists = System.IO.File.Exists(path);
-            if (fileExists) { 
+            if (fileExists)
+            {
                 var fs = System.IO.File.OpenRead(path);
                 return File(fs, "image/jpeg", path);
             }
             else
             {
-                AddPageAlerts(PageAlertType.Warning, "Immagine del percorso non presente");
-                TempData["message"] = "Immagine del percorso non presente";
-               
+                AddPageAlerts(PageAlertType.Warning, _languageService.Getkey("Message_10").ToString());
+                TempData["message"] = _languageService.Getkey("Message_10").ToString();
+
                 return RedirectToAction("Details", "Percorsi", new { id = percorso });
             }
-            
-            
+
+
             //string path = StaticUtils.SetThumbImgPath("Percorsi\\" + percorso, nomefile, t.Pathfile.Basepath);
 
             //completare con case se immagini hanno nome jpg
@@ -490,7 +489,7 @@ namespace U_Plant.Controllers
         public ActionResult ViewBigImg(Guid percorso, string nomefile)
         {
             //string path = StaticUtils.GetImgPath("Percorsi\\", percorso.ToString(), nomefile, _opt.Value.Pathfile.Basepath);
-            string path = StaticUtils.SetImgPath( percorso.ToString(), nomefile, _opt.Value.Pathfile.Basepath+ "\\Percorsi\\");
+            string path = StaticUtils.SetImgPath(percorso.ToString(), nomefile, _opt.Value.Pathfile.Basepath + "\\Percorsi\\");
             var fileExists = System.IO.File.Exists(path);
             if (fileExists)
             {
@@ -499,8 +498,8 @@ namespace U_Plant.Controllers
             }
             else
             {
-                AddPageAlerts(PageAlertType.Warning, "Immagine del percorso non presente");
-                TempData["message"] = "Immagine del percorso non presente";
+                AddPageAlerts(PageAlertType.Warning, _languageService.Getkey("Message_12").ToString());
+                TempData["message"] = _languageService.Getkey("Message_12").ToString();
 
                 return RedirectToAction("Details", "Percorsi", new { id = percorso });
             }
@@ -571,14 +570,14 @@ namespace U_Plant.Controllers
         public bool StatoIndanomalo(Guid? percorso)
         {
             bool allarme = false;
-            IEnumerable<IndividuiPercorso> listaindividui = _context.IndividuiPercorso.Where(x => x.percorso == percorso).ToList(); 
+            IEnumerable<IndividuiPercorso> listaindividui = _context.IndividuiPercorso.Where(x => x.percorso == percorso).ToList();
 
             foreach (var i in listaindividui)
             {
                 StoricoIndividuo storico = _context.StoricoIndividuo.Include(x => x.statoIndividuoNavigation).Where(x => x.individuo == i.individuo).OrderByDescending(x => x.dataInserimento).FirstOrDefault();
                 if (storico != null)
                 {
-                    
+
                     if (storico.statoIndividuoNavigation.stato.Trim().ToLower() != "vivo")
                     {
                         allarme = true;

@@ -7,7 +7,7 @@
     <div class="col-sm-12">
 
 
-        <button type="button" id="torna" class="btn btn-info btn-xs" onclick="window.location.href = '@Url.Action("Index", "Percorsi")';">
+        <button type="button" id="torna" class="btn btn-info " onclick="window.location.href = '@Url.Action("Index", "Percorsi")';">
             @language.Getkey("Global_Go_Back")
         </button>
     </div>
@@ -17,14 +17,14 @@
         <div class="card card-outline card-primary">
             <div class="card-header with-border">
                 <div class="col-md-9">
-                    <h3 class="card-title">@language.Getkey("Global_Edit")</h3>
+                    <h3 class="card-title"></h3>
                 </div>
                 @{
                     if (Model.nomefile !=null)
                     {
                         <div class="float-center success">
                             <img src="@Url.Action("ViewImg","Percorsi", new { percorso = Model.id,nomefile = Model.nomefile  })" title="@Html.DisplayFor(model => model.nomefile)" height="200" />
-                            <button type="button" id="DeleteImg" class="btn btn-danger btn-xs">@language.Getkey("Global_Delete") @language.Getkey("Global_Image") <i class="fa-regular fa-trash"></i></button>
+                                    <button type="button" id="DeleteImg" class="btn btn-danger">@language.Getkey("Global_Delete") @language.Getkey("Global_Image") <i class="fa-solid fa-trash"></i></button>
                             <div class="modal fade" id="myModal2" role="dialog" data-url='@Url.Action("DeleteImg","Percorsi",new { id =  Model.id,nomefile = Model.nomefile})'>
                             </div>
                         </div>
@@ -49,14 +49,14 @@
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
             @Html.HiddenFor(model => model.id)
             <div class="form-group">
-                        <b>@language.Getkey("Globalh_Title")</b><br>
+                        <b>@language.Getkey("Global_Title")</b><br>
                  @Html.EditorFor(model => model.titolo, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.titolo, "", new { @class = "text-danger" })
             </div>
             <div class="form-group">
                         <b>@language.Getkey("Global_Description")</b><br>
                         @Html.TextAreaFor(model => model.descrizione, 10, 80, new { htmlAttributes = new { @class = "form-control" } }) <br>
-                Caratteri da aggiungere al testo : [br]ritorno a capo - [p] nuovo paragrafo
+                        @language.Getkey("Percorsi_Create_Edit_1")
                 @Html.ValidationMessageFor(model => model.descrizione, "", new { @class = "text-danger" })
             </div>
             <div class="form-group">
@@ -67,7 +67,7 @@
             <div class="form-group">
                         <b>@language.Getkey("Global_English_Description")</b><br>
                         @Html.TextAreaFor(model => model.descrizione_en, 10, 80, new { htmlAttributes = new { @class = "form-control", } }) <br>
-                Caratteri da aggiungere al testo : [br]ritorno a capo - [p] nuovo paragrafo
+                        @language.Getkey("Percorsi_Create_Edit_1")
                 @Html.ValidationMessageFor(model => model.descrizione_en, "", new { @class = "text-danger" })
             </div>
             <div class="form-group">

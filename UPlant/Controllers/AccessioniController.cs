@@ -26,8 +26,6 @@ namespace UPlant.Controllers
             _context = context;
             _configuration = Configuration;
             _languageService = languageService;
-
-
             _appOpt = appOpt;
             _googlemap = googlemap;
 
@@ -321,21 +319,21 @@ namespace UPlant.Controllers
                         //  _context.SaveChanges();
                         _context.Add(accessioni);
                         await _context.SaveChangesAsync();
-                        AddPageAlerts(PageAlertType.Success, "Accessione inserita correttamente , puoi inserire l'individuo figlio");
-                        TempData["message"] = "Accessione inserita correttamente , puoi inserire l'individuo figlio";
+                        AddPageAlerts(PageAlertType.Success, _languageService.Getkey("Message_7").ToString());
+                        TempData["message"] = _languageService.Getkey("Message_7").ToString();
                         risultato = "si";
 
                     } catch (Exception ) {
-                        AddPageAlerts(PageAlertType.Error, "Qualcosa nell'inserimento è andato storto");
-                        TempData["message"] = "Qualcosa nell'inserimento è andato storto";
+                        AddPageAlerts(PageAlertType.Error, _languageService.Getkey("Message_14").ToString());
+                        TempData["message"] = _languageService.Getkey("Message_14").ToString();
                         risultato = "no";
                     }
                 } else { 
 
             
 
-                AddPageAlerts(PageAlertType.Warning, "controlla i campi inseriti");
-                TempData["message"] = "controlla i campi inseriti";
+                AddPageAlerts(PageAlertType.Warning, _languageService.Getkey("Message_16").ToString());
+                TempData["message"] = _languageService.Getkey("Message_16").ToString();
                 risultato = "no";
                 var linguacorrente = _languageService.GetCurrentCulture();
                 if (linguacorrente == "en-US")
@@ -559,8 +557,8 @@ namespace UPlant.Controllers
                     _context.Entry(accessioni).State = EntityState.Modified;
 
                     _context.SaveChanges();
-                    AddPageAlerts(PageAlertType.Success, "Accessione modificata correttamente");
-                    TempData["message"] = "Accessione modificata correttamente";
+                    AddPageAlerts(PageAlertType.Success, _languageService.Getkey("Message_8").ToString());
+                    TempData["message"] = _languageService.Getkey("Message_8").ToString();
                   
               
 
@@ -568,7 +566,8 @@ namespace UPlant.Controllers
                 catch (Exception e)
                 {
                     msgerr = e.Message;
-                    TempData["MsgErr"] = msgerr + "Ricontrolla i campi modificati identifica che siano valorizzati";
+                    AddPageAlerts(PageAlertType.Success, _languageService.Getkey("Message_19").ToString());
+                    TempData["MsgErr"] = msgerr + _languageService.Getkey("Message_19").ToString();
 
 
 
@@ -608,8 +607,8 @@ namespace UPlant.Controllers
                     ViewBag.utenteUltimaModifica = new SelectList(_context.Users, "Id", "CreatedBy", accessioni.utenteUltimaModifica);
                     ViewBag.identificatore = new SelectList(_context.Identificatori.OrderBy(a => a.nominativo), "id", "nominativo", accessioni.identificatore);
 
-                    AddPageAlerts(PageAlertType.Warning, "controlla i campi modificati");
-                    TempData["message"] = "controlla i campi modificati";
+                    AddPageAlerts(PageAlertType.Warning, _languageService.Getkey("Message_17").ToString());
+                    TempData["message"] = _languageService.Getkey("Message_17").ToString();
 
 
                     return View(accessioni);

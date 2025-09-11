@@ -33,7 +33,7 @@
                         <b>@language.Getkey("Global_Description")</b><br>
                         @Html.TextAreaFor(model => model.descrizione, new { htmlAttributes = new { @class = "form-control", @rows = 10 , @cols = 80 } })
                         @Html.ValidationMessageFor(model => model.descrizione, "", new { @class = "text-danger" })
-                        <br />@language.Getkey("Percorsi_Create_1")
+                        <br />@language.Getkey("Percorsi_Create_Edit_1")
 
                 
             </div>
@@ -46,7 +46,7 @@
             <div class="form-group">
                         <b>@language.Getkey("Global_English_Description")</b><br>
                 <textarea id="descrizione_en" name="descrizione_en" rows="10" cols="80"></textarea>
-                        <br />@language.Getkey("Percorsi_Create_1")
+                        <br />@language.Getkey("Percorsi_Create_Edit_1")
 
                 @Html.ValidationMessageFor(model => model.descrizione_en, "", new { @class = "text-danger" })
             </div>

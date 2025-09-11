@@ -558,7 +558,7 @@
   <data name="Global_Determiner_Type" xml:space="preserve">
     <value>Determiner Type</value>
   </data>
-  <data name="Percorsi_Create_1" xml:space="preserve">
+  <data name="Percorsi_Create_Edit_1" xml:space="preserve">
     <value>Characters to add to the text: [br]carriage return - [p] new paragraph</value>
   </data>
   <data name="Global_Main_Data" xml:space="preserve">
@@ -650,5 +650,59 @@
   </data>
   <data name="Global_Destinations" xml:space="preserve">
     <value>Destinations</value>
+  </data>
+  <data name="Message_2" xml:space="preserve">
+    <value>Individual already exists in this location</value>
+  </data>
+  <data name="Message_3" xml:space="preserve">
+    <value>Warning: You have an individual in</value>
+  </data>
+  <data name="Message_4" xml:space="preserve">
+    <value>Warning: The individual in this location has a status other than 'Alive'</value>
+  </data>
+  <data name="Message_5" xml:space="preserve">
+    <value>Individual added</value>
+  </data>
+  <data name="Message_6" xml:space="preserve">
+    <value>Individual deleted</value>
+  </data>
+  <data name="Message_7" xml:space="preserve">
+    <value>Accession created successfully. You can now add the individual</value>
+  </data>
+  <data name="Message_8" xml:space="preserve">
+    <value>Accession updated successfully</value>
+  </data>
+  <data name="Message_9" xml:space="preserve">
+    <value>Image uploaded successfully</value>
+  </data>
+  <data name="Message_10" xml:space="preserve">
+    <value>Location image not found</value>
+  </data>
+  <data name="Message_11" xml:space="preserve">
+    <value>Individual image not found</value>
+  </data>
+  <data name="Message_12" xml:space="preserve">
+    <value>Error during deletion</value>
+  </data>
+  <data name="Message_13" xml:space="preserve">
+    <value>Error saving file or to database. Details:</value>
+  </data>
+  <data name="Message_14" xml:space="preserve">
+    <value>Something went wrong during submission</value>
+  </data>
+  <data name="Message_15" xml:space="preserve">
+    <value>File is empty or too large</value>
+  </data>
+  <data name="Message_16" xml:space="preserve">
+    <value>Please check the entered fields</value>
+  </data>
+  <data name="Message_17" xml:space="preserve">
+    <value>Please check the modified fields</value>
+  </data>
+  <data name="Message_18" xml:space="preserve">
+    <value>with a status other than 'Alive' in one or more locations</value>
+  </data>
+  <data name="Message_19" xml:space="preserve">
+    <value>Check the modified fields and make sure they are filled in</value>
   </data>
 </root>

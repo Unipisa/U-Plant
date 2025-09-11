@@ -432,7 +432,7 @@ $('#settore').on("change", function () {
                 s += '<option value="' + data[i].codicecollezione + '">' + data[i].descrizionecollezione + '</option>';
             }
             if (i == 0) {
-                alert("Il settore non ha collezioni corrispondenti verificare e correggi");
+                alert("The sector has no corresponding collections, please check and correct");
                 $('#settore').focusin();
 
             }

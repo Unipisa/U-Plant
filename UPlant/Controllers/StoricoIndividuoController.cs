@@ -62,7 +62,7 @@ namespace UPlant.Controllers
         public IActionResult Create(Guid idindividuo,string tipo,string damodifica)
         {
         if (damodifica== "ok") {
-                var messaggio = _languageService.Getkey("Message_1");
+                var messaggio = _languageService.Getkey("Message_1").ToString();
             AddPageAlerts(PageAlertType.Success, messaggio);
             }
             var storicoindividuo = _context.StoricoIndividuo.Where(x => x.individuo == idindividuo).ToList().OrderByDescending(x => x.dataInserimento).FirstOrDefault();
