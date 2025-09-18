@@ -6,7 +6,18 @@
     ViewBag.Title = "Index";
     ViewBag.lang = language.GetCurrentCulture();
 }
-
+@if (TempData["MsgErr"] != null)
+{
+    <div class="alert alert-danger">@TempData["MsgErr"]</div>
+}
+@if (TempData["MsgSucc"] != null)
+{
+    <div class="alert alert-success">@TempData["MsgSucc"]</div>
+}
+@if (TempData["MsgAle"] != null)
+{
+    <div class="alert alert-warning">@TempData["MsgAle"]</div>
+}
 
    
 <div class="card card-outline card-primary">

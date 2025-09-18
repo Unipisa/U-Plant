@@ -4,7 +4,18 @@
     ViewData["Title"] = "Individui";
     
 }
-
+@if (TempData["MsgErr"] != null)
+{
+    <div class="alert alert-danger">@TempData["MsgErr"]</div>
+}
+@if (TempData["MsgSucc"] != null)
+{
+    <div class="alert alert-success">@TempData["MsgSucc"]</div>
+}
+@if (TempData["MsgAle"] != null)
+{
+    <div class="alert alert-warning">@TempData["MsgAle"]</div>
+}
 <p>
     @{
         if (User.IsInRole("Administrator") || User.IsInRole("Operator") || User.IsInRole("TreeKeeper") || User.IsInRole("Discover") || User.IsInRole("Seminum") || User.IsInRole("Utility"))
@@ -14,7 +25,7 @@
 
         if (ViewBag.tipo == "ricerca")
         {
-            @Html.ActionLink("Vai all'accessione padre", "Details", "Accessioni", new { id = Model.accessione, tipo = "ricerca" }, new { @class = "btn btn-warning" }) <span> </span>
+            @Html.ActionLink(@language.Getkey("Global_Return_To_Parent_Accession"), "Details", "Accessioni", new { id = Model.accessione, tipo = "ricerca" }, new { @class = "btn btn-warning" }) <span> </span>
             <button type="button" id="ricerca" class="btn btn-info" onclick="window.location.href = '@Url.Action("RicercaIndividui", "Home", new {  tipo  = ViewBag.tipo })';">
                 @language.Getkey("Global_Return_To_Search")
             </button>
@@ -648,6 +659,13 @@
     <script type="text/javascript">
 
         var _validFileExtensions = [".jpg", ".jpeg", ".png", ".heif", ".hevc", ".heic"];
+        var _maxFileSizeBytes = '@ViewBag.maxupload';
+        var messerr1 = '@language.Getkey("Message_20")';
+        var messerr2 = '@language.Getkey("Message_21")';
+        var messsize1 = '@language.Getkey("Message_22")';
+        var messsize2 = '@language.Getkey("Message_23")';
+
+
         function validateForm(oForm) {
 
             var arrInputs = oForm.getElementsByTagName("input");
@@ -667,13 +685,29 @@
                         }
 
                         if (!blnValid) {
-                            var messerr = "Mi dispiace ma, il formato " + estensionefile + " non è valido , le estensioni consentite sono le seguenti : " + _validFileExtensions.join(", ");
+                          var messerr = messerr1 + estensionefile + messerr2 + _validFileExtensions.join(", ");
+                            
+                         // var messerr = "Mi dispiace ma, il formato " + estensionefile + " non è valido , le estensioni consentite sono le seguenti : " + _validFileExtensions.join(", ");
                             //alert(messerr);
                             document.getElementById("errore").innerHTML = messerr;
                             document.getElementById("errore").style.display = "block";
 
                             return false;
                         }
+
+                        if (oInput.files && oInput.files.length > 0) {
+                            var f = oInput.files[0];
+                            if (f.size > _maxFileSizeBytes) {
+                                var messsize = messsize1 + Math.round(f.size / 1024) + messsize2 + Math.round(_maxFileSizeBytes / 1024) + " KB.";
+                                document.getElementById("errore").innerHTML = messsize;
+                                document.getElementById("errore").style.display = "block";
+                                return false;
+                            }
+                        } else {
+                            // Se non è disponibile l'oggetto File (vecchi browser), puoi decidere di ignorare o mostrare avviso diverso
+                        }
+
+
                     }
                 }
             }

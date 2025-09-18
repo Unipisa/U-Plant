@@ -82,6 +82,7 @@ namespace UPlant.Controllers
             ViewBag.list = await _context.StoricoIndividuo.Include(i => i.condizioneNavigation).Include(i => i.statoIndividuoNavigation).Include(i => i.utenteNavigation).Where(x => x.individuo == id).ToListAsync();
             ViewBag.idindividuo = id;
             ViewBag.tipo = tipo;
+            ViewBag.maxupload = _opt.Value.Pathfile.LimitMaxUpload;
             ViewBag.list = individui.StoricoIndividuo.OrderByDescending(x => x.dataInserimento).ToList();
             individui.StoricoIndividuo = ViewBag.list;
             //    ViewBag.list = individui.ListaStoricoIndividui.OrderByDescending(x => x.dataInserimento).ToList();
@@ -124,7 +125,7 @@ namespace UPlant.Controllers
             // Do something with your files
 
             var t = _opt.Value;
-
+            
             foreach (var file in files)
             {
              
@@ -172,7 +173,7 @@ namespace UPlant.Controllers
 
                         int posizione = immagini.nomefile.LastIndexOf(".");
                         string estensione = immagini.nomefile.Substring(posizione);
-                        if (estensione.ToLower() == ".heic" || estensione.ToLower() == ".heif" || estensione == ".hevc" || estensione.ToLower() == ".png") //ho modificato il file .heic in jpeg forzatamente
+                        if (estensione.ToLower() == ".heic" || estensione.ToLower() == ".heif" || estensione == ".hevc" || estensione.ToLower() == ".png" ||  estensione.ToLower() == ".jpg" || estensione.ToLower() == ".jpeg") //ho modificato il file .heic in jpeg forzatamente
                         {
                             estensione = ".jpg";
                         }
@@ -198,18 +199,18 @@ namespace UPlant.Controllers
 
                         }
                         AddPageAlerts(PageAlertType.Success, _languageService.Getkey("Message_9").ToString());
-                        TempData["MsgSuc"] = _languageService.Getkey("Message_9").ToString();
+                        TempData["MsgSucc"] = _languageService.Getkey("Message_9").ToString();
 
                     }
                     catch (Exception ex)
                     {
-                        AddPageAlerts(PageAlertType.Success, _languageService.Getkey("Message_13").ToString());
+                        AddPageAlerts(PageAlertType.Error, _languageService.Getkey("Message_13").ToString());
                         TempData["MsgErr"] = _languageService.Getkey("Message_13").ToString() + ex.Message.ToString();
                         return RedirectToAction("Details", "Individui", new { id = idindividuo, tipo = tipo });
                     }
                 else
                 {
-                    AddPageAlerts(PageAlertType.Success, _languageService.Getkey("Message_15").ToString());
+                    AddPageAlerts(PageAlertType.Error, _languageService.Getkey("Message_15").ToString());
                     TempData["MsgErr"] = _languageService.Getkey("Message_15").ToString();
                     return RedirectToAction("Details", "Individui", new { id = idindividuo, tipo = tipo });
                 }
@@ -218,11 +219,6 @@ namespace UPlant.Controllers
             }
 
             return RedirectToAction("Details", "Individui", new { id = idindividuo, tipo = tipo });
-
-
-
-
-
 
         }
         public ActionResult ViewImg(Guid individuo, string img, string filename)
@@ -239,12 +235,10 @@ namespace UPlant.Controllers
             else
             {
                 AddPageAlerts(PageAlertType.Warning, _languageService.Getkey("Message_11").ToString());
-                TempData["message"] = _languageService.Getkey("Message_11").ToString();
-
+                TempData["MsgAle"] = _languageService.Getkey("Message_11").ToString();
                 return RedirectToAction("Details", "Individui", new { id = individuo });
             }
            
-
 
 
         }
@@ -331,7 +325,7 @@ namespace UPlant.Controllers
             if (id == null)
             {
                 AddPageAlerts(PageAlertType.Error, _languageService.Getkey("Message_12").ToString());
-                TempData["message"] = _languageService.Getkey("Message_12").ToString();
+                TempData["MsgErr"] = _languageService.Getkey("Message_12").ToString();
                 return PartialView();
             }
             ViewBag.individuo = id;
@@ -544,6 +538,8 @@ namespace UPlant.Controllers
                     _context.StoricoIndividuo.Add(storico);
                     await _context.SaveChangesAsync();
                     // return RedirectToAction(nameof(Details), nameof(Accessioni), individuo.accessione);
+                    AddPageAlerts(PageAlertType.Success, _languageService.Getkey("Message_5").ToString());
+                    TempData["MsgSucc"] = _languageService.Getkey("Message_5").ToString();
                     return RedirectToAction(nameof(Details), nameof(Accessioni), new { id = individuo.accessione, tipo = tipo });
                   
                 }

@@ -705,4 +705,16 @@
   <data name="Message_19" xml:space="preserve">
     <value>Controlla i campi modificati verifica che siano valorizzati</value>
   </data>
+  <data name="Message_20" xml:space="preserve">
+    <value>Mi dispiace ma, il formato</value>
+  </data>
+  <data name="Message_21" xml:space="preserve">
+    <value> non è valido , le estensioni consentite sono le seguenti : </value>
+  </data>
+  <data name="Message_22" xml:space="preserve">
+    <value>La dimensione del file ( </value>
+  </data>
+  <data name="Message_23" xml:space="preserve">
+    <value>" KB) supera il limite di "</value>
+  </data>
 </root>

@@ -320,12 +320,12 @@ namespace UPlant.Controllers
                         _context.Add(accessioni);
                         await _context.SaveChangesAsync();
                         AddPageAlerts(PageAlertType.Success, _languageService.Getkey("Message_7").ToString());
-                        TempData["message"] = _languageService.Getkey("Message_7").ToString();
+                        TempData["MsgSucc"] = _languageService.Getkey("Message_7").ToString();
                         risultato = "si";
 
                     } catch (Exception ) {
                         AddPageAlerts(PageAlertType.Error, _languageService.Getkey("Message_14").ToString());
-                        TempData["message"] = _languageService.Getkey("Message_14").ToString();
+                        TempData["MsgErr"] = _languageService.Getkey("Message_14").ToString();
                         risultato = "no";
                     }
                 } else { 
@@ -333,7 +333,7 @@ namespace UPlant.Controllers
             
 
                 AddPageAlerts(PageAlertType.Warning, _languageService.Getkey("Message_16").ToString());
-                TempData["message"] = _languageService.Getkey("Message_16").ToString();
+                TempData["MsgAle"] = _languageService.Getkey("Message_16").ToString();
                 risultato = "no";
                 var linguacorrente = _languageService.GetCurrentCulture();
                 if (linguacorrente == "en-US")
@@ -567,7 +567,7 @@ namespace UPlant.Controllers
                 {
                     msgerr = e.Message;
                     AddPageAlerts(PageAlertType.Success, _languageService.Getkey("Message_19").ToString());
-                    TempData["MsgErr"] = msgerr + _languageService.Getkey("Message_19").ToString();
+                    TempData["message"] = msgerr + _languageService.Getkey("Message_19").ToString();
 
 
 
