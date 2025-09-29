@@ -6,14 +6,22 @@
     string url = string.Empty;
     var setting = AppSettings.Value;
     var map = setting.GoogleMap;
+     var currentCulture = language.GetCurrentCulture();
 }
-
-
+@if (TempData["MsgErr"] != null)
+{
+    <div class="alert alert-danger">@TempData["MsgErr"]</div>
+}
+@if (TempData["MsgSucc"] != null)
+{
+    <div class="alert alert-success">@TempData["MsgSucc"]</div>
+}
+@if (TempData["MsgAle"] != null)
+{
+    <div class="alert alert-warning">@TempData["MsgAle"]</div>
+}
 <p>
-
-
-
-    @{
+  @{
         if (User.IsInRole("Administrator") || User.IsInRole("Operator") && Convert.ToBoolean(Model.validazione) == false)
         
         {
@@ -80,7 +88,24 @@
                             <th style="width: 478px; height: 23px;">@language.Getkey("Global_Material_Status")</th>
 
                                 </tr>
-                                <tr style="height: 23px;">
+
+ 
+     @{
+        
+         if(currentCulture == "en-US"){
+         <tr style="height: 23px;">
+        
+                                    <td style="width: 478px; height: 23px;">@Html.DisplayFor(model => model.specieNavigation.nome_scientifico)</td>
+                                    <td style="width: 239px; height: 23px;">@if (string.IsNullOrEmpty(Model.tipoAcquisizioneNavigation.descrizione_en)) { @Html.DisplayFor(model => model.tipoAcquisizioneNavigation.descrizione)} else{ @Html.DisplayFor(model => model.tipoAcquisizioneNavigation.descrizione_en)}</td>
+                                    <td style="width: 239px; height: 23px;">@if (string.IsNullOrEmpty(Model.tipoMaterialeNavigation.descrizione_en)) { @Html.DisplayFor(model => model.tipoMaterialeNavigation.descrizione)} else{ @Html.DisplayFor(model => model.tipoMaterialeNavigation.descrizione_en)}</td>
+                                    <td style="width: 239px; height: 23px;">@if (string.IsNullOrEmpty(Model.provenienzaNavigation.descrizione_en)) { @Html.DisplayFor(model => model.provenienzaNavigation.descrizione)} else{ @Html.DisplayFor(model => model.provenienzaNavigation.descrizione_en)}</td>
+                                    <td style="width: 478px; height: 23px;">@if (string.IsNullOrEmpty(Model.statoMaterialeNavigation.descrizione_en)) { @Html.DisplayFor(model => model.statoMaterialeNavigation.descrizione)} else{ @Html.DisplayFor(model => model.statoMaterialeNavigation.descrizione_en)}</td>
+
+                                </tr>
+     }
+     else
+     {
+         <tr style="height: 23px;">
                                     <td style="width: 478px; height: 23px;">@Html.DisplayFor(model => model.specieNavigation.nome_scientifico)</td>
                                     <td style="width: 239px; height: 23px;">@Html.DisplayFor(model => model.tipoAcquisizioneNavigation.descrizione)</td>
                                     <td style="width: 239px; height: 23px;">@Html.DisplayFor(model => model.tipoMaterialeNavigation.descrizione)</td>
@@ -88,6 +113,10 @@
                                     <td style="width: 478px; height: 23px;">@Html.DisplayFor(model => model.statoMaterialeNavigation.descrizione)</td>
 
                                 </tr>
+     }
+     }
+
+                                
                                 <tr style="height: 23px;">
                             <th style="width: 239px; height: 23px;">@language.Getkey("Global_Quantity")</th>
                             <th style="width: 239px; height: 23px;">@language.Getkey("Global_Taxonomic_Uncertainty")</th>
@@ -99,7 +128,17 @@
 
                                 <tr style="height: 23px;">
                                     <td style="width: 239px; height: 23px;">@Html.DisplayFor(model => model.numeroEsemplari)</td>
+                              
+                                @if (currentCulture == "en-US")
+                                {
+                                    <td style="width: 239px; height: 23px;">@if(string.IsNullOrEmpty(Model.gradoIncertezzaNavigation.descrizione_en)) { @Html.DisplayFor(model => model.gradoIncertezzaNavigation.descrizione)} else{ @Html.DisplayFor(model => model.gradoIncertezzaNavigation.descrizione_en)}</td>
+                                } else
+                                {
+                                    
                                     <td style="width: 239px; height: 23px;">@Html.DisplayFor(model => model.gradoIncertezzaNavigation.descrizione)</td>
+                                }
+                               
+
                                     <td style="width: 239px; height: 23px;">
                                         @if (Model.associatoErbario == true)
                                         {
@@ -124,8 +163,12 @@
 
                                 <tr style="height: 23px;">
                             <th style="width: 239px; height: 23px;">@language.Getkey("Global_Country")</th>
-                                    <td style="width: 239px; height: 23px;" colspan="2">@Html.DisplayFor(model => model.nazioneNavigation.descrizione)</td>
-                            <th style="width: 239px; height: 23px;">@language.Getkey("Global_Longitude")</th>
+                             @if (currentCulture == "en-US") {
+                                    <td style="width: 239px; height: 23px;" colspan="2">@if(string.IsNullOrEmpty(Model.nazioneNavigation.descrizione_en)) { @Html.DisplayFor(model => model.nazioneNavigation.descrizione)} else{ @Html.DisplayFor(model => model.nazioneNavigation.descrizione_en)}</td>
+                                }else{
+                                   <td style="width: 239px; height: 23px;" colspan="2">@Html.DisplayFor(model => model.nazioneNavigation.descrizione)</td> 
+                                }
+                                <th style="width: 239px; height: 23px;">@language.Getkey("Global_Longitude")</th>
                                     <td style="width: 239px; height: 23px;">
                                         @Html.DisplayFor(model => model.longitudine)
                                         @Html.HiddenFor(model => model.longitudine, new { @id = "longitudine", @name = "longitudine" })
@@ -133,7 +176,15 @@
                                 </tr>
                                 <tr style="height: 23px;">
                             <th style="width: 239px; height: 23px;">@language.Getkey("Global_Region")</th>
-                                    <td style="width: 239px; height: 23px;" colspan="2">@Html.DisplayFor(model => model.regioneNavigation.descrizione)</td>
+                            <td style="width: 239px; height: 23px;" colspan="2"> 
+                            @{ 
+                                if (currentCulture == "en-US") {    
+                                   @if(string.IsNullOrEmpty(Model.regioneNavigation.descrizione_en)) { @Html.DisplayFor(model => model.regioneNavigation.descrizione)} else{ @Html.DisplayFor(model => model.regioneNavigation.descrizione_en)};
+                            }else{
+                                @Html.DisplayFor(model => model.regioneNavigation.descrizione);
+                                }
+                            }
+                                </td>
                             <th style="width: 239px; height: 23px;">@language.Getkey("Global_Latitude")</th>
                                     <td style="width: 239px; height: 23px;">
                                         @Html.DisplayFor(model => model.latitudine)
@@ -203,10 +254,6 @@
             
         </div>
     </div>
-
-
-
-
 
     <div id="individui">
         <div class="card card-outline card-primary col-xs-12">
@@ -300,7 +347,18 @@
                                         <td>
                                             @Html.DisplayFor(modelItem => item.vecchioprogressivo)
                                         </td>
-                                        <td>
+
+
+
+
+                                         @{ 
+                                if (currentCulture == "en-US") {    
+                                  <td> @if(string.IsNullOrEmpty(item.settoreNavigation.settore_en)) { @Html.DisplayFor(modelItem => item.settoreNavigation.settore)} else{ @Html.DisplayFor(modelItem => item.settoreNavigation.settore_en)}</td>
+                            <td> @if(string.IsNullOrEmpty(item.collezioneNavigation.collezione_en)) { @Html.DisplayFor(modelItem => item.collezioneNavigation.collezione)} else{ @Html.DisplayFor(modelItem => item.collezioneNavigation.collezione_en)}</td>
+                             <td> @if(string.IsNullOrEmpty(item.cartellinoNavigation.descrizione_en)) { @Html.DisplayFor(modelItem => item.cartellinoNavigation.descrizione)} else{ @Html.DisplayFor(modelItem => item.cartellinoNavigation.descrizione_en)}</td>
+                                
+                                }else{
+                                <td>
                                             @Html.DisplayFor(modelItem => item.settoreNavigation.settore)
                                         </td>
                                         <td>
@@ -309,6 +367,9 @@
                                         <td>
                                             @Html.DisplayFor(modelItem => item.cartellinoNavigation.descrizione)
                                         </td>
+                                }
+                            }
+                                        
 
                                         @{
                                             if (item.StoricoIndividuo.Count() == 0)
@@ -321,13 +382,18 @@
                                                 </td>
                                                 <td>
                                                         @language.Getkey("Global_Empty")
-                                                </td>
-                                            }
-                                            else
-                                            {
-                                                <td>
-                                                        @Html.DisplayFor(modelItem => item.StoricoIndividuo.OrderByDescending(x => x.dataInserimento).First().statoIndividuoNavigation.stato)
-                                                </td>
+                                                    </td>
+                                                }
+                                                else
+                                                {
+                                                    if (currentCulture == "en-US") {    
+                                                        <td> @if(string.IsNullOrEmpty(item.StoricoIndividuo.OrderByDescending(x => x.dataInserimento).First().statoIndividuoNavigation.descrizione_en)) { @Html.DisplayFor(modelItem => item.StoricoIndividuo.OrderByDescending(x => x.dataInserimento).First().statoIndividuoNavigation.stato)} else{ @Html.DisplayFor(modelItem => item.StoricoIndividuo.OrderByDescending(x => x.dataInserimento).First().statoIndividuoNavigation.descrizione_en)}</td>
+                                                    }
+                                                    else
+                                                    {
+                                                          <td>@Html.DisplayFor(modelItem => item.StoricoIndividuo.OrderByDescending(x => x.dataInserimento).First().statoIndividuoNavigation.stato)</td>
+                                                    }
+                                                  
 
                                                 <td>
                                                         @Html.DisplayFor(modelItem => item.StoricoIndividuo.OrderByDescending(x => x.dataInserimento).First().dataInserimento)
@@ -472,21 +538,21 @@
             var myLatlng = new google.maps.LatLng(43.71944963861506, 10.396344067111961);
         }
     async function initMap() {
-      // The location of Uluru
+     
             const position = myLatlng;
-      // Request needed libraries.
+     
       
       const { Map } = await google.maps.importLibrary("maps");
       const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
 
-      // The map, centered at Uluru
+      
             map = new Map(document.getElementById("myMap"), {
                 zoom: 6,
         center: position,
                 mapId: "dd9d3d35a9e256c5",
       });
 
-      // The marker, positioned at Uluru
+      
       const marker = new AdvancedMarkerElement({
                 map: map,
                 position: myLatlng,

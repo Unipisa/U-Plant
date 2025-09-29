@@ -2,7 +2,7 @@
 @inject LanguageService language
 @{
     ViewData["Title"] = "Individui";
-    
+      var currentCulture = language.GetCurrentCulture();
 }
 @if (TempData["MsgErr"] != null)
 {
@@ -106,12 +106,18 @@
                             @Convert.ToDateTime(Model.propagatoData).ToString("dd/MM/yyyy")
                             
                         </td>
+                        @if (currentCulture == "en-US"){
+                         <td style="width: 239px; height: 23px;">@if (string.IsNullOrEmpty(Model.propagatoModalitaNavigation.descrizione_en)) { @Html.DisplayFor(model => model.propagatoModalitaNavigation.propagatoModalita)} else{ @Html.DisplayFor(model => model.propagatoModalitaNavigation.descrizione_en)}</td>   
+                        <td style="width: 239px; height: 23px;">@if (string.IsNullOrEmpty(Model.sessoNavigation.descrizione_en)) { @Html.DisplayFor(model => model.sessoNavigation.descrizione)} else{ @Html.DisplayFor(model => model.sessoNavigation.descrizione_en)}</td>   
+                        
+                        }else {
                         <td style="width:33%">
                             @Html.DisplayFor(model => model.propagatoModalitaNavigation.propagatoModalita)
                         </td>
                         <td style="width:33%">
                             @Html.DisplayFor(model => model.sessoNavigation.descrizione)
                         </td>
+                        }
                     </tr>
                     <tr>
                         <th style="width:33%">
@@ -155,7 +161,13 @@
                     </tr>
 
                     <tr>
-                        <td style="width:33%">
+                        @if (currentCulture == "en-US")
+                        {
+                               <td> @if(string.IsNullOrEmpty(Model.settoreNavigation.settore_en)) { @Html.DisplayFor(model => model.settoreNavigation.settore)} else{ @Html.DisplayFor(model => model.settoreNavigation.settore_en)}</td>
+                            <td> @if(string.IsNullOrEmpty(Model.collezioneNavigation.collezione_en)) { @Html.DisplayFor(model => model.collezioneNavigation.collezione)} else{ @Html.DisplayFor(model => model.collezioneNavigation.collezione_en)}</td>
+                             <td> @if(string.IsNullOrEmpty(Model.cartellinoNavigation.descrizione_en)) { @Html.DisplayFor(model => model.cartellinoNavigation.descrizione)} else{ @Html.DisplayFor(model => model.cartellinoNavigation.descrizione_en)}</td>
+                        }else{
+                             <td style="width:33%">
                             @Html.DisplayFor(model => model.settoreNavigation.settore)
                         </td>
                         <td style="width:33%">
@@ -164,6 +176,10 @@
                         <td style="width:33%">
                             @Html.DisplayFor(model => model.cartellinoNavigation.descrizione)
                         </td>
+
+                        }
+
+                       
                     </tr>
                     <tr>
                         <th style="width:33%">
@@ -299,12 +315,20 @@
                                                     <td>
                                                             @Html.DisplayFor(modelItem => item.utenteNavigation.NomeCognome)
                                                     </td>
-                                                            <td>
+                                                      @if (currentCulture == "en-US"){
+                         <td style="width: 239px; height: 23px;">@if (string.IsNullOrEmpty(item.statoIndividuoNavigation.descrizione_en)) { @Html.DisplayFor(modelItem => item.statoIndividuoNavigation.stato)} else{ @Html.DisplayFor(modelItem => item.statoIndividuoNavigation.descrizione_en)}</td>   
+                                                        <td style="width: 239px; height: 23px;">@if (string.IsNullOrEmpty(item.condizioneNavigation.descrizione_en)) { @Html.DisplayFor(modelItem => item.condizioneNavigation.condizione)} else{ @Html.DisplayFor(modelItem => item.condizioneNavigation.descrizione_en)}</td>
+
+                                                    }else
+                                                    {
+                                                          <td>
                                                                 @Html.DisplayFor(modelItem => item.statoIndividuoNavigation.stato)
                                                             </td>
                                                             <td>
                                                                 @Html.DisplayFor(modelItem => item.condizioneNavigation.condizione)
                                                             </td>
+                                                    }
+
                                                             <td>
                                                                 @Html.DisplayFor(modelItem => item.operazioniColturali)
                                                             </td>
