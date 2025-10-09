@@ -292,7 +292,7 @@
         <input id="idpercorso" name="idpercorso" type="hidden" value="@Model.id">
     </div>
     <div class="col-md-1">
-        <button type="submit" id="cerca" class="pbSubmit btn  btn-success btn-rounded btn-sm">Cerca</button>
+        <button type="submit" id="cerca" class="pbSubmit btn  btn-success btn-rounded btn-sm">@language.Getkey("Global_Search")</button>
 
     </div>
 
@@ -457,7 +457,7 @@
                     var add = "@language.Getkey("Global_Add")";
                         var ind = "@language.Getkey("Global_Individual")";
                            var s = '<div class="col-sm-12"><table id="table1" class="table table-bordered table-striped dataTable">';
-                                    s += '<thead><tr><th></th><th>Progressivo</th><th>'+oldprog+'</th><th>'+names+'</th><th>'+sector+'</th><th>'+coll+'</th><th>'+lab+'</th><th>'+imgs+'</th></tr></thead>';
+                                    s += '<thead><tr><th></th><th>Progressivo</th><th>'+oldprog+'</th><th>'+namesc+'</th><th>'+sector+'</th><th>'+coll+'</th><th>'+lab+'</th><th>'+imgs+'</th></tr></thead>';
                            s += '<tbody>';
                            for (var i = 0; i < data.length; i++) {
                                var per = data[i].idpercorso;

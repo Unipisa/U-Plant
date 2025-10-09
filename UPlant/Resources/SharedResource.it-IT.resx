@@ -490,7 +490,7 @@
     <value>Codice Fiscale</value>
   </data>
   <data name="Global_Enabled" xml:space="preserve">
-    <value>Abilitato</value>
+    <value>Attivo</value>
   </data>
   <data name="Global_Email" xml:space="preserve">
     <value>Email</value>
@@ -716,5 +716,8 @@
   </data>
   <data name="Message_23" xml:space="preserve">
     <value>" KB) supera il limite di "</value>
+  </data>
+  <data name="Global_Search" xml:space="preserve">
+    <value>Cerca</value>
   </data>
 </root>
