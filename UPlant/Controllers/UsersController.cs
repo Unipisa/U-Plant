@@ -75,10 +75,10 @@ namespace UPlant.Controllers
             
             string hostName = Dns.GetHostName();
             string Ip = Dns.GetHostEntry(hostName).AddressList[1].ToString();
-            
 
+            var utenteesistente = _context.UserRole.Include(u => u.UserFKNavigation).Include(u => u.RoleFKNavigation).Where(u => u.UserFKNavigation.UnipiUserName == users.UnipiUserName && u.RoleFK == ruolo);
 
-                var utenteesistente = _context.Users.Where(a => a.UnipiUserName == users.UnipiUserName);
+               // var utenteesistente = _context.Users.Where(a => a.UnipiUserName == users.UnipiUserName );
             if (utenteesistente.Count() >0)
             {
                 ///avverti che stai inserendo un nominativo già presente

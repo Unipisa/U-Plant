@@ -21,6 +21,30 @@ namespace UPlant.Models.DB
     {   
     }
 
+
+    public partial class UsersCustom
+    {
+        [Required]
+        public string UnipiUserName { get; set; }
+        [Required]
+        public string CF { get; set; }
+
+        [Required]
+        public string Name { get; set; }
+        [Required]
+        public string LastName { get; set; }
+        [Required]
+        public string Email { get; set; }
+
+
+    }
+    [ModelMetadataType(typeof(UsersCustom))]
+    public partial class Users
+    {
+    }
+
+
+
     public partial class PercorsiCustom
     {
 

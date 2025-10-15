@@ -148,16 +148,16 @@
     <value>Orto Botanico di Pisa Data</value>
   </data>
   <data name="Home_Index_10" xml:space="preserve">
-    <value>Number of Accepted names in U-Plant</value>
+    <value>Number of accepted names in U-Plant</value>
   </data>
   <data name="Home_Index_11" xml:space="preserve">
     <value>Number of families cultivated in the garden</value>
   </data>
   <data name="Home_Index_12" xml:space="preserve">
-    <value>Number of genera grown in the garden</value>
+    <value>Number of genera cultivated in the garden</value>
   </data>
   <data name="Home_Index_13" xml:space="preserve">
-    <value>Number of species grown in the garden</value>
+    <value>Number of species cultivated in the garden</value>
   </data>
   <data name="Home_Index_14" xml:space="preserve">
     <value>Number of species grown in nursery</value>
@@ -478,7 +478,7 @@
     <value>Users</value>
   </data>
   <data name="UsersController_1" xml:space="preserve">
-    <value>The account is already present in the users table</value>
+    <value>The account is already present in the users table with the role</value>
   </data>
   <data name="Global_Name" xml:space="preserve">
     <value>Name</value>
@@ -622,7 +622,7 @@
     <value>Path</value>
   </data>
   <data name="Shared_Comp_Sb_UPlant_Discover" xml:space="preserve">
-    <value>UPlant Discover</value>
+    <value>U-Plant DISCOVER</value>
   </data>
   <data name="Shared_Comp_Sb_Administration" xml:space="preserve">
     <value>Administration</value>

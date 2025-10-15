@@ -266,7 +266,7 @@
                                 </ul>
                             </li>
                         }
-                        @if (User.IsInRole("Administrator") || User.IsInRole("Operator") || User.IsInRole("TreeKeeper") || User.IsInRole("Discover") || User.IsInRole("Seminum") || User.IsInRole("Utility"))
+                        @if (User.IsInRole("Administrator") || User.IsInRole("Operator"))
 
                         {
 
@@ -342,7 +342,7 @@
                                 </ul>
                             </li>
                         }
-                        else if (User.IsInRole("Reader"))
+                        else if (User.IsInRole("Reader") || User.IsInRole("Discover"))
                         {
 
                             <li class="nav-item has-treeview">
@@ -374,7 +374,7 @@
                             </li>
                         }
 
-                        @if (User.IsInRole("Administrator") || User.IsInRole("Operator") || User.IsInRole("Alberi") || User.IsInRole("Discover") || User.IsInRole("Seminum") || User.IsInRole("Utility"))
+                        @if (User.IsInRole("Administrator")  || User.IsInRole("Discover"))
 
                         {
                             <li class="nav-item has-treeview">
@@ -383,7 +383,7 @@
                                     <p class="text-xs-right">@language.Getkey("Shared_Comp_Sb_Support_Tools")</p><i class="right fa fa-angle-left"></i>
                                 </a>
                                 <ul class="nav nav-treeview">
-                                    @if (User.IsInRole("Administrator") || User.IsInRole("Operator"))
+                                    @if (User.IsInRole("Administrator") || User.IsInRole("Discover"))
                                     {
                                         <li class="nav-item has-treeview">
                                             <a href="#" class="nav-link">

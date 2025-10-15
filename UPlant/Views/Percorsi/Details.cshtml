@@ -1,8 +1,7 @@
 ﻿@model UPlant.Models.DB.Percorsi
 @inject LanguageService language
 @{
-
-    ViewBag.Title = @language.Getkey("Global_Path");
+    ViewBag.Title = language.Getkey("Global_Path");
     ViewBag.lang = language.GetCurrentCulture();
 }
 
@@ -75,9 +74,13 @@
 
                                 </td>
                                 <td style="vertical-align: middle; text-align: center;">
+                                    @{
+                                        if (!string.IsNullOrEmpty(Model.descrizione_en)){
 
-                                    @Model.descrizione_en.ToString().Substring(0, (Model.descrizione_en.Length > 50) ? 50 : Model.descrizione_en.Length) [...]
-
+                                            @Model.descrizione_en.ToString().Substring(0, (Model.descrizione_en.Length > 50) ? 50 : Model.descrizione_en.Length) <span>[...]</span>
+                                            
+                                        } 
+                                  }
                                 </td>
 
                                 <td style="vertical-align: middle; text-align: center;">
@@ -230,10 +233,6 @@
 
                                         
 
-
-
-
-
                                         <td>
                                             @Html.DisplayFor(modelItem => item.individuoNavigation.ImmaginiIndividuo.Count)
                                         </td>
@@ -243,11 +242,6 @@
 
                                                 if (User.IsInRole("Administrator") || User.IsInRole("Discover"))
                                                 {
-
-
-
-
-
 
 
                                                     var idindper = @Html.Raw(item.id);
@@ -272,12 +266,6 @@
                 </table>
             </div>
         </div>
-
-
-
-
-
-
 
 
     </div>

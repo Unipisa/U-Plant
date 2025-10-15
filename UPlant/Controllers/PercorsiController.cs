@@ -17,7 +17,7 @@ using static UPlant.Controllers.BaseController;
 
 namespace U_Plant.Controllers
 {
-    [Authorize(Roles = "Administrator,Operator,Reader")]
+    [Authorize(Roles = "Administrator,Discover")]
     public class PercorsiController : BaseController
     {
         private readonly Entities _context;
@@ -94,6 +94,7 @@ namespace U_Plant.Controllers
             return View(percorsi);
 
         }
+        
         public ActionResult Create()
         {
             ViewBag.titolo = "";
@@ -103,6 +104,7 @@ namespace U_Plant.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         //public ActionResult Create([Bind(Include = "id,titolo,descrizione,ordinamento,attivo")]  Percorsi percorsi)
+       
         public ActionResult Create(string titolo, string descrizione, string titolo_en, string descrizione_en)
         {
             Percorsi percorsi = new Percorsi();
@@ -144,6 +146,7 @@ namespace U_Plant.Controllers
 
             return View(percorsi);
         }
+        
         public ActionResult Edit(Guid? id)
         {
             if (id == null)
@@ -157,6 +160,7 @@ namespace U_Plant.Controllers
             }
             return View(percorsi);
         }
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         //public ActionResult Edit([Bind(Include = "id,titolo,descrizione,datacreazione,ordinamento,attivo")] Percorsi percorsi)
@@ -168,12 +172,12 @@ namespace U_Plant.Controllers
             {
                 percorsi.descrizione = descrizione.Trim();
             }
-            if (titolo_en.Length > 1)
+            if (!string.IsNullOrEmpty(titolo_en))
             {
                 percorsi.titolo_en = titolo_en.Trim();
             }
 
-            if (descrizione_en.Length > 1)
+            if (!string.IsNullOrEmpty(descrizione_en))
             {
                 percorsi.descrizione_en = descrizione_en.Trim();
             }
@@ -187,6 +191,7 @@ namespace U_Plant.Controllers
             }
             return View(percorsi);
         }
+        [Authorize(Roles = "Administrator")]
         public ActionResult Delete(Guid? id)
         {
             if (id == null)
@@ -203,7 +208,7 @@ namespace U_Plant.Controllers
             return View(percorsi);
         }
 
-
+        [Authorize(Roles = "Administrator")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(Guid id)
@@ -241,6 +246,7 @@ namespace U_Plant.Controllers
             return RedirectToAction("Index");
 
         }
+        
         public ActionResult DeleteIndividuoPercorso(Guid? id, Guid percorso)
         {
             if (id == null)
@@ -297,7 +303,7 @@ namespace U_Plant.Controllers
 
             return Json(result, new System.Text.Json.JsonSerializerOptions());
         }
-
+        
         //public ActionResult Create([Bind(Include = "id,titolo,descrizione,ordinamento,attivo")]  Percorsi percorsi)
         public ActionResult Inserisciindividuopercorso(Guid percorso, Guid individuo)
         {
@@ -554,6 +560,7 @@ namespace U_Plant.Controllers
 
 
         }
+        
         public ActionResult ShowHidden(Guid percorso)
         {
 

@@ -478,7 +478,7 @@
     <value>Users</value>
   </data>
   <data name="UsersController_1" xml:space="preserve">
-    <value>L'account è già presente nella tabella utenti</value>
+    <value>L'account è già presente nella tabella utenti con quel ruolo</value>
   </data>
   <data name="Global_Name" xml:space="preserve">
     <value>Nome</value>
@@ -622,7 +622,7 @@
     <value>Percorso</value>
   </data>
   <data name="Shared_Comp_Sb_UPlant_Discover" xml:space="preserve">
-    <value>UPlant Discover</value>
+    <value>U-Plant DISCOVER</value>
   </data>
   <data name="Shared_Comp_Sb_Administration" xml:space="preserve">
     <value>Amministrazione</value>

@@ -1,162 +1,157 @@
 ﻿@model IEnumerable<UPlant.Models.DB.Percorsi>
 @inject LanguageService language
 @{
-  
-    ViewBag.Title = @language.Getkey("Global_Path");
+    ViewBag.Title = language.Getkey("Global_Path");
+
+    // Safe enumerables
+    var percorsi = Model ?? Enumerable.Empty<UPlant.Models.DB.Percorsi>();
+   
+
+    // Local helpers
+    string Trunc(string s, int max) =>
+        string.IsNullOrEmpty(s) ? "" : (s.Length > max ? s.Substring(0, max) : s);
 }
 
 <div class="card card-outline card-primary">
     <div class="card-header with-border">
         <h1 class="card-title">@language.Getkey("Global_List")</h1>
-        <div class="float-right success">
-                    <a asp-action="Create" asp-controller="Percorsi">
-                        <span class="btn btn btn-success" title="crea percorso">
-                    @language.Getkey("Global_Add") 
-                        </span>
-                    </a>
-                </div>
-			</div>
+        @if (User.IsInRole("Administrator") || User.IsInRole("Discover"))
+        {
+            <div class="float-right success">
+                <a asp-action="Create" asp-controller="Percorsi">
+                    <span class="btn btn btn-success" title="crea percorso">
+                        @language.Getkey("Global_Add")
+                    </span>
+                </a>
+            </div>
+        }
+    </div>
     <div class="card-body">
-               
-                <div id="table1_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
+        <div id="table1_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
+            <div class="row">
+                <div class="col-sm-12">
+                    <table id="table1" class="table table-bordered table-striped dataTable">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>@language.Getkey("Global_Title")</th>
+                                <th>@language.Getkey("Global_Description")</th>
+                                <th>@language.Getkey("Global_English_Title")</th>
+                                <th>@language.Getkey("Global_English_Description")</th>
+                                <th>@language.Getkey("Global_Entry_Date")</th>
+                                <th>@language.Getkey("Global_Author")</th>
+                                <th style="width:25%"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in percorsi)
+                            {
+                                <tr>
+                                    <td style="text-align: center;">
+                                        <a asp-action="Details" asp-controller="Percorsi" asp-route-id="@item.id">
+                                            <span class="btn btn-primary btn-xs" title="@($"{language.Getkey("Global_Detail")} {language.Getkey("Global_Individual")}")">
+                                                <i class="fa-solid fa-search"></i>
+                                            </span>
+                                        </a>
 
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <table id="table1" class="table table-bordered table-striped dataTable">
-                                <thead>
-                                    <tr>
-                                        <th>
-                                        </th>
-                                        <th>
-                                    @language.Getkey("Global_Title")
-                                        </th>
-                                        <th>
-                                    @language.Getkey("Global_Description")
-                                        </th>
-                                       
-                                        <th>
-                                    @language.Getkey("Global_English_Title")
-                                        </th>
-                                        <th>
-                                    @language.Getkey("Global_English_Description")
-                                        </th>
-                                        <th>
-                                    @language.Getkey("Global_Entry_Date") 
-                                        </th>
-                                        <th>
-                                    @language.Getkey("Global_Author")
-                                        </th>
-                                        <th style="width:25%"></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
+                                        @* SAFE: pim potrebbe essere vuoto, ma non è mai null *@
+                                        @if (ViewBag.pim.Contains(item.id))
+                                        {
+                                            <i class="fa-solid alert-default-warning" style="color:red"></i>
+                                        }
+                                    </td>
 
-                                    @foreach (var item in Model)
-                                    {
-                                        <tr>
-                                            <td style="text-align: center;">
-                                                <a asp-action="Details" asp-controller="Percorsi" asp-route-id="@item.id">
-                                            <span class="btn btn-primary  btn-xs" title="@language.Getkey("Global_Detail") + ' ' + @language.Getkey("Global_Individual")">
-                                                        <i class="fa-solid fa-search"></i>
-                                                    </span>
-                                                </a>
+                                    <td style="text-align: center;">
+                                        @Html.DisplayFor(_ => item.titolo)
+                                    </td>
 
+                                    <td style="text-align: center;">
+                                        @($"{Trunc(item.descrizione ?? "", 100)}{(string.IsNullOrEmpty(item.descrizione) ? "" : " [...]")}")
+                                    </td>
 
+                                    <td style="text-align: center;">
+                                        @Html.DisplayFor(_ => item.titolo_en)
+                                    </td>
 
+                                    <td style="text-align: center;">
+                                        @($"{Trunc(item.descrizione_en ?? "", 100)}{(string.IsNullOrEmpty(item.descrizione_en) ? "" : " [...]")}")
+                                    </td>
 
-                                                @foreach (var p in ViewBag.pim)
-                                                {
-                                                    if (p == item.id)
-                                                    {
+                                    <td style="text-align: center;">
+                                        @item.datacreazione.ToString("dd/MM/yyyy")
+                                    </td>
 
-                                                        <i class="fa-solid alert-default-warning" style="color:red"></i>
+                                    <td style="vertical-align: top; text-align: center;">
+                                        @Html.DisplayFor(_ => item.autore)
+                                    </td>
 
-                                                    }
+                                    <td style="vertical-align: top;">
+                                        @{
+                                            var isAdmin = User.IsInRole("Administrator");
+                                            var isDiscover = User.IsInRole("Discover");
+                                        }
+                                        @if (isAdmin || isDiscover)
+                                        {
+                                            @if (item.attivo == true)
+                                            {
+                                                <button type="button" id="Sito" class="btn btn-info btn-xs"
+                                                        onclick="window.location.href='@Url.Action("ShowHidden", "Percorsi", new { percorso = item.id })'">
+                                                    <i class="fa-solid fa-eye"></i>
+                                                </button>
+                                            }
+                                            else
+                                            {
+                                                <button type="button" id="Sito" class="btn btn-light btn-xs"
+                                                        onclick="window.location.href='@Url.Action("ShowHidden", "Percorsi", new { percorso = item.id })'">
+                                                    <i class="fa-solid fa-eye-slash"></i>
+                                                </button>
+                                            }
 
-                                                }
+                                            <a asp-action="Edit" asp-controller="Percorsi" asp-route-id="@item.id">
+                                                <span class="btn btn-warning btn-xs" title="@($"{language.Getkey("Global_Edit")} {language.Getkey("Global_Path")}")">
+                                                    <i class="fa-solid fa-pencil" style="color:#fafafa;"></i>
+                                                </span>
+                                            </a>
+                                        }
 
-                                            </td>
-                                            <td style=" text-align: center;">
-                                                @Html.DisplayFor(modelItem => item.titolo)
-                                            </td>
-                                            <td style=" text-align: center;">
-                                        @item.descrizione.ToString().Substring(0, (item.descrizione.Length > 100) ? 100 : item.descrizione.Length) [...]
-                                            </td>
-                                            <td style=" text-align: center;">
-                                                @Html.DisplayFor(modelItem => item.titolo_en)
-                                            </td>
-                                            <td style=" text-align: center;">
-                                        @item.descrizione_en.ToString().Substring(0, (item.descrizione_en.Length > 100) ? 100 : item.descrizione_en.Length) [...] 
-                                            </td>
-                                            <td style=" text-align: center;">
-                                                @Convert.ToDateTime(item.datacreazione).ToString("dd/MM/yyyy")
-                                            </td>
-                                            <td style="vertical-align: top; text-align: center;">
-                                                @Html.DisplayFor(modelItem => item.autore)
-                                            </td>
-                                            <td style=" vertical-align: top;">
-                                                @{
-                                                    if (User.IsInRole("Administrator")  || User.IsInRole("Discover"))
-                                                    {
-                                                        if (item.attivo == true)
-                                                        {
-                                                            <button type="button" id="Sito" class="btn btn-info btn-xs" onclick="window.location.href = '@Url.Action("ShowHidden", "Percorsi", new { percorso = item.id  })';">
-                                                                <i class="fa-solid fa-eye"></i>
-                                                            </button>
-                                                        }
-                                                        else
-                                                        {
-                                                            <button type="button" id="Sito" class="btn btn-light btn-xs" onclick="window.location.href = '@Url.Action("ShowHidden", "Percorsi", new { percorso = item.id })';">
-                                                                <i class="fa-solid fa-eye-slash"></i>
-                                                            </button>
-                                                        }
-                                                        <a asp-action="Edit" asp-controller="Percorsi" asp-route-id="@item.id">
-                                                    <span class="btn btn-warning btn-xs" title="@language.Getkey("Global_Edit") @language.Getkey("Global_Path")">
-                                                                <i class="fa-solid fa-pencil" style="color: #fafafa;"></i>
-                                                            </span>
-                                                        </a>
-                                                 
-                                                    }
-                                                    if (User.IsInRole("Administrator"))
-                                                    
-                                                    {
-                                                        <a asp-action="Delete" asp-controller="Percorsi" asp-route-id="@item.id">
-                                                    <span class="btn btn-danger btn-xs" title="@language.Getkey("Global_Delete") @language.Getkey("Global_Path")">
-                                                                <i class="fa-solid fa-trash"></i>
-                                                            </span>
-                                                        </a>
+                                        @if (isAdmin)
+                                        {
+                                            <a asp-action="Delete" asp-controller="Percorsi" asp-route-id="@item.id">
+                                                <span class="btn btn-danger btn-xs" title="@($"{language.Getkey("Global_Delete")} {language.Getkey("Global_Path")}")">
+                                                    <i class="fa-solid fa-trash"></i>
+                                                </span>
+                                            </a>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
 
-
-                                                    }
-
-                                                }
-                                                
-                                            </td>
-                                        </tr>
-                                    }
-
-                            </table>
+                    @* Messaggio se non ci sono elementi *@
+                    @if (!percorsi.Any())
+                    {
+                        <div class="text-center text-muted">
+                            @language.Getkey("Global_NoResults")
                         </div>
-                    </div>
-
-
+                    }
                 </div>
             </div>
-		</div>
-
+        </div>
+    </div>
+</div>
 
 @section CustomScripts {
-
     <script>
         jQuery(function () {
             jQuery('#table1').DataTable({
-                'paging': true,
-                'lengthChange': true,
-                'searching': true,
-                'ordering': true,
-                'info': true,
-                'autoWidth': false
-            })
-        })
+                paging: true,
+                lengthChange: true,
+                searching: true,
+                ordering: true,
+                info: true,
+                autoWidth: false
+            });
+        });
     </script>
 }
