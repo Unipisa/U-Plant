@@ -13,6 +13,8 @@ public partial class Raccoglitori
 
     public bool attivo { get; set; }
 
+    public string nominativo_en { get; set; }
+
     public virtual ICollection<Accessioni> Accessioni { get; set; } = new List<Accessioni>();
 
     public virtual Organizzazioni organizzazioneNavigation { get; set; }

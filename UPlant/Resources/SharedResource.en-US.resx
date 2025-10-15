@@ -720,4 +720,7 @@
   <data name="Global_Search" xml:space="preserve">
     <value>Search</value>
   </data>
+  <data name="Global_Reset" xml:space="preserve">
+    <value>Reset</value>
+  </data>
 </root>

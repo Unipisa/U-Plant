@@ -25,13 +25,19 @@ public partial class Ricercaacc
 
     public string tipomateriale { get; set; }
 
+    public string tipomateriale_en { get; set; }
+
     public Guid idtipoacquisizione { get; set; }
 
     public string tipoacquisizione { get; set; }
 
+    public string tipoacquisizione_en { get; set; }
+
     public Guid? idgradoincertezza { get; set; }
 
     public string gradoincertezza { get; set; }
+
+    public string gradoincertezza_en { get; set; }
 
     public Guid idinseritoda { get; set; }
 

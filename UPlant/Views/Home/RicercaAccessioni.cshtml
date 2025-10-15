@@ -5,6 +5,7 @@
 
     ViewBag.Title = @language.Getkey("Home_Ricerca_Accessioni_1");
     ViewBag.lang = language.GetCurrentCulture();
+    var currentCulture = language.GetCurrentCulture();
 }
 
 
@@ -24,7 +25,7 @@
             <div class="form-group col-md-4 autocomplete ">
                 <label for="inputNomeScientifico">@language.Getkey("Global_Scientific_Name")</label>
                 <input type="text" class="form-control" id="specie" name="specie" placeholder="@language.Getkey("Global_Scientific_Name")" value="@ViewBag.specie">
-                
+
             </div>
             <div class="form-group col-md-4">
                 <label for="inputFamiglia">@language.Getkey("Global_Family")</label>
@@ -81,10 +82,10 @@
 
         <div class="row">
             <div class="form-group col-md-1">
-                <input type="submit" value="Cerca" class="btn btn-success" />
+                    <input type="submit" value="@language.Getkey("Global_Search")" class="btn btn-success" />
             </div>
             <div class="form-group col-md-3">
-                <input id="azzera" type="button" value="Azzera" class="btn btn-danger" />
+                        <input id="azzera" type="button" value="@language.Getkey("Global_Reset")" class="btn btn-danger" />
             </div>
             @{
                 if (User.IsInRole("Administrator") || User.IsInRole("Operator") || User.IsInRole("TreeKeeper") || User.IsInRole("Discover") || User.IsInRole("Seminum") || User.IsInRole("Utility"))
@@ -95,8 +96,8 @@
                         {
                             <div class="form-group col-md-3">
                                 Download File di ricerca  <button type="button" class="btn btn-success" onclick="window.location.href = '@Url.Action("Download", "Home", new { file = ViewBag.filename })';">
-                                 
-                                <span class="fa-solid fa-file-excel" aria-hidden="true"></span>
+
+                                    <span class="fa-solid fa-file-excel" aria-hidden="true"></span>
                                 </button>
                             </div>
                         }
@@ -129,7 +130,7 @@
                     </th>
 
                     <th>
-                       @language.Getkey("Global_Genus")
+                        @language.Getkey("Global_Genus")
                     </th>
 
                     <th>
@@ -167,7 +168,7 @@
                         {
                             <tr>
                                 <td>
-                                   
+
                                     <a asp-action="Details" asp-controller="Accessioni" asp-route-id="@item.id" asp-route-tipo="ricerca">
                                         <span class="btn btn-primary btn-xs" title="@language.Getkey("Global_Detail") @language.Getkey("Global_Individual")">
                                             <i class="fa-solid fa-search"></i>
@@ -197,9 +198,17 @@
                                 <td>
                                     @Convert.ToDateTime(item.dataacquisizione).ToString("yyyyMMdd")
                                 </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.tipomateriale)
-                                </td>
+                                @if (currentCulture == "en-US") {
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.tipomateriale_en)
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.tipomateriale)
+                                    </td>
+                                }
                                 <td>
                                     @Html.DisplayFor(modelItem => item.countind)
 

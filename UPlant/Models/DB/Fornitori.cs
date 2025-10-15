@@ -15,6 +15,8 @@ public partial class Fornitori
 
     public bool attivo { get; set; }
 
+    public string descrizione_en { get; set; }
+
     public virtual ICollection<Accessioni> Accessioni { get; set; } = new List<Accessioni>();
 
     public virtual Organizzazioni organizzazioneNavigation { get; set; }

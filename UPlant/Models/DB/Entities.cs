@@ -341,6 +341,7 @@ public partial class Entities : DbContext
             entity.Property(e => e.descrizione)
                 .IsRequired()
                 .IsUnicode(false);
+            entity.Property(e => e.descrizione_en).IsUnicode(false);
             entity.Property(e => e.note).HasColumnType("text");
 
             entity.HasOne(d => d.organizzazioneNavigation).WithMany(p => p.Fornitori)
@@ -383,6 +384,7 @@ public partial class Entities : DbContext
             entity.Property(e => e.nominativo)
                 .IsRequired()
                 .IsUnicode(false);
+            entity.Property(e => e.nominativo_en).IsUnicode(false);
 
             entity.HasOne(d => d.organizzazioneNavigation).WithMany(p => p.Identificatori)
                 .HasForeignKey(d => d.organizzazione)
@@ -583,6 +585,7 @@ public partial class Entities : DbContext
             entity.Property(e => e.descrizione)
                 .IsRequired()
                 .IsUnicode(false);
+            entity.Property(e => e.descrizione_en).IsUnicode(false);
             entity.Property(e => e.regione)
                 .IsRequired()
                 .HasMaxLength(2)
@@ -600,6 +603,7 @@ public partial class Entities : DbContext
             entity.Property(e => e.nominativo)
                 .IsRequired()
                 .IsUnicode(false);
+            entity.Property(e => e.nominativo_en).IsUnicode(false);
 
             entity.HasOne(d => d.organizzazioneNavigation).WithMany(p => p.Raccoglitori)
                 .HasForeignKey(d => d.organizzazione)
@@ -647,6 +651,7 @@ public partial class Entities : DbContext
                 .HasMaxLength(100)
                 .IsUnicode(false);
             entity.Property(e => e.gradoincertezza).IsUnicode(false);
+            entity.Property(e => e.gradoincertezza_en).IsUnicode(false);
             entity.Property(e => e.inseritoda)
                 .HasMaxLength(301)
                 .IsUnicode(false);
@@ -662,7 +667,9 @@ public partial class Entities : DbContext
                 .IsUnicode(false);
             entity.Property(e => e.raccoglitore).IsUnicode(false);
             entity.Property(e => e.tipoacquisizione).IsUnicode(false);
+            entity.Property(e => e.tipoacquisizione_en).IsUnicode(false);
             entity.Property(e => e.tipomateriale).IsUnicode(false);
+            entity.Property(e => e.tipomateriale_en).IsUnicode(false);
             entity.Property(e => e.vecchioprogressivo)
                 .HasMaxLength(50)
                 .IsUnicode(false);
@@ -677,7 +684,13 @@ public partial class Entities : DbContext
             entity.Property(e => e.cartellino)
                 .HasMaxLength(50)
                 .IsUnicode(false);
+            entity.Property(e => e.cartellino_en)
+                .HasMaxLength(50)
+                .IsUnicode(false);
             entity.Property(e => e.collezione)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.collezione_en)
                 .HasMaxLength(50)
                 .IsUnicode(false);
             entity.Property(e => e.condizione)
@@ -716,7 +729,13 @@ public partial class Entities : DbContext
             entity.Property(e => e.settore)
                 .HasMaxLength(50)
                 .IsUnicode(false);
+            entity.Property(e => e.settore_en)
+                .HasMaxLength(50)
+                .IsUnicode(false);
             entity.Property(e => e.statoindividuo)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.statoindividuo_en)
                 .HasMaxLength(50)
                 .IsUnicode(false);
             entity.Property(e => e.subspecie)

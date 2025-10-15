@@ -23,12 +23,17 @@ namespace UPlant.Models.DB
         public string nome_scientifico { get; set; }
         public Guid? idsettore { get; set; }
         public string settore { get; set; }
+        public string settore_en { get; set; }
         public Guid? idcollezione { get; set; }
         public string collezione { get; set; }
+        public string collezione_en { get; set; }
         public Guid? idcartellino { get; set; }
         public string cartellino { get; set; }
+
+        public string cartellino_en { get; set; }
         public Guid? idstatoindividuo { get; set; }
         public string stato { get; set; }
+        public string stato_en { get; set; }
         public string nomecognome { get; set; }
         public string datainserimento { get; set; }
         public string countimg { get; set; }
@@ -45,6 +50,7 @@ namespace UPlant.Models.DB
         public string genere { get; set; }
         public string dataacquisizione { get; set; }
         public string tipomateriale { get; set; }
+        public string tipomateriale_en { get; set; }
         public string countind { get; set; }
         public string inseritoda { get; set; }
         public string modificatoda { get; set; }

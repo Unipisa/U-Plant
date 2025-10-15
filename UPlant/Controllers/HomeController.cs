@@ -35,12 +35,12 @@ namespace UPlant.Controllers
         private readonly Entities _context;
         private readonly IHttpContextAccessor _contextAccessor;
         private IWebHostEnvironment _environment;
-        //private readonly IOptions<Pathfiles> _opt;
+        private readonly LanguageService _languageService;
         private readonly IOptions<AppSettings> _opt;
-        public HomeController(Entities context, IWebHostEnvironment environment, IHttpContextAccessor contextAccessor , IOptions<AppSettings> opt)
+        public HomeController(Entities context, IWebHostEnvironment environment, IHttpContextAccessor contextAccessor , IOptions<AppSettings> opt, LanguageService languageService)
         {
             _context = context;
-           
+            _languageService = languageService;
             _contextAccessor = contextAccessor;
             _environment = environment;
             _opt = opt;
@@ -175,19 +175,39 @@ namespace UPlant.Controllers
 
         public ActionResult RicercaIndividui()
         {
+            var linguacorrente = _languageService.GetCurrentCulture();
+
+
+            if (linguacorrente == "en-US")
+            {
+                ViewData["listasettori"] = new SelectList(_context.Settori.OrderBy(a => a.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.settore_en) ? a.settore : a.settore_en }), "id", "Desc");
+                ViewData["listacollezioni"] = new SelectList(_context.Collezioni.OrderBy(a => a.collezione).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.collezione_en) ? a.collezione : a.collezione_en }), "id", "Desc");
+                ViewData["listastatoindividui"] = new SelectList(_context.StatoIndividuo.OrderBy(a => a.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.stato : a.descrizione_en }), "id", "Desc");
+                ViewData["listacondizioni"] = new SelectList(_context.Condizioni.OrderBy(p => p.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.condizione : a.descrizione_en }), "id", "Desc");
+                ViewData["listacartellini"] = new SelectList(_context.Cartellini.OrderBy(a => a.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.descrizione : a.descrizione_en }), "id", "Desc");
+
+            }
+            else
+            {
+
+                ViewData["listasettori"] = new SelectList(_context.Settori.OrderBy(a => a.settore), "id", "settore");
+                ViewData["listacollezioni"] = new SelectList(_context.Collezioni.OrderBy(a => a.collezione), "id", "collezione");
+                ViewData["listastatoindividui"] = new SelectList(_context.StatoIndividuo.OrderBy(a => a.stato), "id", "stato");
+                ViewData["listacondizioni"] = new SelectList(_context.Condizioni.OrderBy(a => a.condizione), "id", "condizione");
+                ViewData["listacartellini"] = new SelectList(_context.Cartellini.OrderBy(a => a.descrizione), "id", "descrizione");
+            }
+
+
+
+
             ViewData["listafamiglie"] = new SelectList(_context.Famiglie.OrderBy(e => e.descrizione), "id", "descrizione");
             ViewData["famiglia"]= "";
             ViewBag.datapropagazioneinizio = new DateTime(1543, 1, 1, 0, 0, 0);
             ViewBag.datapropagazionefine = DateTime.Now;
-            ViewData["listasettori"] = new SelectList(_context.Settori.OrderBy(a => a.settore), "id", "settore");
             ViewData["settore"] = "";
-            ViewData["listacollezioni"] = new SelectList(_context.Collezioni.OrderBy(a => a.collezione), "id", "collezione");
             ViewData["collezione"] = "";
-            ViewData["listastatoindividui"] = new SelectList(_context.StatoIndividuo.OrderBy(a => a.stato), "id", "stato");
             ViewData["statoindividuo"] = "";
-            ViewData["listacondizioni"] = new SelectList(_context.Condizioni.OrderBy(a => a.condizione), "id", "condizione");
             ViewData["condizione"] = "";
-            ViewData["listacartellini"] = new SelectList(_context.Cartellini.OrderBy(a => a.descrizione), "id", "descrizione");
             ViewData["cartellino"] = "";
           
 
@@ -198,7 +218,7 @@ namespace UPlant.Controllers
         public ActionResult RicercaIndividui(string famiglia, string specie, string progacc, Guid? settore, Guid? collezione, DateTime datapropagazioneinizio, DateTime datapropagazionefine, Guid? statoindividuo, Guid? condizione, Guid? cartellino)
         {
 
-
+            var linguacorrente = _languageService.GetCurrentCulture();
             IEnumerable<Ricercaind> listaind = (from m in _context.Ricercaind select m).ToList();
 
             if (!String.IsNullOrEmpty(famiglia))
@@ -251,16 +271,32 @@ namespace UPlant.Controllers
             ViewBag.progacc = progacc;
             ViewBag.datapropagazioneinizio = datapropagazioneinizio;
             ViewBag.datapropagazionefine = datapropagazionefine;
-            ViewBag.listasettori = new SelectList(_context.Settori.OrderBy(a => a.settore), "id", "settore").ToList();
             ViewBag.settore = settore;
-            ViewBag.listacollezioni = new SelectList(_context.Collezioni.OrderBy(a => a.collezione), "id", "collezione").ToList();
             ViewBag.collezione = collezione;
-            ViewBag.listastatoindividui = new SelectList(_context.StatoIndividuo.OrderBy(a => a.stato), "id", "stato").ToList();
             ViewBag.statoindividuo = statoindividuo;
-            ViewBag.listacondizioni = new SelectList(_context.Condizioni.OrderBy(a => a.condizione), "id", "condizione").ToList();
             ViewBag.condizione = condizione;
-            ViewBag.listacartellini = new SelectList(_context.Cartellini.OrderBy(a => a.descrizione), "id", "descrizione").ToList();
             ViewBag.cartellino = cartellino;
+
+
+            if (linguacorrente == "en-US")
+            {
+                ViewBag.listasettori = new SelectList(_context.Settori.OrderBy(a => a.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.settore_en) ? a.settore : a.settore_en }), "id", "Desc").ToList(); 
+                ViewBag.listacollezioni = new SelectList(_context.Collezioni.OrderBy(a => a.collezione).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.collezione_en) ? a.collezione : a.collezione_en }), "id", "Desc").ToList();
+                ViewBag.listastatoindividui = new SelectList(_context.StatoIndividuo.OrderBy(a => a.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.stato : a.descrizione_en }), "id", "Desc").ToList();
+                ViewBag.listacondizioni = new SelectList(_context.Condizioni.OrderBy(p => p.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.condizione : a.descrizione_en }), "id", "Desc").ToList();
+                ViewBag.listacartellini = new SelectList(_context.Cartellini.OrderBy(a => a.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.descrizione : a.descrizione_en }), "id", "Desc").ToList();
+
+            }
+            else
+            {
+
+                ViewBag.listasettori = new SelectList(_context.Settori.OrderBy(a => a.settore), "id", "settore").ToList();
+                ViewBag.listacollezioni = new SelectList(_context.Collezioni.OrderBy(a => a.collezione), "id", "collezione").ToList();
+                ViewBag.listastatoindividui = new SelectList(_context.StatoIndividuo.OrderBy(a => a.stato), "id", "stato").ToList();
+                ViewBag.listacondizioni = new SelectList(_context.Condizioni.OrderBy(a => a.condizione), "id", "condizione").ToList();
+                ViewBag.listacartellini = new SelectList(_context.Cartellini.OrderBy(a => a.descrizione), "id", "descrizione").ToList();
+            }
+
 
 
 
@@ -273,9 +309,13 @@ namespace UPlant.Controllers
                 vecchioprogressivo = r.vecchioprogressivo,
                 nome_scientifico = r.nome_scientifico,
                 settore = r.settore,
+                settore_en = r.settore_en,
                 collezione = r.collezione,
+                collezione_en = r.collezione_en,
                 cartellino = r.cartellino,
+                cartellino_en = r.cartellino_en,
                 stato = r.statoindividuo,
+                stato_en = r.statoindividuo_en,
                 nomecognome = r.nomecognome,
                 datainserimento = string.Format(Convert.ToDateTime(r.datainserimento).ToString(), "{0:yyyy-MM-dd HH:mm:ss}", "yyyy"),
                 countimg = _context.ImmaginiIndividuo.Where(a => a.individuo == r.id).Count().ToString(),
@@ -296,21 +336,34 @@ namespace UPlant.Controllers
 
         public ActionResult RicercaAccessioni()
         {
+            var linguacorrente = _languageService.GetCurrentCulture();
             ViewBag.listafamiglie = new SelectList(_context.Famiglie.OrderBy(x => x.descrizione), "id", "descrizione").ToList();
-
+            ViewBag.listafornitore = new SelectList(_context.Fornitori.OrderBy(a => a.descrizione), "id", "descrizione").ToList();
+            ViewBag.listaraccoglitore = new SelectList(_context.Raccoglitori.OrderBy(a => a.nominativo), "id", "nominativo").ToList();
+            if (linguacorrente == "en-US")
+            {
+               
+                ViewBag.listatipoacquisizione = new SelectList(_context.TipoAcquisizione.OrderBy(a => a.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.descrizione : a.descrizione_en }), "id", "Desc").ToList();
+                ViewBag.listatipomateriale = new SelectList(_context.TipiMateriale.OrderBy(a => a.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.descrizione : a.descrizione_en }), "id", "Desc").ToList();
+                ViewBag.listagradoincertezza = new SelectList(_context.GradoIncertezza.OrderBy(a => a.descrizione).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.descrizione : a.descrizione_en }), "id", "Desc").ToList();
+            }
+            else
+            {
+                ViewBag.listatipomateriale = new SelectList(_context.TipiMateriale.OrderBy(a => a.descrizione), "id", "descrizione").ToList();
+                ViewBag.listatipoacquisizione = new SelectList(_context.TipoAcquisizione.OrderBy(a => a.descrizione), "id", "descrizione").ToList();
+                ViewBag.listagradoincertezza = new SelectList(_context.GradoIncertezza.OrderBy(a => a.descrizione), "id", "descrizione").ToList();
+              
+            }
+            
+            
+            
             ViewBag.famiglia = "";
             ViewBag.datainserimentoinizio = new DateTime(1543, 1, 1, 0, 0, 0);
             ViewBag.datainserimentofine = DateTime.Now;
-
-            ViewBag.listatipomateriale = new SelectList(_context.TipiMateriale.OrderBy(a => a.descrizione), "id", "descrizione").ToList();
             ViewBag.tipomateriale = "";
-            ViewBag.listatipoacquisizione = new SelectList(_context.TipoAcquisizione.OrderBy(a => a.descrizione), "id", "descrizione").ToList();
             ViewBag.tipoacquisizione = "";
-            ViewBag.listafornitore = new SelectList(_context.Fornitori.OrderBy(a => a.descrizione), "id", "descrizione").ToList();
             ViewBag.fornitore = "";
-            ViewBag.listagradoincertezza = new SelectList(_context.GradoIncertezza.OrderBy(a => a.descrizione), "id", "descrizione").ToList();
             ViewBag.gradoincertezza = "";
-            ViewBag.listaraccoglitore = new SelectList(_context.Raccoglitori.OrderBy(a => a.nominativo), "id", "nominativo").ToList();
             ViewBag.raccoglitore = "";
 
             return View();
@@ -319,6 +372,7 @@ namespace UPlant.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult RicercaAccessioni(string famiglia, string specie, string progressivo, string vecchioprogressivo, DateTime datainserimentoinizio, DateTime datainserimentofine, Guid tipomateriale, Guid tipoacquisizione, Guid fornitore, Guid gradoincertezza, Guid raccoglitore)
         {
+            var linguacorrente = _languageService.GetCurrentCulture();
             IEnumerable<Ricercaacc> listaacces = (from m in _context.Ricercaacc select m).ToList();
             // IEnumerable <Accessioni> listaacces = (from m in _context.Accessioni select m).ToList();
             if (!String.IsNullOrEmpty(famiglia))
@@ -377,6 +431,7 @@ namespace UPlant.Controllers
                 genere = r.genere,
                 dataacquisizione = string.Format(Convert.ToDateTime(r.dataAcquisizione).ToString(), "{0:yyyy-MM-dd HH:mm:ss}", "yyyy"),
                 tipomateriale = r.tipomateriale,
+                tipomateriale_en = r.tipomateriale_en,
                 countind = _context.Individui.Where(a => a.accessione == r.idacc).Count().ToString(),
                 inseritoda = r.inseritoda,
                 modificatoda = r.modificatoda,
@@ -394,16 +449,34 @@ namespace UPlant.Controllers
             ViewBag.vecchioprogressivo = vecchioprogressivo;
             ViewBag.datainserimentoinizio = datainserimentoinizio;
             ViewBag.datainserimentofine = datainserimentofine;
-            ViewBag.listatipomateriale = new SelectList(_context.TipiMateriale.OrderBy(x => x.descrizione), "id", "descrizione").ToList();
             ViewBag.tipomateriale = tipomateriale;
-            ViewBag.listatipoacquisizione = new SelectList(_context.TipoAcquisizione.OrderBy(x => x.descrizione), "id", "descrizione").ToList();
             ViewBag.tipoacquisizione = tipoacquisizione;
-            ViewBag.listafornitore = new SelectList(_context.Fornitori.OrderBy(x => x.descrizione), "id", "descrizione").ToList();
             ViewBag.fornitore = fornitore;
-            ViewBag.listagradoincertezza = new SelectList(_context.GradoIncertezza.OrderBy(a => a.descrizione), "id", "descrizione").ToList();
             ViewBag.gradoincertezza = gradoincertezza;
-            ViewBag.listaraccoglitore = new SelectList(_context.Raccoglitori.OrderBy(a => a.nominativo), "id", "nominativo").ToList();
             ViewBag.raccoglitore = raccoglitore;
+
+            if (linguacorrente == "en-US")
+            {
+                ViewBag.listatipoacquisizione = new SelectList(_context.TipoAcquisizione.OrderBy(a => a.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.descrizione : a.descrizione_en }), "id", "Desc").ToList();
+                ViewBag.listatipomateriale = new SelectList(_context.TipiMateriale.OrderBy(a => a.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.descrizione : a.descrizione_en }), "id", "Desc").ToList();
+                ViewBag.listagradoincertezza = new SelectList(_context.GradoIncertezza.OrderBy(a => a.descrizione).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.descrizione : a.descrizione_en }), "id", "Desc").ToList();
+
+            }
+            else
+            {
+                ViewBag.listatipomateriale = new SelectList(_context.TipiMateriale.OrderBy(x => x.descrizione), "id", "descrizione").ToList();
+                ViewBag.listatipoacquisizione = new SelectList(_context.TipoAcquisizione.OrderBy(x => x.descrizione), "id", "descrizione").ToList();
+                ViewBag.listagradoincertezza = new SelectList(_context.GradoIncertezza.OrderBy(a => a.descrizione), "id", "descrizione").ToList();
+            }
+
+               
+            
+            ViewBag.listafornitore = new SelectList(_context.Fornitori.OrderBy(x => x.descrizione), "id", "descrizione").ToList();
+           
+            
+            
+            ViewBag.listaraccoglitore = new SelectList(_context.Raccoglitori.OrderBy(a => a.nominativo), "id", "nominativo").ToList();
+            
 
             //ViewBag.filename = EstraiAccessioni("xlsx", listaacces);
             ViewBag.filename = CreaExcelRicerca(listaacces,null,"accessione");

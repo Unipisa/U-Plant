@@ -11,6 +11,8 @@ public partial class Province
 
     public string descrizione { get; set; }
 
+    public string descrizione_en { get; set; }
+
     public virtual ICollection<Accessioni> Accessioni { get; set; } = new List<Accessioni>();
 
     public virtual Regioni regioneNavigation { get; set; }

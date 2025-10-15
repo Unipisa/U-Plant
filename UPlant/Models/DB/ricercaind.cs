@@ -23,17 +23,25 @@ public partial class Ricercaind
 
     public string settore { get; set; }
 
+    public string settore_en { get; set; }
+
     public Guid? idcollezione { get; set; }
 
     public string collezione { get; set; }
+
+    public string collezione_en { get; set; }
 
     public Guid? idcartellino { get; set; }
 
     public string cartellino { get; set; }
 
+    public string cartellino_en { get; set; }
+
     public Guid? idstatoindividuo { get; set; }
 
     public string statoindividuo { get; set; }
+
+    public string statoindividuo_en { get; set; }
 
     public string nomecognome { get; set; }
 
