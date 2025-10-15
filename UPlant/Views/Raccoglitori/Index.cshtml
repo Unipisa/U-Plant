@@ -30,6 +30,9 @@
             <th>
                             @language.Getkey("Global_Name")
             </th>
+             <th>
+                            @language.Getkey("Global_English_Name")
+            </th>
             <th>
                             @language.Getkey("Global_Enabled")
             </th>
@@ -44,6 +47,9 @@
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.nominativo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.nominativo_en)
             </td>
             <td>
                                 @if (item.attivo == true)

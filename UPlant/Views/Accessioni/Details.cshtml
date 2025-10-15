@@ -178,8 +178,13 @@
                             <th style="width: 239px; height: 23px;">@language.Getkey("Global_Region")</th>
                             <td style="width: 239px; height: 23px;" colspan="2"> 
                                 @{ 
-                                    if (currentCulture == "en-US") {    
-                                        @Html.DisplayFor(model => model.regioneNavigation.descrizione_en);
+                                    if (currentCulture == "en-US") {   
+                                                   
+                                            @(string.IsNullOrWhiteSpace(Model?.regioneNavigation?.descrizione_en)
+                                                            ? Model?.regioneNavigation?.descrizione
+                                                                : Model?.regioneNavigation?.descrizione_en)
+                                                        
+                                        
                                     }else{
                                         @Html.DisplayFor(model => model.regioneNavigation.descrizione);
                                     }
@@ -194,13 +199,22 @@
                         <tr style="height: 23px;">
 
                             <th style="width: 239px; height: 23px;">@language.Getkey("Global_Province")</th>
-                            @if(currentCulture != "en-US") {        
-                                <td style="width: 239px; height: 23px;" colspan="2"> @Html.DisplayFor(model => model.provinciaNavigation.descrizione)</td>
-                            }else{
-                                @if (Model.provinciaNavigation.descrizione.Contains("efinita"))
-                                {<td style="width: 239px; height: 23px;" colspan="2">Undefined</td>}
-                                else{<td style="width: 239px; height: 23px;" colspan="2"> @Html.DisplayFor(model => model.provinciaNavigation.descrizione) </td>}
+                            @{
+                                if (currentCulture == "en-US")
+                                {
+                                                      <td style="width: 239px; height: 23px;" colspan="2">
+                                        @(string.IsNullOrWhiteSpace(Model?.provinciaNavigation?.descrizione_en)
+                                                        ? Model?.provinciaNavigation?.descrizione
+                                                            : Model?.provinciaNavigation?.descrizione_en)
+                                                </td>
+                                          
+                                }
+                                else
+                                {
+                                    <td style="width: 239px; height: 23px;" colspan="2"> @Html.DisplayFor(model => model.provinciaNavigation.descrizione)</td>
+                                }
                             }
+                            
                                 <th style="width: 239px; height: 23px;">@language.Getkey("Global_Altitude")</th>
                                     <td style="width: 239px; height: 23px;">@Html.DisplayFor(model => model.altitudine)</td>
                                 <tr style="height: 23px;">
@@ -229,31 +243,27 @@
                             <th style="width: 239px; height: 23px;">@language.Getkey("Global_Last_Modified_User")</th>
                                 </tr>
                                 <tr style="height: 23px;">
-                                @if (currentCulture != "en-US") {
-                                    <td style="width: 239px; height: 23px;">@Html.DisplayFor(model => model.fornitoreNavigation.descrizione)</td>
-                                    <td style="width: 239px; height: 23px;">@Html.DisplayFor(model => model.raccoglitoreNavigation.nominativo)</td>
-                                    <td style="width: 239px; height: 23px;">@Html.DisplayFor(model => model.identificatoreNavigation.nominativo)</td>
+                                @if (currentCulture == "en-US") {
+                                <td>
+                                        @(string.IsNullOrWhiteSpace(Model?.fornitoreNavigation?.descrizione_en)
+                                            ? Model?.fornitoreNavigation?.descrizione
+                                            : Model?.fornitoreNavigation?.descrizione_en)
+                                </td>
+                                     <td>
+                                        @(string.IsNullOrWhiteSpace(Model?.raccoglitoreNavigation?.nominativo_en)
+                                                    ? Model?.raccoglitoreNavigation?.nominativo
+                                                    : Model?.raccoglitoreNavigation?.nominativo_en)
+                                    </td>
+                                        <td>
+                                        @(string.IsNullOrWhiteSpace(Model?.identificatoreNavigation?.nominativo_en)
+                                                        ? Model?.identificatoreNavigation?.nominativo
+                                                            : Model?.identificatoreNavigation?.nominativo_en)
+                                        </td>
+                                  
                                 } else {
-                                    @if (Model.fornitoreNavigation.descrizione.Contains("efinito"))
-                                    {
-                                      <td style="width: 239px; height: 23px;">Undefined</td>
-                                    }
-                                    else
-                                    {
-                                    <td style="width: 239px; height: 23px;">@Html.DisplayFor(model => model.fornitoreNavigation.descrizione)</td>
-                                    }
-                                    @if (Model.raccoglitoreNavigation.nominativo.Contains("efinito"))
-                                    {
-                                      <td style="width: 239px; height: 23px;">Undefined</td>
-                                    } else {
-                                     <td style="width: 239px; height: 23px;">@Html.DisplayFor(model => model.raccoglitoreNavigation.nominativo)</td>
-                                    }
-                                    @if (Model.identificatoreNavigation.nominativo.Contains("efinito"))
-                                    {
-                                      <td style="width: 239px; height: 23px;">Undefined</td>
-                                    } else {
-                                    <td style="width: 239px; height: 23px;">@Html.DisplayFor(model => model.identificatoreNavigation.nominativo)</td>
-                                    }
+                                <td style="width: 239px; height: 23px;">@Html.DisplayFor(model => model.fornitoreNavigation.descrizione)</td>
+                                <td style="width: 239px; height: 23px;">@Html.DisplayFor(model => model.raccoglitoreNavigation.nominativo)</td>
+                                <td style="width: 239px; height: 23px;">@Html.DisplayFor(model => model.identificatoreNavigation.nominativo)</td>
                                 }                               
                                     <td style="width: 239px; height: 23px;">@Html.DisplayFor(model => model.utenteAcquisizioneNavigation.NomeCognome)</td>
                                     <td style="width: 239px; height: 23px;">@Html.DisplayFor(model => model.utenteUltimaModificaNavigation.NomeCognome)</td> @*Utenti1 è l'utente di modifica*@

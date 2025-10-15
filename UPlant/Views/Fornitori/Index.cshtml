@@ -31,6 +31,9 @@
                             @language.Getkey("Global_Description")
             </th>
             <th>
+                            @language.Getkey("Global_English_Description")
+            </th>
+            <th>
                             @language.Getkey("Global_Notes")
             </th>
             <th>
@@ -47,6 +50,9 @@
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.descrizione)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.descrizione_en)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.note)

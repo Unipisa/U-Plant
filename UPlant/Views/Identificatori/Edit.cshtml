@@ -18,6 +18,11 @@
                 <span asp-validation-for="nominativo" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="nominativo_en" class="control-label">@language.Getkey("Global_English_Name")</label>
+                <input asp-for="nominativo_en" class="form-control" />
+                <span asp-validation-for="nominativo_en" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <label asp-for="tipoIdentificatore" class="control-label">@language.Getkey("Global_Determiner_Type")</label>
                 <select asp-for="tipoIdentificatore" class="form-control" asp-items="ViewBag.tipoIdentificatore"></select>
                 <span asp-validation-for="tipoIdentificatore" class="text-danger"></span>

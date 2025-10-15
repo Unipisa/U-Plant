@@ -60,7 +60,7 @@ namespace UPlant.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("id,organizzazione,nominativo,tipoIdentificatore,attivo")] Identificatori identificatori)
+        public async Task<IActionResult> Create([Bind("id,organizzazione,nominativo,nominativo_en,tipoIdentificatore,attivo")] Identificatori identificatori)
         {
             if (ModelState.IsValid)
             {
@@ -97,7 +97,7 @@ namespace UPlant.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("id,organizzazione,nominativo,tipoIdentificatore,attivo")] Identificatori identificatori)
+        public async Task<IActionResult> Edit(Guid id, [Bind("id,organizzazione,nominativo,nominativo_en,tipoIdentificatore,attivo")] Identificatori identificatori)
         {
             if (id != identificatori.id)
             {

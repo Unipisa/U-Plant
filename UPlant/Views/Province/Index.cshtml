@@ -18,6 +18,9 @@
             <th>
                 @language.Getkey("Global_Code")
             </th>
+            <th>
+                @language.Getkey("Global_English_Description")
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -30,6 +33,9 @@
             <td>
                 @Html.DisplayFor(modelItem => item.regioneNavigation.codice)
             </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.descrizione_en)
+                </td>
             <td>
                     <a asp-action="Edit" asp-route-id="@item.codice">@language.Getkey("Global_Edit")</a> |
                 <a asp-action="Details" asp-route-id="@item.codice">@language.Getkey("Global_Details")</a> |

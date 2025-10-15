@@ -723,4 +723,7 @@
   <data name="Global_Reset" xml:space="preserve">
     <value>Reset</value>
   </data>
+  <data name="Global_English_Name" xml:space="preserve">
+    <value>English Name</value>
+  </data>
 </root>
