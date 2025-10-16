@@ -61,21 +61,46 @@ namespace UPlant.Controllers
         // GET: StoricoIndividuo/Create
         public IActionResult Create(Guid idindividuo,string tipo,string damodifica)
         {
-        if (damodifica== "ok") {
+
+
+            var linguacorrente = _languageService.GetCurrentCulture();
+            if (damodifica== "ok") {
                 var messaggio = _languageService.Getkey("Message_1").ToString();
             AddPageAlerts(PageAlertType.Success, messaggio);
             }
             var storicoindividuo = _context.StoricoIndividuo.Where(x => x.individuo == idindividuo).ToList().OrderByDescending(x => x.dataInserimento).FirstOrDefault();
             ViewData["individuo"] = idindividuo;
             ViewData["tipo"] = tipo;
-            if (storicoindividuo == null) {
-                ViewData["condizione"] = new SelectList(_context.Condizioni.OrderBy(x => x.condizione), "id", "condizione");
-                ViewData["statoIndividuo"] = new SelectList(_context.StatoIndividuo.OrderBy(x => x.stato), "id", "stato");
+            if (storicoindividuo == null ) {
+
+                if (linguacorrente == "en-US")
+                {
+                    ViewData["statoIndividuo"] = new SelectList(_context.StatoIndividuo.OrderBy(a => a.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.stato : a.descrizione_en }), "id", "Desc");
+                    ViewData["condizione"] = new SelectList(_context.Condizioni.OrderBy(p => p.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.condizione : a.descrizione_en }), "id", "Desc");
+                }
+                else
+                {
+                    ViewData["condizione"] = new SelectList(_context.Condizioni.OrderBy(x => x.condizione), "id", "condizione");
+                    ViewData["statoIndividuo"] = new SelectList(_context.StatoIndividuo.OrderBy(x => x.stato), "id", "stato");
+                }
+
+                  
             }
             else
             {
-                ViewData["condizione"] = new SelectList(_context.Condizioni.OrderBy(x => x.condizione), "id", "condizione", storicoindividuo.condizione);
-                ViewData["statoIndividuo"] = new SelectList(_context.StatoIndividuo.OrderBy(x => x.stato), "id", "stato", storicoindividuo.statoIndividuo);
+                if (linguacorrente == "en-US")
+                {
+                    ViewData["statoIndividuo"] = new SelectList(_context.StatoIndividuo.OrderBy(a => a.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.stato : a.descrizione_en }), "id", "Desc", storicoindividuo.statoIndividuo);
+                    ViewData["condizione"] = new SelectList(_context.Condizioni.OrderBy(p => p.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.condizione : a.descrizione_en }), "id", "Desc", storicoindividuo.condizione);
+                }
+                else
+                {
+                    ViewData["condizione"] = new SelectList(_context.Condizioni.OrderBy(x => x.condizione), "id", "condizione", storicoindividuo.condizione);
+                    ViewData["statoIndividuo"] = new SelectList(_context.StatoIndividuo.OrderBy(x => x.stato), "id", "stato", storicoindividuo.statoIndividuo);
+                }
+
+
+               
              
             }
             return View();
@@ -92,6 +117,7 @@ namespace UPlant.Controllers
 
 
         {
+            var linguacorrente = _languageService.GetCurrentCulture();
             StoricoIndividuo storicoIndividuo = new StoricoIndividuo();
             if (ModelState.IsValid)
             {
@@ -116,9 +142,16 @@ namespace UPlant.Controllers
            
             }
             ViewBag.tipo = tipo;
-            
-            ViewData["condizione"] = new SelectList(_context.Condizioni.OrderBy(x => x.condizione), "id", "condizione", storicoIndividuo.condizione);
-            ViewData["statoIndividuo"] = new SelectList(_context.StatoIndividuo.OrderBy(x => x.stato), "id", "stato", storicoIndividuo.statoIndividuo);
+            if (linguacorrente == "en-US")
+            {
+                ViewData["statoIndividuo"] = new SelectList(_context.StatoIndividuo.OrderBy(a => a.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.stato : a.descrizione_en }), "id", "Desc", storicoIndividuo.statoIndividuo);
+                ViewData["condizione"] = new SelectList(_context.Condizioni.OrderBy(p => p.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.condizione : a.descrizione_en }), "id", "Desc", storicoIndividuo.condizione);
+            }
+            else
+            {
+                ViewData["condizione"] = new SelectList(_context.Condizioni.OrderBy(x => x.condizione), "id", "condizione", storicoIndividuo.condizione);
+                ViewData["statoIndividuo"] = new SelectList(_context.StatoIndividuo.OrderBy(x => x.stato), "id", "stato", storicoIndividuo.statoIndividuo);
+            }
             return View(storicoIndividuo);
 
 
@@ -127,6 +160,7 @@ namespace UPlant.Controllers
         // GET: StoricoIndividuo/Edit/5
         public async Task<IActionResult> Edit(Guid? id,string tipo,string individuo)
         {
+            var linguacorrente = _languageService.GetCurrentCulture();
             if (id == null || _context.StoricoIndividuo == null)
             {
                 return NotFound();
@@ -140,9 +174,18 @@ namespace UPlant.Controllers
             }
             ViewBag.tipo = tipo;
            ViewBag.individuo = storicoIndividuo.individuo;
-            ViewData["condizione"] = new SelectList(_context.Condizioni.OrderBy(x => x.condizione), "id", "condizione", storicoIndividuo.condizione);
-            
-            ViewData["statoIndividuo"] = new SelectList(_context.StatoIndividuo.OrderBy(x => x.stato), "id", "stato", storicoIndividuo.statoIndividuo);
+
+            if (linguacorrente == "en-US")
+            {
+                ViewData["statoIndividuo"] = new SelectList(_context.StatoIndividuo.OrderBy(a => a.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.stato : a.descrizione_en }), "id", "Desc", storicoIndividuo.statoIndividuo);
+                ViewData["condizione"] = new SelectList(_context.Condizioni.OrderBy(p => p.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.condizione : a.descrizione_en }), "id", "Desc", storicoIndividuo.condizione);
+            }
+            else
+            {
+                ViewData["condizione"] = new SelectList(_context.Condizioni.OrderBy(x => x.condizione), "id", "condizione", storicoIndividuo.condizione);
+                ViewData["statoIndividuo"] = new SelectList(_context.StatoIndividuo.OrderBy(x => x.stato), "id", "stato", storicoIndividuo.statoIndividuo);
+            }
+
             
             return View(storicoIndividuo);
         }
@@ -154,6 +197,7 @@ namespace UPlant.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Guid id,string tipo, [Bind("id,statoIndividuo,condizione,operazioniColturali,dataInserimento,individuo,utente")] StoricoIndividuo storicoIndividuo)
         {
+            var linguacorrente = _languageService.GetCurrentCulture();
             string username = User.Identities.FirstOrDefault()?.Claims?.Where(c => c.Type == "UnipiUserID").FirstOrDefault()?.Value;
             Guid utente = _context.Users.Where(a => a.UnipiUserName == (username).Substring(0, username.IndexOf("@"))).Select(a => a.Id).FirstOrDefault();
             if (id != storicoIndividuo.id)
@@ -183,10 +227,20 @@ namespace UPlant.Controllers
                 }
                 return RedirectToAction(nameof(Details), nameof(Individui), new { id = storicoIndividuo.individuo ,tipo =tipo});
             }
+            
             ViewBag.tipo = tipo;
-            ViewData["condizione"] = new SelectList(_context.Condizioni.OrderBy(x => x.condizione), "id", "condizione", storicoIndividuo.condizione);
-           // ViewData["individuo"] = new SelectList(_context.Individui, "id", "progressivo", storicoIndividuo.individuo);
-            ViewData["statoIndividuo"] = new SelectList(_context.StatoIndividuo.OrderBy(x => x.stato), "id", "stato", storicoIndividuo.statoIndividuo);
+            if (linguacorrente == "en-US")
+            {
+                ViewData["statoIndividuo"] = new SelectList(_context.StatoIndividuo.OrderBy(a => a.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.stato : a.descrizione_en }), "id", "Desc", storicoIndividuo.statoIndividuo);
+                ViewData["condizione"] = new SelectList(_context.Condizioni.OrderBy(p => p.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.condizione : a.descrizione_en }), "id", "Desc", storicoIndividuo.condizione);
+            }
+            else
+            {
+                ViewData["condizione"] = new SelectList(_context.Condizioni.OrderBy(x => x.condizione), "id", "condizione", storicoIndividuo.condizione);
+                ViewData["statoIndividuo"] = new SelectList(_context.StatoIndividuo.OrderBy(x => x.stato), "id", "stato", storicoIndividuo.statoIndividuo);
+            }
+            
+            
             ViewData["utente"] = new SelectList(_context.Users, "Id", "CreatedBy", storicoIndividuo.utente);
             return View(storicoIndividuo);
         }
