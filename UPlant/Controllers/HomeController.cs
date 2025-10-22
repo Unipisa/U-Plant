@@ -227,12 +227,12 @@ namespace UPlant.Controllers
             }
             if (!String.IsNullOrEmpty(specie))
             {
-                listaind = listaind.Where(a => a.nome_scientifico.ToLower().StartsWith(specie.ToLower()));
+                listaind = listaind.Where(a => a.nome_scientifico.ToLower().Contains(specie.ToLower()));
 
             }
             if (!String.IsNullOrEmpty(progacc))
             {
-                listaind = listaind.Where(a => a.progressivoacc.StartsWith(progacc));
+                listaind = listaind.Where(a => a.progressivoacc.Contains(progacc));
 
             }
             if (settore != null)
@@ -373,7 +373,7 @@ namespace UPlant.Controllers
         public ActionResult RicercaAccessioni(string famiglia, string specie, string progressivo, string vecchioprogressivo, DateTime datainserimentoinizio, DateTime datainserimentofine, Guid tipomateriale, Guid tipoacquisizione, Guid fornitore, Guid gradoincertezza, Guid raccoglitore)
         {
             var linguacorrente = _languageService.GetCurrentCulture();
-            IEnumerable<Ricercaacc> listaacces = (from m in _context.Ricercaacc select m).ToList();
+            IEnumerable<Ricercaacc> listaacces = (from m in _context.Ricercaacc select m).AsQueryable();
             // IEnumerable <Accessioni> listaacces = (from m in _context.Accessioni select m).ToList();
             if (!String.IsNullOrEmpty(famiglia))
             {
@@ -381,15 +381,16 @@ namespace UPlant.Controllers
             }
             if (!String.IsNullOrEmpty(specie))
             {
-                listaacces = listaacces.Where(a => a.nome_scientifico.ToLower().StartsWith(specie.ToLower()));
+                listaacces = listaacces.Where(a => (a.nome_scientifico ?? "").ToLower().Contains(specie.ToLower()));
             }
             if (!String.IsNullOrEmpty(progressivo))
             {
-                listaacces = listaacces.Where(a => a.progressivo == progressivo);
+               
+                listaacces = listaacces.Where(a => (a.progressivo ?? "").Contains(progressivo));
             }
             if (!String.IsNullOrEmpty(vecchioprogressivo))
             {
-                listaacces = listaacces.Where(a => a.vecchioprogressivo == vecchioprogressivo);
+                listaacces = listaacces.Where(a => (a.vecchioprogressivo ?? "").Contains(vecchioprogressivo));
             }
 
             if (datainserimentoinizio == DateTime.MinValue && datainserimentofine == DateTime.MinValue)

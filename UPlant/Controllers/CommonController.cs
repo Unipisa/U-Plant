@@ -153,7 +153,7 @@ namespace UPlant.Controllers
 
             //   var prelist = db.Storico.Include(x => x.Individui)
             //     .Where(p => p.Individui.Accessioni.Specie1.nome_scientifico.ToLower().StartsWith(term.ToLower())).Select(g => g.Individui.Accessioni.Specie1.nome_scientifico);//commentata per sostituire con una ricerca votata alle accessioni senza figli
-            var prelist = _context.Accessioni.Where(p => p.specieNavigation.nome_scientifico.ToLower().StartsWith(term.ToLower())).Select(g => g.specieNavigation.nome_scientifico);
+            var prelist = _context.Accessioni.Where(p => p.specieNavigation.nome_scientifico.ToLower().Contains(term.ToLower())).Select(g => g.specieNavigation.nome_scientifico);
 
             var names = prelist.Distinct().ToList();
 
@@ -164,7 +164,7 @@ namespace UPlant.Controllers
         {
 
             var prelist = _context.Accessioni
-                .Where(p => p.progressivo.StartsWith(term)).Select(g => g.progressivo);
+                .Where(p => p.progressivo.Contains(term)).Select(g => g.progressivo);
 
 
             var names = prelist.Distinct().ToList();
@@ -176,7 +176,7 @@ namespace UPlant.Controllers
         {
 
             var prelist = _context.Accessioni
-                .Where(p => p.vecchioprogressivo.StartsWith(term)).Select(g => g.vecchioprogressivo);
+                .Where(p => p.vecchioprogressivo.Contains(term)).Select(g => g.vecchioprogressivo);
 
 
             var names = prelist.Distinct().ToList();

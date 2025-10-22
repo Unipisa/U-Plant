@@ -50,7 +50,7 @@
                         <span asp-validation-for="individuoNavigation.propagatoData" class="text-danger"></span>
                         </div>
                         <div class="form-group  col">
-                        <label asp-for="individuoNavigation.propagatoModalita" class="control-label">Propagato Modalità</label>
+                        <label asp-for="individuoNavigation.propagatoModalita" class="control-label">@language.Getkey("Global_Propagation_Method")</label>
                         <select asp-for="individuoNavigation.propagatoModalita" class="form-control" id="propagatoModalita" name="propagatoModalita" asp-items="ViewBag.propagatoModalita"></select>
                         </div>
                         <div class="form-group col">
