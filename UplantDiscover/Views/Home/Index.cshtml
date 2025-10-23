@@ -207,38 +207,41 @@
                     var icons;
                                    
                     switch (data[i].Ordinamento) {
-                         case 1:
-                                icons = iconBase + 'lily-pushpin.png';
-                                break;
-                            case 2:
+                            case 0:
                                     icons = iconBase + 'grey-pushpin.png';
-                                break;
-                            case 3:
-                                icons = iconBase + 'purple-pushpin.png';
-                                break;
-                            case 4:
-                                icons = iconBase + 'blue-pushpin.png';
-                                break;
-                            case 5:
-                                icons = iconBase + 'red-pushpin.png';
-                                break;
-                            case 6:
-                                icons = iconBase + 'ltblu-pushpin.png';
-                                break;
-                            case 7:
-                                icons = iconBase + 'grn-pushpin.png';
-                                break;
-                            case 8:
-                                icons = iconBase + 'orange-pushpin.png';
-                                break;
-                            case 9:
-                                icons = iconBase + 'pink-pushpin.png';
-                                break;
-                             case 10:
+                                    break;
+                                case 1:
+                                    icons = iconBase + 'lily-pushpin.png';
+                                    break;
+                                case 2:
+                                    icons = iconBase + 'orange-pushpin.png';
+                                    break;
+                                case 3:
+                                    icons = iconBase + 'blue-pushpin.png';
+                                    break;
+                                case 4:
+                                    icons = iconBase + 'grn-pushpin.png';
+                                    break;
+                                case 5:
+                                    icons = iconBase + 'pink-pushpin.png';
+                                    break;
+                                case 6:
+                                    icons = iconBase + 'red-pushpin.png';
+                                    break;
+                                case 7:
+                                    icons = iconBase + 'ltblu-pushpin.png';
+                                    break;
+                                case 8:
+                                    icons = iconBase + 'orange-pushpin.png';
+                                    break;
+                                case 9:
                                     icons = iconBase + 'ylw-pushpin.png';
-                                break;
-                            default:
-                            icons = iconBase + 'grey-pushpin.png'
+                                    break;
+                                case 10:
+                                    icons = iconBase + 'purple-pushpin.png';
+                                    break;
+                                default:
+                                icons = iconBase + 'grey-pushpin.png'
                     }
                     if (data[i].Latitudine == "" || data[i].Longitudine == "") {
                         var latitudine = "43.71944963861506";

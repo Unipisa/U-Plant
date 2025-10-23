@@ -133,17 +133,12 @@
                     s += '<b>@language.Getkey("settore")</b>: ' + data[0].Settore + '<br>';
                     s += '<b>@language.Getkey("collezione")</b>: ' + data[0].Collezione + '<br>';
                     var bandiera = '@language.Getkey("bandiera")';
+                     if (data[0].Propagatodata) {
+                             const parts = data[0].Propagatodata.split('/');
+                             const anno = parseInt(parts[2] || new Date(data[0].Propagatodata).getFullYear());
+                             s += '<b>@language.Getkey("propagatodata")</b>: ' + anno + '<br>';
 
-                    if (bandiera == 'it') {
-                                if (parseInt(data[0].Propagatodata.substring(6,10)) < 1950) {
-                                    s += '<b>@language.Getkey("propagatodata")</b>: ' + data[0].Propagatodata.substring(6, 10)+ '<br>';
-                                }
-                    } else {
-                       
-                            if (parseInt(data[0].Propagatodata.substring(4,8)) < 1950) {
-                                s += '<b>@language.Getkey("propagatodata")</b>: ' + data[0].Propagatodata.substring(4, 8)+ '<br>';
-                            }
-                    }
+                         }
                    
                     s += '<b>@language.Getkey("acquisizione")</b>: ' + data[0].Acquisizione + '<br>';
                     s += '<b>@language.Getkey("provenienza")</b>: ' + data[0].Provenienza + '<br>';
@@ -243,38 +238,41 @@
                         var iconBase = '@ViewBag.GoogleMapIcons';
                     var icons;
                     switch (data[0].Ordinamento) {
-                            case 1:
-                                icons = iconBase + 'lily-pushpin.png';
-                                break;
-                            case 2:
-                                icons = iconBase + 'grey-pushpin.png';
-                                break;
-                            case 3:
-                                icons = iconBase + 'purple-pushpin.png';
-                                break;
-                            case 4:
-                                icons = iconBase + 'blue-pushpin.png';
-                                break;
-                            case 5:
-                                icons = iconBase + 'red-pushpin.png';
-                                break;
-                            case 6:
-                                icons = iconBase + 'ltblu-pushpin.png';
-                                break;
-                            case 7:
-                                icons = iconBase + 'grn-pushpin.png';
-                                break;
-                            case 8:
-                                icons = iconBase + 'orange-pushpin.png';
-                                break;
-                            case 9:
-                                icons = iconBase + 'pink-pushpin.png';
-                                break;
-                            case 10:
+                                case 0:
+                                    icons = iconBase + 'grey-pushpin.png';
+                                    break;
+                                case 1:
+                                    icons = iconBase + 'lily-pushpin.png';
+                                    break;
+                                case 2:
+                                    icons = iconBase + 'orange-pushpin.png';
+                                    break;
+                                case 3:
+                                    icons = iconBase + 'blue-pushpin.png';
+                                    break;
+                                case 4:
+                                    icons = iconBase + 'grn-pushpin.png';
+                                    break;
+                                case 5:
+                                    icons = iconBase + 'pink-pushpin.png';
+                                    break;
+                                case 6:
+                                    icons = iconBase + 'red-pushpin.png';
+                                    break;
+                                case 7:
+                                    icons = iconBase + 'ltblu-pushpin.png';
+                                    break;
+                                case 8:
+                                    icons = iconBase + 'orange-pushpin.png';
+                                    break;
+                                case 9:
                                     icons = iconBase + 'ylw-pushpin.png';
-                                break;
-                            default:
-                            icons = iconBase + 'grey-pushpin.png'
+                                    break;
+                                case 10:
+                                    icons = iconBase + 'purple-pushpin.png';
+                                    break;
+                                default:
+                                icons = iconBase + 'grey-pushpin.png'
                     }
 
                     if (data[0].Latitudine == "" || data[0].Longitudine == "") {

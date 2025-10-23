@@ -274,7 +274,7 @@
     <value>Collection Date</value>
   </data>
   <data name="Global_Location" xml:space="preserve">
-    <value>Location</value>
+    <value>Locality</value>
   </data>
   <data name="Global_Altitude" xml:space="preserve">
     <value>Altitude</value>
@@ -523,7 +523,7 @@
     <value>Horticultural Operations</value>
   </data>
   <data name="Global_Propagation_Data" xml:space="preserve">
-    <value>Propagation Data</value>
+    <value>Propagation Date</value>
   </data>
   <data name="Global_Yes" xml:space="preserve">
     <value>Yes</value>
