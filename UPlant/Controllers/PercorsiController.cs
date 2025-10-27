@@ -407,7 +407,7 @@ namespace U_Plant.Controllers
 
                         int posizione = percorsi.nomefile.LastIndexOf(".");
                         string estensione = percorsi.nomefile.Substring(posizione);
-                        if (estensione.ToLower() == ".heic" || estensione.ToLower() == ".heif" || estensione == ".hevc" || estensione.ToLower() == ".png") //ho modificato il file .heic in jpeg forzatamente
+                        if (estensione.ToLower() == ".heic" || estensione.ToLower() == ".heif" || estensione == ".hevc" || estensione.ToLower() == ".png" || estensione.ToLower() == ".jpg" || estensione.ToLower() == ".jpeg") //ho modificato il file .heic in jpeg forzatamente
                         {
                             estensione = ".jpg";
                         }

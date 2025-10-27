@@ -11,9 +11,9 @@ using Microsoft.Extensions.Options;
 using UPlant.Models;
 using UPlant.Models.DB;
 using Microsoft.AspNetCore.Http;
-using Aspose.Drawing;
-using Aspose.Drawing.Imaging;
-using Aspose.Drawing.Drawing2D;
+using System.Drawing;
+using System.IO;
+using Image = System.Drawing.Image;
 
 namespace UPlant.Controllers
 {
@@ -25,7 +25,7 @@ namespace UPlant.Controllers
         private readonly IWebHostEnvironment _env;
         private readonly LanguageService _languageService;
 
-        public IndividuiController(Entities context, IOptions<AppSettings> opt,IWebHostEnvironment env, LanguageService languageService)
+        public IndividuiController(Entities context, IOptions<AppSettings> opt, IWebHostEnvironment env, LanguageService languageService)
         {
             _context = context;
             _opt = opt;
@@ -120,31 +120,30 @@ namespace UPlant.Controllers
             string username = User.Identities.FirstOrDefault()?.Claims?.Where(c => c.Type == "UnipiUserID").FirstOrDefault()?.Value;
             string autore = _context.Users.Where(a => a.UnipiUserName == (username).Substring(0, username.IndexOf("@"))).Select(a => a.Name + " " + a.LastName).FirstOrDefault();
 
-           // var cognome = @User.Identities.FirstOrDefault()?.Claims?.Where(c => c.Type == "family_name").FirstOrDefault()?.Value;
-           // var nome = @User.Identities.FirstOrDefault()?.Claims?.Where(c => c.Type == "given_name").FirstOrDefault()?.Value;
+            // var cognome = @User.Identities.FirstOrDefault()?.Claims?.Where(c => c.Type == "family_name").FirstOrDefault()?.Value;
+            // var nome = @User.Identities.FirstOrDefault()?.Claims?.Where(c => c.Type == "given_name").FirstOrDefault()?.Value;
             // Do something with your files
 
             var t = _opt.Value;
-            
+
             foreach (var file in files)
             {
-             
+
 
                 if (file.Length > 0 && file.Length <= Convert.ToDecimal(t.Pathfile.LimitMaxUpload))
 
-
+                {
                     try
                     {
-                        int posizione1 = file.FileName.LastIndexOf(".");
-                        string estensione1 = file.FileName.Substring(posizione1);
-                        if (estensione1.ToLower() == ".heic" || estensione1.ToLower() == ".heif" || estensione1 == ".hevc" || estensione1.ToLower() == ".png") //ho modificato il file .heic in jpeg forzatamente
+                        string estensione1 = Path.GetExtension(file.FileName);
+                        if (estensione1.ToLower() == ".heic" || estensione1.ToLower() == ".heif" || estensione1 == ".hevc" || estensione1.ToLower() == ".png" || estensione1.ToLower() == ".jpg" || estensione1.ToLower() == ".jpeg") //ho modificato il file .heic in jpeg forzatamente
                         {
                             estensione1 = ".jpg";
                         }
 
                         var containdimma = _context.ImmaginiIndividuo.Where(x => x.individuo == idindividuo).Count();
                         ImmaginiIndividuo immagini = new ImmaginiIndividuo();
-                        
+
                         //immagini.id = Guid.NewGuid().ToString("N");
                         immagini.individuo = idindividuo;
                         immagini.descrizione = descrizione;
@@ -162,29 +161,45 @@ namespace UPlant.Controllers
                         }
                         immagini.credits = credits;
 
+                        await using var imageStream = file.OpenReadStream();
+                        try
+                        {
+                            using var image = Image.FromStream(imageStream);
+                        }
+                        catch (Exception)
+                        {
+                            AddPageAlerts(PageAlertType.Error, _languageService.Getkey("Message_13").ToString());
+                            TempData["MsgErr"] = _languageService.Getkey("Message_13").ToString();
+                            return RedirectToAction("Details", "Individui", new { id = idindividuo, tipo = tipo });
+                        }
+
+                        imageStream.Position = 0;
+
+
+
+
                         if (ModelState.IsValid)
                         {
-                          
+
                             _context.ImmaginiIndividuo.Add(immagini);
                             await _context.SaveChangesAsync();
                         }
 
 
+                        string estensione = Path.GetExtension(immagini.nomefile);
 
-                        int posizione = immagini.nomefile.LastIndexOf(".");
-                        string estensione = immagini.nomefile.Substring(posizione);
-                        if (estensione.ToLower() == ".heic" || estensione.ToLower() == ".heif" || estensione == ".hevc" || estensione.ToLower() == ".png" ||  estensione.ToLower() == ".jpg" || estensione.ToLower() == ".jpeg") //ho modificato il file .heic in jpeg forzatamente
+                        if (estensione.ToLower() == ".heic" || estensione.ToLower() == ".heif" || estensione == ".hevc" || estensione.ToLower() == ".png" || estensione.ToLower() == ".jpg" || estensione.ToLower() == ".jpeg") //ho modificato il file .heic in jpeg forzatamente
                         {
                             estensione = ".jpg";
                         }
-                        string filename = StaticUtils.SetImgPath(immagini.individuo.ToString(), immagini.id + estensione,t.Pathfile.Basepath);
+                        string filename = StaticUtils.SetImgPath(immagini.individuo.ToString(), immagini.id + estensione, t.Pathfile.Basepath);
 
                         if (file.Length > 0)
                         {
                             string filePath = Path.Combine(t.Pathfile.Basepath, filename);
-                            using (Stream fileStream = new FileStream(filePath, FileMode.Create))
+                            await using (Stream fileStream = new FileStream(filePath, FileMode.Create))
                             {
-                                await file.CopyToAsync(fileStream);
+                                await imageStream.CopyToAsync(fileStream);
                             }
                         }
 
@@ -208,6 +223,7 @@ namespace UPlant.Controllers
                         TempData["MsgErr"] = _languageService.Getkey("Message_13").ToString() + ex.Message.ToString();
                         return RedirectToAction("Details", "Individui", new { id = idindividuo, tipo = tipo });
                     }
+                }
                 else
                 {
                     AddPageAlerts(PageAlertType.Error, _languageService.Getkey("Message_15").ToString());
@@ -223,10 +239,10 @@ namespace UPlant.Controllers
         }
         public ActionResult ViewImg(Guid individuo, string img, string filename)
         {
-            
+
             string filePath = StaticUtils.GetThumbImgPath(individuo.ToString(), img, filename, _opt.Value.Pathfile.Basepath);
             var fileExists = System.IO.File.Exists(filePath);
-            
+
             if (fileExists)
             {
                 var fs = System.IO.File.OpenRead(filePath);
@@ -238,7 +254,7 @@ namespace UPlant.Controllers
                 TempData["MsgAle"] = _languageService.Getkey("Message_11").ToString();
                 return RedirectToAction("Details", "Individui", new { id = individuo });
             }
-           
+
 
 
         }
@@ -248,21 +264,21 @@ namespace UPlant.Controllers
 
 
             string filePath = StaticUtils.GetImgPath(individuo.ToString(), img, filename, _opt.Value.Pathfile.Basepath);
-            
+
             var fileExists = System.IO.File.Exists(filePath);
             var fs = System.IO.File.OpenRead(filePath);
             return File(fs, "image/jpeg", filename);
 
 
         }
-        
+
         public async Task<IActionResult> ShowHidden(Guid individuo, Guid img, string tipo)
         {
             var immagini = await _context.ImmaginiIndividuo
                 .Include(i => i.individuoNavigation)
                 .FirstOrDefaultAsync(m => m.id == img);
 
-          //  ImmaginiIndividuo immagini = _context.ImmaginiIndividuo.Find(img);
+            //  ImmaginiIndividuo immagini = _context.ImmaginiIndividuo.Find(img);
 
             immagini.visibile = !immagini.visibile;
             _context.Entry(immagini).State = EntityState.Modified;
@@ -276,12 +292,9 @@ namespace UPlant.Controllers
             try
             {
                 string path = StaticUtils.GetThumbImgPath(individuo.ToString(), img, filename, _opt.Value.Pathfile.Basepath);
-                Aspose.Drawing.Image imgPhoto = Aspose.Drawing.Image.FromFile(path);
-                if (imgPhoto != null)
-                {
-                    imgPhoto.RotateFlip(RotateFlipType.Rotate90FlipNone);
-                    imgPhoto.Save(path);
-                }
+                using var imgPhoto = Image.FromFile(path);
+                imgPhoto.RotateFlip(RotateFlipType.Rotate90FlipNone);
+                imgPhoto.Save(path);
 
 
             }
@@ -309,7 +322,7 @@ namespace UPlant.Controllers
             var immagini = await _context.ImmaginiIndividuo
                 .Include(i => i.individuoNavigation)
                 .FirstOrDefaultAsync(m => m.id == img);
-           
+
             immagini.predefinita = true;
             _context.Entry(immagini).State = EntityState.Modified;
             _context.SaveChanges();
@@ -339,7 +352,7 @@ namespace UPlant.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteImgConfirmed(Guid id, string tipo)
         {
-            
+
             ImmaginiIndividuo immagini = _context.ImmaginiIndividuo.Find(id);
             Guid numeroindividuo = immagini.individuo;
 
@@ -402,9 +415,9 @@ namespace UPlant.Controllers
 
         // GET: Individui/Create
 
-        public ActionResult Create(Guid idaccessione,string tipo)
+        public ActionResult Create(Guid idaccessione, string tipo)
         {
-            var accessione =  _context.Accessioni
+            var accessione = _context.Accessioni
                 .Include(s => s.specieNavigation)
                 .FirstOrDefault(m => m.id == idaccessione);
 
@@ -444,7 +457,7 @@ namespace UPlant.Controllers
 
 
 
-           
+
 
 
 
@@ -461,7 +474,7 @@ namespace UPlant.Controllers
         public async Task<IActionResult> Create(Guid accessione, Guid idindividuo, string progressivo,
                                    Guid sesso, string propagatoData, Guid propagatoModalita, Guid settore, Guid collezione,// non mi serve la famiglia e il genere
                                    bool indexSeminum, string destinazioni, string note, Guid statoindividuo,
-                                   Guid condizione, string operazioniColturali, Guid cartellino, string vecchioprogressivo, string accvecprog, string latitudine, string longitudine,string tipo)  // solo campi 
+                                   Guid condizione, string operazioniColturali, Guid cartellino, string vecchioprogressivo, string accvecprog, string latitudine, string longitudine, string tipo)  // solo campi 
 
 
         {
@@ -483,29 +496,30 @@ namespace UPlant.Controllers
             if (collezione != Guid.Parse("00000000-0000-0000-0000-000000000000"))
             {
                 individuo.collezione = collezione;
-            } else
+            }
+            else
             {
                 var collezionenon = await _context.Collezioni.Where(x => x.settore == settore && x.collezione.Contains("Non ")).Select(x => x.id).FirstOrDefaultAsync();
                 individuo.collezione = collezionenon;
             }
-            
+
             individuo.indexSeminum = indexSeminum;
             individuo.destinazioni = destinazioni;
             individuo.note = note;
             individuo.latitudine = latitudine;
             individuo.longitudine = longitudine;
-            
+
             if (!String.IsNullOrEmpty(accvecprog))
             {
                 if (!String.IsNullOrEmpty(vecchioprogressivo))
                 {
-                    individuo.vecchioprogressivo = accvecprog + "/" +vecchioprogressivo;
+                    individuo.vecchioprogressivo = accvecprog + "/" + vecchioprogressivo;
                 }
                 else
                 {
                     individuo.vecchioprogressivo = accvecprog;
                 }
-               
+
             }
 
             individuo.validazione = true;
@@ -541,7 +555,7 @@ namespace UPlant.Controllers
                     AddPageAlerts(PageAlertType.Success, _languageService.Getkey("Message_5").ToString());
                     TempData["MsgSucc"] = _languageService.Getkey("Message_5").ToString();
                     return RedirectToAction(nameof(Details), nameof(Accessioni), new { id = individuo.accessione, tipo = tipo });
-                  
+
                 }
 
 
@@ -593,7 +607,7 @@ namespace UPlant.Controllers
             Individui individui = await _context.Individui.Include(i => i.accessioneNavigation).ThenInclude(i => i.specieNavigation)
                 .Include(i => i.cartellinoNavigation)
                 .Include(i => i.collezioneNavigation)
-                
+
                 .Include(i => i.propagatoModalitaNavigation)
                 .Include(i => i.sessoNavigation)
                 .Include(i => i.settoreNavigation)
@@ -614,18 +628,18 @@ namespace UPlant.Controllers
                 ViewBag.collezione = new SelectList(_context.Collezioni.Where(x => x.settore == individui.settore).OrderBy(a => a.collezione).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.collezione_en) ? a.collezione : a.collezione_en }), "id", "Desc", individui.collezione);
                 ViewBag.settore = new SelectList(_context.Settori.OrderBy(a => a.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.settore_en) ? a.settore : a.settore_en }), "id", "Desc", individui.settore);
                 ViewBag.cartellino = new SelectList(_context.Cartellini.OrderBy(a => a.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.descrizione : a.descrizione_en }), "id", "Desc", individui.cartellino);
-                
+
             }
             else
             {
                 ViewBag.propagatoModalita = new SelectList(_context.ModalitaPropagazione.OrderBy(a => a.ordinamento), "id", "propagatoModalita", individui.propagatoModalita);
                 ViewBag.sesso = new SelectList(_context.Sesso.OrderByDescending(a => a.descrizione), "id", "descrizione", individui.sesso);
-                
+
                 ViewBag.collezione = new SelectList(_context.Collezioni.Where(x => x.settore == individui.settore).OrderBy(a => a.collezione), "id", "collezione", individui.collezione);
                 ViewBag.settore = new SelectList(_context.Settori.OrderBy(a => a.ordinamento), "id", "settore", individui.settore);
                 ViewBag.cartellino = new SelectList(_context.Cartellini.OrderBy(a => a.ordinamento), "id", "descrizione", individui.cartellino);
-                
-                
+
+
 
             }
 
@@ -637,8 +651,8 @@ namespace UPlant.Controllers
 
                 if (linguacorrente == "en-US")
                 {
-                   
-                   
+
+
                     ViewBag.statoindividuo = _context.StatoIndividuo.Where(x => x.id == storico.statoIndividuo).Select(a => new { stato = string.IsNullOrEmpty(a.descrizione_en) ? a.stato : a.descrizione_en }).Single().stato;
                     ViewBag.condizione = _context.Condizioni.Where(x => x.id == storico.condizione).Select(a => new { condizione = string.IsNullOrEmpty(a.descrizione_en) ? a.condizione : a.descrizione_en }).Single().condizione;
                 }
@@ -649,7 +663,7 @@ namespace UPlant.Controllers
                 }
 
 
-                
+
                 ViewBag.operazioniColturali = storico.operazioniColturali;
                 ViewBag.esiste = "ok";
             }
@@ -665,7 +679,7 @@ namespace UPlant.Controllers
         //  public ActionResult Edit([Bind(Include = "id,accessione,individuo,progressivo,sesso,propagatoData,propagatoModalita,settore,collezione,cartellino,statoindividuo,condizione,indexSeminum,destinazioni,note")] Individui individui)
         public async Task<IActionResult> Edit(Guid id, Guid sesso, string propagatoData, Guid propagatoModalita, Guid settore, Guid collezione,
                                    bool indexSeminum, string destinazioni, string note, string statoindividuo,
-                                   Guid condizione, string operazioniColturali, Guid cartellino, string vecchioprogressivo, string longitudine, string latitudine,string tipo)
+                                   Guid condizione, string operazioniColturali, Guid cartellino, string vecchioprogressivo, string longitudine, string latitudine, string tipo)
 
 
 
@@ -715,10 +729,10 @@ namespace UPlant.Controllers
                 _context.SaveChanges();
 
 
-               
+
                 // passare ultimi valori stato individuo
-                return RedirectToAction(nameof(Create), nameof(StoricoIndividuo), new { idindividuo = individui.id, tipo= tipo ,damodifica = "ok" });
-              //  return RedirectToAction("../StoricoIndivi/Create", new { idindividuo = individui.id, damodifica = "ok" });
+                return RedirectToAction(nameof(Create), nameof(StoricoIndividuo), new { idindividuo = individui.id, tipo = tipo, damodifica = "ok" });
+                //  return RedirectToAction("../StoricoIndivi/Create", new { idindividuo = individui.id, damodifica = "ok" });
             }
 
             var linguacorrente = _languageService.GetCurrentCulture();
@@ -731,9 +745,10 @@ namespace UPlant.Controllers
                 ViewBag.settore = new SelectList(_context.Settori.OrderBy(a => a.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.settore_en) ? a.settore : a.settore_en }), "id", "Desc", individui.settore);
                 ViewBag.cartellino = new SelectList(_context.Cartellini.OrderBy(a => a.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.descrizione : a.descrizione_en }), "id", "Desc", individui.cartellino);
 
-               
+
             }
-            else {
+            else
+            {
                 ViewBag.propagatoModalita = new SelectList(_context.ModalitaPropagazione.OrderBy(a => a.ordinamento), "id", "propagatoModalita", individui.propagatoModalita);
                 ViewBag.sesso = new SelectList(_context.Sesso, "id", "descrizione", individui.sesso);
                 ViewBag.settore = new SelectList(_context.Settori.OrderBy(a => a.ordinamento), "id", "settore", individui.settore);
@@ -744,8 +759,8 @@ namespace UPlant.Controllers
 
 
 
-           
-            
+
+
             if (storico != null)
             {
                 if (linguacorrente == "en-US")
@@ -753,18 +768,19 @@ namespace UPlant.Controllers
                     ViewBag.statoindividuo = _context.StatoIndividuo.Where(x => x.id == storico.statoIndividuo).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.stato : a.descrizione_en }).Single().Desc;
                     ViewBag.condizione = _context.Condizioni.Where(x => x.id == storico.condizione).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.condizione : a.descrizione_en }).Single().Desc;
                 }
-                else {
+                else
+                {
                     ViewBag.statoindividuo = _context.StatoIndividuo.Where(x => x.id == storico.statoIndividuo).Single().stato;
                     ViewBag.condizione = _context.Condizioni.Where(x => x.id == storico.condizione).Single().condizione;
                 }
 
 
 
-                    // Storico storico = _context.Storico.Where(x => x.individuo == individui.id).OrderByDescending(x => x.dataInserimento).First();
-                  
-                
-                
-                
+                // Storico storico = _context.Storico.Where(x => x.individuo == individui.id).OrderByDescending(x => x.dataInserimento).First();
+
+
+
+
                 ViewBag.operazioniColturali = storico.operazioniColturali;
                 ViewBag.esiste = "ok";
             }
@@ -817,7 +833,7 @@ namespace UPlant.Controllers
             _context.Individui.Remove(individui);
             _context.SaveChanges();
             return RedirectToAction(nameof(Details), nameof(Accessioni), new { id = numeroaccessione });
-           
+
 
         }
         private string nextProg(Guid accessione)

@@ -10,9 +10,10 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using UPlant.Models;
 using Microsoft.Extensions.Options;
-using Aspose.Drawing;
-using Aspose.Drawing.Imaging;
-using Aspose.Drawing.Drawing2D;
+using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
+using Image = System.Drawing.Image;
 
 namespace UPlant.Controllers
 {
@@ -27,7 +28,7 @@ namespace UPlant.Controllers
 
         public static string GetImgPath(string individuo, string img, string namefile, string basepath)
         {
-            
+
             string pathindividuo = Path.Combine(basepath, individuo);
             int posizione = namefile.LastIndexOf(".");
             string estensione = namefile.Substring(posizione);
@@ -38,7 +39,7 @@ namespace UPlant.Controllers
         }
         public static string GetThumbImgPath(string individuo, string img, string namefile, string basepath)
         {
-            
+
             string pathindividuo = Path.Combine(basepath, individuo);
             string paththumbindividuo = Path.Combine(pathindividuo, "thumb");
             int posizione = namefile.LastIndexOf(".");
@@ -70,7 +71,7 @@ namespace UPlant.Controllers
         public static string SetImgPath(string id, string img, string basepath)
         {
 
-           
+
             //in windows il path devo metterlo così
             string completepath = Path.Combine(basepath, id);
             try
@@ -94,7 +95,7 @@ namespace UPlant.Controllers
         public static string SetThumbImgPath(string id, string img, string basepath)
         {
 
-           
+
             //in windows il path devo metterlo così
             string completepath = Path.Combine(basepath, id);
             string completethumbpath = Path.Combine(completepath, "thumb");
@@ -118,15 +119,18 @@ namespace UPlant.Controllers
         public static string GeneraSuccessivo(string successivo)
         {
 
-            if (Int32.TryParse(successivo, out int value)) {
+            if (Int32.TryParse(successivo, out int value))
+            {
                 successivo = (Int32.Parse(successivo) + 1).ToString();
                 return successivo;
-            } else {
+            }
+            else
+            {
                 successivo = "";
                 return successivo;
             }
-                
-               
+
+
 
         }
         public static int GeneraSuccessivo(int successivo)
@@ -138,131 +142,102 @@ namespace UPlant.Controllers
 
         public static void ResizeAndSave(string FileNameInput, string fileNamethumb, int maxSideSize, bool makeItSquare)
         {
-            int newWidth2;
-            int newHeight2;
-            
-            Aspose.Drawing.Image image = new Bitmap(FileNameInput);
-
-            int oldWidth = image.Width;
-            int oldHeight = image.Height;
-            // Bitmap newImage;
-
-            Aspose.Drawing.Image result = null;
 
 
-            if (makeItSquare)
-            {
-                if (image.Width != maxSideSize || image.Height != maxSideSize)
-                {
-                    using (var target = new Bitmap(maxSideSize, maxSideSize))
-                    {
-                        using (var g = Aspose.Drawing.Graphics.FromImage(target))
-                        {
-                            g.CompositingQuality = CompositingQuality.HighQuality;
-                            g.InterpolationMode = InterpolationMode.HighQualityBicubic;
-                            g.SmoothingMode = SmoothingMode.HighQuality;
-
-                            // Scaling
-                            float scaling;
-                            float scalingY = (float)image.Height / maxSideSize;
-                            float scalingX = (float)image.Width / maxSideSize;
-                            if (scalingX < scalingY) scaling = scalingX; else scaling = scalingY;
-
-                            int newWidth = (int)(image.Width / scaling);
-                            int newHeight = (int)(image.Height / scaling);
-
-                            // Correct float to int rounding
-                            if (newWidth < maxSideSize) newWidth = maxSideSize;
-                            if (newHeight < maxSideSize) newHeight = maxSideSize;
-
-                            // See if image needs to be cropped
-                            int shiftX = 0;
-                            int shiftY = 0;
-
-                            if (newWidth > maxSideSize)
-                            {
-                                shiftX = (newWidth - maxSideSize) / 2;
-                            }
-
-                            if (newHeight > maxSideSize)
-                            {
-                                shiftY = (newHeight - maxSideSize) / 2;
-                            }
-
-                            // Draw image
-                            g.DrawImage(image, -shiftX, -shiftY, newWidth, newHeight);
-                        }
-
-                        result = new Bitmap(target);
-                    }
-                }
-                //vecchio modo di creazione thumb
-                /* int smallerSide = oldWidth >= oldHeight ? oldHeight : oldWidth;
-                double coeficient = maxSideSize / (double)smallerSide;
-                newWidth = Convert.ToInt32(coeficient * oldWidth);
-                newHeight = Convert.ToInt32(coeficient * oldHeight);
-                Bitmap tempImage = new Bitmap(image, newWidth, newHeight);
-                int cropX = (newWidth - maxSideSize) / 2;
-                int cropY = (newHeight - maxSideSize) / 2;
-                newImage = new Bitmap(maxSideSize, maxSideSize);
-                Graphics tempGraphic = Graphics.FromImage(newImage);
-                tempGraphic.SmoothingMode = SmoothingMode.AntiAlias;
-                tempGraphic.InterpolationMode = InterpolationMode.HighQualityBicubic;
-                tempGraphic.PixelOffsetMode = PixelOffsetMode.HighQuality;
-                // tempGraphic.DrawImage(tempImage, new Rectangle(0, 0, maxSideSize, maxSideSize), cropX, cropY, maxSideSize, maxSideSize, GraphicsUnit.Pixel);
-                tempGraphic.DrawImage(tempImage, new Rectangle(0, 0, maxSideSize, maxSideSize), cropX, cropY, maxSideSize, maxSideSize,GraphicsUnit.Point);
-            */
-
-            }
-            else
-            {
-                int maxSide = oldWidth >= oldHeight ? oldWidth : oldHeight;
-
-                if (maxSide > maxSideSize)
-                {
-                    double coeficient = maxSideSize / (double)maxSide;
-                    newWidth2 = Convert.ToInt32(coeficient * oldWidth);
-                    newHeight2 = Convert.ToInt32(coeficient * oldHeight);
-                }
-                else
-                {
-                    newWidth2 = oldWidth;
-                    newHeight2 = oldHeight;
-                }
-                result = new Bitmap(image, newWidth2, newHeight2);
-            }
-
-
-
-
-            //var extension = Path.GetExtension(FileNameInput);
-            int posizione = FileNameInput.LastIndexOf(".");
-            string formato = FileNameInput.Substring(posizione + 1);
-            if (formato.ToLower() == "png")
-            {
-                result.Save(fileNamethumb, ImageFormat.Png);
-            }
-            else if (formato.ToLower() == "jpeg" || formato == "jpg")
-            {
-                result.Save(fileNamethumb, ImageFormat.Jpeg);
-            }
-            else if (formato.ToLower() == "heif" || formato == "hevc" || formato == "heic")
-            {
-                result.Save(fileNamethumb, ImageFormat.Jpeg);
-            }
-
-
-
-            /* else if (ImageFormat.Jpeg.Equals(formato))
-             {
-                 newImage.Save(fileNamethumb, ImageFormat.Jpeg);
-             }*/
-
-
-            image.Dispose();
-            result.Dispose();
+            Image image = new Bitmap(FileNameInput);
+            Bitmap result = makeItSquare ? ResizeSquare(image, maxSideSize) : ResizeByLongestSide(image, maxSideSize);
+            var format = ResolveImageFormat(FileNameInput);
+            result.Save(fileNamethumb, format);
         }
 
 
+
+        private static Bitmap ResizeSquare(Image image, int maxSideSize)
+        {
+            if (image.Width == maxSideSize && image.Height == maxSideSize)
+            {
+                return new Bitmap(image);
+            }
+
+            var target = new Bitmap(maxSideSize, maxSideSize);
+
+            using (var graphics = Graphics.FromImage(target))
+            {
+                graphics.CompositingQuality = CompositingQuality.HighQuality;
+                graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                graphics.SmoothingMode = SmoothingMode.HighQuality;
+                float scalingX = (float)image.Width / maxSideSize;
+                float scalingY = (float)image.Height / maxSideSize;
+                float scaling = Math.Min(scalingX, scalingY);
+                if (scaling == 0)
+                {
+                    scaling = 1;
+                }
+
+                int newWidth = (int)Math.Round(image.Width / scaling);
+                int newHeight = (int)Math.Round(image.Height / scaling);
+
+
+                if (newWidth < maxSideSize)
+                {
+                    newWidth = maxSideSize;
+                }
+                if (newHeight < maxSideSize)
+                {
+                    newHeight = maxSideSize;
+                }
+                int shiftX = Math.Max(0, (newWidth - maxSideSize) / 2);
+                int shiftY = Math.Max(0, (newHeight - maxSideSize) / 2);
+
+                graphics.DrawImage(image, -shiftX, -shiftY, newWidth, newHeight);
+            }
+
+            return target;
+        }
+
+
+
+
+
+        //var extension = Path.GetExtension(FileNameInput);
+        private static Bitmap ResizeByLongestSide(Image image, int maxSideSize)
+        {
+            int oldWidth = image.Width;
+            int oldHeight = image.Height;
+            int maxSide = Math.Max(oldWidth, oldHeight);
+
+            if (maxSide <= maxSideSize)
+            {
+                return new Bitmap(image);
+            }
+
+            double coefficient = maxSideSize / (double)maxSide;
+            int newWidth = (int)Math.Round(oldWidth * coefficient);
+            int newHeight = (int)Math.Round(oldHeight * coefficient);
+
+            return new Bitmap(image, newWidth, newHeight);
+        }
+
+        /* else if (ImageFormat.Jpeg.Equals(formato))
+         {
+             newImage.Save(fileNamethumb, ImageFormat.Jpeg);
+         }*/
+        private static ImageFormat ResolveImageFormat(string fileNameInput)
+        {
+            var extension = Path.GetExtension(fileNameInput)?.TrimStart('.').ToLowerInvariant();
+
+            return extension switch
+            {
+                "png" => ImageFormat.Png,
+                "jpeg" => ImageFormat.Jpeg,
+                "jpg" => ImageFormat.Jpeg,
+                "heif" => ImageFormat.Jpeg,
+                "hevc" => ImageFormat.Jpeg,
+                "heic" => ImageFormat.Jpeg,
+                _ => ImageFormat.Jpeg,
+            };
+
+
+        }
     }
 }
