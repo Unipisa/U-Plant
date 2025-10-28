@@ -504,8 +504,8 @@
   <data name="Global_Created_By" xml:space="preserve">
     <value>Creato Da</value>
   </data>
-  <data name="Global_Historical" xml:space="preserve">
-    <value>Storico</value>
+  <data name="Global_Individual_Record_History" xml:space="preserve">
+    <value>Registro Storico Individuo</value>
   </data>
   <data name="Individui_Validazione_1" xml:space="preserve">
     <value>Confermi la validazione dell'individuo</value>
