@@ -297,8 +297,8 @@
   <data name="Global_Collector" xml:space="preserve">
     <value>Raccoglitore</value>
   </data>
-  <data name="Global_Identified_By" xml:space="preserve">
-    <value>Identificato da</value>
+  <data name="Global_Identifier" xml:space="preserve">
+    <value>Identificatore</value>
   </data>
   <data name="Global_Notes" xml:space="preserve">
     <value>Note</value>
@@ -555,7 +555,7 @@
   <data name="Global_Determiner" xml:space="preserve">
     <value>Identificatore</value>
   </data>
-  <data name="Global_Determiner_Type" xml:space="preserve">
+  <data name="Global_Identifier_Type" xml:space="preserve">
     <value>Tipo Identificatore</value>
   </data>
   <data name="Percorsi_Create_Edit_1" xml:space="preserve">
@@ -618,8 +618,8 @@
   <data name="Shared_Comp_Sb_Support_Tools" xml:space="preserve">
     <value>Strumenti di Supporto</value>
   </data>
-  <data name="Global_Path" xml:space="preserve">
-    <value>Percorso</value>
+  <data name="Global_Thematic_Visits" xml:space="preserve">
+    <value>Visite Tematiche</value>
   </data>
   <data name="Shared_Comp_Sb_UPlant_Discover" xml:space="preserve">
     <value>U-Plant DISCOVER</value>

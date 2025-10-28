@@ -297,8 +297,8 @@
   <data name="Global_Collector" xml:space="preserve">
     <value>Collector</value>
   </data>
-  <data name="Global_Identified_By" xml:space="preserve">
-    <value>Identified By</value>
+  <data name="Global_Identifier" xml:space="preserve">
+    <value>Identifier</value>
   </data>
   <data name="Global_Notes" xml:space="preserve">
     <value>Notes</value>
@@ -555,8 +555,8 @@
   <data name="Global_Determiner" xml:space="preserve">
     <value>Determiner</value>
   </data>
-  <data name="Global_Determiner_Type" xml:space="preserve">
-    <value>Determiner Type</value>
+  <data name="Global_Identifier_Type" xml:space="preserve">
+    <value>Identifier Type</value>
   </data>
   <data name="Percorsi_Create_Edit_1" xml:space="preserve">
     <value>Characters to add to the text: [br]carriage return - [p] new paragraph</value>
@@ -618,8 +618,8 @@
   <data name="Shared_Comp_Sb_Support_Tools" xml:space="preserve">
     <value>Support Tools</value>
   </data>
-  <data name="Global_Path" xml:space="preserve">
-    <value>Path</value>
+  <data name="Global_Thematic_Visits" xml:space="preserve">
+    <value>Thematic Visits</value>
   </data>
   <data name="Shared_Comp_Sb_UPlant_Discover" xml:space="preserve">
     <value>U-Plant DISCOVER</value>

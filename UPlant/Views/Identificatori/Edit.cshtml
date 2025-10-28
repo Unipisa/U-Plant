@@ -5,7 +5,7 @@
 }
 <div class="card card-outline card-primary">
     <div class="card-header with-border">
-        <h3 class="card-title">@language.Getkey("Global_Edit") @language.Getkey("Global_Determiner")</h3>
+        <h3 class="card-title">@language.Getkey("Global_Edit") @language.Getkey("Global_Identifier")</h3>
     </div>
     <div class="card-body">
         <form asp-action="Edit">
@@ -23,7 +23,7 @@
                 <span asp-validation-for="nominativo_en" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="tipoIdentificatore" class="control-label">@language.Getkey("Global_Determiner_Type")</label>
+                <label asp-for="tipoIdentificatore" class="control-label">@language.Getkey("Global_Identifier_Type")</label>
                 <select asp-for="tipoIdentificatore" class="form-control" asp-items="ViewBag.tipoIdentificatore"></select>
                 <span asp-validation-for="tipoIdentificatore" class="text-danger"></span>
             </div>

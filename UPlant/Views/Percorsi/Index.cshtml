@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<UPlant.Models.DB.Percorsi>
 @inject LanguageService language
 @{
-    ViewBag.Title = language.Getkey("Global_Path");
+    ViewBag.Title = language.Getkey("Global_Thematic_Visits");
 
     // Safe enumerables
     var percorsi = Model ?? Enumerable.Empty<UPlant.Models.DB.Percorsi>();
@@ -108,7 +108,7 @@
                                             }
 
                                             <a asp-action="Edit" asp-controller="Percorsi" asp-route-id="@item.id">
-                                                <span class="btn btn-warning btn-xs" title="@($"{language.Getkey("Global_Edit")} {language.Getkey("Global_Path")}")">
+                                                <span class="btn btn-warning btn-xs" title="@($"{language.Getkey("Global_Edit")} {language.Getkey("Global_Thematic_Visits")}")">
                                                     <i class="fa-solid fa-pencil" style="color:#fafafa;"></i>
                                                 </span>
                                             </a>
@@ -117,7 +117,7 @@
                                         @if (isAdmin)
                                         {
                                             <a asp-action="Delete" asp-controller="Percorsi" asp-route-id="@item.id">
-                                                <span class="btn btn-danger btn-xs" title="@($"{language.Getkey("Global_Delete")} {language.Getkey("Global_Path")}")">
+                                                <span class="btn btn-danger btn-xs" title="@($"{language.Getkey("Global_Delete")} {language.Getkey("Global_Thematic_Visits")}")">
                                                     <i class="fa-solid fa-trash"></i>
                                                 </span>
                                             </a>

@@ -1,7 +1,7 @@
 ﻿@model UPlant.Models.DB.Percorsi
 @inject LanguageService language
 @{
-    ViewBag.Title = language.Getkey("Global_Path");
+    ViewBag.Title = language.Getkey("Global_Thematic_Visits");
     ViewBag.lang = language.GetCurrentCulture();
 }
 
@@ -98,7 +98,7 @@
                                         if (User.IsInRole("Administrator") || User.IsInRole("Discover"))
                                         {
                                             <a asp-action="Edit" asp-controller="Percorsi" asp-route-id="@Model.id">
-                                                <span class="btn btn-warning btn-xs" title="@language.Getkey("Global_Edit") @language.Getkey("Global_Path")">
+                                                <span class="btn btn-warning btn-xs" title="@language.Getkey("Global_Edit") @language.Getkey("Global_Thematic_Visits")">
                                                     <i class="fa-solid fa-pencil" style="color: #fafafa;"></i>
                                                 </span>
                                             </a>

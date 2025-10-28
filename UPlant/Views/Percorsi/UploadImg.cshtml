@@ -2,7 +2,7 @@
 @inject LanguageService language
 @{
     
-    ViewBag.Title = "Upload "+@language.Getkey("Global_Image")+" "+ @language.Getkey("Global_Path");
+    ViewBag.Title = "Upload " + @language.Getkey("Global_Image") + " " + @language.Getkey("Global_Thematic_Visits");
 }
 <div class="container">
     <div class="row">
@@ -11,7 +11,7 @@
             <div class="modal-content">
                 <div class="modal-header" style="background-color: #3c8dbc; ">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title" id="myModal-label" style="color: azure">Upload @language.Getkey("Global_Image") @language.Getkey("Global_Path")</h4>
+                    <h4 class="modal-title" id="myModal-label" style="color: azure">Upload @language.Getkey("Global_Image") @language.Getkey("Global_Thematic_Visits")</h4>
                 </div>
                 <div class="modal-body">
 
