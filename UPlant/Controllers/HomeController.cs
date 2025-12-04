@@ -244,11 +244,37 @@ namespace UPlant.Controllers
                 listaind = listaind.Where(a => a.idcollezione == collezione);
             }
 
-            if (datapropagazioneinizio == DateTime.MinValue && datapropagazionefine == DateTime.MinValue)
+            DateTime dataMin = new DateTime(1543, 1, 1);
+            DateTime dataMax = DateTime.Today.AddDays(1).AddTicks(-1);
+            if (datapropagazioneinizio == DateTime.MinValue)
+                datapropagazioneinizio = dataMin;
+            if (datapropagazionefine == DateTime.MinValue)
+                datapropagazionefine = dataMax;
+            if (datapropagazioneinizio < dataMin)
+                datapropagazioneinizio = dataMin;
+
+            if (datapropagazioneinizio > dataMax)
+                datapropagazioneinizio = dataMax;
+
+            if (datapropagazionefine < dataMin)
+                datapropagazionefine = dataMin;
+
+            if (datapropagazionefine > dataMax)
+                datapropagazionefine = dataMax;
+            if (datapropagazionefine < datapropagazioneinizio)
             {
-                datapropagazionefine = datapropagazionefine.AddSeconds(86399);// servirà se si utilizzarà un dataaquisizione al secondo
-                listaind = listaind.Where(a => a.propagatodata >= datapropagazioneinizio && a.propagatodata < datapropagazionefine);
+                var tmp = datapropagazioneinizio;
+                datapropagazioneinizio = datapropagazionefine;
+                datapropagazionefine = tmp;
             }
+
+
+          
+
+
+       
+                listaind = listaind.Where(a => a.propagatodata >= datapropagazioneinizio && a.propagatodata < datapropagazionefine);
+            
 
             if (statoindividuo != null)
             {
@@ -392,12 +418,34 @@ namespace UPlant.Controllers
             {
                 listaacces = listaacces.Where(a => (a.vecchioprogressivo ?? "").Contains(vecchioprogressivo));
             }
+            DateTime dataMin = new DateTime(1543, 1, 1);
+            DateTime dataMax = DateTime.Today.AddDays(1).AddTicks(-1);
+            if (datainserimentoinizio == DateTime.MinValue)
+                datainserimentoinizio = dataMin;
+            if (datainserimentofine == DateTime.MinValue)
+                datainserimentofine = dataMax;
+            if (datainserimentoinizio < dataMin)
+                datainserimentoinizio = dataMin;
 
-            if (datainserimentoinizio == DateTime.MinValue && datainserimentofine == DateTime.MinValue)
+            if (datainserimentoinizio > dataMax)
+                datainserimentoinizio = dataMax;
+
+            if (datainserimentofine < dataMin)
+                datainserimentofine = dataMin;
+
+            if (datainserimentofine > dataMax)
+                datainserimentofine = dataMax;
+            if (datainserimentofine < datainserimentoinizio)
             {
-                datainserimentofine = datainserimentofine.AddSeconds(86399);// servirà se si utilizzarà un dataaquisizione al secondo
-                listaacces = listaacces.Where(a => a.dataAcquisizione >= datainserimentoinizio && a.dataAcquisizione < datainserimentofine);
+                var tmp = datainserimentoinizio;
+                datainserimentoinizio = datainserimentofine;
+                datainserimentofine = tmp;
             }
+
+
+              //  datainserimentofine = datainserimentofine.AddSeconds(86399);// servirà se si utilizzarà un dataaquisizione al secondo
+                listaacces = listaacces.Where(a => a.dataAcquisizione >= datainserimentoinizio && a.dataAcquisizione < datainserimentofine);
+            
 
             if (tipomateriale != Guid.Empty)
             {

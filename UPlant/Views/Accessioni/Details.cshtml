@@ -47,9 +47,9 @@
 </p>
 
 <div class="col-xs-12">
-    <div class="card card-outline card-primary">
+    <div class="card card-primary">
         <div class="card-header with-border">
-            <h3 class="card-title">  <span class="text-primary">@language.Getkey("Global_Detail")  @language.Getkey("Global_Accession")</span></h3>
+            <h3 class="card-title">  @language.Getkey("Global_Detail")  @language.Getkey("Global_Accession")</h3>
         </div>   <form role="form">
             <div class="card-body">
                 <table style="height: 30px; width: 100% " class="table-striped table-bordered">
@@ -296,10 +296,10 @@
     </div>
 
     <div id="individui">
-        <div class="card card-outline card-primary col-xs-12">
-        <div class="card-header with-border ml-2  col-xs-12" id="headingOne">
+        <div class="card  card-primary col-xs-12">
+        <div class="card-header with-border col-xs-12" id="headingOne">
 
-            <h3 class="card-title mb-0"><button class="btn btn-light active" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">@language.Getkey("Accession_Details_1")</button></h3>
+            <h3 class="card-title"><span class="btn btn-primary" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">@language.Getkey("Accession_Details_1")</span></h3>
                 @{
                     if (User.IsInRole("Administrator") || User.IsInRole("Operator") || User.IsInRole("TreeKeeper") || User.IsInRole("Discover") || User.IsInRole("Seminum") || User.IsInRole("Utility"))
                     {
