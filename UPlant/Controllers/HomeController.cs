@@ -269,10 +269,6 @@ namespace UPlant.Controllers
             }
 
 
-          
-
-
-       
                 listaind = listaind.Where(a => a.propagatodata >= datapropagazioneinizio && a.propagatodata < datapropagazionefine);
             
 
@@ -418,23 +414,28 @@ namespace UPlant.Controllers
             {
                 listaacces = listaacces.Where(a => (a.vecchioprogressivo ?? "").Contains(vecchioprogressivo));
             }
+
+            // ============================
+            // 📅 NORMALIZZAZIONE DELLE DATE
+            // ============================
+
             DateTime dataMin = new DateTime(1543, 1, 1);
             DateTime dataMax = DateTime.Today.AddDays(1).AddTicks(-1);
+
             if (datainserimentoinizio == DateTime.MinValue)
                 datainserimentoinizio = dataMin;
+
             if (datainserimentofine == DateTime.MinValue)
-                datainserimentofine = dataMax;
-            if (datainserimentoinizio < dataMin)
-                datainserimentoinizio = dataMin;
+                datainserimentofine = DateTime.Today;
 
-            if (datainserimentoinizio > dataMax)
-                datainserimentoinizio = dataMax;
+            // Limita ai range validi
+            if (datainserimentoinizio < dataMin) datainserimentoinizio = dataMin;
+            if (datainserimentoinizio > dataMax) datainserimentoinizio = dataMax;
 
-            if (datainserimentofine < dataMin)
-                datainserimentofine = dataMin;
+            if (datainserimentofine < dataMin) datainserimentofine = dataMin;
+            if (datainserimentofine > dataMax) datainserimentofine = dataMax;
 
-            if (datainserimentofine > dataMax)
-                datainserimentofine = dataMax;
+            // Se invertite, swap
             if (datainserimentofine < datainserimentoinizio)
             {
                 var tmp = datainserimentoinizio;
@@ -443,9 +444,18 @@ namespace UPlant.Controllers
             }
 
 
-              //  datainserimentofine = datainserimentofine.AddSeconds(86399);// servirà se si utilizzarà un dataaquisizione al secondo
-                listaacces = listaacces.Where(a => a.dataAcquisizione >= datainserimentoinizio && a.dataAcquisizione < datainserimentofine);
-            
+            // ============================
+            // ⭐ FILTRO SULLE DATE (QUELLO BUONO)
+            // Include tutta la giornata di fine
+            // ============================
+
+            var dataInizio = datainserimentoinizio.Date;
+            var dataFine = datainserimentofine.Date;
+            var dataFineEsclusiva = dataFine.AddDays(1);   // 👈 giorno dopo = include tutta la giornata
+
+            listaacces = listaacces.Where(a =>
+                a.dataAcquisizione >= dataInizio &&
+                a.dataAcquisizione < dataFineEsclusiva);
 
             if (tipomateriale != Guid.Empty)
             {
