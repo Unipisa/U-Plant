@@ -219,7 +219,7 @@ namespace UPlant.Controllers
         {
 
             var linguacorrente = _languageService.GetCurrentCulture();
-            IEnumerable<Ricercaind> listaind = (from m in _context.Ricercaind select m).ToList();
+            IEnumerable<Ricercaind> listaind = (from m in _context.Ricercaind select m);
 
             if (!String.IsNullOrEmpty(famiglia))
             {
@@ -343,7 +343,7 @@ namespace UPlant.Controllers
                 countimg = _context.ImmaginiIndividuo.Where(a => a.individuo == r.id).Count().ToString(),
                 //nomeetichetta = StaticUtils.CleanInput(r.nome_scientifico).Replace("  "," ")
                 nomeetichetta = StaticUtils.CleanInput(r.genere).Replace("  ", " ") + " " + StaticUtils.CleanInput(r.nome).Replace("  ", " ")
-            });
+            }).ToList();
             ViewData["filename"] = CreaExcelRicerca(null,listaind, "individuo"); 
             
             ViewData["famiglia"] = famiglia;
