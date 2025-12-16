@@ -268,8 +268,18 @@ namespace UPlant.Controllers
                 datapropagazionefine = tmp;
             }
 
+            var dataInizio = datapropagazioneinizio.Date;
+            var dataFine = datapropagazionefine.Date;
+            var dataFineEsclusiva = dataFine.AddDays(1);   // 👈 giorno dopo = include tutta la giornata
 
-                listaind = listaind.Where(a => a.propagatodata >= datapropagazioneinizio && a.propagatodata < datapropagazionefine);
+            listaind = listaind.Where(a =>
+                a.propagatodata >= dataInizio &&
+                a.propagatodata < dataFineEsclusiva);
+
+
+
+
+           // listaind = listaind.Where(a => a.propagatodata >= datapropagazioneinizio && a.propagatodata < datapropagazionefine);
             
 
             if (statoindividuo != null)
