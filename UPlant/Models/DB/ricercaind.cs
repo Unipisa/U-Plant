@@ -68,4 +68,6 @@ public partial class Ricercaind
     public string varieta { get; set; }
 
     public string cult { get; set; }
+    public int? numero_immagini { get; set; }
+    
 }
