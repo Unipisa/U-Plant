@@ -56,4 +56,6 @@ public partial class Ricercaacc
     public string raccoglitore { get; set; }
 
     public bool validazione { get; set; }
+
+    public int? numero_individui { get; set; }
 }

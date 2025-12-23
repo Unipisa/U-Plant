@@ -501,7 +501,7 @@ namespace UPlant.Controllers
                 dataacquisizione = string.Format(Convert.ToDateTime(r.dataAcquisizione).ToString(), "{0:yyyy-MM-dd HH:mm:ss}", "yyyy"),
                 tipomateriale = r.tipomateriale,
                 tipomateriale_en = r.tipomateriale_en,
-                countind = _context.Individui.Where(a => a.accessione == r.idacc).Count().ToString(),
+                countind = r.numero_individui.ToString(), // _context.Individui.Where(a => a.accessione == r.idacc).Count().ToString(),
                 inseritoda = r.inseritoda,
                 modificatoda = r.modificatoda,
                 validazione = r.validazione
