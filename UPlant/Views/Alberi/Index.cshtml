@@ -1,0 +1,95 @@
+﻿@model IEnumerable<UPlant.Models.DB.Alberi>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.dataapertura)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.motivo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.esitointervento)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.stato)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.datachiusura)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.fornitoreNavigation)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.individuoNavigation)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.interventoNavigation)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.prioritaNavigation)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.utenteaperturaNavigation)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.utenteultimamodificaNavigation)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.dataapertura)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.motivo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.esitointervento)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.stato)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.datachiusura)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.fornitoreNavigation.descrizione)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.individuoNavigation.progressivo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.interventoNavigation.descrizione)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.prioritaNavigation.descrizione)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.utenteaperturaNavigation.CF)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.utenteultimamodificaNavigation.CF)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

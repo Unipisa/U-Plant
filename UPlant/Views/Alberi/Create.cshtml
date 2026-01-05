@@ -1,0 +1,77 @@
+﻿@model UPlant.Models.DB.Alberi
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Alberi</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="individuo" class="control-label"></label>
+                <select asp-for="individuo" class ="form-control" asp-items="ViewBag.individuo"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="dataapertura" class="control-label"></label>
+                <input asp-for="dataapertura" class="form-control" />
+                <span asp-validation-for="dataapertura" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="priorita" class="control-label"></label>
+                <select asp-for="priorita" class ="form-control" asp-items="ViewBag.priorita"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="intervento" class="control-label"></label>
+                <select asp-for="intervento" class ="form-control" asp-items="ViewBag.intervento"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="fornitore" class="control-label"></label>
+                <select asp-for="fornitore" class ="form-control" asp-items="ViewBag.fornitore"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="motivo" class="control-label"></label>
+                <input asp-for="motivo" class="form-control" />
+                <span asp-validation-for="motivo" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="esitointervento" class="control-label"></label>
+                <input asp-for="esitointervento" class="form-control" />
+                <span asp-validation-for="esitointervento" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="stato" /> @Html.DisplayNameFor(model => model.stato)
+                </label>
+            </div>
+            <div class="form-group">
+                <label asp-for="datachiusura" class="control-label"></label>
+                <input asp-for="datachiusura" class="form-control" />
+                <span asp-validation-for="datachiusura" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="utenteapertura" class="control-label"></label>
+                <select asp-for="utenteapertura" class ="form-control" asp-items="ViewBag.utenteapertura"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="utenteultimamodifica" class="control-label"></label>
+                <select asp-for="utenteultimamodifica" class ="form-control" asp-items="ViewBag.utenteultimamodifica"></select>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
