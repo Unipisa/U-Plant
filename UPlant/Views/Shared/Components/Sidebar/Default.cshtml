@@ -263,6 +263,30 @@
 
                                         </ul>
                                     </li>
+                                    @*un albero*@
+                                    <li class="nav-item has-treeview">
+                                        <a href="#" class="nav-link">
+                                            <i class="nav-icon fa fa-table" style="color :sandybrown"></i><p style="color :sandybrown">@language.Getkey("Shared_Comp_Sb_Tree_Tables")</p><i class="right fa fa-angle-left"></i>
+                                        </a>
+                                        <ul class="nav nav-treeview">
+                                            <li class="nav-item">
+                                                <a asp-action="Index" asp-controller="TipoInterventiAlberi" class="nav-link active">
+                                                    <span>
+                                                        <i class="far fa-circle nav-icon"></i> @language.Getkey("Global_Tree_Interventions")
+                                                    </span>
+                                                </a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a asp-action="Index" asp-controller="TipoPrioritaAlberi" class="nav-link active">
+                                                    <span>
+                                                        <i class="far fa-circle nav-icon"></i> @language.Getkey("Global_Tree_Priority")
+                                                    </span>
+                                                </a>
+                                            </li>
+
+                                        </ul>
+                                    </li>
+                                
                                 </ul>
                             </li>
                         }

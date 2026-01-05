@@ -735,4 +735,13 @@
   <data name="Global_Maintenance" xml:space="preserve">
     <value>Manutenzione</value>
   </data>
+  <data name="Shared_Comp_Sb_Tree_Tables" xml:space="preserve">
+    <value>Tabelle Alberi</value>
+  </data>
+  <data name="Global_Tree_Interventions" xml:space="preserve">
+    <value>Tipo Interventi Alberi</value>
+  </data>
+  <data name="Global_Tree_Priority" xml:space="preserve">
+    <value>Tipo Priorità Alberi</value>
+  </data>
 </root>
