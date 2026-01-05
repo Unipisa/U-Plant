@@ -33,6 +33,10 @@ public partial class Users
 
     public virtual ICollection<Accessioni> AccessioniutenteUltimaModificaNavigation { get; set; } = new List<Accessioni>();
 
+    public virtual ICollection<Alberi> AlberiutenteaperturaNavigation { get; set; } = new List<Alberi>();
+
+    public virtual ICollection<Alberi> AlberiutenteultimamodificaNavigation { get; set; } = new List<Alberi>();
+
     public virtual Organizzazioni OrganizzazioneNavigation { get; set; }
 
     public virtual ICollection<StoricoIndividuo> StoricoIndividuo { get; set; } = new List<StoricoIndividuo>();

@@ -39,6 +39,8 @@ public partial class Individui
 
     public string vecchioprogressivo { get; set; }
 
+    public virtual ICollection<Alberi> Alberi { get; set; } = new List<Alberi>();
+
     public virtual ICollection<ImmaginiIndividuo> ImmaginiIndividuo { get; set; } = new List<ImmaginiIndividuo>();
 
     public virtual ICollection<IndividuiPercorso> IndividuiPercorso { get; set; } = new List<IndividuiPercorso>();

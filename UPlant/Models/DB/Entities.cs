@@ -13,6 +13,8 @@ public partial class Entities : DbContext
 
     public virtual DbSet<Accessioni> Accessioni { get; set; }
 
+    public virtual DbSet<Alberi> Alberi { get; set; }
+
     public virtual DbSet<Areali> Areali { get; set; }
 
     public virtual DbSet<Cartellini> Cartellini { get; set; }
@@ -92,6 +94,10 @@ public partial class Entities : DbContext
     public virtual DbSet<TipoAcquisizione> TipoAcquisizione { get; set; }
 
     public virtual DbSet<TipoIdentificatore> TipoIdentificatore { get; set; }
+
+    public virtual DbSet<TipoInterventiAlberi> TipoInterventiAlberi { get; set; }
+
+    public virtual DbSet<TipoPrioritaAlberi> TipoPrioritaAlberi { get; set; }
 
     public virtual DbSet<TipologiaUtente> TipologiaUtente { get; set; }
 
@@ -205,6 +211,47 @@ public partial class Entities : DbContext
                 .HasForeignKey(d => d.utenteUltimaModifica)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Accessioni_UtentiModifica");
+        });
+
+        modelBuilder.Entity<Alberi>(entity =>
+        {
+            entity.Property(e => e.id).HasDefaultValueSql("(newid())");
+            entity.Property(e => e.dataapertura).HasColumnType("datetime");
+            entity.Property(e => e.datachiusura).HasColumnType("datetime");
+            entity.Property(e => e.esitointervento).IsUnicode(false);
+            entity.Property(e => e.motivo)
+                .IsRequired()
+                .IsUnicode(false);
+
+            entity.HasOne(d => d.fornitoreNavigation).WithMany(p => p.Alberi)
+                .HasForeignKey(d => d.fornitore)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Alberi_Fornitori");
+
+            entity.HasOne(d => d.individuoNavigation).WithMany(p => p.Alberi)
+                .HasForeignKey(d => d.individuo)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Alberi_Individui");
+
+            entity.HasOne(d => d.interventoNavigation).WithMany(p => p.Alberi)
+                .HasForeignKey(d => d.intervento)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Alberi_TipoInterventiAlberi");
+
+            entity.HasOne(d => d.prioritaNavigation).WithMany(p => p.Alberi)
+                .HasForeignKey(d => d.priorita)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Alberi_TipoPrioritaAlberi");
+
+            entity.HasOne(d => d.utenteaperturaNavigation).WithMany(p => p.AlberiutenteaperturaNavigation)
+                .HasForeignKey(d => d.utenteapertura)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Alberi_UsersApertura");
+
+            entity.HasOne(d => d.utenteultimamodificaNavigation).WithMany(p => p.AlberiutenteultimamodificaNavigation)
+                .HasForeignKey(d => d.utenteultimamodifica)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Alberi_UsersUltima");
         });
 
         modelBuilder.Entity<Areali>(entity =>
@@ -958,6 +1005,28 @@ public partial class Entities : DbContext
                 .HasForeignKey(d => d.organizzazione)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_TipoVerificatore_Organizzazione");
+        });
+
+        modelBuilder.Entity<TipoInterventiAlberi>(entity =>
+        {
+            entity.HasKey(e => e.id).HasName("PK_InterventiAlberi");
+
+            entity.Property(e => e.id).HasDefaultValueSql("(newid())");
+            entity.Property(e => e.descrizione)
+                .IsRequired()
+                .IsUnicode(false);
+            entity.Property(e => e.descrizione_en).IsUnicode(false);
+        });
+
+        modelBuilder.Entity<TipoPrioritaAlberi>(entity =>
+        {
+            entity.HasKey(e => e.id).HasName("PK_PrioritaAlberi");
+
+            entity.Property(e => e.id).HasDefaultValueSql("(newid())");
+            entity.Property(e => e.descrizione)
+                .IsRequired()
+                .IsUnicode(false);
+            entity.Property(e => e.descrizione_en).IsUnicode(false);
         });
 
         modelBuilder.Entity<TipologiaUtente>(entity =>
