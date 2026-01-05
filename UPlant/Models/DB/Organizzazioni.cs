@@ -47,6 +47,10 @@ public partial class Organizzazioni
 
     public virtual ICollection<TipoIdentificatore> TipoIdentificatore { get; set; } = new List<TipoIdentificatore>();
 
+    public virtual ICollection<TipoInterventiAlberi> TipoInterventiAlberi { get; set; } = new List<TipoInterventiAlberi>();
+
+    public virtual ICollection<TipoPrioritaAlberi> TipoPrioritaAlberi { get; set; } = new List<TipoPrioritaAlberi>();
+
     public virtual ICollection<TipologiaUtente> TipologiaUtente { get; set; } = new List<TipologiaUtente>();
 
     public virtual ICollection<Users> Users { get; set; } = new List<Users>();

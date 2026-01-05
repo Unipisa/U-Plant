@@ -1016,6 +1016,11 @@ public partial class Entities : DbContext
                 .IsRequired()
                 .IsUnicode(false);
             entity.Property(e => e.descrizione_en).IsUnicode(false);
+
+            entity.HasOne(d => d.organizzazioneNavigation).WithMany(p => p.TipoInterventiAlberi)
+                .HasForeignKey(d => d.organizzazione)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_TipoInterventiAlberi_Organizzazioni");
         });
 
         modelBuilder.Entity<TipoPrioritaAlberi>(entity =>
@@ -1027,6 +1032,11 @@ public partial class Entities : DbContext
                 .IsRequired()
                 .IsUnicode(false);
             entity.Property(e => e.descrizione_en).IsUnicode(false);
+
+            entity.HasOne(d => d.organizzazioneNavigation).WithMany(p => p.TipoPrioritaAlberi)
+                .HasForeignKey(d => d.organizzazione)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_TipoPrioritaAlberi_Organizzazioni");
         });
 
         modelBuilder.Entity<TipologiaUtente>(entity =>
