@@ -50,7 +50,8 @@ namespace UPlant.Controllers
             string username = User.Identities.FirstOrDefault()?.Claims?.Where(c => c.Type == "UnipiUserID").FirstOrDefault()?.Value;
             var oggettoutente = _context.Users.Where(a => a.UnipiUserName == (username).Substring(0, username.IndexOf("@")));
             ViewData["organizzazione"] = new SelectList(_context.Organizzazioni.OrderBy(x => x.descrizione), "id", "descrizione", oggettoutente.Select(x => x.Organizzazione).FirstOrDefault());
-            ViewData["ordinesuccessivo"] = StaticUtils.GeneraSuccessivo(_context.StatoIndividuo.OrderBy(x => x.ordinamento).LastOrDefault().ordinamento);//da il numero successivo anche se stringa se il valore è 1 ,2 se viene espresso in alfabetico per ora da vuoto
+            var ultimo = _context.StatoIndividuo.Max(x => (int?)x.ordinamento);
+            ViewData["ordinesuccessivo"] = StaticUtils.GeneraSuccessivo(ultimo);
             return View();
         }
 

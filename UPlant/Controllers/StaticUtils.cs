@@ -116,27 +116,10 @@ namespace UPlant.Controllers
         }
 
 
-        public static string GeneraSuccessivo(string successivo)
+      
+        public static int GeneraSuccessivo(int? successivo)
         {
-
-            if (Int32.TryParse(successivo, out int value))
-            {
-                successivo = (Int32.Parse(successivo) + 1).ToString();
-                return successivo;
-            }
-            else
-            {
-                successivo = "";
-                return successivo;
-            }
-
-
-
-        }
-        public static int GeneraSuccessivo(int successivo)
-        {
-            _ = successivo > 0 ? successivo++ : successivo;
-            return successivo;
+            return (successivo ?? -1) + 1; // null -> 0, altrimenti +1
         }
 
 

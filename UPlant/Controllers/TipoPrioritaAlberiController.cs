@@ -49,7 +49,9 @@ namespace UPlant.Controllers
         {
             string username = User.Identities.FirstOrDefault()?.Claims?.Where(c => c.Type == "UnipiUserID").FirstOrDefault()?.Value;
             var oggettoutente = _context.Users.Where(a => a.UnipiUserName == (username).Substring(0, username.IndexOf("@")));
-            ViewData["organizzazione"] = new SelectList(_context.Organizzazioni.OrderBy(x => x.descrizione), "id", "descrizione", oggettoutente.Select(x => x.Organizzazione).FirstOrDefault());
+            ViewData["organizzazione"] = oggettoutente.Select(x => x.Organizzazione).FirstOrDefault();
+            var ultimo = _context.TipoPrioritaAlberi.Max(x => (int?)x.ordinamento);
+            ViewData["ordinesuccessivo"] = StaticUtils.GeneraSuccessivo(ultimo);
             return View();
         }
 
@@ -62,6 +64,7 @@ namespace UPlant.Controllers
         {
             if (ModelState.IsValid)
             {
+
                 tipoPrioritaAlberi.id = Guid.NewGuid();
                 _context.Add(tipoPrioritaAlberi);
                 await _context.SaveChangesAsync();

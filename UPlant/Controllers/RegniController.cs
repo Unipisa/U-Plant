@@ -45,7 +45,8 @@ namespace UPlant.Controllers
         // GET: Regni/Create
         public IActionResult Create()
         {
-            ViewData["ordinesuccessivo"] = StaticUtils.GeneraSuccessivo(_context.Regni.OrderBy(x => x.ordinamento).LastOrDefault().ordinamento);//da il numero successivo anche se stringa se il valore è 1 ,2 se viene espresso in alfabetico per ora da vuoto
+            var ultimo = _context.Regni.Max(x => (int?)x.ordinamento);
+            ViewData["ordinesuccessivo"] = StaticUtils.GeneraSuccessivo(ultimo);
             return View();
         }
 

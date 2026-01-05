@@ -47,7 +47,8 @@ namespace UPlant.Controllers
         // GET: TipologiaUtente/Create
         public IActionResult Create()
         {
-            ViewData["ordinesuccessivo"] = StaticUtils.GeneraSuccessivo(_context.TipologiaUtente.OrderBy(x => x.ordinamento).LastOrDefault().ordinamento);//da il numero successivo anche se stringa se il valore è 1 ,2 se viene espresso in alfabetico per ora da vuoto
+            var ultimo = _context.TipologiaUtente.Max(x => (int?)x.ordinamento);
+            ViewData["ordinesuccessivo"] = StaticUtils.GeneraSuccessivo(ultimo);
             ViewData["organizzazione"] = new SelectList(_context.Organizzazioni.OrderBy(x => x.descrizione), "id", "descrizione");
             return View();
         }
