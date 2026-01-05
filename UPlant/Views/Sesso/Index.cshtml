@@ -35,9 +35,7 @@
                         <th>
                             @language.Getkey("Global_English_Description")
                         </th>
-            <th>
-                            @language.Getkey("Global_Organization")
-            </th>
+          
             <th></th>
         </tr>
     </thead>
@@ -50,22 +48,20 @@
                             <td>
                                 @Html.DisplayFor(modelItem => item.descrizione_en)
                             </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.organizzazioneNavigation.descrizione)
-            </td>
+          
             <td>
                 @if (User.IsInRole("Administrator"))
                 {
 
                     <a asp-action="Edit" asp-route-id="@item.id">
-                                        <span class="btn btn-warning btn-xs" title="@language.Getkey("Global_Edit") Materiale">
+                                        <span class="btn btn-warning btn-xs" title="@language.Getkey("Global_Edit")">
                                             <i class="fa-solid fa-pencil" style="color: #fafafa;"></i>
                         </span>
                                     </a>
                                     if (@item.Individui.Count() == 0)
                                     {
                     <a asp-action="Delete" asp-route-id="@item.id">
-                                            <span class="btn btn-danger btn-xs" title="@language.Getkey("Global_Delete") Materiale">
+                                            <span class="btn btn-danger btn-xs" title="@language.Getkey("Global_Delete")">
                             <i class="fa-solid fa-trash"></i>
                         </span>
                     </a>

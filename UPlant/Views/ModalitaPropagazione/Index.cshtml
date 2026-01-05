@@ -39,9 +39,7 @@
                         <th>
                             @language.Getkey("Global_Sorting")
                         </th>
-            <th>
-                            @language.Getkey("Global_Organization")
-            </th>
+         
             <th></th>
         </tr>
     </thead>
@@ -58,9 +56,7 @@
                             <td>
                                 @Html.DisplayFor(modelItem => item.ordinamento)
                             </td>
-            <td>
-                 @Html.DisplayFor(modelItem => item.organizzazioneNavigation.descrizione)
-            </td>
+           
             <td>
                 @if (User.IsInRole("Administrator"))
                 {
