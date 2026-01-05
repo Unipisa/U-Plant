@@ -21,7 +21,9 @@ namespace UPlant.Controllers
         // GET: TipoInterventiAlberi
         public async Task<IActionResult> Index()
         {
-            return View(await _context.TipoInterventiAlberi.ToListAsync());
+            var entities = _context.TipoInterventiAlberi.Include(s => s.organizzazioneNavigation).Include(a => a.Alberi).OrderBy(x => x.descrizione);
+            return View(await entities.ToListAsync());
+           
         }
 
         // GET: TipoInterventiAlberi/Details/5
@@ -33,6 +35,7 @@ namespace UPlant.Controllers
             }
 
             var tipoInterventiAlberi = await _context.TipoInterventiAlberi
+                  .Include(s => s.organizzazioneNavigation)
                 .FirstOrDefaultAsync(m => m.id == id);
             if (tipoInterventiAlberi == null)
             {
@@ -45,6 +48,9 @@ namespace UPlant.Controllers
         // GET: TipoInterventiAlberi/Create
         public IActionResult Create()
         {
+            string username = User.Identities.FirstOrDefault()?.Claims?.Where(c => c.Type == "UnipiUserID").FirstOrDefault()?.Value;
+            var oggettoutente = _context.Users.Where(a => a.UnipiUserName == (username).Substring(0, username.IndexOf("@")));
+            ViewData["organizzazione"] = new SelectList(_context.Organizzazioni.OrderBy(x => x.descrizione), "id", "descrizione", oggettoutente.Select(x => x.Organizzazione).FirstOrDefault());
             return View();
         }
 
@@ -62,6 +68,7 @@ namespace UPlant.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["organizzazione"] = new SelectList(_context.Organizzazioni, "id", "descrizione", tipoInterventiAlberi.organizzazione);
             return View(tipoInterventiAlberi);
         }
 
@@ -78,6 +85,7 @@ namespace UPlant.Controllers
             {
                 return NotFound();
             }
+            ViewData["organizzazione"] = new SelectList(_context.Organizzazioni.OrderBy(x => x.descrizione), "id", "descrizione", tipoInterventiAlberi.organizzazione);
             return View(tipoInterventiAlberi);
         }
 
@@ -113,6 +121,7 @@ namespace UPlant.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["organizzazione"] = new SelectList(_context.Organizzazioni.OrderBy(x => x.descrizione), "id", "descrizione", tipoInterventiAlberi.organizzazione);
             return View(tipoInterventiAlberi);
         }
 
@@ -125,6 +134,7 @@ namespace UPlant.Controllers
             }
 
             var tipoInterventiAlberi = await _context.TipoInterventiAlberi
+                .Include(s => s.organizzazioneNavigation)
                 .FirstOrDefaultAsync(m => m.id == id);
             if (tipoInterventiAlberi == null)
             {
