@@ -726,4 +726,13 @@
   <data name="Global_English_Name" xml:space="preserve">
     <value>Nome Inglese</value>
   </data>
+  <data name="Global_SuperAdmin" xml:space="preserve">
+    <value>Super Admin</value>
+  </data>
+  <data name="Shared_Comp_Sb_Tree" xml:space="preserve">
+    <value>Gestione Alberi</value>
+  </data>
+  <data name="Global_Maintenance" xml:space="preserve">
+    <value>Manutenzione</value>
+  </data>
 </root>
