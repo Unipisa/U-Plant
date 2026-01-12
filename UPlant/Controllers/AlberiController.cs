@@ -1,21 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using UPlant.Models;
 using UPlant.Models.DB;
+
 
 namespace UPlant.Controllers
 {
-    public class AlberiController : Controller
+    [Authorize(Roles = "Administrator,Tree")]
+    public class AlberiController : BaseController
     {
         private readonly Entities _context;
-
-        public AlberiController(Entities context)
+        private readonly LanguageService _languageService;
+        public AlberiController(Entities context, LanguageService languageService)
         {
             _context = context;
+            _languageService = languageService;
         }
 
         // GET: Alberi
@@ -190,5 +195,86 @@ namespace UPlant.Controllers
         {
             return _context.Alberi.Any(e => e.id == id);
         }
+        public JsonResult AutoComplete()
+        {
+            //  var allowedStatus = new[] { "30e70f7c13774994ac9215b3543ebd7b", "3d91514fecb3473783eda3d3f8a63457", "429773f8ba564e2b87a0b775935c3ff7" }; //Vivo e incerto, malato
+            var notallowedsector = new[] { "0ba85efcea3544e485141f7e311d82e2", "0e551835b07642f88540a4ff9d15e84e" }; //Nursery e Banca Semi
+            string term = HttpContext.Request.Query["term"].ToString();
+
+            IEnumerable<StoricoIndividuo> prog =
+                _context.StoricoIndividuo
+                .Include(x => x.individuoNavigation)
+                .Include(x => x.individuoNavigation).ThenInclude(x => x.settoreNavigation)
+                .Include(x => x.statoIndividuoNavigation)
+                .AsEnumerable()
+                .OrderByDescending(c => c.individuoNavigation.propagatoData)
+                .GroupBy(c => c.individuo)
+                        .Select(g => g.OrderByDescending(c => c.dataInserimento).FirstOrDefault())
+                        .Where(x => x.individuoNavigation.progressivo.StartsWith(term))
+           .ToList();
+
+            var result = prog.Take(10).Select(x => x.individuoNavigation.progressivo);
+
+
+
+          
+            return Json(result, new System.Text.Json.JsonSerializerOptions());
+        }
+
+
+        public ActionResult InserisciIndividuoAlberi(Guid individuo)
+        {
+
+
+            var indicerca = _context.Alberi.Where(x => x.individuo == individuo);
+            if (indicerca.Count() == 0)
+            {
+                Alberi indiper = new Alberi();
+
+                
+                indiper.individuo = individuo;
+
+                if (ModelState.IsValid)
+                {
+
+
+                    _context.Alberi.Add(indiper);
+                    _context.SaveChanges();
+                    AddPageAlerts(PageAlertType.Success, _languageService.Getkey("Message_5").ToString());
+                    TempData["message"] = _languageService.Getkey("Message_5").ToString();
+
+                    return RedirectToAction("Index", "Percorsi");
+
+                }
+            }
+            AddPageAlerts(PageAlertType.Warning, _languageService.Getkey("Message_2").ToString());
+            TempData["message"] = _languageService.Getkey("Message_2").ToString();
+
+
+            return RedirectToAction("Index", "Percorsi");
+        }
+        public JsonResult Ricerca(string progressivo)
+        {
+
+            return Json(_context.Individui.Where(a => a.progressivo.Contains(progressivo)).OrderByDescending(c => c.progressivo).Select(x => new
+            {
+                idindividuo = x.id,
+                progressivo = x.progressivo,
+                vecchioprogressivo = x.vecchioprogressivo,
+                nomescientifico = x.accessioneNavigation.specieNavigation.nome_scientifico,
+                settore = x.settoreNavigation.settore,
+                collezione = x.collezioneNavigation.collezione,
+                cartellino = x.cartellinoNavigation.descrizione,
+                immagini = x.ImmaginiIndividuo.Count
+            }).ToList(), new System.Text.Json.JsonSerializerOptions());
+
+
+        }
+
+
+
+
+
+
     }
 }

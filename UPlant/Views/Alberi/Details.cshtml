@@ -1,84 +1,238 @@
 ﻿@model UPlant.Models.DB.Alberi
-
+@inject LanguageService language
 @{
-    ViewData["Title"] = "Details";
+    ViewBag.Title = language.Getkey("Global_Tree");
+    ViewBag.lang = language.GetCurrentCulture();
 }
 
-<h1>Details</h1>
 
-<div>
-    <h4>Alberi</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.dataapertura)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.dataapertura)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.motivo)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.motivo)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.esitointervento)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.esitointervento)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.stato)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.stato)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.datachiusura)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.datachiusura)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.fornitoreNavigation)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.fornitoreNavigation.descrizione)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.individuoNavigation)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.individuoNavigation.progressivo)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.interventoNavigation)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.interventoNavigation.descrizione)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.prioritaNavigation)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.prioritaNavigation.descrizione)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.utenteaperturaNavigation)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.utenteaperturaNavigation.CF)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.utenteultimamodificaNavigation)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.utenteultimamodificaNavigation.CF)
-        </dd>
-    </dl>
+
+<div class="card card-outline card-primary">
+    <div class="card-header with-border">
+
+        <div class="card-body">
+            <div class="row">
+                <h4 class="box-title">@language.Getkey("Global_Add") @language.Getkey("Global_Individual")</h4>
+
+                <div class="row">
+
+                    <div class="col-md-2">
+                        <input id="progressivo" name="progressivo" type="text" placeholder="@language.Getkey("Global_Progressive")">
+                        <input id="idpercorso" name="idpercorso" type="hidden" value="@Model.id">
+                    </div>
+                    <div class="col-md-1">
+                        <button type="submit" id="cerca" class="pbSubmit btn  btn-success btn-rounded btn-sm">@language.Getkey("Global_Search")</button>
+
+                    </div>
+
+                </div>
+
+                <div class="row" id="risultato2">
+                </div>
+
+
+
+
+
+            </div>
+        </div>
+    </div>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
+@section Styles {
+
+
+}
+
+@section CustomStyles {
+    <style>
+        .ui-autocomplete {
+            margin: 0px;
+            font-family: Arial, Verdana, Sans-Serif;
+            float: left;
+            width: 10%;
+            list-style-type: none;
+            color: #0060B6;
+            text-decoration: none;
+        }
+
+            .ui-autocomplete .fixed-height {
+                float: left;
+                max-height: 175px;
+                overflow: auto !important;
+                list-style-type: none;
+            }
+
+                .ui-autocomplete .fixed-height li {
+                    font-family: Arial, Verdana, Sans-Serif;
+                    float: left;
+                    width: 100%;
+                    list-style-type: none;
+                    text-align: left;
+                    font: bold 26px Poiret One;
+                    list-style-type: none;
+                }
+
+            /* to distinctly see which returned item is selected/hovered over*/
+            .ui-autocomplete .ui-menu-item .ui-corner-all {
+                float: left;
+                width: 100%;
+                height: 30px;
+                padding: 10px 0 10px 0;
+                background: #FFF;
+                list-style-type: none;
+            }
+
+            /* to hide the lower left text*/
+            .ui-autocomplete .ui-menu-item .ui-state-focus {
+                list-style-type: none;
+                background-color: #00F;
+                cursor: pointer;
+            }
+
+        .zoom {
+            padding: 0px;
+            transition: transform .2s; /* Animation */
+            width: 50px;
+            height: 50px;
+            margin: 0 auto;
+        }
+
+            .zoom:hover {
+                transform: scale(3.5); /* (150% zoom - Note: if the zoom is too large, it will go outside of the viewport) */
+            }
+    </style>
+
+
+}
+@section Scripts {
+
+
+    <script src="~/js/datatables.min.js"></script>
+
+}
+@section CustomScripts {
+
+
+    <script type="text/javascript">
+        function CancellaIndividuoPercorso(x) {
+            var url = $('#' + x).data('url');
+            $.get(url, function (data) {
+                $('#' + x).html(data);
+                $('#' + x).modal({ backdrop: "static" });
+            });
+        }
+    </script>
+
+    <script type="text/javascript">
+               $(document).ready(function () {
+                       // Set the language for DataTables based on the ViewBag.lang value
+                   var lingua = "@ViewBag.lang";
+                  if (lingua == "en-US"){
+                      $.extend($.fn.dataTable.defaults, {
+                      language: { url: "/js/dataTables.english.json" }
+                      });
+                  } else {
+                      $.extend($.fn.dataTable.defaults, {
+                      language: { url: "/js/dataTables.default.json" }
+                      });
+                  }
+
+
+                   var baseUrlauto = '@Url.Action("AutoComplete", "Percorsi")';
+
+
+                   $("#progressivo").autocomplete({
+                    source: function(request, response) {
+                       $.ajax({
+                       url: baseUrlauto,
+                       dataType: "json",
+                      data: {
+                           term : request.term,
+                           field : "progressivo"
+                       },
+                       success: function(data) {
+                            response(data);
+                       }
+                       });
+                    }
+                   });
+
+
+               $('#table1').DataTable({
+                   'paging': true,
+                   'lengthChange': true,
+                   'searching': true,
+                   'info': true,
+                   'autoWidth': false,
+                   'ordering': true
+               })
+               $('#table1').DataTable().order([7, 'asc']).draw();
+
+
+
+               });
+               var baseUrlRicerca = '@Url.Action("Ricerca", "Percorsi")';
+
+               $("#cerca").click(function () {
+                   var prog = $('#progressivo').val();
+                   var idpercorso = $('#idpercorso').val();
+                   $.ajax({
+                       type: "GET",
+
+                       url: baseUrlRicerca,
+                       data: {
+                           'idpercorso': idpercorso,
+                           'progressivo': prog
+                       },
+                       success: function (data) {
+                   var  namesc = "@language.Getkey("Global_Scientific_Name")";
+                var  oldprog = "@language.Getkey("Global_Old_Progressive")";
+            var sector = "@language.Getkey("Global_Sector")";
+              var coll = "@language.Getkey("Global_Collection")";
+        var lab = "@language.Getkey("Global_Label")";
+              var imgs = "@language.Getkey("Global_Images")";
+                    var add = "@language.Getkey("Global_Add")";
+                        var ind = "@language.Getkey("Global_Individual")";
+                           var s = '<div class="col-sm-12"><table id="table1" class="table table-bordered table-striped dataTable">';
+                                    s += '<thead><tr><th></th><th>Progressivo</th><th>'+oldprog+'</th><th>'+namesc+'</th><th>'+sector+'</th><th>'+coll+'</th><th>'+lab+'</th><th>'+imgs+'</th></tr></thead>';
+                           s += '<tbody>';
+                           for (var i = 0; i < data.length; i++) {
+                               var per = data[i].idpercorso;
+                               var indi = data[i].idindividuo;
+                               var action = '@Url.Action("Inserisciindividuopercorso", "Percorsi")?percorso=' + per + '&individuo=' + indi;
+
+
+
+                               s += '<tr><td><a href="'+action+'">';
+                               s += ' <button class="btn btn-success btn-xs" title="'+add+ ' ' + ind+ '" onclick="window.location.href =' + action +'"><i class="fa-solid fa-plus"></i></button></a></td>';
+                               s += '<td>' + data[i].progressivo + '</td>';
+
+                               if (data[i].vecchioprogressivo == null) {
+                                   s += '<td></td>';
+                               } else {
+                               s += '<td>' + data[i].vecchioprogressivo + '</td>';
+                               }
+
+                               s += '<td>' + data[i].nomescientifico + '</td>';
+                               s += '<td>' + data[i].settore + '</td>';
+                               s += '<td>' + data[i].collezione + '</td>';
+                               s += '<td>' + data[i].cartellino + '</td>';
+                               s += '<td>' + data[i].immagini + '</td></tr>';
+                           }
+                           if (i == 0) {
+                               alert("Non ho trovato individui corrispondenti verificare e correggi");
+
+
+                           }
+                           s += '</tbody></table></div>';
+                           $("#risultato2").html(s);
+                       },
+                       error: function (xhr, ajaxOptions, thrownError) {
+                           alert('Error during process: \n' + xhr.responseText);
+                       }
+
+                   });
+               });
+    </script>
+
+}
