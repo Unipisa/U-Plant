@@ -1,49 +1,66 @@
 ﻿@model UPlant.Models.DB.TipoPrioritaAlberi
-
+@inject LanguageService language
 @{
     ViewData["Title"] = "Edit";
 }
-
-<h1>Edit</h1>
-
-<h4>TipoPrioritaAlberi</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
+<div class="card card-outline card-primary">
+    <div class="card-header with-border">
+        <h3 class="card-title">@language.Getkey("Global_Edit") @language.Getkey("Global_Tree_Priority")</h3>
+    </div>
+    <div class="card-body">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="id" />
             <div class="form-group">
-                <label asp-for="descrizione" class="control-label"></label>
+                <label asp-for="descrizione" class="control-label">@language.Getkey("Global_Description")</label>
                 <input asp-for="descrizione" class="form-control" />
                 <span asp-validation-for="descrizione" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="descrizione_en" class="control-label"></label>
+                <label asp-for="descrizione_en" class="control-label">@language.Getkey("Global_English_Description")</label>
                 <input asp-for="descrizione_en" class="form-control" />
                 <span asp-validation-for="descrizione_en" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="organizzazione" class="control-label"></label>
-                <input asp-for="organizzazione" class="form-control" />
-                <span asp-validation-for="organizzazione" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ordinamento" class="control-label"></label>
+                <label asp-for="ordinamento" class="control-label">@language.Getkey("Global_Sorting")</label>
                 <input asp-for="ordinamento" class="form-control" />
                 <span asp-validation-for="ordinamento" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
+                <div class="form-group">
+                    <input asp-for="organizzazione" type="hidden" value="@ViewData["organizzazione"]" />
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="@language.Getkey("Global_Save")" class="btn btn-primary" />
+                </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    @Html.ActionLink(@language.Getkey("Global_Go_Back"), null, null, null, new { @class = "btn btn-info go_back" })
 </div>
+@section Styles {
+    <link href="~/css/select2.min.css" rel="stylesheet" />
+    <link href="~/css/accessioni.min.css" rel="stylesheet" />
+
+}
+
+
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        <script src="~/js/select2.min.js"></script>
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+
+}
+@section CustomScripts {
+    <script type="text/javascript">
+        $(function () {
+            $('.go_back').click(function (e) {
+                e.preventDefault();
+                history.go(-1);
+            });
+        });
+    </script>
 }

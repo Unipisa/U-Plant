@@ -70,7 +70,7 @@ namespace UPlant.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["organizzazione"] = new SelectList(_context.Organizzazioni, "id", "descrizione", tipoPrioritaAlberi.organizzazione);
+            ViewData["organizzazione"] = tipoPrioritaAlberi.organizzazione;
             return View(tipoPrioritaAlberi);
         }
 
@@ -87,7 +87,8 @@ namespace UPlant.Controllers
             {
                 return NotFound();
             }
-            ViewData["organizzazione"] = new SelectList(_context.Organizzazioni.OrderBy(x => x.descrizione), "id", "descrizione", tipoPrioritaAlberi.organizzazione);
+            ViewData["organizzazione"] = tipoPrioritaAlberi.organizzazione;
+     
             return View(tipoPrioritaAlberi);
         }
 
@@ -123,7 +124,7 @@ namespace UPlant.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["organizzazione"] = new SelectList(_context.Organizzazioni.OrderBy(x => x.descrizione), "id", "descrizione", tipoPrioritaAlberi.organizzazione);
+            ViewData["organizzazione"] = tipoPrioritaAlberi.organizzazione;
             return View(tipoPrioritaAlberi);
         }
 

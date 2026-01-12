@@ -50,8 +50,11 @@ namespace UPlant.Controllers
         {
             string username = User.Identities.FirstOrDefault()?.Claims?.Where(c => c.Type == "UnipiUserID").FirstOrDefault()?.Value;
             var oggettoutente = _context.Users.Where(a => a.UnipiUserName == (username).Substring(0, username.IndexOf("@")));
-            ViewData["organizzazione"] = new SelectList(_context.Organizzazioni.OrderBy(x => x.descrizione), "id", "descrizione", oggettoutente.Select(x => x.Organizzazione).FirstOrDefault());
+            ViewData["organizzazione"] = oggettoutente.Select(x => x.Organizzazione).FirstOrDefault();
+            var ultimo = _context.TipoInterventiAlberi.Max(x => (int?)x.ordinamento);
+            ViewData["ordinesuccessivo"] = StaticUtils.GeneraSuccessivo(ultimo);
             return View();
+           
         }
 
         // POST: TipoInterventiAlberi/Create
@@ -68,7 +71,7 @@ namespace UPlant.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["organizzazione"] = new SelectList(_context.Organizzazioni, "id", "descrizione", tipoInterventiAlberi.organizzazione);
+            ViewData["organizzazione"] = tipoInterventiAlberi.organizzazione;
             return View(tipoInterventiAlberi);
         }
 
@@ -85,7 +88,7 @@ namespace UPlant.Controllers
             {
                 return NotFound();
             }
-            ViewData["organizzazione"] = new SelectList(_context.Organizzazioni.OrderBy(x => x.descrizione), "id", "descrizione", tipoInterventiAlberi.organizzazione);
+            ViewData["organizzazione"] = tipoInterventiAlberi.organizzazione;
             return View(tipoInterventiAlberi);
         }
 
@@ -121,7 +124,7 @@ namespace UPlant.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["organizzazione"] = new SelectList(_context.Organizzazioni.OrderBy(x => x.descrizione), "id", "descrizione", tipoInterventiAlberi.organizzazione);
+            ViewData["organizzazione"] = tipoInterventiAlberi.organizzazione;
             return View(tipoInterventiAlberi);
         }
 
