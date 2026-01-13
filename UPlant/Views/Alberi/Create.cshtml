@@ -1,77 +1,175 @@
 ﻿@model UPlant.Models.DB.Alberi
-
+@inject LanguageService language
 @{
-    ViewData["Title"] = "Create";
+    ViewBag.Title = @language.Getkey("Global_Individual");
+}
+<p>
+    <a asp-action="Index" asp-controller="Alberi">
+        <span class="btn btn btn-info " title="@language.Getkey("Global_Go_Back")">
+            @language.Getkey("Global_Go_Back")
+        </span>
+    </a>
+
+</p>
+
+<div class="col-lg-12">
+    <div class="card card-primary">
+        <div class="card-header with-border">
+            <h3 class="card-title font-weight-bold">
+                @language.Getkey("Shared_Comp_Sb_Tree") - @language.Getkey("Global_Individual") : @ViewData["progressivo"]
+
+                <span> - </span> @language.Getkey("Global_Species")@Html.Label(" :  ") @ViewData["nomescientifico"]
+            </h3>
+        </div>
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+            <div class="card-body">
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="form-group">
+                    <div class="form-group">
+                        <input asp-for="individuo" type="hidden" value="@ViewData["individuo"]" />
+                    </div>
+                    <div class="form-group">
+                        <input asp-for="utenteapertura" type="hidden" value="@ViewData["utenteapertura"]" />
+                    </div>
+                    <div class="form-group">
+                        <input asp-for="utenteultimamodifica" type="hidden" value="@ViewData["utenteultimamodifica"]" />
+                    </div>
+
+                </div>
+
+
+
+                <div class="row">
+                    <div class="form-group col">
+                        <label asp-for="dataapertura" class="control-label"></label>
+                        <input asp-for="dataapertura" class="form-control" />
+                        <span asp-validation-for="dataapertura" class="text-danger"></span>
+                    </div>
+                    <div class="form-group  col">
+                        <div class="form-group">
+                            <label asp-for="priorita" class="control-label"></label>
+                            <select asp-for="priorita" class="form-control" asp-items="ViewBag.priorita"></select>
+                        </div>
+                    </div>
+                    <div class="form-group col">
+                        <label asp-for="intervento" class="control-label"></label>
+                        <select asp-for="intervento" class="form-control" asp-items="ViewBag.intervento"></select>
+                    </div>
+
+
+                </div>
+
+
+
+
+                <hr>
+                <div class="row" align="center">Dettagli</div>
+                <hr>
+                <div class="row">
+                    <div class="form-group col">
+                        <label asp-for="fornitore" class="control-label"></label>
+                        <select asp-for="fornitore" class="form-control" asp-items="ViewBag.fornitore"></select>
+                    </div>
+                    <div class="form-group col">
+                        <label asp-for="motivo" class="control-label"></label>
+                        <input asp-for="motivo" class="form-control" />
+                        <span asp-validation-for="motivo" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col">
+                        <label asp-for="stato" class="control-label"></label>
+                        <select asp-for="stato" class="form-control stato-select aperto">
+                            <option value="false" selected>Aperto</option>
+                            <option value="true">Chiuso</option>
+                        </select>
+
+                    </div>
+                    
+
+
+                </div>
+
+
+
+                <hr>
+                <div class="form-group">
+                    <input type="submit" value="@language.Getkey("Global_Add")" class="btn btn-primary" />
+
+                </div>
+
+
+            </div>
+
+        }
+
+    </div>
+    <p>
+        <a asp-action="Index" asp-controller="Alberi">
+            <span class="btn btn btn-info " title="@language.Getkey("Global_Go_Back")">
+                @language.Getkey("Global_Go_Back")
+            </span>
+        </a>
+
+    </p>
+</div>
+
+
+
+@section Styles {
+    <link href="~/css/select2.min.css" rel="stylesheet" />
+
+
+}
+@section CustomStyles {
+    <style>
+        .stato-select {
+        color: white;
+        font-weight: bold;
+    }
+
+    .stato-select.aperto {
+        background-color: #dc3545; /* rosso */
+    }
+
+            .stato-select.chiuso {
+                background-color: #28a745; /* verde */
+            }
+    </style>
+}
+@section Scripts {
+
+
+    <script src="~/js/select2.min.js"></script>
+    <script src="~/js/jquery.validation.min.js"></script>
+
 }
 
-<h1>Create</h1>
+@section CustomScripts {
 
-<h4>Alberi</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="individuo" class="control-label"></label>
-                <select asp-for="individuo" class ="form-control" asp-items="ViewBag.individuo"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="dataapertura" class="control-label"></label>
-                <input asp-for="dataapertura" class="form-control" />
-                <span asp-validation-for="dataapertura" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="priorita" class="control-label"></label>
-                <select asp-for="priorita" class ="form-control" asp-items="ViewBag.priorita"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="intervento" class="control-label"></label>
-                <select asp-for="intervento" class ="form-control" asp-items="ViewBag.intervento"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="fornitore" class="control-label"></label>
-                <select asp-for="fornitore" class ="form-control" asp-items="ViewBag.fornitore"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="motivo" class="control-label"></label>
-                <input asp-for="motivo" class="form-control" />
-                <span asp-validation-for="motivo" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="esitointervento" class="control-label"></label>
-                <input asp-for="esitointervento" class="form-control" />
-                <span asp-validation-for="esitointervento" class="text-danger"></span>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="stato" /> @Html.DisplayNameFor(model => model.stato)
-                </label>
-            </div>
-            <div class="form-group">
-                <label asp-for="datachiusura" class="control-label"></label>
-                <input asp-for="datachiusura" class="form-control" />
-                <span asp-validation-for="datachiusura" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="utenteapertura" class="control-label"></label>
-                <select asp-for="utenteapertura" class ="form-control" asp-items="ViewBag.utenteapertura"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="utenteultimamodifica" class="control-label"></label>
-                <select asp-for="utenteultimamodifica" class ="form-control" asp-items="ViewBag.utenteultimamodifica"></select>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
-</div>
+    <script>
+        const select = document.getElementById("stato");
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+        function aggiornaColore() {
+            select.classList.remove("aperto", "chiuso");
 
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+            if (select.value === "true") {
+                select.classList.add("chiuso");
+            } else {
+                select.classList.add("aperto");
+            }
+        }
+
+        // inizializzazione
+        aggiornaColore();
+
+        // cambio selezione
+        select.addEventListener("change", aggiornaColore);
+    </script>
+
+
+
+
+
+
 }

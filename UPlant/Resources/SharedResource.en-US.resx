@@ -208,7 +208,7 @@
     <value>Acquisition Mode</value>
   </data>
   <data name="Global_Taxonymic_Identity" xml:space="preserve">
-    <value>Taxonymic Identity</value>
+    <value>Taxonomic Identity</value>
   </data>
   <data name="Global_Genus" xml:space="preserve">
     <value>Genus</value>

@@ -55,14 +55,30 @@ namespace UPlant.Controllers
         }
 
         // GET: Alberi/Create
-        public IActionResult Create()
+        public IActionResult Create(Guid idindividuo)
         {
+            var individuo = _context.Individui
+               .Include(s => s.accessioneNavigation)
+               .ThenInclude(x => x.specieNavigation)
+               .FirstOrDefault(x => x.id == idindividuo);
+
+
+            string username = User.Identities.FirstOrDefault()?.Claims?.Where(c => c.Type == "UnipiUserID").FirstOrDefault()?.Value;
+            var oggettoutente = _context.Users.Where(a => a.UnipiUserName == (username).Substring(0, username.IndexOf("@")));
+
+
+            Guid organizzazione = oggettoutente.Select(a => a.Organizzazione).FirstOrDefault();
+            Guid utente = oggettoutente.Select(a => a.Id).FirstOrDefault();
+
+            //var individuo = _context.Individui.Where(x => x.id == idindividuo).FirstOrDefault();
             ViewData["fornitore"] = new SelectList(_context.Fornitori, "id", "descrizione");
-            ViewData["individuo"] = new SelectList(_context.Individui, "id", "progressivo");
-            ViewData["intervento"] = new SelectList(_context.TipoInterventiAlberi, "id", "descrizione");
-            ViewData["priorita"] = new SelectList(_context.TipoPrioritaAlberi, "id", "descrizione");
-            ViewData["utenteapertura"] = new SelectList(_context.Users, "Id", "CF");
-            ViewData["utenteultimamodifica"] = new SelectList(_context.Users, "Id", "CF");
+            ViewData["individuo"] = individuo.id;
+            ViewData["progressivo"] = individuo.progressivo;
+            ViewData["nomescientifico"] = individuo.accessioneNavigation.specieNavigation.nome_scientifico;
+            ViewData["intervento"] = new SelectList(_context.TipoInterventiAlberi.OrderBy(a => a.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.descrizione : a.descrizione_en }), "id", "Desc");
+            ViewData["priorita"] = new SelectList(_context.TipoPrioritaAlberi.OrderBy(a => a.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.descrizione : a.descrizione_en }), "id", "Desc");
+            ViewData["utenteapertura"] = utente;
+            ViewData["utenteultimamodifica"] = utente;
             return View();
         }
 
@@ -220,7 +236,7 @@ namespace UPlant.Controllers
           
             return Json(result, new System.Text.Json.JsonSerializerOptions());
         }
-
+        /* per ora non serve
 
         public ActionResult InserisciIndividuoAlberi(Guid individuo)
         {
@@ -252,7 +268,7 @@ namespace UPlant.Controllers
 
 
             return RedirectToAction("Index", "Percorsi");
-        }
+        }*/
         public JsonResult Ricerca(string progressivo)
         {
 
