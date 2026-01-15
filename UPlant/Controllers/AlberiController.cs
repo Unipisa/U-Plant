@@ -26,8 +26,31 @@ namespace UPlant.Controllers
         // GET: Alberi
         public async Task<IActionResult> Index()
         {
-            var entities = _context.Alberi.Include(a => a.fornitoreNavigation).Include(a => a.individuoNavigation).Include(a => a.interventoNavigation).Include(a => a.prioritaNavigation).Include(a => a.utenteaperturaNavigation).Include(a => a.utenteultimamodificaNavigation);
-            return View(await entities.ToListAsync());
+            var entities = await _context.Alberi
+     .Include(a => a.fornitoreNavigation)
+     .Include(a => a.interventoNavigation)
+     .Include(a => a.prioritaNavigation)
+     .Include(a => a.utenteaperturaNavigation)
+     .Include(a => a.utenteultimamodificaNavigation)
+     .Include(a => a.individuoNavigation)
+         .ThenInclude(i => i.accessioneNavigation)
+             .ThenInclude(s => s.specieNavigation)
+     .Include(a => a.individuoNavigation)
+         .ThenInclude(i => i.collezioneNavigation)
+             .ThenInclude(c => c.settoreNavigation)
+
+     .GroupBy(a => a.individuo)
+
+     .OrderByDescending(g => g.Any(x => x.stato == false))
+     .ThenByDescending(g => g.Max(x => x.dataapertura))
+
+     .Select(g => g
+         .OrderByDescending(x => x.stato == false)
+         .ThenByDescending(x => x.dataapertura)
+         .First()
+     )
+     .ToListAsync(); 
+            return View(entities);
         }
 
         // GET: Alberi/Details/5
@@ -236,39 +259,7 @@ namespace UPlant.Controllers
           
             return Json(result, new System.Text.Json.JsonSerializerOptions());
         }
-        /* per ora non serve
-
-        public ActionResult InserisciIndividuoAlberi(Guid individuo)
-        {
-
-
-            var indicerca = _context.Alberi.Where(x => x.individuo == individuo);
-            if (indicerca.Count() == 0)
-            {
-                Alberi indiper = new Alberi();
-
-                
-                indiper.individuo = individuo;
-
-                if (ModelState.IsValid)
-                {
-
-
-                    _context.Alberi.Add(indiper);
-                    _context.SaveChanges();
-                    AddPageAlerts(PageAlertType.Success, _languageService.Getkey("Message_5").ToString());
-                    TempData["message"] = _languageService.Getkey("Message_5").ToString();
-
-                    return RedirectToAction("Index", "Percorsi");
-
-                }
-            }
-            AddPageAlerts(PageAlertType.Warning, _languageService.Getkey("Message_2").ToString());
-            TempData["message"] = _languageService.Getkey("Message_2").ToString();
-
-
-            return RedirectToAction("Index", "Percorsi");
-        }*/
+      
         public JsonResult Ricerca(string progressivo)
         {
 
@@ -287,10 +278,28 @@ namespace UPlant.Controllers
 
         }
 
+        public async Task<IActionResult> ElencoInterventi(Guid? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
 
+            var alberi = await _context.Alberi
+                .Include(a => a.fornitoreNavigation)
+                .Include(a => a.individuoNavigation)
+                .Include(a => a.interventoNavigation)
+                .Include(a => a.prioritaNavigation)
+                .Include(a => a.utenteaperturaNavigation)
+                .Include(a => a.utenteultimamodificaNavigation).Where(m => m.individuo == id)
+                .ToListAsync();
+            if (alberi == null)
+            {
+                return NotFound();
+            }
 
-
-
+            return View(alberi);
+        }
 
     }
 }

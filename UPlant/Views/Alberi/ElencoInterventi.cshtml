@@ -1,0 +1,106 @@
+﻿@model IEnumerable<UPlant.Models.DB.Alberi>
+@inject LanguageService language
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="card card-outline card-primary">
+    <div class="card-header with-border">
+        <h1 class="card-title">Elenco</h1>
+        @{
+
+            if (User.IsInRole("Administrator"))
+            {
+                <div class="float-right success ">
+                    <a asp-action="Create">
+                        <span class="btn btn-success" title="@language.Getkey("Global_Add") @language.Getkey("Global_Sex")">
+                            @language.Getkey("Global_Add") @language.Getkey("Global_Sex")
+                        </span>
+                    </a>
+
+
+                </div>
+            }
+        }
+    </div>
+
+    <div class="card-body">
+        <div class="table-responsive">
+            <table id="table1" class="table table-bordered table-striped dataTable">
+    <thead>
+        <tr>
+                        <th>
+                           priorità
+                        </th>
+            <th>
+                           Motivo
+            </th>
+                       
+          
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.prioritaNavigation.descrizione)
+                            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.motivo)
+            </td>
+                            
+          
+            <td>
+                @if (User.IsInRole("Administrator"))
+                {
+
+                    <a asp-action="Edit" asp-route-id="@item.id">
+                                        <span class="btn btn-warning btn-xs" title="@language.Getkey("Global_Edit")">
+                                            <i class="fa-solid fa-pencil" style="color: #fafafa;"></i>
+                        </span>
+                                    </a>
+                                   
+
+                }
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+        </div>
+    </div>
+
+
+</div>
+@section Styles {
+    <link href="~/css/select2.min.css" rel="stylesheet" />
+    <link href="~/css/accessioni.min.css" rel="stylesheet" />
+    <link href="~/css/datatables.min.css" rel="stylesheet" />
+}
+
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script src="~/js/datatables.min.js"></script>
+}
+
+
+@section CustomScripts {
+    <script>
+        jQuery(function () {
+            jQuery('#table1').DataTable({
+                'paging': true,
+                'lengthChange': true,
+                'searching': true,
+                'ordering': true,
+                'info': true,
+                'autoWidth': false
+            })
+        })
+    </script>
+}          

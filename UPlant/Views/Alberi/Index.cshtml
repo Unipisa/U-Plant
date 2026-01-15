@@ -38,6 +38,95 @@
         </div>
     </div>
 </div>
+
+<h4 class="box-title">Elenco Individui con Interventi </h4>
+
+<div class="card card-outline card-primary">
+    <div class="card-header with-border">
+<div class="card-body">
+    <div id="table1_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
+        <div class="row">
+            <div class="col-sm-12">
+                <table id="table1" class="table table-bordered table-striped dataTable">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>
+                                @language.Getkey("Global_Progressive")
+                            </th>
+                            <th>@language.Getkey("Global_Scientific_Name")</th>
+                            <th>
+                                @language.Getkey("Global_Sector")
+                            </th>
+                            <th>
+                                @language.Getkey("Global_Collection")
+                            </th>
+                            <th>
+                                Stato
+                            </th>
+                           
+                        </tr>
+                    </thead>
+                    <tbody>
+                
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td style="text-align: center;">
+                            <a asp-action="ElencoInterventi" asp-controller="Alberi" asp-route-id="@item.individuo">
+                                <span class="btn btn-primary btn-xs" title="@($"{language.Getkey("Global_Detail")} {language.Getkey("Global_Individual")}")">
+                                    <i class="fa-solid fa-search"></i>
+                                </span>
+                            </a>
+
+                        
+                        </td>
+
+                        <td style="text-align: center;">
+                            @Html.DisplayFor(_ => item.individuoNavigation.progressivo)
+                        </td>
+
+                        <td style="text-align: center;">
+                                    @Html.DisplayFor(_ => item.individuoNavigation.accessioneNavigation.specieNavigation.nome_scientifico)
+                        </td>
+
+                        <td style="text-align: center;">
+                                    @Html.DisplayFor(_ => item.individuoNavigation.collezioneNavigation.settoreNavigation.settore)
+                        </td>
+
+                                <td style="text-align: center;">
+                                    @Html.DisplayFor(_ => item.individuoNavigation.collezioneNavigation.collezione)
+                                </td>
+                                <td style="text-align: center;">
+                                    @{
+                                        if (item.stato == false)
+                                        {
+                                            <span>Situazioni aperte</span>
+                                        }
+                                    }
+                                    
+                                </td>
+                      
+                       
+                    </tr>
+                }
+                </tbody>
+                </table>
+
+                @* Messaggio se non ci sono elementi *@
+                @if (!Model.Any())
+                {
+                    <div class="text-center text-muted">
+                        @language.Getkey("Global_NoResults")
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+
 @section Styles {
 
 
@@ -176,6 +265,7 @@
                            'progressivo': prog
                        },
                        success: function (data) {
+                            var  progre = "@language.Getkey("Global_Progressive")";
                    var  namesc = "@language.Getkey("Global_Scientific_Name")";
                 var  oldprog = "@language.Getkey("Global_Old_Progressive")";
             var sector = "@language.Getkey("Global_Sector")";
@@ -185,7 +275,7 @@
                     var add = "@language.Getkey("Global_Add")";
                         var ind = "@language.Getkey("Global_Individual")";
                            var s = '<div class="col-sm-12"><table id="table1" class="table table-bordered table-striped dataTable">';
-                                    s += '<thead><tr><th></th><th>Progressivo</th><th>'+oldprog+'</th><th>'+namesc+'</th><th>'+sector+'</th><th>'+coll+'</th><th>'+lab+'</th><th>'+imgs+'</th></tr></thead>';
+                                    s += '<thead><tr><th></th><th>'+progre+'</th><th>'+oldprog+'</th><th>'+namesc+'</th><th>'+sector+'</th><th>'+coll+'</th><th>'+lab+'</th><th>'+imgs+'</th></tr></thead>';
                            s += '<tbody>';
                            for (var i = 0; i < data.length; i++) {
                               
