@@ -1,13 +1,9 @@
-SET QUOTED_IDENTIFIER ON
-GO
-
 CREATE TABLE [dbo].[TipoPrioritaAlberi](
 	[id] [uniqueidentifier] NOT NULL,
 	[descrizione] [varchar](max) NOT NULL,
 	[descrizione_en] [varchar](max) NULL,
 	[organizzazione] [uniqueidentifier] NOT NULL,
 	[ordinamento] [int] NOT NULL,
-	[livello] [int] NOT NULL,
  CONSTRAINT [PK_PrioritaAlberi] PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
