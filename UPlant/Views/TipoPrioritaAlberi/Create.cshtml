@@ -10,6 +10,11 @@
     </div>
     <div class="card-body">
         <form asp-action="Create">
+            <div class="form-group">
+                <label asp-for="livello" class="control-label">@language.Getkey("Global_Level")</label>
+                <input asp-for="livello" class="form-control" value="@ViewData["livellosuccessivo"]" />
+                <span asp-validation-for="ordinamento" class="text-danger"></span>
+            </div>
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="descrizione" class="control-label">@language.Getkey("Global_Description")</label>

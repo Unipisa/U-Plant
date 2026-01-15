@@ -50,8 +50,10 @@ namespace UPlant.Controllers
             string username = User.Identities.FirstOrDefault()?.Claims?.Where(c => c.Type == "UnipiUserID").FirstOrDefault()?.Value;
             var oggettoutente = _context.Users.Where(a => a.UnipiUserName == (username).Substring(0, username.IndexOf("@")));
             ViewData["organizzazione"] = oggettoutente.Select(x => x.Organizzazione).FirstOrDefault();
-            var ultimo = _context.TipoPrioritaAlberi.Max(x => (int?)x.ordinamento);
-            ViewData["ordinesuccessivo"] = StaticUtils.GeneraSuccessivo(ultimo);
+            var ultimoord = _context.TipoPrioritaAlberi.Max(x => (int?)x.ordinamento);
+            ViewData["ordinesuccessivo"] = StaticUtils.GeneraSuccessivo(ultimoord);
+            var ultimoliv = _context.TipoPrioritaAlberi.Max(x => (int?)x.livello);
+            ViewData["livellosuccessivo"] = StaticUtils.GeneraSuccessivo(ultimoliv);
             return View();
         }
 
@@ -60,7 +62,7 @@ namespace UPlant.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("id,descrizione,descrizione_en,organizzazione,ordinamento")] TipoPrioritaAlberi tipoPrioritaAlberi)
+        public async Task<IActionResult> Create([Bind("id,descrizione,descrizione_en,organizzazione,ordinamento,livello")] TipoPrioritaAlberi tipoPrioritaAlberi)
         {
             if (ModelState.IsValid)
             {
@@ -97,7 +99,7 @@ namespace UPlant.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("id,descrizione,descrizione_en,organizzazione,ordinamento")] TipoPrioritaAlberi tipoPrioritaAlberi)
+        public async Task<IActionResult> Edit(Guid id, [Bind("id,descrizione,descrizione_en,organizzazione,ordinamento,livello")] TipoPrioritaAlberi tipoPrioritaAlberi)
         {
             if (id != tipoPrioritaAlberi.id)
             {

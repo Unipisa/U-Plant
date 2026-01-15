@@ -744,4 +744,7 @@
   <data name="Global_Tree_Priority" xml:space="preserve">
     <value>Tipo Priorità Alberi</value>
   </data>
+  <data name="Global_Level" xml:space="preserve">
+    <value>Livello</value>
+  </data>
 </root>

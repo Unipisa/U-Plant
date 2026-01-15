@@ -217,7 +217,7 @@ public partial class Entities : DbContext
         {
             entity.Property(e => e.id).HasDefaultValueSql("(newid())");
             entity.Property(e => e.dataapertura).HasColumnType("datetime");
-            entity.Property(e => e.datachiusura).HasColumnType("datetime");
+            entity.Property(e => e.dataultimamodifica).HasColumnType("datetime");
             entity.Property(e => e.esitointervento).IsUnicode(false);
             entity.Property(e => e.motivo)
                 .IsRequired()

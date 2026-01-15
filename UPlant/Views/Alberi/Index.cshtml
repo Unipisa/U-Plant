@@ -1,139 +1,130 @@
 ﻿@model List<UPlant.Models.DB.Alberi>
 @inject LanguageService language
+
 @{
     ViewBag.Title = language.Getkey("Global_Tree");
     ViewBag.lang = language.GetCurrentCulture();
 }
 
+<h4 class="box-title">@language.Getkey("Shared_Comp_Sb_Tree")</h4>
 
-<h4 class="box-title">@language.Getkey("Shared_Comp_Sb_Tree") </h4>
-<div class="card card-outline card-primary">
-    <div class="card-header with-border">
+<!-- Bottone toggle Aggiungi/Chiudi -->
+<button class="btn btn-primary btn-sm mb-2"
+        type="button"
+        id="btnToggleAggiungi"
+        data-toggle="collapse"
+        data-target="#addIndividuoCollapse"
+        aria-expanded="false"
+        aria-controls="addIndividuoCollapse">
+    <i class="fa-solid fa-plus"></i> Aggiungi
+</button>
 
+<!-- Card Aggiungi Individuo (inizialmente nascosta) -->
+<div class="collapse" id="addIndividuoCollapse">
+    <div class="card card-outline card-primary mt-2">
         <div class="card-body">
-         
-                <h4 class="box-title">@language.Getkey("Global_Add") @language.Getkey("Global_Individual")</h4>
 
-                <div class="row">
+            <h4 class="box-title">@language.Getkey("Global_Add") @language.Getkey("Global_Individual")</h4>
 
-                    <div class="col-md-2">
-                        <input id="progressivo" name="progressivo" type="text" placeholder="@language.Getkey("Global_Progressive")">
-                      
-                    </div>
-                    <div class="col-md-1">
-                        <button type="submit" id="cerca" class="pbSubmit btn  btn-success btn-rounded btn-sm">@language.Getkey("Global_Search")</button>
-
-                    </div>
-
+            <div class="row align-items-end">
+                <div class="col-md-3">
+                    <label class="form-label">@language.Getkey("Global_Scientific_Name")</label>
+                    <input id="nomescientifico" name="nomescientifico" class="form-control" type="text"
+                           placeholder="@language.Getkey("Global_Scientific_Name")">
                 </div>
-
-                <div class="row" id="risultato2">
+                <div class="col-md-2">
+                    <button type="button" id="cerca" class="btn btn-success">
+                        @language.Getkey("Global_Search")
+                    </button>
                 </div>
+            </div>
 
+            <!-- Risultati ricerca (nascosti finché non arrivano) -->
+            <div class="row mt-3">
+                <div class="col-12">
+                    <div id="risultato2" class="card card-outline card-info d-none">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">Risultati ricerca</h5>
+                        </div>
+                        <div class="card-body">
+                            <div id="risultato2Content"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-
-
-
-            
         </div>
     </div>
 </div>
 
-<h4 class="box-title">Elenco Individui con Interventi </h4>
+<!-- Elenco principale -->
+<div class="card card-outline card-primary mt-3">
 
-<div class="card card-outline card-primary">
-    <div class="card-header with-border">
-<div class="card-body">
-    <div id="table1_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
-        <div class="row">
-            <div class="col-sm-12">
-                <table id="table1" class="table table-bordered table-striped dataTable">
-                    <thead>
-                        <tr>
-                            <th></th>
-                            <th>
-                                @language.Getkey("Global_Progressive")
-                            </th>
-                            <th>@language.Getkey("Global_Scientific_Name")</th>
-                            <th>
-                                @language.Getkey("Global_Sector")
-                            </th>
-                            <th>
-                                @language.Getkey("Global_Collection")
-                            </th>
-                            <th>
-                                Stato
-                            </th>
-                           
-                        </tr>
-                    </thead>
-                    <tbody>
-                
+    <!-- Header: Visualizza a sinistra / Cerca a destra -->
+    <div class="card-header">
+        <div class="d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center">
+                <h3 class="card-title mb-0 mr-3">Elenco Individui con Interventi</h3>
+                <div id="table1HeaderLeft" class="d-flex align-items-center"></div>
+            </div>
+            <div id="table1HeaderRight" class="d-flex align-items-center"></div>
+        </div>
+    </div>
+
+    <div class="card-body">
+        <table id="table1" class="table table-bordered table-striped table-sm">
+            <thead>
+                <tr>
+                    <th style="width:60px;"></th>
+                    <th>@language.Getkey("Global_Progressive")</th>
+                    <th>@language.Getkey("Global_Scientific_Name")</th>
+                    <th>@language.Getkey("Global_Sector")</th>
+                    <th>@language.Getkey("Global_Collection")</th>
+                    <th>@language.Getkey("Global_Tree_Priority")</th>
+                    <th>@language.Getkey("Global_Last_Modified_Date")</th>
+                    <th>Stato</th>
+                </tr>
+            </thead>
+            <tbody>
                 @foreach (var item in Model)
                 {
                     <tr>
-                        <td style="text-align: center;">
-                            <a asp-action="ElencoInterventi" asp-controller="Alberi" asp-route-id="@item.individuo">
-                                <span class="btn btn-primary btn-xs" title="@($"{language.Getkey("Global_Detail")} {language.Getkey("Global_Individual")}")">
-                                    <i class="fa-solid fa-search"></i>
-                                </span>
+                        <td class="text-center">
+                            <a asp-action="ElencoInterventi"
+                               asp-controller="Alberi"
+                               asp-route-id="@item.individuo"
+                               class="btn btn-primary btn-sm"
+                               title="@($"{language.Getkey("Global_Detail")} {language.Getkey("Global_Individual")}")">
+                                <i class="fa-solid fa-search"></i>
                             </a>
-
-                        
                         </td>
 
-                        <td style="text-align: center;">
-                            @Html.DisplayFor(_ => item.individuoNavigation.progressivo)
-                        </td>
+                        <td class="text-center">@item.individuoNavigation.progressivo</td>
+                        <td class="text-center">@item.individuoNavigation.accessioneNavigation.specieNavigation.nome_scientifico</td>
+                        <td class="text-center">@item.individuoNavigation.collezioneNavigation.settoreNavigation.settore</td>
+                        <td class="text-center">@item.individuoNavigation.collezioneNavigation.collezione</td>
+                        <td class="text-center">@item.prioritaNavigation.descrizione</td>
 
-                        <td style="text-align: center;">
-                                    @Html.DisplayFor(_ => item.individuoNavigation.accessioneNavigation.specieNavigation.nome_scientifico)
-                        </td>
+                        <td class="text-center">@item.dataultimamodifica.ToString("dd/MM/yyyy HH:mm")</td>
 
-                        <td style="text-align: center;">
-                                    @Html.DisplayFor(_ => item.individuoNavigation.collezioneNavigation.settoreNavigation.settore)
-                        </td>
-
-                                <td style="text-align: center;">
-                                    @Html.DisplayFor(_ => item.individuoNavigation.collezioneNavigation.collezione)
-                                </td>
-                                <td style="text-align: center;">
-                                    @{
-                                        if (item.stato == false)
-                                        {
-                                            <span>Situazioni aperte</span>
-                                        }
-                                    }
-                                    
-                                </td>
-                      
-                       
+                        <td class="text-center">@(item.stato == false ? "Aperto" : "Chiuso")</td>
                     </tr>
                 }
-                </tbody>
-                </table>
+            </tbody>
+        </table>
 
-                @* Messaggio se non ci sono elementi *@
-                @if (!Model.Any())
-                {
-                    <div class="text-center text-muted">
-                        @language.Getkey("Global_NoResults")
-                    </div>
-                }
+        @if (!Model.Any())
+        {
+            <div class="text-center text-muted mt-2">
+                @language.Getkey("Global_NoResults")
             </div>
-        </div>
+        }
     </div>
 </div>
-</div>
-</div>
-
-@section Styles {
-
-
-}
 
 @section CustomStyles {
     <style>
+        /* Autocomplete */
         .ui-autocomplete {
             margin: 0px;
             font-family: Arial, Verdana, Sans-Serif;
@@ -155,165 +146,206 @@
                     font-family: Arial, Verdana, Sans-Serif;
                     float: left;
                     width: 100%;
-                    list-style-type: none;
                     text-align: left;
                     font: bold 26px Poiret One;
-                    list-style-type: none;
                 }
 
-            /* to distinctly see which returned item is selected/hovered over*/
             .ui-autocomplete .ui-menu-item .ui-corner-all {
                 float: left;
                 width: 100%;
                 height: 30px;
-                padding: 10px 0 10px 0;
+                padding: 10px 0;
                 background: #FFF;
-                list-style-type: none;
             }
 
-            /* to hide the lower left text*/
             .ui-autocomplete .ui-menu-item .ui-state-focus {
-                list-style-type: none;
                 background-color: #00F;
                 cursor: pointer;
             }
 
-        .zoom {
-            padding: 0px;
-            transition: transform .2s; /* Animation */
-            width: 50px;
-            height: 50px;
-            margin: 0 auto;
+        /* Header controlli DataTables */
+        #table1HeaderLeft label,
+        #table1HeaderRight label {
+            margin-bottom: 0;
+            white-space: nowrap;
         }
 
-            .zoom:hover {
-                transform: scale(3.5); /* (150% zoom - Note: if the zoom is too large, it will go outside of the viewport) */
-            }
+        #table1HeaderLeft select {
+            width: 90px;
+            display: inline-block;
+            margin: 0 6px;
+        }
+
+        #table1HeaderRight input {
+            width: 190px;
+            display: inline-block;
+            margin-left: 6px;
+        }
+
+        /* evita che vada a capo */
+        #table1HeaderLeft, #table1HeaderRight {
+            gap: 10px;
+        }
     </style>
-
-
 }
+
 @section Scripts {
-
-
     <script src="~/js/datatables.min.js"></script>
-
 }
+
 @section CustomScripts {
-
-
-
     <script type="text/javascript">
-               $(document).ready(function () {
-                       // Set the language for DataTables based on the ViewBag.lang value
-                   var lingua = "@ViewBag.lang";
-                  if (lingua == "en-US"){
-                      $.extend($.fn.dataTable.defaults, {
-                      language: { url: "/js/dataTables.english.json" }
-                      });
-                  } else {
-                      $.extend($.fn.dataTable.defaults, {
-                      language: { url: "/js/dataTables.default.json" }
-                      });
-                  }
+        $(document).ready(function () {
 
+            // Lingua DataTables
+            var lingua = "@ViewBag.lang";
+            if (lingua === "en-US") {
+                $.extend($.fn.dataTable.defaults, {
+                    language: { url: "/js/dataTables.english.json" }
+                });
+            } else {
+                $.extend($.fn.dataTable.defaults, {
+                    language: { url: "/js/dataTables.default.json" }
+                });
+            }
 
-                   var baseUrlauto = '@Url.Action("AutoComplete", "Alberi")';
+            // Autocomplete
+            var baseUrlauto = '@Url.Action("AutoComplete", "Alberi")';
+            $("#nomescientifico").autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: baseUrlauto,
+                        dataType: "json",
+                        data: { term: request.term, field: "nome_scientifico" },
+                        success: function (data) { response(data); }
+                    });
+                }
+            });
 
+            // DataTables (DEFAULT layout, poi spostiamo i controlli)
+            var dt = $('#table1').DataTable({
+                paging: true,
+                lengthChange: true,
+                searching: true,
+                info: true,
+                autoWidth: false,
+                ordering: true
+            });
 
-                   $("#progressivo").autocomplete({
-                    source: function(request, response) {
-                       $.ajax({
-                       url: baseUrlauto,
-                       dataType: "json",
-                      data: {
-                           term : request.term,
-                           field : "progressivo"
-                       },
-                       success: function(data) {
-                            response(data);
-                       }
-                       });
-                    }
-                   });
+            // Sposta "Visualizza" a sinistra e "Cerca" a destra nel header
+            var wrapper = $('#table1').closest('.dataTables_wrapper');
 
+            $('#table1HeaderLeft').empty().append(wrapper.find('#table1_length').detach());
+            $('#table1HeaderRight').empty().append(wrapper.find('#table1_filter').detach());
 
-               $('#table1').DataTable({
-                   'paging': true,
-                   'lengthChange': true,
-                   'searching': true,
-                   'info': true,
-                   'autoWidth': false,
-                   'ordering': true
-               })
-               $('#table1').DataTable().order([7, 'asc']).draw();
+            // Ordine iniziale: Data Ultima Modifica DESC (colonna 6)
+            dt.order([6, 'desc']).draw();
 
+            // Ricerca individui per aggiunta
+            var baseUrlRicerca = '@Url.Action("Ricerca", "Alberi")';
 
+            $("#cerca").click(function () {
+                var prog = $('#nomescientifico').val();
 
-               });
-               var baseUrlRicerca = '@Url.Action("Ricerca", "Alberi")';
+                $.ajax({
+                    type: "GET",
+                    url: baseUrlRicerca,
+                    dataType: "json",
+                    data: { nome_scientifico: prog },
+                    success: function (data) {
 
-               $("#cerca").click(function () {
-                   var prog = $('#progressivo').val();
-                 
-                   $.ajax({
-                       type: "GET",
+                        if (!data || data.length === 0) {
+                            $("#risultato2Content").html('<div class="alert alert-warning mb-0">Nessun individuo trovato.</div>');
+                            $("#risultato2").removeClass("d-none");
+                            return;
+                        }
 
-                       url: baseUrlRicerca,
-                       data: {
-                         
-                           'progressivo': prog
-                       },
-                       success: function (data) {
-                            var  progre = "@language.Getkey("Global_Progressive")";
-                   var  namesc = "@language.Getkey("Global_Scientific_Name")";
-                var  oldprog = "@language.Getkey("Global_Old_Progressive")";
-            var sector = "@language.Getkey("Global_Sector")";
-              var coll = "@language.Getkey("Global_Collection")";
-        var lab = "@language.Getkey("Global_Label")";
-              var imgs = "@language.Getkey("Global_Images")";
-                    var add = "@language.Getkey("Global_Add")";
+                        var progre = "@language.Getkey("Global_Progressive")";
+                        var namesc = "@language.Getkey("Global_Scientific_Name")";
+                        var oldprog = "@language.Getkey("Global_Old_Progressive")";
+                        var sector = "@language.Getkey("Global_Sector")";
+                        var coll = "@language.Getkey("Global_Collection")";
+                        var lab = "@language.Getkey("Global_Label")";
+                        var imgs = "@language.Getkey("Global_Images")";
+                        var add = "@language.Getkey("Global_Add")";
                         var ind = "@language.Getkey("Global_Individual")";
-                           var s = '<div class="col-sm-12"><table id="table1" class="table table-bordered table-striped dataTable">';
-                                    s += '<thead><tr><th></th><th>'+progre+'</th><th>'+oldprog+'</th><th>'+namesc+'</th><th>'+sector+'</th><th>'+coll+'</th><th>'+lab+'</th><th>'+imgs+'</th></tr></thead>';
-                           s += '<tbody>';
-                           for (var i = 0; i < data.length; i++) {
-                              
-                               var indi = data[i].idindividuo;
-                               var action = '@Url.Action("Create", "Alberi")?idindividuo=' + indi;
 
+                        var s = '';
+                        s += '<table id="tableSearch" class="table table-bordered table-striped table-sm">';
+                        s += '<thead><tr>';
+                        s += '<th style="width:60px;"></th>';
+                        s += '<th>' + progre + '</th>';
+                        s += '<th>' + oldprog + '</th>';
+                        s += '<th>' + namesc + '</th>';
+                        s += '<th>' + sector + '</th>';
+                        s += '<th>' + coll + '</th>';
+                        s += '<th>' + lab + '</th>';
+                        s += '<th>' + imgs + '</th>';
+                        s += '</tr></thead><tbody>';
 
+                        for (var i = 0; i < data.length; i++) {
+                            var indi = data[i].idindividuo;
+                            var action = '@Url.Action("Create", "Alberi")' + '?idindividuo=' + encodeURIComponent(indi);
 
-                               s += '<tr><td><a href="'+action+'">';
-                               s += ' <button class="btn btn-success btn-xs" title="'+add+ ' ' + ind+ '" onclick="window.location.href =' + action +'"><i class="fa-solid fa-plus"></i></button></a></td>';
-                               s += '<td>' + data[i].progressivo + '</td>';
+                            s += '<tr>';
+                            s += '<td class="text-center">';
+                            s += '<a class="btn btn-success btn-sm" title="' + add + ' ' + ind + '" href="' + action + '">';
+                            s += '<i class="fa-solid fa-plus"></i>';
+                            s += '</a>';
+                            s += '</td>';
 
-                               if (data[i].vecchioprogressivo == null) {
-                                   s += '<td></td>';
-                               } else {
-                               s += '<td>' + data[i].vecchioprogressivo + '</td>';
-                               }
+                            s += '<td>' + (data[i].progressivo ?? '') + '</td>';
+                            s += '<td>' + (data[i].vecchioprogressivo ?? '') + '</td>';
+                            s += '<td>' + (data[i].nomescientifico ?? '') + '</td>';
+                            s += '<td>' + (data[i].settore ?? '') + '</td>';
+                            s += '<td>' + (data[i].collezione ?? '') + '</td>';
+                            s += '<td>' + (data[i].cartellino ?? '') + '</td>';
+                            s += '<td>' + (data[i].immagini ?? '') + '</td>';
+                            s += '</tr>';
+                        }
 
-                               s += '<td>' + data[i].nomescientifico + '</td>';
-                               s += '<td>' + data[i].settore + '</td>';
-                               s += '<td>' + data[i].collezione + '</td>';
-                               s += '<td>' + data[i].cartellino + '</td>';
-                               s += '<td>' + data[i].immagini + '</td></tr>';
-                           }
-                           if (i == 0) {
-                               alert("Non ho trovato individui corrispondenti verificare e correggi");
+                        s += '</tbody></table>';
 
+                        $("#risultato2Content").html(s);
+                        $("#risultato2").removeClass("d-none");
 
-                           }
-                           s += '</tbody></table></div>';
-                           $("#risultato2").html(s);
-                       },
-                       error: function (xhr, ajaxOptions, thrownError) {
-                           alert('Error during process: \n' + xhr.responseText);
-                       }
+                        if ($.fn.DataTable.isDataTable('#tableSearch')) {
+                            $('#tableSearch').DataTable().destroy();
+                        }
 
-                   });
-               });
+                        $('#tableSearch').DataTable({
+                            paging: true,
+                            lengthChange: false,
+                            searching: false,
+                            info: false,
+                            ordering: true,
+                            autoWidth: false
+                        });
+                    },
+                    error: function (xhr) {
+                        $("#risultato2Content").html(
+                            '<div class="alert alert-danger mb-0">Errore durante la ricerca:<br>' + (xhr.responseText ?? '') + '</div>'
+                        );
+                        $("#risultato2").removeClass("d-none");
+                    }
+                });
+            });
+
+            // Cambio testo bottone Aggiungi/Chiudi
+            $('#addIndividuoCollapse')
+                .on('shown.bs.collapse', function () {
+                    $('#btnToggleAggiungi')
+                        .removeClass('btn-primary')
+                        .addClass('btn-secondary')
+                        .html('<i class="fa-solid fa-xmark"></i> Chiudi');
+                })
+                .on('hidden.bs.collapse', function () {
+                    $('#btnToggleAggiungi')
+                        .removeClass('btn-secondary')
+                        .addClass('btn-primary')
+                        .html('<i class="fa-solid fa-plus"></i> Aggiungi');
+                });
+
+        });
     </script>
-
 }

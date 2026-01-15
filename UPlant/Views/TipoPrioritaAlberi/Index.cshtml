@@ -30,6 +30,9 @@
                 <thead>
                     <tr>
                         <th>
+                            @language.Getkey("Global_Level")
+                        </th>
+                        <th>
                             @language.Getkey("Global_Description")
                         </th>
                         <th>
@@ -45,6 +48,9 @@
                     @foreach (var item in Model)
                     {
                         <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.livello)
+                            </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.descrizione)
                             </td>

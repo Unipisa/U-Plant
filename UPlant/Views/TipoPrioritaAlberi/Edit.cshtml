@@ -12,6 +12,11 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="id" />
             <div class="form-group">
+                <label asp-for="livello" class="control-label">@language.Getkey("Global_Level")</label>
+                <input asp-for="livello" class="form-control" />
+                <span asp-validation-for="livello" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <label asp-for="descrizione" class="control-label">@language.Getkey("Global_Description")</label>
                 <input asp-for="descrizione" class="form-control" />
                 <span asp-validation-for="descrizione" class="text-danger"></span>
@@ -25,6 +30,7 @@
                 <label asp-for="ordinamento" class="control-label">@language.Getkey("Global_Sorting")</label>
                 <input asp-for="ordinamento" class="form-control" />
                 <span asp-validation-for="ordinamento" class="text-danger"></span>
+            </div>
                 <div class="form-group">
                     <input asp-for="organizzazione" type="hidden" value="@ViewData["organizzazione"]" />
                 </div>

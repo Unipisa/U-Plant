@@ -23,7 +23,7 @@ public partial class Alberi
 
     public bool stato { get; set; }
 
-    public DateTime? datachiusura { get; set; }
+    public DateTime dataultimamodifica { get; set; }
 
     public Guid utenteapertura { get; set; }
 

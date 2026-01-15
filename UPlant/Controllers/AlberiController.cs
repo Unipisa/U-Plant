@@ -26,30 +26,66 @@ namespace UPlant.Controllers
         // GET: Alberi
         public async Task<IActionResult> Index()
         {
+            var flat = await _context.Alberi
+     .Select(a => new
+     {
+         a.id,                      // <-- PK Alberi (cambia se diverso)
+         a.individuo,
+         a.stato,                   // false = aperto
+         a.dataultimamodifica,
+         livello = a.prioritaNavigation.livello  // 0..5 dalla tabella TipoPrioritaAlberi
+     })
+     .ToListAsync();
+
+            // Raggruppo e scelgo la riga migliore per ogni individuo
+            var bestPerIndividuo = flat
+                .GroupBy(x => x.individuo)
+                .Select(g =>
+                {
+                    var hasOpen = g.Any(x => x.stato == false);
+
+                    var best = g
+                        .OrderByDescending(x => x.stato == false) // aperti prima
+                        .ThenBy(x => x.livello)                   // 0 più alta
+                        .ThenByDescending(x => x.dataultimamodifica)
+                        .First();
+
+                    return new
+                    {
+                        Individuo = g.Key,
+                        HasOpen = hasOpen,
+                        BestId = best.id,
+                        BestLivello = best.livello,
+                        BestData = best.dataultimamodifica
+                    };
+                })
+                .OrderByDescending(x => x.HasOpen)     // individui con aperti prima
+                .ThenBy(x => x.BestLivello)            // livello 0 prima
+                .ThenByDescending(x => x.BestData)     // ultima modifica più recente
+                .ToList();
+
+            var bestIds = bestPerIndividuo.Select(x => x.BestId).ToList();
+
+
+            // PASSO 2: carico SOLO le righe "best" con tutte le Include che servono
             var entities = await _context.Alberi
-     .Include(a => a.fornitoreNavigation)
-     .Include(a => a.interventoNavigation)
-     .Include(a => a.prioritaNavigation)
-     .Include(a => a.utenteaperturaNavigation)
-     .Include(a => a.utenteultimamodificaNavigation)
-     .Include(a => a.individuoNavigation)
-         .ThenInclude(i => i.accessioneNavigation)
-             .ThenInclude(s => s.specieNavigation)
-     .Include(a => a.individuoNavigation)
-         .ThenInclude(i => i.collezioneNavigation)
-             .ThenInclude(c => c.settoreNavigation)
+                .Where(a => bestIds.Contains(a.id))    // <-- PK Alberi (cambia se diverso)
+                .Include(a => a.fornitoreNavigation)
+                .Include(a => a.interventoNavigation)
+                .Include(a => a.prioritaNavigation)
+                .Include(a => a.utenteaperturaNavigation)
+                .Include(a => a.utenteultimamodificaNavigation)
+                .Include(a => a.individuoNavigation).ThenInclude(i => i.accessioneNavigation).ThenInclude(s => s.specieNavigation)
+                .Include(a => a.individuoNavigation).ThenInclude(i => i.collezioneNavigation).ThenInclude(c => c.settoreNavigation)
+                .ToListAsync();
 
-     .GroupBy(a => a.individuo)
+            // Contains() non preserva l'ordine: riordino come bestPerIndividuo
+            var order = bestPerIndividuo
+                .Select((x, idx) => new { x.BestId, idx })
+                .ToDictionary(x => x.BestId, x => x.idx);
 
-     .OrderByDescending(g => g.Any(x => x.stato == false))
-     .ThenByDescending(g => g.Max(x => x.dataapertura))
+            entities = entities.OrderBy(e => order[e.id]).ToList(); // <-- PK Alberi (cambia se diverso)
 
-     .Select(g => g
-         .OrderByDescending(x => x.stato == false)
-         .ThenByDescending(x => x.dataapertura)
-         .First()
-     )
-     .ToListAsync(); 
             return View(entities);
         }
 
@@ -110,11 +146,12 @@ namespace UPlant.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("id,individuo,dataapertura,priorita,intervento,fornitore,motivo,esitointervento,stato,datachiusura,utenteapertura,utenteultimamodifica")] Alberi alberi)
+        public async Task<IActionResult> Create([Bind("id,individuo,dataapertura,priorita,intervento,fornitore,motivo,esitointervento,stato,dataultimamodifica,utenteapertura,utenteultimamodifica")] Alberi alberi)
         {
             if (ModelState.IsValid)
             {
                 alberi.id = Guid.NewGuid();
+                alberi.dataultimamodifica = DateTime.Now;
                 _context.Add(alberi);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -155,7 +192,7 @@ namespace UPlant.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("id,individuo,dataapertura,priorita,intervento,fornitore,motivo,esitointervento,stato,datachiusura,utenteapertura,utenteultimamodifica")] Alberi alberi)
+        public async Task<IActionResult> Edit(Guid id, [Bind("id,individuo,dataapertura,priorita,intervento,fornitore,motivo,esitointervento,stato,dataultimamodifica,utenteapertura,utenteultimamodifica")] Alberi alberi)
         {
             if (id != alberi.id)
             {
@@ -166,6 +203,7 @@ namespace UPlant.Controllers
             {
                 try
                 {
+                    alberi.dataultimamodifica = DateTime.Now;
                     _context.Update(alberi);
                     await _context.SaveChangesAsync();
                 }
@@ -236,34 +274,35 @@ namespace UPlant.Controllers
         }
         public JsonResult AutoComplete()
         {
-            //  var allowedStatus = new[] { "30e70f7c13774994ac9215b3543ebd7b", "3d91514fecb3473783eda3d3f8a63457", "429773f8ba564e2b87a0b775935c3ff7" }; //Vivo e incerto, malato
-            var notallowedsector = new[] { "0ba85efcea3544e485141f7e311d82e2", "0e551835b07642f88540a4ff9d15e84e" }; //Nursery e Banca Semi
+            
             string term = HttpContext.Request.Query["term"].ToString();
-
+            /*
             IEnumerable<StoricoIndividuo> prog =
                 _context.StoricoIndividuo
                 .Include(x => x.individuoNavigation)
                 .Include(x => x.individuoNavigation).ThenInclude(x => x.settoreNavigation)
                 .Include(x => x.statoIndividuoNavigation)
+                .Include(x => x.individuoNavigation).ThenInclude(x => x.accessioneNavigation).ThenInclude(x => x.specieNavigation)
                 .AsEnumerable()
                 .OrderByDescending(c => c.individuoNavigation.propagatoData)
                 .GroupBy(c => c.individuo)
                         .Select(g => g.OrderByDescending(c => c.dataInserimento).FirstOrDefault())
-                        .Where(x => x.individuoNavigation.progressivo.StartsWith(term))
-           .ToList();
-
-            var result = prog.Take(10).Select(x => x.individuoNavigation.progressivo);
+                        .Where(x => x.individuoNavigation.accessioneNavigation.specieNavigation.nome_scientifico.StartsWith(term))
+           .ToList();*/
+            var prelist = _context.Accessioni.Where(p => p.specieNavigation.nome_scientifico.ToLower().Contains(term.ToLower())).Select(g => g.specieNavigation.nome_scientifico);
+            var names = prelist.Distinct().ToList();
+            //var result = prog.Take(10).Select(x => x.individuoNavigation.progressivo);
 
 
 
           
-            return Json(result, new System.Text.Json.JsonSerializerOptions());
+            return Json(names, new System.Text.Json.JsonSerializerOptions());
         }
       
-        public JsonResult Ricerca(string progressivo)
+        public JsonResult Ricerca(string nome_scientifico)
         {
-
-            return Json(_context.Individui.Where(a => a.progressivo.Contains(progressivo)).OrderByDescending(c => c.progressivo).Select(x => new
+            
+            return Json(_context.Individui.Include(x => x.accessioneNavigation).ThenInclude(x => x.specieNavigation).Where(x => x.accessioneNavigation.specieNavigation.nome_scientifico.ToLower().Contains(nome_scientifico.ToLower())).Select(x => new
             {
                 idindividuo = x.id,
                 progressivo = x.progressivo,

@@ -1,5 +1,6 @@
 ﻿@model UPlant.Models.DB.Percorsi
 @inject LanguageService language
+
 @{
     ViewBag.Title = language.Getkey("Global_Thematic_Visits");
     ViewBag.lang = language.GetCurrentCulture();
@@ -7,292 +8,259 @@
 
 <div class="row">
     <div class="col-sm-12">
-
-
-        <button type="button" id="torna" class="btn btn-info" onclick="window.location.href = '@Url.Action("Index", "Percorsi")';">
+        <button type="button" id="torna" class="btn btn-info"
+                onclick="window.location.href='@Url.Action("Index","Percorsi")';">
             @language.Getkey("Global_Go_Back")
         </button>
     </div>
 </div>
-<br>
+
+<br />
+
 <div class="card card-outline card-primary">
     <div class="card-header with-border">
+        <h3 class="card-title mb-0">@language.Getkey("Global_Thematic_Visits")</h3>
+    </div>
 
-        <div class="card-body">
-            <div class="row">
-                <div class="col-sm-12">
-                    <table id="table0" class="table table-bordered table-striped dataTable">
-                        <thead>
-                            <tr>
-                                <th>
-                                    @language.Getkey("Global_Thumb")
-                                </th>
-                                <th>
-                                    @language.Getkey("Global_Title")
-                                </th>
-                                <th>
-                                    @language.Getkey("Global_English_Title")
-                                </th>
-                                <th>
-                                    @language.Getkey("Global_Description")
-                                </th>
-                                <th>
-                                    @language.Getkey("Global_English_Description")
-                                </th>
-                                <th>
-                                    @language.Getkey("Global_Credits")
-                                </th>
-                                <th>
-                                    @language.Getkey("Global_Author")
-                                </th>
-                                <th>
-                                    &nbsp;
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
+    <div class="card-body">
 
-                                <td style="vertical-align: middle; text-align: center;" class="zoom">
+        <!-- DETTAGLIO PERCORSO -->
+        <div class="row">
+            <div class="col-sm-12">
+                <table id="table0" class="table table-bordered table-striped dataTable">
+                    <thead>
+                        <tr>
+                            <th>@language.Getkey("Global_Thumb")</th>
+                            <th>@language.Getkey("Global_Title")</th>
+                            <th>@language.Getkey("Global_English_Title")</th>
+                            <th>@language.Getkey("Global_Description")</th>
+                            <th>@language.Getkey("Global_English_Description")</th>
+                            <th>@language.Getkey("Global_Credits")</th>
+                            <th>@language.Getkey("Global_Author")</th>
+                            <th>&nbsp;</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="vertical-align: middle; text-align: center;" class="zoom">
+                                <img src="@Url.Action("ViewImg","Percorsi", new { percorso = Model.id, nomefile = Model.nomefile })"
+                                     title="@Html.DisplayFor(m => m.nomefile)" height="40" />
+                            </td>
 
-                                    <img src="@Url.Action("ViewImg","Percorsi", new { percorso = Model.id,nomefile = Model.nomefile  })" title="@Html.DisplayFor(model => model.nomefile)" height="40" />
+                            <td style="vertical-align: middle; text-align: center;">
+                                @Html.DisplayFor(m => m.titolo)
+                            </td>
 
-                                </td>
-                                <td style="vertical-align: middle; text-align: center;">
+                            <td style="vertical-align: middle; text-align: center;">
+                                @Html.DisplayFor(m => m.titolo_en)
+                            </td>
 
-                                    @Html.DisplayFor(model => model.titolo)
+                            <td style="vertical-align: middle; text-align: center;">
+                                @Model.descrizione.Substring(0, (Model.descrizione.Length > 50) ? 50 : Model.descrizione.Length) [...]
+                            </td>
 
-                                </td>
-                                <td style="vertical-align: middle; text-align: center;">
-
-                                    @Html.DisplayFor(model => model.titolo_en)
-
-                                </td>
-                                <td style="vertical-align: middle; text-align: center;">
-                                    @Model.descrizione.ToString().Substring(0, (Model.descrizione.Length > 50) ? 50 : Model.descrizione.Length) [...]
-
-
-                                </td>
-                                <td style="vertical-align: middle; text-align: center;">
-                                    @{
-                                        if (!string.IsNullOrEmpty(Model.descrizione_en)){
-
-                                            @Model.descrizione_en.ToString().Substring(0, (Model.descrizione_en.Length > 50) ? 50 : Model.descrizione_en.Length) <span>[...]</span>
-                                            
-                                        } 
-                                  }
-                                </td>
-
-                                <td style="vertical-align: middle; text-align: center;">
-
-                                    @Html.DisplayFor(model => model.credits)
-
-                                </td>
-                                <td style="vertical-align: middle; text-align: center;">
-
-                                    @Html.DisplayFor(model => model.autore)
-
-                                </td>
-                                <td style="vertical-align: middle;">
-                                    @{
-                                        if (User.IsInRole("Administrator") || User.IsInRole("Discover"))
-                                        {
-                                            <a asp-action="Edit" asp-controller="Percorsi" asp-route-id="@Model.id">
-                                                <span class="btn btn-warning btn-xs" title="@language.Getkey("Global_Edit") @language.Getkey("Global_Thematic_Visits")">
-                                                    <i class="fa-solid fa-pencil" style="color: #fafafa;"></i>
-                                                </span>
-                                            </a>
-
-
-
-
-                                        }
+                            <td style="vertical-align: middle; text-align: center;">
+                                @{
+                                    if (!string.IsNullOrEmpty(Model.descrizione_en))
+                                    {
+                                        @Model.descrizione_en.Substring(0, (Model.descrizione_en.Length > 50) ? 50 : Model.descrizione_en.Length) <span>[...]</span>
                                     }
+                                }
+                            </td>
 
-                                </td>
-                            </tr>
-                    </table>
-                </div>
+                            <td style="vertical-align: middle; text-align: center;">
+                                @Html.DisplayFor(m => m.credits)
+                            </td>
+
+                            <td style="vertical-align: middle; text-align: center;">
+                                @Html.DisplayFor(m => m.autore)
+                            </td>
+
+                            <td style="vertical-align: middle;">
+                                @{
+                                    if (User.IsInRole("Administrator") || User.IsInRole("Discover"))
+                                    {
+                                        <a asp-action="Edit" asp-controller="Percorsi" asp-route-id="@Model.id">
+                                            <span class="btn btn-warning btn-xs"
+                                                  title="@language.Getkey("Global_Edit") @language.Getkey("Global_Thematic_Visits")">
+                                                <i class="fa-solid fa-pencil" style="color:#fafafa;"></i>
+                                            </span>
+                                        </a>
+                                    }
+                                }
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
-
-
-
         </div>
 
+        <!-- AGGIUNGI INDIVIDUO (BOTTONE + COLLAPSE + RISULTATI) - PRIMA DELL'ELENCO -->
+        <div class="row mt-3">
+            <div class="col-sm-12">
 
+                <button class="btn btn-primary btn-sm mb-2"
+                        type="button"
+                        id="btnToggleAddInd"
+                        data-toggle="collapse"
+                        data-target="#addIndividuoCollapse2"
+                        aria-expanded="false"
+                        aria-controls="addIndividuoCollapse2">
+                    <i class="fa-solid fa-plus"></i> @language.Getkey("Global_Add") @language.Getkey("Global_Individual")
+                </button>
 
+                <div class="collapse" id="addIndividuoCollapse2">
+                    <div class="card card-outline card-info">
+                        <div class="card-body">
 
-        <div class="row" id="risultato">
+                            <div class="row align-items-end">
+                                <div class="col-md-4">
+                                    <label class="form-label">@language.Getkey("Global_Scientific_Name")</label>
+                                    <input id="nomescientifico" name="nomescientifico" class="form-control"
+                                           type="text" placeholder="@language.Getkey("Global_Scientific_Name")" />
+                                    <input id="idpercorso" name="idpercorso" type="hidden" value="@Model.id" />
+                                </div>
+
+                                <div class="col-md-2">
+                                    <button type="button" id="btnCercaIndividuo" class="btn btn-success">
+                                        @language.Getkey("Global_Search")
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Risultati ricerca -->
+                            <div class="row mt-3">
+                                <div class="col-12">
+                                    <div id="risultato2" class="card card-outline card-primary d-none">
+                                        <div class="card-header">
+                                            <h5 class="card-title mb-0">Risultati ricerca</h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <div id="risultato2Content"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ELENCO INDIVIDUI NEL PERCORSO -->
+        <div class="row mt-3" id="risultato">
             <div class="col-sm-12">
                 <table id="table2" name="table2" class="table table-bordered table-striped dataTable">
                     <thead>
-
                         <tr>
                             <th></th>
-                            <th>
-                                @language.Getkey("Global_Progressive")
-                            </th>
-                            <th>
-                                @language.Getkey("Global_Old_Progressive")
-                            </th>
-                            <th>
-                                @language.Getkey("Global_Scientific_Name")
-                            </th>
-                            <th>
-                                @language.Getkey("Global_Sector")
-                            </th>
-                            <th>
-                                @language.Getkey("Global_Collection")
-                            </th>
-                            <th>
-                                @language.Getkey("Global_Label")
-                            </th>
-                            <th>
-                                @language.Getkey("Global_Individual_Status")
-                            </th>
-                            <th>
-                                @language.Getkey("Global_Number_Of_Images")
-                            </th>
+                            <th>@language.Getkey("Global_Progressive")</th>
+                            <th>@language.Getkey("Global_Old_Progressive")</th>
+                            <th>@language.Getkey("Global_Scientific_Name")</th>
+                            <th>@language.Getkey("Global_Sector")</th>
+                            <th>@language.Getkey("Global_Collection")</th>
+                            <th>@language.Getkey("Global_Label")</th>
+                            <th>@language.Getkey("Global_Individual_Status")</th>
+                            <th>@language.Getkey("Global_Number_Of_Images")</th>
                             <th></th>
                         </tr>
                     </thead>
 
                     <tbody>
-
                         @{
                             if (Model.IndividuiPercorso != null)
                             {
-
-
                                 foreach (var item in Model.IndividuiPercorso)
                                 {
                                     <tr>
                                         <td>
-                                            <a asp-action="Details" asp-controller="Individui" asp-route-id="@item.individuoNavigation.id" target="_blank">
-                                                <span class="btn btn-primary  btn-xs" title="@language.Getkey("Global_Detail") + ' ' + @language.Getkey("Global_Individual")">
+                                            <a asp-action="Details" asp-controller="Individui"
+                                               asp-route-id="@item.individuoNavigation.id" target="_blank">
+                                                <span class="btn btn-primary btn-xs"
+                                                      title="@language.Getkey("Global_Detail") @language.Getkey("Global_Individual")">
                                                     <i class="fa-solid fa-search"></i>
                                                 </span>
                                             </a>
+                                        </td>
 
+                                        <td>@item.individuoNavigation.progressivo</td>
+                                        <td>@item.individuoNavigation.vecchioprogressivo</td>
+                                        <td>@item.individuoNavigation.accessioneNavigation.specieNavigation.nome_scientifico</td>
 
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.individuoNavigation.progressivo)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.individuoNavigation.vecchioprogressivo)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.individuoNavigation.accessioneNavigation.specieNavigation.nome_scientifico)
-                                        </td>
-                                        
                                         @{
                                             if (language.GetCurrentCulture() == "en-US")
-                                        {
-                                            <td>
-                                                    @Html.DisplayFor(modelItem => item.individuoNavigation.settoreNavigation.settore_en)
-                                            </td>
-                                            <td>
-                                                    @Html.DisplayFor(modelItem => item.individuoNavigation.collezioneNavigation.collezione_en)
-                                            </td>
-                                            <td>
-                                                    @Html.DisplayFor(modelItem => item.individuoNavigation.cartellinoNavigation.descrizione_en)
-                                            </td>
-                                                if (item.individuoNavigation.StoricoIndividuo.OrderByDescending(z => z.dataInserimento).FirstOrDefault().statoIndividuoNavigation.stato.Trim().ToLower() != "vivo")
+                                            {
+                                                <td>@item.individuoNavigation.settoreNavigation.settore_en</td>
+                                                <td>@item.individuoNavigation.collezioneNavigation.collezione_en</td>
+                                                <td>@item.individuoNavigation.cartellinoNavigation.descrizione_en</td>
+
+                                                var last = item.individuoNavigation.StoricoIndividuo
+                                                    .OrderByDescending(x => x.dataInserimento).FirstOrDefault();
+
+                                                if (last != null && last.statoIndividuoNavigation.stato.Trim().ToLower() != "vivo")
                                                 {
-                                                    <td style="background-color:red">  @Html.DisplayFor(modelItem =>item.individuoNavigation.StoricoIndividuo.OrderByDescending(x => x.dataInserimento).FirstOrDefault().statoIndividuoNavigation.descrizione_en)</td>
+                                                    <td style="background-color:red">@last.statoIndividuoNavigation.descrizione_en</td>
                                                 }
                                                 else
                                                 {
-                                                    <td>@Html.DisplayFor(modelItem => item.individuoNavigation.StoricoIndividuo.OrderByDescending(x => x.dataInserimento).FirstOrDefault().statoIndividuoNavigation.descrizione_en)</td>
+                                                    <td>@(last?.statoIndividuoNavigation.descrizione_en)</td>
                                                 }
-
-
-                                        }
-                                        else
-                                        {
-                                            <td>
-                                                @Html.DisplayFor(modelItem => item.individuoNavigation.settoreNavigation.settore)
-                                            </td>
-                                            <td>
-                                                @Html.DisplayFor(modelItem => item.individuoNavigation.collezioneNavigation.collezione)
-                                            </td>
-                                            <td>
-                                                @Html.DisplayFor(modelItem => item.individuoNavigation.cartellinoNavigation.descrizione)
-                                            </td>
-                                            if (item.individuoNavigation.StoricoIndividuo.OrderByDescending(z => z.dataInserimento).FirstOrDefault().statoIndividuoNavigation.stato.Trim().ToLower() != "vivo")
-                                            {
-                                                <td style="background-color:red">  @Html.DisplayFor(modelItem => item.individuoNavigation.StoricoIndividuo.OrderByDescending(x => x.dataInserimento).FirstOrDefault().statoIndividuoNavigation.stato)</td>
                                             }
                                             else
                                             {
-                                                <td>@Html.DisplayFor(modelItem => item.individuoNavigation.StoricoIndividuo.OrderByDescending(x => x.dataInserimento).FirstOrDefault().statoIndividuoNavigation.stato)</td>
-                                            }
-                                         }
-                                        }
+                                                <td>@item.individuoNavigation.settoreNavigation.settore</td>
+                                                <td>@item.individuoNavigation.collezioneNavigation.collezione</td>
+                                                <td>@item.individuoNavigation.cartellinoNavigation.descrizione</td>
 
-                                        
+                                                var last = item.individuoNavigation.StoricoIndividuo
+                                                    .OrderByDescending(x => x.dataInserimento).FirstOrDefault();
 
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.individuoNavigation.ImmaginiIndividuo.Count)
-                                        </td>
-                                        <td>
-                                            @{
-
-
-                                                if (User.IsInRole("Administrator") || User.IsInRole("Discover"))
+                                                if (last != null && last.statoIndividuoNavigation.stato.Trim().ToLower() != "vivo")
                                                 {
-
-
-                                                    var idindper = @Html.Raw(item.id);
-
-                                                    <button type="button" id="DeleteIndividuoPercorso" class="btn btn-danger btn-xs" value="@idindper" onclick="CancellaIndividuoPercorso(this.value)"><i class="fa-solid fa-trash"></i></button>
-
-                                                    <div class="modal fade" id="@item.id" role="dialog" data-url='@Url.Action("DeleteIndividuoPercorso", "Percorsi", new { @id = item.id, percorso = item.percorsoNavigation.id })'>
-                                                    </div>
-
+                                                    <td style="background-color:red">@last.statoIndividuoNavigation.stato</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@(last?.statoIndividuoNavigation.stato)</td>
                                                 }
                                             }
+                                        }
 
+                                        <td>@item.individuoNavigation.ImmaginiIndividuo.Count</td>
 
+                                        <td>
+                                            @{
+                                                if (User.IsInRole("Administrator") || User.IsInRole("Discover"))
+                                                {
+                                                    var idindper = @Html.Raw(item.id);
 
+                                                    <button type="button"
+                                                            class="btn btn-danger btn-xs"
+                                                            value="@idindper"
+                                                            onclick="CancellaIndividuoPercorso(this.value)">
+                                                        <i class="fa-solid fa-trash"></i>
+                                                    </button>
 
+                                                    <div class="modal fade" id="@item.id" role="dialog"
+                                                         data-url='@Url.Action("DeleteIndividuoPercorso","Percorsi", new { id = item.id, percorso = item.percorsoNavigation.id })'>
+                                                    </div>
+                                                }
+                                            }
                                         </td>
                                     </tr>
                                 }
                             }
                         }
+                    </tbody>
 
                 </table>
             </div>
         </div>
 
-
     </div>
 </div>
-
-<h4 class="box-title">@language.Getkey("Global_Add") @language.Getkey("Global_Individual")</h4>
-
-<div class="row">
-
-    <div class="col-md-2">
-        <input id="progressivo" name="progressivo" type="text" placeholder="@language.Getkey("Global_Progressive")">
-        <input id="idpercorso" name="idpercorso" type="hidden" value="@Model.id">
-    </div>
-    <div class="col-md-1">
-        <button type="submit" id="cerca" class="pbSubmit btn  btn-success btn-rounded btn-sm">@language.Getkey("Global_Search")</button>
-
-    </div>
-
-</div>
-
-<div class="row" id="risultato2">
-</div>
-
-@section Styles {
-
-
-}
 
 @section CustomStyles {
     <style>
@@ -305,64 +273,49 @@
             color: #0060B6;
             text-decoration: none;
         }
-
-            .ui-autocomplete .fixed-height {
-                float: left;
-                max-height: 175px;
-                overflow: auto !important;
-                list-style-type: none;
-            }
-
-                .ui-autocomplete .fixed-height li {
-                    font-family: Arial, Verdana, Sans-Serif;
-                    float: left;
-                    width: 100%;
-                    list-style-type: none;
-                    text-align: left;
-                    font: bold 26px Poiret One;
-                    list-style-type: none;
-                }
-
-            /* to distinctly see which returned item is selected/hovered over*/
-            .ui-autocomplete .ui-menu-item .ui-corner-all {
-                float: left;
-                width: 100%;
-                height: 30px;
-                padding: 10px 0 10px 0;
-                background: #FFF;
-                list-style-type: none;
-            }
-
-            /* to hide the lower left text*/
-            .ui-autocomplete .ui-menu-item .ui-state-focus {
-                list-style-type: none;
-                background-color: #00F;
-                cursor: pointer;
-            }
+        .ui-autocomplete .fixed-height {
+            float: left;
+            max-height: 175px;
+            overflow: auto !important;
+            list-style-type: none;
+        }
+        .ui-autocomplete .fixed-height li {
+            font-family: Arial, Verdana, Sans-Serif;
+            float: left;
+            width: 100%;
+            text-align: left;
+            font: bold 26px Poiret One;
+        }
+        .ui-autocomplete .ui-menu-item .ui-corner-all {
+            float: left;
+            width: 100%;
+            height: 30px;
+            padding: 10px 0;
+            background: #FFF;
+        }
+        .ui-autocomplete .ui-menu-item .ui-state-focus {
+            background-color: #00F;
+            cursor: pointer;
+        }
 
         .zoom {
             padding: 0px;
-            transition: transform .2s; /* Animation */
+            transition: transform .2s;
             width: 50px;
             height: 50px;
             margin: 0 auto;
         }
-
-            .zoom:hover {
-                transform: scale(3.5); /* (150% zoom - Note: if the zoom is too large, it will go outside of the viewport) */
-            }
+        .zoom:hover {
+            transform: scale(3.5);
+        }
     </style>
-
-
 }
+
 @section Scripts {
-
-
     <script src="~/js/datatables.min.js"></script>
-
 }
-@section CustomScripts {
 
+@section CustomScripts {
 
     <script type="text/javascript">
         function CancellaIndividuoPercorso(x) {
@@ -375,115 +328,160 @@
     </script>
 
     <script type="text/javascript">
-               $(document).ready(function () {
-                       // Set the language for DataTables based on the ViewBag.lang value
-                   var lingua = "@ViewBag.lang";
-                  if (lingua == "en-US"){
-                      $.extend($.fn.dataTable.defaults, {
-                      language: { url: "/js/dataTables.english.json" }
-                      });
-                  } else {
-                      $.extend($.fn.dataTable.defaults, {
-                      language: { url: "/js/dataTables.default.json" }
-                      });
-                  }
+        $(document).ready(function () {
 
+            // Lingua DataTables
+            var lingua = "@ViewBag.lang";
+            if (lingua === "en-US") {
+                $.extend($.fn.dataTable.defaults, { language: { url: "/js/dataTables.english.json" } });
+            } else {
+                $.extend($.fn.dataTable.defaults, { language: { url: "/js/dataTables.default.json" } });
+            }
 
-                   var baseUrlauto = '@Url.Action("AutoComplete", "Percorsi")';
+            // DataTables
+            $('#table0').DataTable({
+                paging: false,
+                searching: false,
+                info: false,
+                lengthChange: false,
+                ordering: false,
+                autoWidth: false
+            });
 
+            $('#table2').DataTable({
+                paging: true,
+                lengthChange: true,
+                searching: true,
+                info: true,
+                autoWidth: false,
+                ordering: true
+            });
 
-                   $("#progressivo").autocomplete({
-                    source: function(request, response) {
-                       $.ajax({
-                       url: baseUrlauto,
-                       dataType: "json",
-                      data: {
-                           term : request.term,
-                           field : "progressivo"
-                       },
-                       success: function(data) {
-                            response(data);
-                       }
-                       });
-                    }
-                   });
+            // Autocomplete nome scientifico
+            var baseUrlauto = '@Url.Action("AutoComplete", "Percorsi")';
+            $("#nomescientifico").autocomplete({
+                minLength: 2,
+                source: function (request, response) {
+                    $.ajax({
+                        url: baseUrlauto,
+                        dataType: "json",
+                        data: { term: request.term, field: "nome_scientifico" },
+                        success: function (data) { response(data); }
+                    });
+                }
+            });
 
+            // Toggle bottone Aggiungi/Chiudi
+            $('#addIndividuoCollapse2')
+                .on('shown.bs.collapse', function () {
+                    $('#btnToggleAddInd')
+                        .removeClass('btn-primary')
+                        .addClass('btn-secondary')
+                        .html('<i class="fa-solid fa-xmark"></i> Chiudi');
+                })
+                .on('hidden.bs.collapse', function () {
+                    $('#btnToggleAddInd')
+                        .removeClass('btn-secondary')
+                        .addClass('btn-primary')
+                        .html('<i class="fa-solid fa-plus"></i> @language.Getkey("Global_Add") @language.Getkey("Global_Individual")');
+                });
 
-               $('#table1').DataTable({
-                   'paging': true,
-                   'lengthChange': true,
-                   'searching': true,
-                   'info': true,
-                   'autoWidth': false,
-                   'ordering': true
-               })
-               $('#table1').DataTable().order([7, 'asc']).draw();
+            // Ricerca individui da aggiungere
+            var baseUrlRicerca = '@Url.Action("Ricerca", "Percorsi")';
 
+            $("#btnCercaIndividuo").click(function () {
+                var ns = $('#nomescientifico').val();
+                var idpercorso = $('#idpercorso').val();
 
+                $.ajax({
+                    type: "GET",
+                    url: baseUrlRicerca,
+                    dataType: "json",
+                    data: { idpercorso: idpercorso, nome_scientifico: ns },
+                    success: function (data) {
 
-               });
-               var baseUrlRicerca = '@Url.Action("Ricerca", "Percorsi")';
+                        if (!data || data.length === 0) {
+                            $("#risultato2Content").html('<div class="alert alert-warning mb-0">Nessun individuo trovato.</div>');
+                            $("#risultato2").removeClass("d-none");
+                            return;
+                        }
 
-               $("#cerca").click(function () {
-                   var prog = $('#progressivo').val();
-                   var idpercorso = $('#idpercorso').val();
-                   $.ajax({
-                       type: "GET",
-
-                       url: baseUrlRicerca,
-                       data: {
-                           'idpercorso': idpercorso,
-                           'progressivo': prog
-                       },
-                       success: function (data) {
-                   var  namesc = "@language.Getkey("Global_Scientific_Name")";
-                var  oldprog = "@language.Getkey("Global_Old_Progressive")";
-            var sector = "@language.Getkey("Global_Sector")";
-              var coll = "@language.Getkey("Global_Collection")";
-        var lab = "@language.Getkey("Global_Label")";
-              var imgs = "@language.Getkey("Global_Images")";
-                    var add = "@language.Getkey("Global_Add")";
+                        var namesc = "@language.Getkey("Global_Scientific_Name")";
+                        var oldprog = "@language.Getkey("Global_Old_Progressive")";
+                        var sector = "@language.Getkey("Global_Sector")";
+                        var coll = "@language.Getkey("Global_Collection")";
+                        var lab = "@language.Getkey("Global_Label")";
+                        var imgs = "@language.Getkey("Global_Images")";
+                        var add = "@language.Getkey("Global_Add")";
                         var ind = "@language.Getkey("Global_Individual")";
-                           var s = '<div class="col-sm-12"><table id="table1" class="table table-bordered table-striped dataTable">';
-                                    s += '<thead><tr><th></th><th>Progressivo</th><th>'+oldprog+'</th><th>'+namesc+'</th><th>'+sector+'</th><th>'+coll+'</th><th>'+lab+'</th><th>'+imgs+'</th></tr></thead>';
-                           s += '<tbody>';
-                           for (var i = 0; i < data.length; i++) {
-                               var per = data[i].idpercorso;
-                               var indi = data[i].idindividuo;
-                               var action = '@Url.Action("Inserisciindividuopercorso", "Percorsi")?percorso=' + per + '&individuo=' + indi;
 
+                        var s = '';
+                        s += '<table id="tableSearch" class="table table-bordered table-striped table-sm">';
+                        s += '<thead><tr>';
+                        s += '<th style="width:60px;"></th>';
+                        s += '<th>Progressivo</th>';
+                        s += '<th>' + oldprog + '</th>';
+                        s += '<th>' + namesc + '</th>';
+                        s += '<th>' + sector + '</th>';
+                        s += '<th>' + coll + '</th>';
+                        s += '<th>' + lab + '</th>';
+                        s += '<th>' + imgs + '</th>';
+                        s += '</tr></thead><tbody>';
 
+                        for (var i = 0; i < data.length; i++) {
+                            var per = data[i].idpercorso;
+                            var indi = data[i].idindividuo;
 
-                               s += '<tr><td><a href="'+action+'">';
-                               s += ' <button class="btn btn-success btn-xs" title="'+add+ ' ' + ind+ '" onclick="window.location.href =' + action +'"><i class="fa-solid fa-plus"></i></button></a></td>';
-                               s += '<td>' + data[i].progressivo + '</td>';
+                            var action = '@Url.Action("Inserisciindividuopercorso","Percorsi")' +
+                                '?percorso=' + encodeURIComponent(per) +
+                                '&individuo=' + encodeURIComponent(indi);
 
-                               if (data[i].vecchioprogressivo == null) {
-                                   s += '<td></td>';
-                               } else {
-                               s += '<td>' + data[i].vecchioprogressivo + '</td>';
-                               }
+                            s += '<tr>';
+                            s += '<td class="text-center">';
+                            s += '<a class="btn btn-success btn-sm" title="' + add + ' ' + ind + '" href="' + action + '">';
+                            s += '<i class="fa-solid fa-plus"></i>';
+                            s += '</a>';
+                            s += '</td>';
 
-                               s += '<td>' + data[i].nomescientifico + '</td>';
-                               s += '<td>' + data[i].settore + '</td>';
-                               s += '<td>' + data[i].collezione + '</td>';
-                               s += '<td>' + data[i].cartellino + '</td>';
-                               s += '<td>' + data[i].immagini + '</td></tr>';
-                           }
-                           if (i == 0) {
-                               alert("Non ho trovato individui corrispondenti verificare e correggi");
+                            s += '<td>' + (data[i].progressivo ?? '') + '</td>';
+                            s += '<td>' + (data[i].vecchioprogressivo ?? '') + '</td>';
+                            s += '<td>' + (data[i].nomescientifico ?? '') + '</td>';
+                            s += '<td>' + (data[i].settore ?? '') + '</td>';
+                            s += '<td>' + (data[i].collezione ?? '') + '</td>';
+                            s += '<td>' + (data[i].cartellino ?? '') + '</td>';
+                            s += '<td>' + (data[i].immagini ?? '') + '</td>';
+                            s += '</tr>';
+                        }
 
+                        s += '</tbody></table>';
 
-                           }
-                           s += '</tbody></table></div>';
-                           $("#risultato2").html(s);
-                       },
-                       error: function (xhr, ajaxOptions, thrownError) {
-                           alert('Error during process: \n' + xhr.responseText);
-                       }
+                        $("#risultato2Content").html(s);
+                        $("#risultato2").removeClass("d-none");
 
-                   });
-               });
+                        if ($.fn.DataTable.isDataTable('#tableSearch')) {
+                            $('#tableSearch').DataTable().destroy();
+                        }
+
+                        $('#tableSearch').DataTable({
+                            paging: true,
+                            lengthChange: false,
+                            searching: false,
+                            info: false,
+                            ordering: true,
+                            autoWidth: false
+                        });
+                    },
+                    error: function (xhr) {
+                        $("#risultato2Content").html(
+                            '<div class="alert alert-danger mb-0">Errore durante la ricerca:<br>' +
+                            (xhr.responseText ?? '') +
+                            '</div>'
+                        );
+                        $("#risultato2").removeClass("d-none");
+                    }
+                });
+            });
+
+        });
     </script>
-
 }

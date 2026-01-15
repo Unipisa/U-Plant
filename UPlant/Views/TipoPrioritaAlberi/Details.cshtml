@@ -10,6 +10,12 @@
     <h4>TipoPrioritaAlberi</h4>
     <hr />
     <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.livello)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.livello)
+        </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.descrizione)
         </dt>
@@ -22,12 +28,7 @@
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.descrizione_en)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.organizzazione)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.organizzazione)
-        </dd>
+       
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.ordinamento)
         </dt>

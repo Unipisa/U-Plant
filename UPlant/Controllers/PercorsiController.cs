@@ -272,25 +272,24 @@ namespace U_Plant.Controllers
 
         public JsonResult AutoComplete()
         {
-            //  var allowedStatus = new[] { "30e70f7c13774994ac9215b3543ebd7b", "3d91514fecb3473783eda3d3f8a63457", "429773f8ba564e2b87a0b775935c3ff7" }; //Vivo e incerto, malato
-            var notallowedsector = new[] { "0ba85efcea3544e485141f7e311d82e2", "0e551835b07642f88540a4ff9d15e84e" }; //Nursery e Banca Semi
+            
             string term = HttpContext.Request.Query["term"].ToString();
+            /*
+                        IEnumerable<StoricoIndividuo> prog =
+                            _context.StoricoIndividuo
+                            .Include(x => x.individuoNavigation)
+                            .Include(x => x.individuoNavigation).ThenInclude(x => x.settoreNavigation)
+                            .Include(x => x.statoIndividuoNavigation)
+                            .AsEnumerable()
+                            .OrderByDescending(c => c.individuoNavigation.propagatoData)
+                            .GroupBy(c => c.individuo)
+                                    .Select(g => g.OrderByDescending(c => c.dataInserimento).FirstOrDefault())
+                                    .Where(x => x.individuoNavigation.progressivo.StartsWith(term))
+                        .Where(x => x.statoIndividuoNavigation.visualizzazioneweb == true)
+                        .Where(x => x.individuoNavigation.settoreNavigation.visualizzazioneweb == true).ToList();
 
-            IEnumerable<StoricoIndividuo> prog =
-                _context.StoricoIndividuo
-                .Include(x => x.individuoNavigation)
-                .Include(x => x.individuoNavigation).ThenInclude(x => x.settoreNavigation)
-                .Include(x => x.statoIndividuoNavigation)
-                .AsEnumerable()
-                .OrderByDescending(c => c.individuoNavigation.propagatoData)
-                .GroupBy(c => c.individuo)
-                        .Select(g => g.OrderByDescending(c => c.dataInserimento).FirstOrDefault())
-                        .Where(x => x.individuoNavigation.progressivo.StartsWith(term))
-            .Where(x => x.statoIndividuoNavigation.visualizzazioneweb == true)
-            .Where(x => x.individuoNavigation.settoreNavigation.visualizzazioneweb == true).ToList();
-
-            var result = prog.Take(10).Select(x => x.individuoNavigation.progressivo);
-
+                        var result = prog.Take(10).Select(x => x.individuoNavigation.progressivo);
+            */
 
 
             // var prog = _context.Storico.GroupBy(c => c.individuo).Select(g => g.OrderByDescending(c => c.dataInserimento).FirstOrDefault()).Where(x => allowedStatus.Contains(x.statoIndividuo)).Where(x => !notallowedsector.Contains(x.Individui.settore)).Where(x => x.Individui.progressivo.StartsWith(term)).Take(10).Select(x => x.Individui.progressivo).ToList()
@@ -300,8 +299,9 @@ namespace U_Plant.Controllers
             //   .Select(g => g.OrderByDescending(c => c.dataInserimento).FirstOrDefault()).Where(x => x.statoIndividuoNavigation.visualizzazioneweb == true).Where(x => x.individuoNavigation.settoreNavigation.visualizzazioneweb == true).Where(x => x.individuoNavigation.progressivo.StartsWith(term)).Take(10).Select(x => x.individuoNavigation.progressivo);
 
             // var prog = _context.StoricoIndividuo.GroupBy(c => c.individuo).Select(g => g.OrderByDescending(c => c.dataInserimento).FirstOrDefault()).Where(x => x.statoIndividuoNavigation.visualizzazioneweb == true).Where(x => x.individuoNavigation.settoreNavigation.visualizzazioneweb == true).Where(x => x.individuoNavigation.progressivo.StartsWith(term)).Take(10).Select(x => x.individuoNavigation.progressivo);
-
-            return Json(result, new System.Text.Json.JsonSerializerOptions());
+            var prelist = _context.Accessioni.Where(p => p.specieNavigation.nome_scientifico.ToLower().Contains(term.ToLower())).Select(g => g.specieNavigation.nome_scientifico);
+            var names = prelist.Distinct().ToList();
+            return Json(names, new System.Text.Json.JsonSerializerOptions());
         }
         
         //public ActionResult Create([Bind(Include = "id,titolo,descrizione,ordinamento,attivo")]  Percorsi percorsi)
@@ -341,10 +341,10 @@ namespace U_Plant.Controllers
             return RedirectToAction("Details", "Percorsi", new { id = percorso });
         }
 
-        public JsonResult Ricerca(string idpercorso, string progressivo)
+        public JsonResult Ricerca(string idpercorso, string nome_scientifico)
         {
 
-            return Json(_context.Individui.Where(a => a.progressivo.Contains(progressivo)).OrderByDescending(c => c.progressivo).Select(x => new
+            return Json(_context.Individui.Include(x => x.accessioneNavigation).ThenInclude(x => x.specieNavigation).Where(x => x.accessioneNavigation.specieNavigation.nome_scientifico.ToLower().Contains(nome_scientifico.ToLower())).Select(x => new
             {
                 idindividuo = x.id,
                 progressivo = x.progressivo,
