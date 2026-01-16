@@ -11,7 +11,7 @@ CREATE TABLE [dbo].[Alberi](
 	[motivo] [varchar](max) NOT NULL,
 	[esitointervento] [varchar](max) NULL,
 	[stato] [bit] NOT NULL,
-	[datachiusura] [datetime] NULL,
+	[dataultimamodifica] [datetime] NULL,
 	[utenteapertura] [uniqueidentifier] NOT NULL,
 	[utenteultimamodifica] [uniqueidentifier] NOT NULL,
  CONSTRAINT [PK_Alberi] PRIMARY KEY CLUSTERED 
