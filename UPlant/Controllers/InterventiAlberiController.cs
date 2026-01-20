@@ -31,7 +31,7 @@ namespace UPlant.Controllers
      {
          a.id,                      // <-- PK Alberi (cambia se diverso)
          a.individuo,
-         a.stato,                   // false = aperto
+         a.statoIntervento,                   // false = aperto
          a.dataultimamodifica,
          livello = a.prioritaNavigation.livello  // 0..5 dalla tabella TipoPrioritaAlberi
      })
@@ -42,10 +42,10 @@ namespace UPlant.Controllers
                 .GroupBy(x => x.individuo)
                 .Select(g =>
                 {
-                    var hasOpen = g.Any(x => x.stato == false);
+                    var hasOpen = g.Any(x => x.statoIntervento == false);
 
                     var best = g
-                        .OrderByDescending(x => x.stato == false) // aperti prima
+                        .OrderByDescending(x => x.statoIntervento == false) // aperti prima
                         .ThenByDescending(x => x.livello)                   // 0 più alta
                         .ThenByDescending(x => x.dataultimamodifica)
                         .First();
@@ -145,8 +145,8 @@ namespace UPlant.Controllers
             ViewData["condizione"] = new SelectList(_context.Condizioni.Select(x => new { x.id, Desc = string.IsNullOrEmpty(x.descrizione_en) ? x.condizione : x.descrizione_en }), "id", "Desc", selectedCondizione);
             ViewData["progressivo"] = individuo.progressivo;
             ViewData["nomescientifico"] = individuo.accessioneNavigation.specieNavigation.nome_scientifico;
-            ViewData["intervento"] = new SelectList(_context.TipoInterventiAlberi.OrderBy(a => a.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.descrizione : a.descrizione_en }), "id", "Desc");
-            ViewData["priorita"] = new SelectList(_context.TipoPrioritaAlberi.OrderBy(a => a.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.descrizione : a.descrizione_en }), "id", "Desc");
+            ViewData["intervento"] = new SelectList(_context.TipoInterventiAlberi.OrderByDescending(a => a.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.descrizione : a.descrizione_en }), "id", "Desc");
+            ViewData["priorita"] = new SelectList(_context.TipoPrioritaAlberi.OrderByDescending(a => a.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.descrizione : a.descrizione_en }), "id", "Desc");
             ViewData["utenteapertura"] = utente;
             ViewData["utenteultimamodifica"] = utente;
             return View();
@@ -157,13 +157,13 @@ namespace UPlant.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("id,individuo,dataapertura,priorita,intervento,fornitore,motivo,esitointervento,stato,dataultimamodifica,utenteapertura,utenteultimamodifica,statoIndividuo,condizione")] InterventiAlberi interventiAlberi)
+        public async Task<IActionResult> Create([Bind("id,individuo,dataapertura,priorita,intervento,fornitore,motivo,esitointervento,statoIntervento,dataultimamodifica,utenteapertura,utenteultimamodifica,statoIndividuo,condizione")] InterventiAlberi interventiAlberi)
         {
             if (ModelState.IsValid)
             {
                 interventiAlberi.id = Guid.NewGuid();
                 interventiAlberi.dataultimamodifica = DateTime.Now;
-                interventiAlberi.stato = false; // aperto di default
+                interventiAlberi.statoIntervento = false; // aperto di default
                 _context.Add(interventiAlberi);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));

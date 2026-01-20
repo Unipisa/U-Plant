@@ -21,7 +21,7 @@ public partial class InterventiAlberi
 
     public string esitointervento { get; set; }
 
-    public bool stato { get; set; }
+    public bool statoIntervento { get; set; }
 
     public DateTime? dataultimamodifica { get; set; }
 

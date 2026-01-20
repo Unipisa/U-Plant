@@ -3,43 +3,35 @@
 @{
     ViewBag.Title = @language.Getkey("Global_Individual");
 }
+
 <p>
-    <a asp-action="Index" asp-controller="Alberi">
+    <a asp-action="Index" asp-controller="InterventiAlberi">
         <span class="btn btn btn-info " title="@language.Getkey("Global_Go_Back")">
             @language.Getkey("Global_Go_Back")
         </span>
     </a>
-
 </p>
 
 <div class="col-lg-12">
     <div class="card card-primary">
         <div class="card-header with-border">
             <h3 class="card-title font-weight-bold">
-                @language.Getkey("Shared_Comp_Sb_Tree") - @language.Getkey("Global_Individual") : @ViewData["progressivo"]
-
-                <span> - </span> @language.Getkey("Global_Species")@Html.Label(" :  ") @ViewData["nomescientifico"]
+                @language.Getkey("Shared_Comp_Sb_Tree") - @language.Getkey("Global_Individual") : @(ViewData["progressivo"] ?? "")
+                <span> - </span> @language.Getkey("Global_Species")@Html.Label(" :  ") @(ViewData["nomescientifico"] ?? "")
             </h3>
         </div>
+
         @using (Html.BeginForm())
         {
             @Html.AntiForgeryToken()
             <div class="card-body">
                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
                 <div class="form-group">
-                    <div class="form-group">
-                        <input asp-for="individuo" type="hidden" value="@ViewData["individuo"]" />
-                    </div>
-                    <div class="form-group">
-                        <input asp-for="utenteapertura" type="hidden" value="@ViewData["utenteapertura"]" />
-                    </div>
-                    <div class="form-group">
-                        <input asp-for="utenteultimamodifica" type="hidden" value="@ViewData["utenteultimamodifica"]" />
-                    </div>
-
+                    <input asp-for="individuo" type="hidden" value="@(ViewData["individuo"] ?? Guid.Empty)" />
+                    <input asp-for="utenteapertura" type="hidden" value="@(ViewData["utenteapertura"] ?? null)" />
+                    <input asp-for="utenteultimamodifica" type="hidden" value="@(ViewData["utenteultimamodifica"] ?? null)" />
                 </div>
-
-
 
                 <div class="row">
                     <div class="form-group col">
@@ -47,90 +39,90 @@
                         <input asp-for="dataapertura" class="form-control" />
                         <span asp-validation-for="dataapertura" class="text-danger"></span>
                     </div>
-                    <div class="form-group  col">
-                        <div class="form-group">
-                            <label asp-for="priorita" class="control-label"></label>
-                            <select asp-for="priorita" class="form-control" asp-items="ViewBag.priorita"></select>
-                        </div>
+
+                    <div class="form-group col">
+                        <label asp-for="priorita" class="control-label"></label>
+                        <select asp-for="priorita" class="form-control" asp-items="ViewBag.priorita"></select>
                     </div>
+
                     <div class="form-group col">
                         <label asp-for="intervento" class="control-label"></label>
                         <select asp-for="intervento" class="form-control" asp-items="ViewBag.intervento"></select>
                     </div>
-
-
                 </div>
 
+                <hr />
+                <div class="row text-center font-weight-bold">Dettagli</div>
+                <hr />
 
-
-
-                <hr>
-                <div class="row" align="center">Dettagli</div>
-                <hr>
                 <div class="row">
                     <div class="form-group col">
                         <label asp-for="fornitore" class="control-label"></label>
                         <select asp-for="fornitore" class="form-control" asp-items="ViewBag.fornitore"></select>
                     </div>
+
                     <div class="form-group col">
                         <label asp-for="motivo" class="control-label"></label>
                         <input asp-for="motivo" class="form-control" />
                         <span asp-validation-for="motivo" class="text-danger"></span>
                     </div>
-                    
-                    
 
+                    <!-- NUOVE DROPDOWN: Stato Individuo e Condizione -->
+                    <div class="form-group col">
+                        <label class="control-label">@language.Getkey("Global_Individual_Status")</label>
+                        <!-- uso name/id espliciti: funzionerà anche se il model non ha la proprietà -->
+                        <select id="statoIndividuo" name="statoIndividuo" class="form-control select2"
+                                asp-items="@(ViewData["statoIndividuo"] as SelectList)"></select>
+                    </div>
 
+                    <div class="form-group col">
+                        <label class="control-label">@language.Getkey("Global_Condition")</label>
+                        <select id="condizione" name="condizione" class="form-control select2"
+                                asp-items="@(ViewData["condizione"] as SelectList)"></select>
+                    </div>
                 </div>
 
-
-
-                <hr>
+                <hr />
                 <div class="form-group">
                     <input type="submit" value="@language.Getkey("Global_Add")" class="btn btn-primary" />
-
                 </div>
-
-
             </div>
-
         }
 
     </div>
+
     <p>
-        <a asp-action="Index" asp-controller="Alberi">
+        <a asp-action="Index" asp-controller="InterventiAlberi">
             <span class="btn btn btn-info " title="@language.Getkey("Global_Go_Back")">
                 @language.Getkey("Global_Go_Back")
             </span>
         </a>
-
     </p>
 </div>
 
-
-
 @section Styles {
     <link href="~/css/select2.min.css" rel="stylesheet" />
-
-
 }
-@section CustomStyles {
-   
-}
+
 @section Scripts {
-
-
     <script src="~/js/select2.min.js"></script>
     <script src="~/js/jquery.validation.min.js"></script>
-
 }
 
 @section CustomScripts {
+    <script>
+        $(function () {
+            // inizializza Select2 sulle due select (se presente)
+            if ($.fn.select2) {
+                $('.select2').select2({
+                    width: '100%',
+                    theme: 'bootstrap4' // se usi la integrazione bootstrap per Select2; altrimenti rimuovi
+                });
+            }
 
-    
+            // Se vuoi puoi forzare la selezione iniziale dal SelectList (già gestito da asp-items con selected)
+            // es: $('#statoIndividuo').val('@ViewData["statoIndividuoSelected"]')...
 
-
-
-
-
+        });
+    </script>
 }
