@@ -83,6 +83,7 @@
                     <th>@language.Getkey("Global_Tree_Priority")</th>
                     <th>@language.Getkey("Global_Last_Modified_Date")</th>
                     <th>Stato</th>
+                    <th>Aggiungi</th>
                 </tr>
             </thead>
             <tbody>
@@ -105,9 +106,19 @@
                         <td class="text-center">@item.individuoNavigation.collezioneNavigation.collezione</td>
                         <td class="text-center">@item.prioritaNavigation.descrizione</td>
 
-                        <td class="text-center">@item.dataultimamodifica?.ToString("dd/MM/yyyy HH:mm") ?? "-")</td>
+                        <td class="text-center">@(item.dataultimamodifica?.ToString("dd/MM/yyyy HH:mm") ?? "-")</td>
 
                         <td class="text-center">@(item.statoIntervento == false ? "Aperto" : "Chiuso")</td>
+                        <td class="text-center">
+                            <a asp-action="Create"
+                               asp-controller="InterventiAlberi"
+                               asp-route-idindividuo="@item.individuo"
+                               class="btn btn-primary btn-sm"
+                               title="@($"{language.Getkey("Global_Add")} {language.Getkey("Global_Individual")}")">
+                                <i class="fa-solid fa-plus"></i>
+                            </a>
+                            
+                        </td>
                     </tr>
                 }
             </tbody>

@@ -257,6 +257,22 @@ namespace UPlant.Models.DB
 
 
 
+    public partial class InterventiAlberiCustom
+    {
+       
+        [Required]
+        public string motivo { get; set; }
+
+        
+    }
+    [ModelMetadataType(typeof(InterventiAlberiCustom))]
+    public partial class InterventiAlberi { }
+
+
+
+
+
+
     public partial class AccessioniCustom
     {
         [Editable(false)]

@@ -34,39 +34,39 @@
                 </div>
 
                 <div class="row">
-                    <div class="form-group col">
-                        <label asp-for="dataapertura" class="control-label"></label>
-                        <input asp-for="dataapertura" class="form-control" />
-                        <span asp-validation-for="dataapertura" class="text-danger"></span>
-                    </div>
+                
 
                     <div class="form-group col">
-                        <label asp-for="priorita" class="control-label"></label>
+                        <label asp-for="priorita" class="control-label">@language.Getkey("Global_Tree_Priority")</label>
                         <select asp-for="priorita" class="form-control" asp-items="ViewBag.priorita"></select>
                     </div>
 
+                   
+                </div>
+                <div class="row">
                     <div class="form-group col">
                         <label asp-for="intervento" class="control-label"></label>
                         <select asp-for="intervento" class="form-control" asp-items="ViewBag.intervento"></select>
                     </div>
+                    <div class="form-group col">
+                        <label asp-for="fornitore" class="control-label"></label>
+                        <select asp-for="fornitore" class="form-control" asp-items="ViewBag.fornitore"></select>
+                    </div>
                 </div>
-
                 <hr />
                 <div class="row text-center font-weight-bold">Dettagli</div>
                 <hr />
 
                 <div class="row">
-                    <div class="form-group col">
-                        <label asp-for="fornitore" class="control-label"></label>
-                        <select asp-for="fornitore" class="form-control" asp-items="ViewBag.fornitore"></select>
-                    </div>
+                    
 
                     <div class="form-group col">
                         <label asp-for="motivo" class="control-label"></label>
                         <input asp-for="motivo" class="form-control" />
                         <span asp-validation-for="motivo" class="text-danger"></span>
                     </div>
-
+                </div>
+                <div class="row">
                     <!-- NUOVE DROPDOWN: Stato Individuo e Condizione -->
                     <div class="form-group col">
                         <label class="control-label">@language.Getkey("Global_Individual_Status")</label>
