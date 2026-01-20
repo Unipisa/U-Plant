@@ -1,4 +1,4 @@
-﻿@model List<UPlant.Models.DB.Alberi>
+﻿@model List<UPlant.Models.DB.InterventiAlberi>
 @inject LanguageService language
 
 @{
@@ -91,7 +91,7 @@
                     <tr>
                         <td class="text-center">
                             <a asp-action="ElencoInterventi"
-                               asp-controller="Alberi"
+                               asp-controller="InterventiAlberi"
                                asp-route-id="@item.individuo"
                                class="btn btn-primary btn-sm"
                                title="@($"{language.Getkey("Global_Detail")} {language.Getkey("Global_Individual")}")">
@@ -105,7 +105,7 @@
                         <td class="text-center">@item.individuoNavigation.collezioneNavigation.collezione</td>
                         <td class="text-center">@item.prioritaNavigation.descrizione</td>
 
-                        <td class="text-center">@item.dataultimamodifica.ToString("dd/MM/yyyy HH:mm")</td>
+                        <td class="text-center">@item.dataultimamodifica?.ToString("dd/MM/yyyy HH:mm") ?? "-")</td>
 
                         <td class="text-center">@(item.stato == false ? "Aperto" : "Chiuso")</td>
                     </tr>
@@ -210,7 +210,7 @@
             }
 
             // Autocomplete
-            var baseUrlauto = '@Url.Action("AutoComplete", "Alberi")';
+            var baseUrlauto = '@Url.Action("AutoComplete", "InterventiAlberi")';
             $("#nomescientifico").autocomplete({
                 source: function (request, response) {
                     $.ajax({
@@ -242,7 +242,7 @@
             dt.order([6, 'desc']).draw();
 
             // Ricerca individui per aggiunta
-            var baseUrlRicerca = '@Url.Action("Ricerca", "Alberi")';
+            var baseUrlRicerca = '@Url.Action("Ricerca", "InterventiAlberi")';
 
             $("#cerca").click(function () {
                 var prog = $('#nomescientifico').val();
@@ -285,7 +285,7 @@
 
                         for (var i = 0; i < data.length; i++) {
                             var indi = data[i].idindividuo;
-                            var action = '@Url.Action("Create", "Alberi")' + '?idindividuo=' + encodeURIComponent(indi);
+                            var action = '@Url.Action("Create", "InterventiAlberi")' + '?idindividuo=' + encodeURIComponent(indi);
 
                             s += '<tr>';
                             s += '<td class="text-center">';

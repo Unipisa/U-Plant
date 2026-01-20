@@ -1,4 +1,4 @@
-﻿@model IEnumerable<UPlant.Models.DB.Alberi>
+﻿@model IEnumerable<UPlant.Models.DB.InterventiAlberi>
 @inject LanguageService language
 @{
     ViewData["Title"] = "Index";
@@ -27,47 +27,48 @@
     <div class="card-body">
         <div class="table-responsive">
             <table id="table1" class="table table-bordered table-striped dataTable">
-    <thead>
-        <tr>
+                <thead>
+                    <tr>
                         <th>
-                           priorità
+                            priorità
                         </th>
-            <th>
-                           Motivo
-            </th>
-                       
-          
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
+                        <th>
+                            Motivo
+                        </th>
+
+
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
                             <td>
                                 @Html.DisplayFor(modelItem => item.prioritaNavigation.descrizione)
                             </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.motivo)
-            </td>
-                            
-          
-            <td>
-                @if (User.IsInRole("Administrator"))
-                {
+                            <td>
+                                @Html.DisplayFor(modelItem => item.motivo)
+                            </td>
 
-                    <a asp-action="Edit" asp-route-id="@item.id">
+
+                            <td>
+                                @if (User.IsInRole("Administrator"))
+                                {
+
+                                    <a asp-action="Edit" asp-route-id="@item.id">
                                         <span class="btn btn-warning btn-xs" title="@language.Getkey("Global_Edit")">
                                             <i class="fa-solid fa-pencil" style="color: #fafafa;"></i>
-                        </span>
+                                        </span>
                                     </a>
-                                   
 
-                }
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
         </div>
     </div>
 
@@ -103,4 +104,4 @@
             })
         })
     </script>
-}          
+}

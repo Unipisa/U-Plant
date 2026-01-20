@@ -21,7 +21,7 @@ namespace UPlant.Controllers
         // GET: TipoPrioritaAlberi
         public async Task<IActionResult> Index()
         {
-            var entities = _context.TipoPrioritaAlberi.Include(s => s.organizzazioneNavigation).Include(a => a.Alberi).OrderBy(x => x.descrizione);
+            var entities = _context.TipoPrioritaAlberi.Include(s => s.organizzazioneNavigation).Include(a => a.InterventiAlberi).OrderBy(x => x.descrizione);
             return View(await entities.ToListAsync());
            
         }

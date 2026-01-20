@@ -69,7 +69,7 @@
                                             <i class="fa-solid fa-pencil" style="color: #fafafa;"></i>
                                         </span>
                                     </a>
-                                    if (@item.Alberi.Count() == 0)
+                                    if (@item.InterventiAlberi.Count() == 0)
                                     {
                                         <a asp-action="Delete" asp-route-id="@item.id">
                                             <span class="btn btn-danger btn-xs" title="@language.Getkey("Global_Delete") ">

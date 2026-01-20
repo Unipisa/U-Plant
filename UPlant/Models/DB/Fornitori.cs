@@ -19,7 +19,7 @@ public partial class Fornitori
 
     public virtual ICollection<Accessioni> Accessioni { get; set; } = new List<Accessioni>();
 
-    public virtual ICollection<Alberi> Alberi { get; set; } = new List<Alberi>();
+    public virtual ICollection<InterventiAlberi> InterventiAlberi { get; set; } = new List<InterventiAlberi>();
 
     public virtual Organizzazioni organizzazioneNavigation { get; set; }
 }

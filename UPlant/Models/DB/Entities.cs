@@ -13,8 +13,6 @@ public partial class Entities : DbContext
 
     public virtual DbSet<Accessioni> Accessioni { get; set; }
 
-    public virtual DbSet<Alberi> Alberi { get; set; }
-
     public virtual DbSet<Areali> Areali { get; set; }
 
     public virtual DbSet<Cartellini> Cartellini { get; set; }
@@ -50,6 +48,8 @@ public partial class Entities : DbContext
     public virtual DbSet<Individui> Individui { get; set; }
 
     public virtual DbSet<IndividuiPercorso> IndividuiPercorso { get; set; }
+
+    public virtual DbSet<InterventiAlberi> InterventiAlberi { get; set; }
 
     public virtual DbSet<Iucn> Iucn { get; set; }
 
@@ -211,47 +211,6 @@ public partial class Entities : DbContext
                 .HasForeignKey(d => d.utenteUltimaModifica)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Accessioni_UtentiModifica");
-        });
-
-        modelBuilder.Entity<Alberi>(entity =>
-        {
-            entity.Property(e => e.id).HasDefaultValueSql("(newid())");
-            entity.Property(e => e.dataapertura).HasColumnType("datetime");
-            entity.Property(e => e.dataultimamodifica).HasColumnType("datetime");
-            entity.Property(e => e.esitointervento).IsUnicode(false);
-            entity.Property(e => e.motivo)
-                .IsRequired()
-                .IsUnicode(false);
-
-            entity.HasOne(d => d.fornitoreNavigation).WithMany(p => p.Alberi)
-                .HasForeignKey(d => d.fornitore)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Alberi_Fornitori");
-
-            entity.HasOne(d => d.individuoNavigation).WithMany(p => p.Alberi)
-                .HasForeignKey(d => d.individuo)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Alberi_Individui");
-
-            entity.HasOne(d => d.interventoNavigation).WithMany(p => p.Alberi)
-                .HasForeignKey(d => d.intervento)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Alberi_TipoInterventiAlberi");
-
-            entity.HasOne(d => d.prioritaNavigation).WithMany(p => p.Alberi)
-                .HasForeignKey(d => d.priorita)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Alberi_TipoPrioritaAlberi");
-
-            entity.HasOne(d => d.utenteaperturaNavigation).WithMany(p => p.AlberiutenteaperturaNavigation)
-                .HasForeignKey(d => d.utenteapertura)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Alberi_UsersApertura");
-
-            entity.HasOne(d => d.utenteultimamodificaNavigation).WithMany(p => p.AlberiutenteultimamodificaNavigation)
-                .HasForeignKey(d => d.utenteultimamodifica)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Alberi_UsersUltima");
         });
 
         modelBuilder.Entity<Areali>(entity =>
@@ -526,6 +485,59 @@ public partial class Entities : DbContext
                 .HasForeignKey(d => d.percorso)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_IndividuiPercorso_Percorsi");
+        });
+
+        modelBuilder.Entity<InterventiAlberi>(entity =>
+        {
+            entity.HasKey(e => e.id).HasName("PK_Alberi");
+
+            entity.Property(e => e.id).HasDefaultValueSql("(newid())");
+            entity.Property(e => e.dataapertura).HasColumnType("datetime");
+            entity.Property(e => e.dataultimamodifica).HasColumnType("datetime");
+            entity.Property(e => e.esitointervento).IsUnicode(false);
+            entity.Property(e => e.motivo)
+                .IsRequired()
+                .IsUnicode(false);
+
+            entity.HasOne(d => d.condizioneNavigation).WithMany(p => p.InterventiAlberi)
+                .HasForeignKey(d => d.condizione)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_InterventiAlberi_Condizioni");
+
+            entity.HasOne(d => d.fornitoreNavigation).WithMany(p => p.InterventiAlberi)
+                .HasForeignKey(d => d.fornitore)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Alberi_Fornitori");
+
+            entity.HasOne(d => d.individuoNavigation).WithMany(p => p.InterventiAlberi)
+                .HasForeignKey(d => d.individuo)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Alberi_Individui");
+
+            entity.HasOne(d => d.interventoNavigation).WithMany(p => p.InterventiAlberi)
+                .HasForeignKey(d => d.intervento)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Alberi_TipoInterventiAlberi");
+
+            entity.HasOne(d => d.prioritaNavigation).WithMany(p => p.InterventiAlberi)
+                .HasForeignKey(d => d.priorita)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Alberi_TipoPrioritaAlberi");
+
+            entity.HasOne(d => d.statoIndividuoNavigation).WithMany(p => p.InterventiAlberi)
+                .HasForeignKey(d => d.statoIndividuo)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_InterventiAlberi_StatoIndividuo");
+
+            entity.HasOne(d => d.utenteaperturaNavigation).WithMany(p => p.InterventiAlberiutenteaperturaNavigation)
+                .HasForeignKey(d => d.utenteapertura)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Alberi_UsersApertura");
+
+            entity.HasOne(d => d.utenteultimamodificaNavigation).WithMany(p => p.InterventiAlberiutenteultimamodificaNavigation)
+                .HasForeignKey(d => d.utenteultimamodifica)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Alberi_UsersUltima");
         });
 
         modelBuilder.Entity<Iucn>(entity =>
