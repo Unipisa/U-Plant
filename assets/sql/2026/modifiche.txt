@@ -1,0 +1,6 @@
+Per le modifiche relative al implementazione della gestione degli alberi sono state create 3 nuovo tabelle
+InterventiAlberi
+TipoInterventiAlberi
+TipoPrioritaAlberi
+
+Invece per le modifiche in collaborazione con il Muse si è deciso aggiungere il campo note alla tabella specie andando ad modificare il campo non più utilizzato di nome_volgare, abbiamo aggiunto la tabella tipoCartellino e abbiamo agganciato il campo id della tabella nuovo campo creato nella tabella individui tipocartellino

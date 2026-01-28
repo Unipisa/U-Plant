@@ -1,6 +1,8 @@
+/****** Object:  Table [dbo].[TipoPrioritaAlberi]    Script Date: 28/01/2026 13:11:55 ******/
+SET ANSI_NULLS ON
+GO
 SET QUOTED_IDENTIFIER ON
 GO
-
 CREATE TABLE [dbo].[TipoPrioritaAlberi](
 	[id] [uniqueidentifier] NOT NULL,
 	[descrizione] [varchar](max) NOT NULL,
@@ -14,13 +16,11 @@ CREATE TABLE [dbo].[TipoPrioritaAlberi](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-
 ALTER TABLE [dbo].[TipoPrioritaAlberi] ADD  CONSTRAINT [DF_PrioritaAlberi_id]  DEFAULT (newid()) FOR [id]
 GO
-
 ALTER TABLE [dbo].[TipoPrioritaAlberi]  WITH CHECK ADD  CONSTRAINT [FK_TipoPrioritaAlberi_Organizzazioni] FOREIGN KEY([organizzazione])
 REFERENCES [dbo].[Organizzazioni] ([id])
 GO
-
 ALTER TABLE [dbo].[TipoPrioritaAlberi] CHECK CONSTRAINT [FK_TipoPrioritaAlberi_Organizzazioni]
 GO
+
