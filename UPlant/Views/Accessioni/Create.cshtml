@@ -379,9 +379,9 @@
                     </tr>
                     <tr>
                         <th>
-                            @language.Getkey("Global_Vulgar_Name")
-                            @Html.EditorFor(model => model.specieNavigation.nome_volgare, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.specieNavigation.nome_volgare, "", new { @class = "text-danger" })
+                            @language.Getkey("Global_Notes")
+                            @Html.EditorFor(model => model.specieNavigation.note, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.specieNavigation.note, "", new { @class = "text-danger" })
                         </th>
                     </tr>
                     <tr>

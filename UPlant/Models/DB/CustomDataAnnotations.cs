@@ -20,6 +20,7 @@ namespace UPlant.Models.DB
         public string shortprog { get; set; }
         public string ipen { get; set; }
         public string vecchioprogressivo { get; set; }
+        public string destinazioni { get; set; } 
         public string nome_scientifico { get; set; }
         public Guid? idsettore { get; set; }
         public string settore { get; set; }
@@ -45,6 +46,7 @@ namespace UPlant.Models.DB
         public Guid id { get; set; }
         public string progressivo { get; set; }
         public string vecchioprogressivo { get; set; }
+        public string destinazioni { get; set; } = null;
         public string nome_scientifico { get; set; }
         public string famiglia { get; set; }
         public string genere { get; set; }

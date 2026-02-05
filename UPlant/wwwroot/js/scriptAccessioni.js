@@ -232,7 +232,7 @@ $('#addlink').click(function () {
         //riazzera valori form
         $('#specieNavigation_nome').val("");
         $('#specieNavigation_autori').val("");
-        $('#specieNavigation_nome_volgare').val("");
+        $('#specieNavigation_note').val("");
         $('#specieNavigation_nome_comune').val("");
         $('#specieNavigation_nome_comune_en').val("");
         $('#specieNavigation_subspecie').val("");
@@ -262,7 +262,6 @@ $('#addlink2').click(function () {
         //riazzera valori form
         $('#specieNavigation_nome').val("");
         $('#specieNavigation_autori').val("");
-        $('#specieNavigation_nome_volgare').val("");
         $('#specieNavigation_nome_comune').val("");
         $('#specieNavigation_nome_comune_en').val("");
         $('#specieNavigation_subspecie').val("");
@@ -271,6 +270,7 @@ $('#addlink2').click(function () {
         $('#specieNavigation_autorivar').val("");
         $('#specieNavigation_cult').val("");
         $('#specieNavigation_autoricult').val("");
+        $('#specieNavigation_note').val("");
         $('#regno').val("343b8a46-5dfa-4127-9ab4-29eb0d1d1ad5");
         $('#areale').val("473a0041-c4ee-406f-892e-1728997f45fa");
         $('#specieNavigation_genereNavigation_descrizione').val("");
@@ -346,8 +346,7 @@ $('#insSpecie').click(function () {
             data: {
                 'genere': $('#genere :selected').val(),
                 'nome': $('#specieNavigation_nome').val().trim(),
-                'nome_scientifico': $('#genere :selected').text() + " " + $('#specieNavigation_nome').val().trim() + " " + $('#specieNavigation_autori').val().trim() + val4 + val6 + val8,//devo metterci la descrizione e non id devo correggere
-                'nome_volgare': $('#specieNavigation_nome_volgare').val(),
+                'nome_scientifico': $('#genere :selected').text() + " " + $('#specieNavigation_nome').val().trim() + " " + $('#specieNavigation_autori').val().trim() + val4 + val6 + val8,//devo metterci la descrizione e non id devo correggere     
                 'nome_comune': nomecomune,
                 'nome_comune_en': nomecomuneen,
                 'autori': $('#specieNavigation_autori').val().trim(),
@@ -357,6 +356,7 @@ $('#insSpecie').click(function () {
                 'autorivar': $('#specieNavigation_autorivar').val().trim(),
                 'cult': $('#specieNavigation_cult').val().trim(),
                 'autoricult': $('#specieNavigation_autoricult').val().trim(),
+                'note': $('#specieNavigation_note').val(),
                 'regno': $('#regno').val(),
                 'areale': $('#areale').val()
 
@@ -382,8 +382,7 @@ $('#insSpecie').click(function () {
                     $('#addSpecie').hide();
                     //riazzera valori form
                     $('#specieNavigation_nome').val("");
-                    $('#specieNavigation_autori').val("");
-                    $('#specieNavigation_nome_volgare').val("");
+                    $('#specieNavigation_autori').val("");                    
                     $('#specieNavigation_nome_comune').val("");
                     $('#specieNavigation_nome_comune_en').val("");
                     $('#specieNavigation_subspecie').val("");
@@ -392,6 +391,7 @@ $('#insSpecie').click(function () {
                     $('#specieNavigation_autorivar').val("");
                     $('#specieNavigation_cult').val("");
                     $('#specieNavigation_autoricult').val("");
+                    $('#specieNavigation_note').val("");
                     $('#regno').val("343b8a46-5dfa-4127-9ab4-29eb0d1d1ad5");
                     $('#areale').val("473a0041-c4ee-406f-892e-1728997f45fa");
                     $('#specieNavigation_genereNavigation_descrizione').val("");

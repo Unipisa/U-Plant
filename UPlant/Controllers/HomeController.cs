@@ -215,16 +215,13 @@ namespace UPlant.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult RicercaIndividui(string famiglia, string specie, string progacc, Guid? settore, Guid? collezione, DateTime datapropagazioneinizio, DateTime datapropagazionefine, Guid? statoindividuo, Guid? condizione, Guid? cartellino)
+        public ActionResult RicercaIndividui(string famiglia, string specie, string progacc, string destinations, Guid? settore, Guid? collezione, DateTime datapropagazioneinizio, DateTime datapropagazionefine, Guid? statoindividuo, Guid? condizione, Guid? cartellino)
         {
 
             var linguacorrente = _languageService.GetCurrentCulture();
             IEnumerable<Ricercaind> listaind = (from m in _context.Ricercaind select m);
 
-            if (!String.IsNullOrEmpty(famiglia))
-            {
-                listaind = listaind.Where(a => a.idfamiglia == new Guid(famiglia));
-            }
+          
             if (!String.IsNullOrEmpty(specie))
             {
                 listaind = listaind.Where(a => a.nome_scientifico.ToLower().Contains(specie.ToLower()));
@@ -234,6 +231,17 @@ namespace UPlant.Controllers
             {
                 listaind = listaind.Where(a => a.progressivoacc.Contains(progacc));
 
+            }
+            if (!string.IsNullOrWhiteSpace(destinations))
+            {
+                var dest = destinations.Trim().ToLower();
+
+                listaind = listaind.Where(a =>
+                    (a.destinazioni ?? "").ToLower().Contains(dest));
+            }
+            if (!String.IsNullOrEmpty(famiglia))
+            {
+                listaind = listaind.Where(a => a.idfamiglia == new Guid(famiglia));
             }
             if (settore != null)
             {
@@ -301,6 +309,7 @@ namespace UPlant.Controllers
             ViewBag.famiglia = famiglia;
             ViewBag.specie = specie;
             ViewBag.progacc = progacc;
+            ViewBag.destinations = destinations;
             ViewBag.datapropagazioneinizio = datapropagazioneinizio;
             ViewBag.datapropagazionefine = datapropagazionefine;
             ViewBag.settore = settore;
@@ -339,6 +348,7 @@ namespace UPlant.Controllers
                 shortprog = r.progressivo.Substring(10, 4),
                 ipen = r.ipen,
                 vecchioprogressivo = r.vecchioprogressivo,
+                destinazioni = r.destinazioni,
                 nome_scientifico = r.nome_scientifico,
                 settore = r.settore,
                 settore_en = r.settore_en,

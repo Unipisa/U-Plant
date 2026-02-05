@@ -59,6 +59,11 @@
                 <span asp-validation-for="autoricult" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="note" class="control-label">@language.Getkey("Global_Notes")</label>
+                <textarea asp-for="note" class="form-control"></textarea>
+                <span asp-validation-for="note" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <label asp-for="nome_comune" class="control-label">@language.Getkey("Global_Common_Name")</label>
                 <input asp-for="nome_comune" class="form-control" />
                 <span asp-validation-for="nome_comune" class="text-danger"></span>

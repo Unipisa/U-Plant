@@ -93,6 +93,8 @@ public partial class Entities : DbContext
 
     public virtual DbSet<TipoAcquisizione> TipoAcquisizione { get; set; }
 
+    public virtual DbSet<TipoCartellino> TipoCartellino { get; set; }
+
     public virtual DbSet<TipoIdentificatore> TipoIdentificatore { get; set; }
 
     public virtual DbSet<TipoInterventiAlberi> TipoInterventiAlberi { get; set; }
@@ -429,7 +431,9 @@ public partial class Entities : DbContext
         modelBuilder.Entity<Individui>(entity =>
         {
             entity.Property(e => e.id).HasDefaultValueSql("(newid())");
-            entity.Property(e => e.destinazioni).HasColumnType("text");
+            entity.Property(e => e.destinazioni)
+                .HasMaxLength(1000)
+                .IsUnicode(false);
             entity.Property(e => e.latitudine).IsUnicode(false);
             entity.Property(e => e.longitudine).IsUnicode(false);
             entity.Property(e => e.note).HasColumnType("text");
@@ -470,6 +474,11 @@ public partial class Entities : DbContext
                 .HasForeignKey(d => d.settore)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Individui_Settori");
+
+            entity.HasOne(d => d.tipocartellinoNavigation).WithMany(p => p.Individui)
+                .HasForeignKey(d => d.tipocartellino)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Individui_TipoCartellino");
         });
 
         modelBuilder.Entity<IndividuiPercorso>(entity =>
@@ -760,6 +769,9 @@ public partial class Entities : DbContext
                 .IsUnicode(false);
             entity.Property(e => e.datainserimento).HasColumnType("datetime");
             entity.Property(e => e.datapropagazione).HasColumnType("datetime");
+            entity.Property(e => e.destinazioni)
+                .HasMaxLength(1000)
+                .IsUnicode(false);
             entity.Property(e => e.famiglia)
                 .HasMaxLength(100)
                 .IsUnicode(false);
@@ -882,8 +894,8 @@ public partial class Entities : DbContext
             entity.Property(e => e.nome_scientifico)
                 .HasMaxLength(200)
                 .IsUnicode(false);
-            entity.Property(e => e.nome_volgare)
-                .HasMaxLength(100)
+            entity.Property(e => e.note)
+                .HasMaxLength(1000)
                 .IsUnicode(false);
             entity.Property(e => e.subspecie)
                 .HasMaxLength(100)
@@ -1002,6 +1014,18 @@ public partial class Entities : DbContext
                 .HasForeignKey(d => d.organizzazione)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_TipoAcquisizione_Organizzazione");
+        });
+
+        modelBuilder.Entity<TipoCartellino>(entity =>
+        {
+            entity.Property(e => e.id).HasDefaultValueSql("(newid())");
+            entity.Property(e => e.descrizione)
+                .IsRequired()
+                .HasMaxLength(500)
+                .IsUnicode(false);
+            entity.Property(e => e.descrizione_en)
+                .HasMaxLength(500)
+                .IsUnicode(false);
         });
 
         modelBuilder.Entity<TipoIdentificatore>(entity =>

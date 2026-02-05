@@ -66,7 +66,7 @@ namespace UPlant.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("id,genere,nome,nome_scientifico,nome_volgare,autori,regno,areale,subspecie,autorisub,varieta,autorivar,cult,autoricult,nome_comune,nome_comune_en,iucn_globale,iucn_italia,cites")] Specie specie)
+        public async Task<IActionResult> Create([Bind("id,genere,nome,nome_scientifico,autori,regno,areale,subspecie,autorisub,varieta,autorivar,cult,autoricult,note,nome_comune,nome_comune_en,iucn_globale,iucn_italia,cites")] Specie specie)
         {
             if (ModelState.IsValid)
             {
@@ -111,7 +111,7 @@ namespace UPlant.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("id,genere,nome,nome_scientifico,nome_volgare,autori,regno,areale,subspecie,autorisub,varieta,autorivar,cult,autoricult,nome_comune,nome_comune_en,iucn_globale,iucn_italia,cites")] Specie specie)
+        public async Task<IActionResult> Edit(Guid id, [Bind("id,genere,nome,nome_scientifico,autori,regno,areale,subspecie,autorisub,varieta,autorivar,cult,autoricult,note,nome_comune,nome_comune_en,iucn_globale,iucn_italia,cites")] Specie specie)
         {
             if (id != specie.id)
             {

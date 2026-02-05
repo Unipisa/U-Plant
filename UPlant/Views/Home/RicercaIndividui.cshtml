@@ -23,28 +23,32 @@
     <div class="box-body">
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="form-row">
-            <div class="form-group col-md-4 autocomplete " >
+            <div class="form-group col-md-4 autocomplete">
                 <label for="inputNomeScientifico">@language.Getkey("Global_Scientific_Name")</label>
                 <input type="text" class="form-control" id="specie" name="specie" placeholder="@language.Getkey("Global_Scientific_Name")" value="@ViewBag.specie">
             </div>
-            <div class="form-group col-md-4">
-                <label for="inputFamiglia">@language.Getkey("Global_Family")</label>
-                @Html.DropDownList("famiglia", (IEnumerable<SelectListItem>)ViewBag.listafamiglie, @language.Getkey("Global_All"), htmlAttributes: new { @Id = "famiglia", @class = "form-control" })
-            </div>
+        
             <div class="form-group col-md-4 autocomplete">
                 <label for="inputProgressivoAccessioni">@language.Getkey("Global_Accession_Progressive")</label>
                 <input type="text" id="progacc" name="progacc" class="form-control" value="@ViewBag.progacc" placeholder="@language.Getkey("Global_Accession_Progressive")">
             </div>
-
+            <div class="form-group col-md-4 autocomplete">
+                <label for="inputDestinazioni">@language.Getkey("Global_Destinations")</label>
+                <input type="text" id="destinations" name="destinations" class="form-control" value="@ViewBag.destinations" placeholder="@language.Getkey("Global_Destinations")">
+            </div>
 
 
         </div>
         <div class="form-row">
-            <div class="form-group col-md-4">
+            <div class="form-group col-md-3">
+                <label for="inputFamiglia">@language.Getkey("Global_Family")</label>
+                @Html.DropDownList("famiglia", (IEnumerable<SelectListItem>)ViewBag.listafamiglie, @language.Getkey("Global_All"), htmlAttributes: new { @Id = "famiglia", @class = "form-control" })
+            </div>
+            <div class="form-group col-md-3">
                 <label for="inputSettore">@language.Getkey("Global_Sector")</label>
                 @Html.DropDownList("settore", (IEnumerable<SelectListItem>)ViewBag.listasettori, @language.Getkey("Global_All"), htmlAttributes: new { @Id = "settore", @class = "form-control" })
             </div>
-            <div class="form-group col-md-4">
+            <div class="form-group col-md-3">
                 <label for="inputCollezione">@language.Getkey("Global_Collection")</label>
                 @Html.DropDownList("collezione", (IEnumerable<SelectListItem>)ViewBag.listacollezioni, @language.Getkey("Global_All"), htmlAttributes: new { @Id = "collezione", @class = "form-control" })
             </div>
@@ -132,6 +136,9 @@
                         @language.Getkey("Global_Label")
                     </th>
                     <th>
+                        @language.Getkey("Global_Destinations")
+                    </th>
+                    <th>
                         @language.Getkey("Global_Individual_Status")
                     </th>
                     <th>
@@ -202,6 +209,9 @@
                                     <td>
                                         @Html.DisplayFor(modelItem => item.cartellino_en)
                                     </td>
+                                     <td>
+                                        @Html.DisplayFor(modelItem => item.destinazioni)
+                                    </td>
                                     <td>
                                         @Html.DisplayFor(modelItem => item.stato_en)
                                     </td>
@@ -215,6 +225,9 @@
                                     </td>
                                     <td>
                                         @Html.DisplayFor(modelItem => item.cartellino)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.destinazioni)
                                     </td>
                                     <td>
                                         @Html.DisplayFor(modelItem => item.stato)
@@ -368,9 +381,9 @@
                       'autoWidth'   : false,
                       
                          "columnDefs": [
-                            { "orderData": [10], "targets": [9] },
+                            { "orderData": [11], "targets": [10] },
                             {
-                                'targets': [10],
+                                'targets': [11],
                                 'visible': false,
                                 'searchable': false
                             }
@@ -462,7 +475,17 @@
 
 
     </script>
+    <script>
+        var baseUrlCercadest = '@Url.Action("Cercadest", "Common")';
 
+            $("#destinations").autocomplete({
+                source: baseUrlCercadest,
+                    minLength: 3,
+                    position: { offset: '-30 0' }
+                });
+
+
+    </script>
 
     <script>
     var baseUrlSettori = '@Url.Action("GetSettori", "Common")';

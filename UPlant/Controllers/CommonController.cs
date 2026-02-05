@@ -1,17 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
+﻿using DocumentFormat.OpenXml.Wordprocessing;
+using DymoSDK.Implementations;
+using DymoSDK.Interfaces;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using UPlant.Models.DB;
-using DymoSDK.Implementations;
-using DymoSDK.Interfaces;
-using UPlant.Models;
+using System;
+using System.Collections.Generic;
 using System.Configuration;
-using Microsoft.AspNetCore.Localization;
+using System.Linq;
+using System.Net;
+using System.Threading.Tasks;
+using UPlant.Models;
+using UPlant.Models.DB;
 
 
 
@@ -134,8 +135,7 @@ namespace UPlant.Controllers
             {
                 codicespecie = x.id,
                 nomespecie = x.nome,
-                nomescientifico = x.nome_scientifico,
-                nomevolgare = x.nome_volgare
+                nomescientifico = x.nome_scientifico
             }).OrderBy(x => x.nomescientifico).ToList(), new System.Text.Json.JsonSerializerOptions());//, JsonRequestBehavior.AllowGet deprecato
 
         }
@@ -154,6 +154,18 @@ namespace UPlant.Controllers
             //   var prelist = db.Storico.Include(x => x.Individui)
             //     .Where(p => p.Individui.Accessioni.Specie1.nome_scientifico.ToLower().StartsWith(term.ToLower())).Select(g => g.Individui.Accessioni.Specie1.nome_scientifico);//commentata per sostituire con una ricerca votata alle accessioni senza figli
             var prelist = _context.Accessioni.Where(p => p.specieNavigation.nome_scientifico.ToLower().Contains(term.ToLower())).Select(g => g.specieNavigation.nome_scientifico);
+
+            var names = prelist.Distinct().ToList();
+
+            return Json(names, new System.Text.Json.JsonSerializerOptions());//, JsonRequestBehavior.AllowGet deprecato
+
+        }
+        public JsonResult Cercadest(string term)
+        {
+
+            var prelist = _context.Individui
+                .Where(p => p.destinazioni.Contains(term) && p.destinazioni != null).Select(g => g.destinazioni);
+
 
             var names = prelist.Distinct().ToList();
 

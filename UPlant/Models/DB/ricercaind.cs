@@ -17,6 +17,8 @@ public partial class Ricercaind
 
     public string vecchioprogressivo { get; set; }
 
+    public string destinazioni { get; set; } 
+
     public string nome_scientifico { get; set; }
 
     public Guid? idsettore { get; set; }

@@ -39,6 +39,8 @@ public partial class Individui
 
     public string vecchioprogressivo { get; set; }
 
+    public Guid tipocartellino { get; set; }
+
     public virtual ICollection<ImmaginiIndividuo> ImmaginiIndividuo { get; set; } = new List<ImmaginiIndividuo>();
 
     public virtual ICollection<IndividuiPercorso> IndividuiPercorso { get; set; } = new List<IndividuiPercorso>();
@@ -58,4 +60,6 @@ public partial class Individui
     public virtual Sesso sessoNavigation { get; set; }
 
     public virtual Settori settoreNavigation { get; set; }
+
+    public virtual TipoCartellino tipocartellinoNavigation { get; set; }
 }
