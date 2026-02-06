@@ -52,18 +52,33 @@
                 <label for="inputCollezione">@language.Getkey("Global_Collection")</label>
                 @Html.DropDownList("collezione", (IEnumerable<SelectListItem>)ViewBag.listacollezioni, @language.Getkey("Global_All"), htmlAttributes: new { @Id = "collezione", @class = "form-control" })
             </div>
-            <div class="form-group col-sm-1">
-                <label for="inputPropagazioneda">@language.Getkey("Global_Propagation_Data") @language.Getkey("Global_From")</label>
-                <input id="datapropagazioneinizio" name="datapropagazioneinizio" value="@ViewBag.datapropagazioneinizio.ToString("yyyy-MM-dd")" type="date" size="40" maxlength="50" />
-            </div>
-            <div class="form-group col-sm-1">
-            </div>
-            <div class="form-group col-sm-1">
-                <label for="inputPropagazionea">@language.Getkey("Global_To")</label>
-                <br />
-                <input id="datapropagazionefine" name="datapropagazionefine" value="@ViewBag.datapropagazionefine.ToString("yyyy-MM-dd")" type="date" size="40" maxlength="50" />
-            </div>
+            <div class="form-group col-md-3">
+    <label>@language.Getkey("Global_Propagation_Data")</label>
 
+    <div class="d-flex">
+        <div class="input-group mr-2">
+            <div class="input-group-prepend">
+                <span class="input-group-text">@language.Getkey("Global_From")</span>
+            </div>
+            <input id="datapropagazioneinizio"
+                   name="datapropagazioneinizio"
+                   class="form-control"
+                   type="date"
+                   value="@ViewBag.datapropagazioneinizio.ToString("yyyy-MM-dd")" />
+        </div>
+
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">@language.Getkey("Global_To")</span>
+            </div>
+            <input id="datapropagazionefine"
+                   name="datapropagazionefine"
+                   class="form-control"
+                   type="date"
+                   value="@ViewBag.datapropagazionefine.ToString("yyyy-MM-dd")" />
+        </div>
+    </div>
+</div>
         </div>
         <div class="form-row">
             <div class="form-group col-md-4">
