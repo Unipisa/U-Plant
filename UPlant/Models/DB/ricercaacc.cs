@@ -11,6 +11,8 @@ public partial class Ricercaacc
 
     public string vecchioprogressivo { get; set; }
 
+    public string ipen { get; set; }
+
     public string nome_scientifico { get; set; }
 
     public Guid? idfamiglia { get; set; }

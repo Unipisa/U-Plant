@@ -407,12 +407,12 @@ namespace UPlant.Controllers
             ViewBag.fornitore = "";
             ViewBag.gradoincertezza = "";
             ViewBag.raccoglitore = "";
-
+            ViewBag.ipen = "";
             return View();
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult RicercaAccessioni(string famiglia, string specie, string progressivo, string vecchioprogressivo, DateTime datainserimentoinizio, DateTime datainserimentofine, Guid tipomateriale, Guid tipoacquisizione, Guid fornitore, Guid gradoincertezza, Guid raccoglitore)
+        public ActionResult RicercaAccessioni(string famiglia, string specie, string progressivo, string vecchioprogressivo,string ipen, DateTime datainserimentoinizio, DateTime datainserimentofine, Guid tipomateriale, Guid tipoacquisizione, Guid fornitore, Guid gradoincertezza, Guid raccoglitore)
         {
             var linguacorrente = _languageService.GetCurrentCulture();
             IEnumerable<Ricercaacc> listaacces = (from m in _context.Ricercaacc select m).AsQueryable();
@@ -434,7 +434,10 @@ namespace UPlant.Controllers
             {
                 listaacces = listaacces.Where(a => (a.vecchioprogressivo ?? "").Contains(vecchioprogressivo));
             }
-
+            if (!String.IsNullOrEmpty(ipen))
+            {
+                listaacces = listaacces.Where(a => (a.ipen ?? "").StartsWith(ipen));
+            }
             // ============================
             // 📅 NORMALIZZAZIONE DELLE DATE
             // ============================
@@ -805,7 +808,8 @@ namespace UPlant.Controllers
             var IUCNGlobale = "";
             var IUCNItalia = "";
             var CITES = "";
-            sb.AppendFormat("{0};{1};{2};{3};{4};{5};{6};{7};{8};{9};", ada("Famiglia"), ada("Genere"), ada("Nome Scientifico"), ada("Nome Comune"), ada("Nome Comune Inglese"), ada("Regno"), ada("Areale"), ada("IUCN Globale"), ada("IUCN Italia"), ada("CITES"));
+            var Notespecie = "";
+            sb.AppendFormat("{0};{1};{2};{3};{4};{5};{6};{7};{8};{9};{10};", ada("Famiglia"), ada("Genere"), ada("Nome Scientifico"), ada("Nome Comune"), ada("Nome Comune Inglese"), ada("Regno"), ada("Areale"), ada("IUCN Globale"), ada("IUCN Italia"), ada("CITES"), ada("Note"));
             sb.AppendFormat(Environment.NewLine);
             foreach (var item in listaspecie)
             {
@@ -816,16 +820,16 @@ namespace UPlant.Controllers
                
                 if (item.cites == Guid.Empty ) { CITES = "Campo Null o Vuoto Verificare"; } else { CITES = item.citesNavigation.codice; }
 
-                if (String.IsNullOrEmpty(item.genereNavigation.famigliaNavigation.descrizione)) { Famiglia = "Campo Null o Vuoto Verificare"; } else { CITES = item.genereNavigation.famigliaNavigation.descrizione; }
+                if (String.IsNullOrEmpty(item.genereNavigation.famigliaNavigation.descrizione)) { Famiglia = "Campo Null o Vuoto Verificare"; } else { Famiglia = item.genereNavigation.famigliaNavigation.descrizione; }
                 if (String.IsNullOrEmpty(item.genereNavigation.descrizione)) { Genere = "Campo Null o Vuoto Verificare"; } else { Genere = item.genereNavigation.descrizione; }
                 if (String.IsNullOrEmpty(item.nome_scientifico)) { NomeScientifico = "Campo Null o Vuoto Verificare"; } else { NomeScientifico = item.nome_scientifico; }
                 if (String.IsNullOrEmpty(item.nome_comune)) { NomeComune = "Campo Null o Vuoto Verificare"; } else { NomeComune = item.nome_comune; }
                 if (String.IsNullOrEmpty(item.nome_comune_en)) { NomeComuneEN = "Campo Null o Vuoto Verificare"; } else { NomeComuneEN = item.nome_comune_en; }
                 if (String.IsNullOrEmpty(item.regnoNavigation.descrizione)) { Regno = "Campo Null o Vuoto Verificare"; } else { Regno = item.regnoNavigation.descrizione; }
                 if (String.IsNullOrEmpty(item.arealeNavigation.descrizione)) { Areale = "Campo Null o Vuoto Verificare"; } else { Areale = item.arealeNavigation.descrizione; }
+                if (String.IsNullOrEmpty(item.note)) { Notespecie = "Campo Null o Vuoto Verificare"; } else { Notespecie = item.note; }
 
-
-                sb.AppendFormat("{0};{1};{2};{3};{4};{5};{6};{7};{8};{9};", ada(Famiglia), ada(Genere), ada(NomeScientifico), ada(NomeComune), ada(NomeComuneEN), ada(Regno), ada(Areale), ada(IUCNGlobale), ada(IUCNItalia), ada(CITES));
+                sb.AppendFormat("{0};{1};{2};{3};{4};{5};{6};{7};{8};{9};{10};", ada(Famiglia), ada(Genere), ada(NomeScientifico), ada(NomeComune), ada(NomeComuneEN), ada(Regno), ada(Areale), ada(IUCNGlobale), ada(IUCNItalia), ada(CITES),ada(Notespecie));
                 sb.AppendFormat(Environment.NewLine);
 
             }
@@ -900,7 +904,42 @@ namespace UPlant.Controllers
 
           
         }
-        public String ada(String pulita)
+
+        public static string ada(string? value, char delimiter = ';', bool preventExcelInjection = true)
+        {
+            if (string.IsNullOrEmpty(value))
+                return "\"\"";
+
+            // 1) Trim + rimozione caratteri di controllo "brutti"
+            var sb = new StringBuilder(value.Length);
+            foreach (var ch in value.Trim())
+            {
+                if (ch == '\0') continue; // NULL
+                                          // rimuove controlli tranne tab e newline (li gestiamo dopo)
+                if (char.IsControl(ch) && ch != '\r' && ch != '\n' && ch != '\t') continue;
+                sb.Append(ch);
+            }
+
+            var s = sb.ToString();
+
+            // 2) Normalizza newline per non spezzare il CSV
+            s = s.Replace("\r\n", "\n").Replace("\r", "\n").Replace("\n", " ");
+
+            // 3) Protezione Excel injection
+            if (preventExcelInjection && s.Length > 0)
+            {
+                var first = s[0];
+                if (first == '=' || first == '+' || first == '-' || first == '@')
+                    s = "'" + s;
+            }
+
+            // 4) Escape dei doppi apici
+            s = s.Replace("\"", "\"\"");
+
+            // 5) Quota sempre (coerente col tuo stile attuale)
+            return $"\"{s}\"";
+        }
+        public String adaold(String pulita)
         {
             if (String.IsNullOrEmpty(pulita))
             {

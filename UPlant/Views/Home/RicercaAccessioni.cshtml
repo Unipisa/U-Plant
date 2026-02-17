@@ -20,100 +20,130 @@
     <div class="box-body">
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-        <div class="form-row">
-            <div class="form-group col-md-4 autocomplete ">
-                <label for="inputNomeScientifico">@language.Getkey("Global_Scientific_Name")</label>
+        <!-- 1) Prima riga: Nome Scientifico + Famiglia -->
+        <div class="row">
+            <div class="form-group col-md-4 autocomplete">
+                <label for="specie">@language.Getkey("Global_Scientific_Name")</label>
                 <input type="text" class="form-control" id="specie" name="specie"
                        placeholder="@language.Getkey("Global_Scientific_Name")"
                        value="@ViewBag.specie" />
             </div>
+
             <div class="form-group col-md-4">
-                <label for="inputFamiglia">@language.Getkey("Global_Family")</label>
+                <label for="famiglia">@language.Getkey("Global_Family")</label>
                 @Html.DropDownList(
                 "famiglia",
                         (IEnumerable<SelectListItem>)ViewBag.listafamiglie,
                         @language.Getkey("Global_All"),
-                        htmlAttributes: new { Id = "famiglia", @class = "form-control" })
+                        htmlAttributes: new { Id = "famiglia", @class = "form-control" }
+                        )
         </div>
+    </div>
+
+    <!-- 2) Seconda riga: Progressivo + Vecchio Progressivo + IPEN -->
+    <div class="row">
         <div class="form-group col-md-4 autocomplete">
-            <label for="inputProgressivo">@language.Getkey("Global_Progressive")</label>
+            <label for="progressivo">@language.Getkey("Global_Progressive")</label>
             <input type="text" class="form-control" id="progressivo" name="progressivo"
                    placeholder="@language.Getkey("Global_Progressive")"
                    value="@ViewBag.progressivo" />
         </div>
-    </div>
 
-    <div class="form-row">
-        <div class="form-group col-md-4">
-            <label for="inputVecchioprogressivo">@language.Getkey("Global_Old_Progressive")</label>
+        <div class="form-group col-md-4 autocomplete">
+            <label for="vecchioprogressivo">@language.Getkey("Global_Old_Progressive")</label>
             <input type="text" class="form-control" id="vecchioprogressivo" name="vecchioprogressivo"
                    placeholder="@language.Getkey("Global_Old_Progressive")"
                    value="@ViewBag.vecchioprogressivo" />
         </div>
-        <div class="form-group col-sm-2">
-            <label for="inputDataInizio">@language.Getkey("Home_Ricerca_Accessioni_2")</label>
-            <input type="date" class="form-control" id="datainserimentoinizio" name="datainserimentoinizio"
-                   placeholder="@language.Getkey("Home_Ricerca_Accessioni_2")"
-                   value="@ViewBag.datainserimentoinizio.ToString("yyyy-MM-dd")"
-                   size="40" maxlength="50" />
-        </div>
-        <span>&nbsp;</span>
-        <div class="form-group col-sm-2">
-            <label for="inputDatafine">@language.Getkey("Home_Ricerca_Accessioni_3")</label>
-            <input type="date" class="form-control" id="datainserimentofine" name="datainserimentofine"
-                   placeholder="Data Fine"
-                   value="@ViewBag.datainserimentofine.ToString("yyyy-MM-dd")"
-                   size="40" maxlength="50" />
+
+        <div class="form-group col-md-4 autocomplete">
+            <label for="ipen">IPEN</label>
+            <input type="text" class="form-control" id="ipen" name="ipen"
+                   placeholder="IPEN"
+                   value="@ViewBag.ipen" />
         </div>
     </div>
 
-    <div class="form-row">
+    <!-- 3) Terza riga: Tipo Materiale + Modalità Acquisizione + Data Da/A (grafica) -->
+    <div class="row">
         <div class="form-group col-md-4">
-            <label for="inputTipodiMateriale">@language.Getkey("Global_Material_Type")</label>
+            <label for="tipomateriale">@language.Getkey("Global_Material_Type")</label>
             @Html.DropDownList(
                         "tipomateriale",
                         (IEnumerable<SelectListItem>)ViewBag.listatipomateriale,
                         @language.Getkey("Global_All"),
-                        htmlAttributes: new { Id = "tipomateriale", @class = "form-control" })
+                        htmlAttributes: new { Id = "tipomateriale", @class = "form-control" }
+                        )
         </div>
 
         <div class="form-group col-md-4">
-            <label for="inputModalitadiacquisizione">@language.Getkey("Global_Acquisition_Mode")</label>
+            <label for="tipoacquisizione">@language.Getkey("Global_Acquisition_Mode")</label>
             @Html.DropDownList(
                         "tipoacquisizione",
                         (IEnumerable<SelectListItem>)ViewBag.listatipoacquisizione,
                         @language.Getkey("Global_All"),
-                        htmlAttributes: new { Id = "tipoacquisizione", @class = "form-control" })
+                        htmlAttributes: new { Id = "tipoacquisizione", @class = "form-control" }
+                        )
         </div>
 
         <div class="form-group col-md-4">
-            <label for="inputDonatoreFornitore">@language.Getkey("Global_Donor_Supplier")</label>
-            @Html.DropDownList(
-                        "fornitore",
-                        (IEnumerable<SelectListItem>)ViewBag.listafornitore,
-                        @language.Getkey("Global_All"),
-                        htmlAttributes: new { Id = "fornitore", @class = "form-control" })
+            <label>@language.Getkey("Global_Acquisition_Date")</label>
+
+            <div class="d-flex">
+                <div class="input-group mr-2">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">@language.Getkey("Global_From")</span>
+                    </div>
+                    <input type="date" class="form-control"
+                           id="datainserimentoinizio" name="datainserimentoinizio"
+                           value="@ViewBag.datainserimentoinizio.ToString("yyyy-MM-dd")" />
+                </div>
+
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">@language.Getkey("Global_To")</span>
+                    </div>
+                    <input type="date" class="form-control"
+                           id="datainserimentofine" name="datainserimentofine"
+                           value="@ViewBag.datainserimentofine.ToString("yyyy-MM-dd")" />
+                </div>
+            </div>
         </div>
     </div>
 
+    <!-- 4) Quarta riga: Incertezza tassonomica + Raccoglitore + Donatore -->
     <div class="row">
         <div class="form-group col-md-4">
-            <label for="inputGradodiIncertezza">@language.Getkey("Global_Taxonomic_Uncertainty")</label>
+            <label for="gradoincertezza">@language.Getkey("Global_Taxonomic_Uncertainty")</label>
             @Html.DropDownList(
                         "gradoincertezza",
                         (IEnumerable<SelectListItem>)ViewBag.listagradoincertezza,
                         @language.Getkey("Global_All"),
-                        htmlAttributes: new { Id = "gradoincertezza", @class = "form-control" })
+                        htmlAttributes: new { Id = "gradoincertezza", @class = "form-control" }
+                        )
         </div>
+
         <div class="form-group col-md-4">
-            <label for="inputRaccoglitore">@language.Getkey("Global_Collector")</label>
+            <label for="raccoglitore">@language.Getkey("Global_Collector")</label>
             @Html.DropDownList(
                         "raccoglitore",
                         (IEnumerable<SelectListItem>)ViewBag.listaraccoglitore,
                         @language.Getkey("Global_All"),
-                        htmlAttributes: new { Id = "raccoglitore", @class = "form-control" })
+                        htmlAttributes: new { Id = "raccoglitore", @class = "form-control" }
+                        )
+        </div>
+
+        <div class="form-group col-md-4">
+            <label for="fornitore">@language.Getkey("Global_Donor_Supplier")</label>
+            @Html.DropDownList(
+                        "fornitore",
+                        (IEnumerable<SelectListItem>)ViewBag.listafornitore,
+                        @language.Getkey("Global_All"),
+                        htmlAttributes: new { Id = "fornitore", @class = "form-control" }
+                        )
         </div>
     </div>
+
 
     <div class="row">
         <div class="form-group col-md-1">
@@ -213,7 +243,7 @@
                                             }
                                         }
 
-                                        @if (User.IsInRole("Operator") || User.IsInRole("TreeKeeper") ||
+                                        @if (User.IsInRole("Administrator")|| User.IsInRole("Operator") || User.IsInRole("TreeKeeper") ||
                                                                     User.IsInRole("Discover") || User.IsInRole("Seminum") ||
                                                                     User.IsInRole("Utility"))
                                         {
@@ -228,13 +258,7 @@
 
                                         @if (User.IsInRole("Administrator"))
                                         {
-                                            <a asp-action="Edit" asp-controller="Accessioni"
-                                               asp-route-id="@item.id">
-                                                <span class="btn btn-warning btn-xs"
-                                                      title="@language.Getkey("Global_Edit")  @language.Getkey("Global_Accession")">
-                                                    <i class="fa-solid fa-pencil" style="color: #fafafa;"></i>
-                                                </span>
-                                            </a>
+                                            
 
                                             if (Convert.ToInt32(item.countind) == 0)
                                             {
@@ -376,7 +400,7 @@
             $('#fornitore').val('').trigger('change');
             $('#gradoincertezza').val('').trigger('change');
             $('#raccoglitore').val('').trigger('change');
-
+            document.getElementById("ipen").value = "";
             document.getElementById("specie").value = "";
             document.getElementById("progressivo").value = "";
             document.getElementById("vecchioprogressivo").value = "";

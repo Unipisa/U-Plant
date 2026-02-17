@@ -133,13 +133,13 @@
                         @language.Getkey("Global_Collection")
                     </th>
                     <th>
-                        @language.Getkey("Global_Label")
-                    </th>
-                    <th>
                         @language.Getkey("Global_Destinations")
                     </th>
                     <th>
                         @language.Getkey("Global_Individual_Status")
+                    </th>
+                    <th>
+                        @language.Getkey("Global_Label")
                     </th>
                     <th>
                         @language.Getkey("Home_Ricerca_Individui_1")  
@@ -207,14 +207,15 @@
                                         @Html.DisplayFor(modelItem => item.collezione_en)
                                     </td>
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.cartellino_en)
-                                    </td>
-                                     <td>
                                         @Html.DisplayFor(modelItem => item.destinazioni)
                                     </td>
                                     <td>
                                         @Html.DisplayFor(modelItem => item.stato_en)
                                     </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.cartellino_en)
+                                    </td>
+                                   
                                 } else
                                 {
                                     <td>
@@ -224,14 +225,15 @@
                                         @Html.DisplayFor(modelItem => item.collezione)
                                     </td>
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.cartellino)
-                                    </td>
-                                    <td>
                                         @Html.DisplayFor(modelItem => item.destinazioni)
                                     </td>
                                     <td>
                                         @Html.DisplayFor(modelItem => item.stato)
                                     </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.cartellino)
+                                    </td>
+                                   
                                 }
                                 <td>
                                                                 @Html.DisplayFor(modelItem => item.nomecognome)
@@ -542,6 +544,8 @@
             $('#condizione').val('').trigger('change');
             $('#cartellino').val('').trigger('change');
             document.getElementById("specie").value = "";
+            document.getElementById("destinations").value = "";
+            document.getElementById("progacc").value = "";
             document.getElementById("datapropagazioneinizio").value = "1543-01-01";
             var date = new Date();
             var day = date.getDate();
