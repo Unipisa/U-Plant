@@ -184,6 +184,18 @@ namespace UPlant.Controllers
             return Json(names, new System.Text.Json.JsonSerializerOptions());//, JsonRequestBehavior.AllowGet deprecato
 
         }
+        public JsonResult Cercaipen(string term)
+        {
+
+            var prelist = _context.Accessioni
+                .Where(p => p.ipen.Contains(term)).Select(g => g.ipen);
+
+
+            var names = prelist.Distinct().ToList();
+
+            return Json(names, new System.Text.Json.JsonSerializerOptions());//, JsonRequestBehavior.AllowGet deprecato
+
+        }
         public JsonResult Cercavecchioprog(string term)
         {
 

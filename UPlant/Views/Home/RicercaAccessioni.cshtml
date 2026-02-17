@@ -444,4 +444,12 @@
             position: { offset: '-30 0' }
         });
     </script>
+    <script>
+        var baseUrlCercaprog = '@Url.Action("Cercaipen", "Common")';
+        $("#ipen").autocomplete({
+            source: baseUrlCercaprog,
+            minLength: 3,
+            position: { offset: '-30 0' }
+        });
+    </script>
 }

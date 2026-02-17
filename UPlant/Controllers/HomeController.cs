@@ -809,6 +809,12 @@ namespace UPlant.Controllers
             var IUCNItalia = "";
             var CITES = "";
             var Notespecie = "";
+
+
+
+
+
+
             sb.AppendFormat("{0};{1};{2};{3};{4};{5};{6};{7};{8};{9};{10};", ada("Famiglia"), ada("Genere"), ada("Nome Scientifico"), ada("Nome Comune"), ada("Nome Comune Inglese"), ada("Regno"), ada("Areale"), ada("IUCN Globale"), ada("IUCN Italia"), ada("CITES"), ada("Note"));
             sb.AppendFormat(Environment.NewLine);
             foreach (var item in listaspecie)
