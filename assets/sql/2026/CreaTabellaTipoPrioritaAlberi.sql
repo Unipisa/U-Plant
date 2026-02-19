@@ -13,7 +13,7 @@ CREATE TABLE [dbo].[TipoPrioritaAlberi](
  CONSTRAINT [PK_PrioritaAlberi] PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
 ALTER TABLE [dbo].[TipoPrioritaAlberi] ADD  CONSTRAINT [DF_PrioritaAlberi_id]  DEFAULT (newid()) FOR [id]
@@ -23,4 +23,5 @@ REFERENCES [dbo].[Organizzazioni] ([id])
 GO
 ALTER TABLE [dbo].[TipoPrioritaAlberi] CHECK CONSTRAINT [FK_TipoPrioritaAlberi_Organizzazioni]
 GO
-
+INSERT [dbo].[TipoPrioritaAlberi] ([id], [descrizione], [descrizione_en], [organizzazione], [ordinamento], [livello]) VALUES (N'fa5a2095-052f-4f2c-ae5c-2343605d1a34', N'Non Definito', N'Not Defined', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', 0, 0)
+GO
