@@ -16,8 +16,7 @@
     <div class="card card-primary">
         <div class="card-header with-border">
             <h3 class="card-title font-weight-bold">
-                @language.Getkey("Shared_Comp_Sb_Tree") - @language.Getkey("Global_Individual") : @(ViewData["progressivo"] ?? "")
-                <span> - </span> @language.Getkey("Global_Species")@Html.Label(" :  ") @(ViewData["nomescientifico"] ?? "")
+                @(ViewData["nomescientifico"] ?? "") - @(ViewData["progressivo"] ?? "")
             </h3>
         </div>
 
@@ -81,7 +80,7 @@
                     </div>
                 </div>
 
-                <div class="row">
+                <div class="row" id="statoCondizioneRow">
                     <div class="form-group col">
                         <label class="control-label">@language.Getkey("Global_Individual_Status")</label>
                         <select asp-for="statoIndividuo" class="form-control select2"
@@ -131,6 +130,20 @@
                     theme: 'bootstrap4'
                 });
             }
+
+            var isClosed = String($('#statoIntervento').val()).toLowerCase() === 'true';
+
+            function updateStatoCondizioneEditable() {
+                var closed = String($('#statoIntervento').val()).toLowerCase() === 'true';
+                $('#statoIndividuo').prop('disabled', !closed).trigger('change.select2');
+                $('#condizione').prop('disabled', !closed).trigger('change.select2');
+            }
+
+            if (!isClosed) {
+                $('#statoIntervento').on('change', updateStatoCondizioneEditable);
+            }
+
+            updateStatoCondizioneEditable();
         });
     </script>
 }
