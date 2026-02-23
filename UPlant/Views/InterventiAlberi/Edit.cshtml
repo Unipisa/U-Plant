@@ -137,6 +137,7 @@
                 var closed = String($('#statoIntervento').val()).toLowerCase() === 'true';
                 $('#statoIndividuo').prop('disabled', !closed).trigger('change.select2');
                 $('#condizione').prop('disabled', !closed).trigger('change.select2');
+                $('#esitointervento').prop('required', closed);
             }
 
             if (!isClosed) {
