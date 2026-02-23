@@ -1,108 +1,139 @@
 ﻿@model IEnumerable<UPlant.Models.DB.InterventiAlberi>
 @inject LanguageService language
+
 @{
-    ViewData["Title"] = "Index";
+    ViewBag.Title = language.Getkey("Global_Tree_Interventions");
+    ViewBag.lang = language.GetCurrentCulture();
 }
 
-<div class="card card-outline card-primary">
-    <div class="card-header with-border">
-        <h1 class="card-title">Elenco</h1>
-        @{
+<p>
+    <a asp-action="Index" asp-controller="InterventiAlberi">
+        <span class="btn btn btn-info " title="@language.Getkey("Global_Go_Back")">
+            @language.Getkey("Global_Go_Back")
+        </span>
+    </a>
 
-            if (User.IsInRole("Administrator"))
-            {
-                <div class="float-right success ">
-                    <a asp-action="Create" asp-controller="InterventiAlberi"
-                       asp-route-idindividuo="@ViewBag.idindividuo">
-                        <span class="btn btn-success" title="@language.Getkey("Global_Add") @language.Getkey("Global_Tree_Interventions")">
-                            @language.Getkey("Global_Add") @language.Getkey("Global_Tree_Interventions")
-                        </span>
-                    </a>
+    <a asp-action="Create" asp-controller="InterventiAlberi" asp-route-idindividuo="@ViewBag.idindividuo">
+        <span class="btn btn-success" title="@language.Getkey("Global_Add") @language.Getkey("Global_Tree_Interventions")">
+            @language.Getkey("Global_Add") @language.Getkey("Global_Tree_Interventions")
+        </span>
+    </a>
+</p>
 
+<div class="card card-outline card-primary mt-3">
 
-                </div>
-            }
-        }
-    </div>
-
-    <div class="card-body">
-        <div class="table-responsive">
-            <table id="table1" class="table table-bordered table-striped dataTable">
-                <thead>
-                    <tr>
-                        <th>
-                            priorità
-                        </th>
-                        <th>
-                            Motivo
-                        </th>
-
-
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model)
-                    {
-                        <tr>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.prioritaNavigation.descrizione)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.motivo)
-                            </td>
-
-
-                            <td>
-                                @if (User.IsInRole("Administrator"))
-                                {
-
-                                    <a asp-action="Edit" asp-route-id="@item.id">
-                                        <span class="btn btn-warning btn-xs" title="@language.Getkey("Global_Edit")">
-                                            <i class="fa-solid fa-pencil" style="color: #fafafa;"></i>
-                                        </span>
-                                    </a>
-
-
-                                }
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
+    <div class="card-header">
+        <div class="d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center">
+                <h3 class="card-title mb-0 mr-3">@language.Getkey("Global_Tree_Interventions")</h3>
+                <div id="table1HeaderLeft" class="d-flex align-items-center"></div>
+            </div>
+            <div id="table1HeaderRight" class="d-flex align-items-center"></div>
         </div>
     </div>
 
+    <div class="card-body">
+        <table id="table1" class="table table-bordered table-striped table-sm">
+            <thead>
+                <tr>
+                    <th style="width:60px;">@language.Getkey("Global_Edit")</th>
+                    <th>@language.Getkey("Global_Tree_Priority")</th>
+                    <th>@language.Getkey("Global_Intervention")</th>
+                    <th>@language.Getkey("Global_Reason")</th>
+                    <th>@language.Getkey("Global_Individual_Status")</th>
+                    <th>@language.Getkey("Global_Condition")</th>
+                    <th>@language.Getkey("Global_Last_Modified_Date")</th>
+                    <th>Stato</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td class="text-center">
+                            <a asp-action="Edit" asp-route-id="@item.id" class="btn btn-warning btn-sm" title="@language.Getkey("Global_Edit")">
+                                <i class="fa-solid fa-pencil" style="color: #fafafa;"></i>
+                            </a>
+                        </td>
+                        <td class="text-center">@item.prioritaNavigation.descrizione</td>
+                        <td class="text-center">@item.interventoNavigation.descrizione</td>
+                        <td class="text-center">@item.motivo</td>
+                        <td class="text-center">@item.statoIndividuoNavigation.stato</td>
+                        <td class="text-center">@item.condizioneNavigation.condizione</td>
+                        <td class="text-center">@(item.dataultimamodifica?.ToString("dd/MM/yyyy HH:mm") ?? "-")</td>
+                        <td class="text-center">@(item.statoIntervento == false ? "Aperto" : "Chiuso")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
 
+        @if (!Model.Any())
+        {
+            <div class="text-center text-muted mt-2">
+                @language.Getkey("Global_NoResults")
+            </div>
+        }
+    </div>
 </div>
-@section Styles {
-    <link href="~/css/select2.min.css" rel="stylesheet" />
-    <link href="~/css/accessioni.min.css" rel="stylesheet" />
-    <link href="~/css/datatables.min.css" rel="stylesheet" />
+
+@section CustomStyles {
+    <style>
+        #table1HeaderLeft label,
+        #table1HeaderRight label {
+            margin-bottom: 0;
+            white-space: nowrap;
+        }
+
+        #table1HeaderLeft select {
+            width: 90px;
+            display: inline-block;
+            margin: 0 6px;
+        }
+
+        #table1HeaderRight input {
+            width: 190px;
+            display: inline-block;
+            margin-left: 6px;
+        }
+
+        #table1HeaderLeft, #table1HeaderRight {
+            gap: 10px;
+        }
+    </style>
 }
 
-
-
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
-
     <script src="~/js/datatables.min.js"></script>
 }
 
-
 @section CustomScripts {
     <script>
-        jQuery(function () {
-            jQuery('#table1').DataTable({
-                'paging': true,
-                'lengthChange': true,
-                'searching': true,
-                'ordering': true,
-                'info': true,
-                'autoWidth': false
-            })
-        })
+        $(function () {
+            var lingua = "@ViewBag.lang";
+            if (lingua === "en-US") {
+                $.extend($.fn.dataTable.defaults, {
+                    language: { url: "/js/dataTables.english.json" }
+                });
+            } else {
+                $.extend($.fn.dataTable.defaults, {
+                    language: { url: "/js/dataTables.default.json" }
+                });
+            }
+
+            var dt = $('#table1').DataTable({
+                paging: true,
+                lengthChange: true,
+                searching: true,
+                info: true,
+                autoWidth: false,
+                ordering: true
+            });
+
+            var wrapper = $('#table1').closest('.dataTables_wrapper');
+            $('#table1HeaderLeft').empty().append(wrapper.find('#table1_length').detach());
+            $('#table1HeaderRight').empty().append(wrapper.find('#table1_filter').detach());
+
+            dt.order([6, 'desc']).draw();
+        });
     </script>
 }

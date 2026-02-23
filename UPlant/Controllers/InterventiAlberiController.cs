@@ -219,22 +219,42 @@ namespace UPlant.Controllers
         // GET: Alberi/Edit/5
         public async Task<IActionResult> Edit(Guid? id)
         {
+            var linguacorrente = _languageService.GetCurrentCulture();
             if (id == null)
             {
                 return NotFound();
             }
 
-            var interventiAlberi = await _context.InterventiAlberi.FindAsync(id);
+            var interventiAlberi = await _context.InterventiAlberi
+                .Include(x => x.individuoNavigation)
+                .ThenInclude(x => x.accessioneNavigation)
+                .ThenInclude(x => x.specieNavigation)
+                .FirstOrDefaultAsync(x => x.id == id);
             if (interventiAlberi == null)
             {
                 return NotFound();
             }
+
+            ViewData["progressivo"] = interventiAlberi.individuoNavigation?.progressivo;
+            ViewData["nomescientifico"] = interventiAlberi.individuoNavigation?.accessioneNavigation?.specieNavigation?.nome_scientifico;
+
             ViewData["fornitore"] = new SelectList(_context.Fornitori, "id", "descrizione", interventiAlberi.fornitore);
-            ViewData["individuo"] = new SelectList(_context.Individui, "id", "progressivo", interventiAlberi.individuo);
-            ViewData["intervento"] = new SelectList(_context.TipoInterventiAlberi, "id", "descrizione", interventiAlberi.intervento);
-            ViewData["priorita"] = new SelectList(_context.TipoPrioritaAlberi, "id", "descrizione", interventiAlberi.priorita);
-            ViewData["utenteapertura"] = new SelectList(_context.Users, "Id", "CF", interventiAlberi.utenteapertura);
-            ViewData["utenteultimamodifica"] = new SelectList(_context.Users, "Id", "CF", interventiAlberi.utenteultimamodifica);
+
+            if (linguacorrente == "en-US")
+            {
+                ViewData["statoIndividuo"] = new SelectList(_context.StatoIndividuo.Select(x => new { x.id, Desc = string.IsNullOrEmpty(x.descrizione_en) ? x.stato : x.descrizione_en }), "id", "Desc", interventiAlberi.statoIndividuo);
+                ViewData["condizione"] = new SelectList(_context.Condizioni.Select(x => new { x.id, Desc = string.IsNullOrEmpty(x.descrizione_en) ? x.condizione : x.descrizione_en }), "id", "Desc", interventiAlberi.condizione);
+                ViewData["intervento"] = new SelectList(_context.TipoInterventiAlberi.OrderByDescending(a => a.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.descrizione : a.descrizione_en }), "id", "Desc", interventiAlberi.intervento);
+                ViewData["priorita"] = new SelectList(_context.TipoPrioritaAlberi.OrderByDescending(a => a.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.descrizione : a.descrizione_en }), "id", "Desc", interventiAlberi.priorita);
+            }
+            else
+            {
+                ViewData["statoIndividuo"] = new SelectList(_context.StatoIndividuo.OrderByDescending(a => a.ordinamento), "id", "stato", interventiAlberi.statoIndividuo);
+                ViewData["condizione"] = new SelectList(_context.Condizioni.OrderByDescending(a => a.ordinamento), "id", "condizione", interventiAlberi.condizione);
+                ViewData["intervento"] = new SelectList(_context.TipoInterventiAlberi.OrderByDescending(a => a.ordinamento), "id", "descrizione", interventiAlberi.intervento);
+                ViewData["priorita"] = new SelectList(_context.TipoPrioritaAlberi.OrderByDescending(a => a.ordinamento), "id", "descrizione", interventiAlberi.priorita);
+            }
+
             return View(interventiAlberi);
         }
 
@@ -243,8 +263,9 @@ namespace UPlant.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("id,individuo,dataapertura,priorita,intervento,fornitore,motivo,esitointervento,statoIntervento,dataultimamodifica,utenteapertura,utenteultimamodifica")] InterventiAlberi interventiAlberi)
+        public async Task<IActionResult> Edit(Guid id, [Bind("id,individuo,dataapertura,priorita,intervento,fornitore,motivo,esitointervento,statoIntervento,dataultimamodifica,utenteapertura,utenteultimamodifica,statoIndividuo,condizione")] InterventiAlberi interventiAlberi)
         {
+            var linguacorrente = _languageService.GetCurrentCulture();
             if (id != interventiAlberi.id)
             {
                 return NotFound();
@@ -272,11 +293,30 @@ namespace UPlant.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["fornitore"] = new SelectList(_context.Fornitori, "id", "descrizione", interventiAlberi.fornitore);
-            ViewData["individuo"] = new SelectList(_context.Individui, "id", "progressivo", interventiAlberi.individuo);
-            ViewData["intervento"] = new SelectList(_context.TipoInterventiAlberi, "id", "descrizione", interventiAlberi.intervento);
-            ViewData["priorita"] = new SelectList(_context.TipoPrioritaAlberi, "id", "descrizione", interventiAlberi.priorita);
-            ViewData["utenteapertura"] = new SelectList(_context.Users, "Id", "CF", interventiAlberi.utenteapertura);
-            ViewData["utenteultimamodifica"] = new SelectList(_context.Users, "Id", "CF", interventiAlberi.utenteultimamodifica);
+
+            var individuo = await _context.Individui
+                .Include(s => s.accessioneNavigation)
+                .ThenInclude(x => x.specieNavigation)
+                .FirstOrDefaultAsync(x => x.id == interventiAlberi.individuo);
+
+            ViewData["progressivo"] = individuo?.progressivo;
+            ViewData["nomescientifico"] = individuo?.accessioneNavigation?.specieNavigation?.nome_scientifico;
+
+            if (linguacorrente == "en-US")
+            {
+                ViewData["statoIndividuo"] = new SelectList(_context.StatoIndividuo.Select(x => new { x.id, Desc = string.IsNullOrEmpty(x.descrizione_en) ? x.stato : x.descrizione_en }), "id", "Desc", interventiAlberi.statoIndividuo);
+                ViewData["condizione"] = new SelectList(_context.Condizioni.Select(x => new { x.id, Desc = string.IsNullOrEmpty(x.descrizione_en) ? x.condizione : x.descrizione_en }), "id", "Desc", interventiAlberi.condizione);
+                ViewData["intervento"] = new SelectList(_context.TipoInterventiAlberi.OrderByDescending(a => a.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.descrizione : a.descrizione_en }), "id", "Desc", interventiAlberi.intervento);
+                ViewData["priorita"] = new SelectList(_context.TipoPrioritaAlberi.OrderByDescending(a => a.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.descrizione : a.descrizione_en }), "id", "Desc", interventiAlberi.priorita);
+            }
+            else
+            {
+                ViewData["statoIndividuo"] = new SelectList(_context.StatoIndividuo.OrderByDescending(a => a.ordinamento), "id", "stato", interventiAlberi.statoIndividuo);
+                ViewData["condizione"] = new SelectList(_context.Condizioni.OrderByDescending(a => a.ordinamento), "id", "condizione", interventiAlberi.condizione);
+                ViewData["intervento"] = new SelectList(_context.TipoInterventiAlberi.OrderByDescending(a => a.ordinamento), "id", "descrizione", interventiAlberi.intervento);
+                ViewData["priorita"] = new SelectList(_context.TipoPrioritaAlberi.OrderByDescending(a => a.ordinamento), "id", "descrizione", interventiAlberi.priorita);
+            }
+
             return View(interventiAlberi);
         }
 
@@ -380,8 +420,12 @@ namespace UPlant.Controllers
                 .Include(a => a.individuoNavigation)
                 .Include(a => a.interventoNavigation)
                 .Include(a => a.prioritaNavigation)
+                .Include(a => a.statoIndividuoNavigation)
+                .Include(a => a.condizioneNavigation)
                 .Include(a => a.utenteaperturaNavigation)
-                .Include(a => a.utenteultimamodificaNavigation).Where(m => m.individuo == id)
+                .Include(a => a.utenteultimamodificaNavigation)
+                .Where(m => m.individuo == id)
+                .OrderByDescending(x => x.dataultimamodifica ?? x.dataapertura)
                 .ToListAsync();
             if (interventiAlberi == null)
             {
