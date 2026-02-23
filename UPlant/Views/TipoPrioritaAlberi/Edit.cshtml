@@ -27,6 +27,11 @@
                 <span asp-validation-for="descrizione_en" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="colore" class="control-label">Colore priorità</label>
+                <input asp-for="colore" type="color" class="form-control" />
+                <span asp-validation-for="colore" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <label asp-for="ordinamento" class="control-label">@language.Getkey("Global_Sorting")</label>
                 <input asp-for="ordinamento" class="form-control" />
                 <span asp-validation-for="ordinamento" class="text-danger"></span>

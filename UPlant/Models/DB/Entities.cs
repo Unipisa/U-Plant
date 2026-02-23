@@ -1064,6 +1064,11 @@ public partial class Entities : DbContext
             entity.HasKey(e => e.id).HasName("PK_PrioritaAlberi");
 
             entity.Property(e => e.id).HasDefaultValueSql("(newid())");
+            entity.Property(e => e.colore)
+                .IsRequired()
+                .HasMaxLength(7)
+                .IsUnicode(false)
+                .HasDefaultValue("#6c757d");
             entity.Property(e => e.descrizione)
                 .IsRequired()
                 .IsUnicode(false);

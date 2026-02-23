@@ -48,7 +48,7 @@
                 @foreach (var item in Model)
                 {
                     <tr>
-                        <td class="text-center">@item.prioritaNavigation.descrizione</td>
+                        <td class="text-center"><span class="priority-chip" style="background-color:@item.prioritaNavigation.colore">@item.prioritaNavigation.descrizione</span></td>
                         <td class="text-center">@item.interventoNavigation.descrizione</td>
                         <td class="text-center">@item.motivo</td>
                         <td class="text-center">@(item.dataultimamodifica?.ToString("dd/MM/yyyy HH:mm") ?? "-")</td>
@@ -74,6 +74,14 @@
 
 @section CustomStyles {
     <style>
+        .priority-chip {
+            display:inline-block;
+            padding: 0.2rem 0.5rem;
+            border-radius: 0.25rem;
+            color: #fff;
+            font-weight: 600;
+        }
+
         #table1HeaderLeft label,
         #table1HeaderRight label {
             margin-bottom: 0;
@@ -129,7 +137,6 @@
             $('#table1HeaderLeft').empty().append(wrapper.find('#table1_length').detach());
             $('#table1HeaderRight').empty().append(wrapper.find('#table1_filter').detach());
 
-            dt.order([4, 'desc']).draw();
         });
     </script>
 }

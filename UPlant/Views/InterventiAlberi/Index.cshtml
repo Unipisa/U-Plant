@@ -104,7 +104,7 @@
                         <td class="text-center">@item.individuoNavigation.accessioneNavigation.specieNavigation.nome_scientifico</td>
                         <td class="text-center">@item.individuoNavigation.collezioneNavigation.settoreNavigation.settore</td>
                         <td class="text-center">@item.individuoNavigation.collezioneNavigation.collezione</td>
-                        <td class="text-center">@item.prioritaNavigation.descrizione</td>
+                        <td class="text-center"><span class="priority-chip" style="background-color:@item.prioritaNavigation.colore">@item.prioritaNavigation.descrizione</span></td>
 
                         <td class="text-center">@(item.dataultimamodifica?.ToString("dd/MM/yyyy HH:mm") ?? "-")</td>
 
@@ -135,6 +135,14 @@
 
 @section CustomStyles {
     <style>
+        .priority-chip {
+            display:inline-block;
+            padding: 0.2rem 0.5rem;
+            border-radius: 0.25rem;
+            color: #fff;
+            font-weight: 600;
+        }
+
         /* Autocomplete */
         .ui-autocomplete {
             margin: 0px;

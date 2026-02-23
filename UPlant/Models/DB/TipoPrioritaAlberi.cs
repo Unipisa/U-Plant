@@ -17,6 +17,8 @@ public partial class TipoPrioritaAlberi
 
     public int livello { get; set; }
 
+    public string colore { get; set; }
+
     public virtual ICollection<InterventiAlberi> InterventiAlberi { get; set; } = new List<InterventiAlberi>();
 
     public virtual Organizzazioni organizzazioneNavigation { get; set; }
