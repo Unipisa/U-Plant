@@ -10,6 +10,7 @@ CREATE TABLE [dbo].[TipoPrioritaAlberi](
 	[organizzazione] [uniqueidentifier] NOT NULL,
 	[ordinamento] [int] NOT NULL,
 	[livello] [int] NOT NULL,
+	[colore] [varchar](7) NOT NULL CONSTRAINT [DF_TipoPrioritaAlberi_colore] DEFAULT ('#6c757d'),
  CONSTRAINT [PK_PrioritaAlberi] PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
@@ -23,5 +24,5 @@ REFERENCES [dbo].[Organizzazioni] ([id])
 GO
 ALTER TABLE [dbo].[TipoPrioritaAlberi] CHECK CONSTRAINT [FK_TipoPrioritaAlberi_Organizzazioni]
 GO
-INSERT [dbo].[TipoPrioritaAlberi] ([id], [descrizione], [descrizione_en], [organizzazione], [ordinamento], [livello]) VALUES (N'fa5a2095-052f-4f2c-ae5c-2343605d1a34', N'Non Definito', N'Not Defined', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', 0, 0)
+INSERT [dbo].[TipoPrioritaAlberi] ([id], [descrizione], [descrizione_en], [organizzazione], [ordinamento], [livello], [colore]) VALUES (N'fa5a2095-052f-4f2c-ae5c-2343605d1a34', N'Non Definito', N'Not Defined', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', 0, 0, N'#6c757d')
 GO

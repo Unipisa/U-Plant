@@ -499,7 +499,9 @@ namespace UPlant.Controllers
                 .Include(a => a.utenteaperturaNavigation)
                 .Include(a => a.utenteultimamodificaNavigation)
                 .Where(m => m.individuo == id)
-                .OrderByDescending(x => x.dataultimamodifica ?? x.dataapertura)
+                .OrderByDescending(x => x.statoIntervento == false)
+                .ThenByDescending(x => x.prioritaNavigation.livello)
+                .ThenByDescending(x => x.dataultimamodifica ?? x.dataapertura)
                 .ToListAsync();
             if (interventiAlberi == null)
             {

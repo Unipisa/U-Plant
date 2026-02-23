@@ -39,6 +39,9 @@
                             @language.Getkey("Global_English_Description")
                         </th>
                         <th>
+                            Colore
+                        </th>
+                        <th>
                             @language.Getkey("Global_Sorting")
                         </th>
                         <th></th>
@@ -56,6 +59,10 @@
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.descrizione_en)
+                            </td>
+                            <td class="text-center">
+                                <span class="d-inline-block" style="width:22px;height:22px;border:1px solid #ccc;background-color:@item.colore;" title="@item.colore"></span>
+                                <small class="ml-1">@item.colore</small>
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.ordinamento)
