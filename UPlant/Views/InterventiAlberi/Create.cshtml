@@ -16,8 +16,7 @@
     <div class="card card-primary">
         <div class="card-header with-border">
             <h3 class="card-title font-weight-bold">
-                @language.Getkey("Shared_Comp_Sb_Tree") - @language.Getkey("Global_Individual") : @(ViewData["progressivo"] ?? "")
-                <span> - </span> @language.Getkey("Global_Species")@Html.Label(" :  ") @(ViewData["nomescientifico"] ?? "")
+                @(ViewData["nomescientifico"] ?? "") - @(ViewData["progressivo"] ?? "")
             </h3>
         </div>
 
@@ -66,21 +65,8 @@
                         <span asp-validation-for="motivo" class="text-danger"></span>
                     </div>
                 </div>
-                <div class="row">
-                    <!-- NUOVE DROPDOWN: Stato Individuo e Condizione -->
-                    <div class="form-group col">
-                        <label class="control-label">@language.Getkey("Global_Individual_Status")</label>
-                        <!-- uso name/id espliciti: funzionerà anche se il model non ha la proprietà -->
-                        <select id="statoIndividuo" name="statoIndividuo" class="form-control select2"
-                                asp-items="@(ViewData["statoIndividuo"] as SelectList)"></select>
-                    </div>
-
-                    <div class="form-group col">
-                        <label class="control-label">@language.Getkey("Global_Condition")</label>
-                        <select id="condizione" name="condizione" class="form-control select2"
-                                asp-items="@(ViewData["condizione"] as SelectList)"></select>
-                    </div>
-                </div>
+                <input type="hidden" asp-for="statoIndividuo" />
+                <input type="hidden" asp-for="condizione" />
 
                 <hr />
                 <div class="form-group">

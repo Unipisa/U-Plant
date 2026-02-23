@@ -36,32 +36,28 @@
         <table id="table1" class="table table-bordered table-striped table-sm">
             <thead>
                 <tr>
-                    <th style="width:60px;">@language.Getkey("Global_Edit")</th>
                     <th>@language.Getkey("Global_Tree_Priority")</th>
                     <th>@language.Getkey("Global_Intervention")</th>
                     <th>@language.Getkey("Global_Reason")</th>
-                    <th>@language.Getkey("Global_Individual_Status")</th>
-                    <th>@language.Getkey("Global_Condition")</th>
                     <th>@language.Getkey("Global_Last_Modified_Date")</th>
                     <th>Stato</th>
+                    <th style="width:60px;">@language.Getkey("Global_Edit")</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var item in Model)
                 {
                     <tr>
+                        <td class="text-center">@item.prioritaNavigation.descrizione</td>
+                        <td class="text-center">@item.interventoNavigation.descrizione</td>
+                        <td class="text-center">@item.motivo</td>
+                        <td class="text-center">@(item.dataultimamodifica?.ToString("dd/MM/yyyy HH:mm") ?? "-")</td>
+                        <td class="text-center">@(item.statoIntervento == false ? "Aperto" : "Chiuso")</td>
                         <td class="text-center">
                             <a asp-action="Edit" asp-route-id="@item.id" class="btn btn-warning btn-sm" title="@language.Getkey("Global_Edit")">
                                 <i class="fa-solid fa-pencil" style="color: #fafafa;"></i>
                             </a>
                         </td>
-                        <td class="text-center">@item.prioritaNavigation.descrizione</td>
-                        <td class="text-center">@item.interventoNavigation.descrizione</td>
-                        <td class="text-center">@item.motivo</td>
-                        <td class="text-center">@item.statoIndividuoNavigation.stato</td>
-                        <td class="text-center">@item.condizioneNavigation.condizione</td>
-                        <td class="text-center">@(item.dataultimamodifica?.ToString("dd/MM/yyyy HH:mm") ?? "-")</td>
-                        <td class="text-center">@(item.statoIntervento == false ? "Aperto" : "Chiuso")</td>
                     </tr>
                 }
             </tbody>
@@ -133,7 +129,7 @@
             $('#table1HeaderLeft').empty().append(wrapper.find('#table1_length').detach());
             $('#table1HeaderRight').empty().append(wrapper.find('#table1_filter').detach());
 
-            dt.order([6, 'desc']).draw();
+            dt.order([4, 'desc']).draw();
         });
     </script>
 }

@@ -177,13 +177,24 @@ namespace UPlant.Controllers
             var linguacorrente = _languageService.GetCurrentCulture();
             if (ModelState.IsValid)
             {
+                var lastStorico = await _context.StoricoIndividuo
+                    .Where(x => x.individuo == interventiAlberi.individuo)
+                    .OrderByDescending(x => x.dataInserimento)
+                    .FirstOrDefaultAsync();
+
+                if (lastStorico != null)
+                {
+                    interventiAlberi.statoIndividuo = lastStorico.statoIndividuo;
+                    interventiAlberi.condizione = lastStorico.condizione;
+                }
+
                 interventiAlberi.dataapertura = DateTime.Now;
                 interventiAlberi.id = Guid.NewGuid();
                 interventiAlberi.dataultimamodifica = DateTime.Now;
                 interventiAlberi.statoIntervento = false; // aperto di default
                 _context.Add(interventiAlberi);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(ElencoInterventi), new { id = interventiAlberi.individuo });
             }
             
             var selectedStato = interventiAlberi.statoIndividuo;
@@ -275,8 +286,54 @@ namespace UPlant.Controllers
             {
                 try
                 {
-                    interventiAlberi.dataultimamodifica = DateTime.Now;
-                    _context.Update(interventiAlberi);
+                    var existingIntervento = await _context.InterventiAlberi
+                        .FirstOrDefaultAsync(x => x.id == id);
+
+                    if (existingIntervento == null)
+                    {
+                        return NotFound();
+                    }
+
+                    var utenteCorrente = GetCurrentUserId();
+                    var chiusuraIntervento = existingIntervento.statoIntervento == false && interventiAlberi.statoIntervento == true;
+
+                    existingIntervento.priorita = interventiAlberi.priorita;
+                    existingIntervento.intervento = interventiAlberi.intervento;
+                    existingIntervento.fornitore = interventiAlberi.fornitore;
+                    existingIntervento.motivo = interventiAlberi.motivo;
+                    existingIntervento.esitointervento = interventiAlberi.esitointervento;
+                    existingIntervento.statoIntervento = interventiAlberi.statoIntervento;
+                    existingIntervento.dataultimamodifica = DateTime.Now;
+                    if (utenteCorrente != Guid.Empty)
+                    {
+                        existingIntervento.utenteultimamodifica = utenteCorrente;
+                    }
+
+                    if (chiusuraIntervento)
+                    {
+                        existingIntervento.statoIndividuo = interventiAlberi.statoIndividuo;
+                        existingIntervento.condizione = interventiAlberi.condizione;
+
+                        var utenteIdStorico = utenteCorrente != Guid.Empty
+                            ? utenteCorrente
+                            : (existingIntervento.utenteultimamodifica != Guid.Empty
+                                ? existingIntervento.utenteultimamodifica
+                                : existingIntervento.utenteapertura);
+
+                        var storico = new StoricoIndividuo
+                        {
+                            id = Guid.NewGuid(),
+                            individuo = existingIntervento.individuo,
+                            dataInserimento = DateTime.Now,
+                            statoIndividuo = existingIntervento.statoIndividuo,
+                            condizione = existingIntervento.condizione,
+                            operazioniColturali = existingIntervento.esitointervento,
+                            utente = utenteIdStorico
+                        };
+
+                        _context.StoricoIndividuo.Add(storico);
+                    }
+
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -290,7 +347,7 @@ namespace UPlant.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(ElencoInterventi), new { id = interventiAlberi.individuo });
             }
             ViewData["fornitore"] = new SelectList(_context.Fornitori, "id", "descrizione", interventiAlberi.fornitore);
 
@@ -318,6 +375,18 @@ namespace UPlant.Controllers
             }
 
             return View(interventiAlberi);
+        }
+
+        private Guid GetCurrentUserId()
+        {
+            var username = User.Identities.FirstOrDefault()?.Claims?.FirstOrDefault(c => c.Type == "UnipiUserID")?.Value;
+            if (string.IsNullOrWhiteSpace(username) || !username.Contains("@"))
+            {
+                return Guid.Empty;
+            }
+
+            var userNameOnly = username.Substring(0, username.IndexOf("@"));
+            return _context.Users.Where(u => u.UnipiUserName == userNameOnly).Select(u => u.Id).FirstOrDefault();
         }
 
         // GET: Alberi/Delete/5
