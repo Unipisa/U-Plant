@@ -282,6 +282,11 @@ namespace UPlant.Controllers
                 return NotFound();
             }
 
+            if (interventiAlberi.statoIntervento && string.IsNullOrWhiteSpace(interventiAlberi.esitointervento))
+            {
+                ModelState.AddModelError(nameof(interventiAlberi.esitointervento), "L'esito intervento è obbligatorio quando lo stato è Chiuso.");
+            }
+
             if (ModelState.IsValid)
             {
                 try
