@@ -374,7 +374,7 @@ namespace UPlant.Controllers
             {
                 return NotFound();
             }
-
+            ViewBag.idindividuo = id;
             var interventiAlberi = await _context.InterventiAlberi
                 .Include(a => a.fornitoreNavigation)
                 .Include(a => a.individuoNavigation)

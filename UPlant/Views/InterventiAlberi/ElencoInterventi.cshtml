@@ -12,7 +12,8 @@
             if (User.IsInRole("Administrator"))
             {
                 <div class="float-right success ">
-                    <a asp-action="Create">
+                    <a asp-action="Create" asp-controller="InterventiAlberi"
+                       asp-route-idindividuo="@ViewBag.idindividuo">
                         <span class="btn btn-success" title="@language.Getkey("Global_Add") @language.Getkey("Global_Tree_Interventions")">
                             @language.Getkey("Global_Add") @language.Getkey("Global_Tree_Interventions")
                         </span>
