@@ -1,82 +1,136 @@
 ﻿@model UPlant.Models.DB.InterventiAlberi
-
+@inject LanguageService language
 @{
-    ViewData["Title"] = "Edit";
+    ViewBag.Title = @language.Getkey("Global_Individual");
 }
 
-<h1>Edit</h1>
+<p>
+    <a asp-action="ElencoInterventi" asp-controller="InterventiAlberi" asp-route-id="@Model.individuo">
+        <span class="btn btn btn-info " title="@language.Getkey("Global_Go_Back")">
+            @language.Getkey("Global_Go_Back")
+        </span>
+    </a>
+</p>
 
-<h4>Interventi Alberi</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="id" />
-            <div class="form-group">
-                <label asp-for="individuo" class="control-label"></label>
-                <select asp-for="individuo" class="form-control" asp-items="ViewBag.individuo"></select>
-                <span asp-validation-for="individuo" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="dataapertura" class="control-label"></label>
-                <input asp-for="dataapertura" class="form-control" />
-                <span asp-validation-for="dataapertura" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="priorita" class="control-label"></label>
-                <select asp-for="priorita" class="form-control" asp-items="ViewBag.priorita"></select>
-                <span asp-validation-for="priorita" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="intervento" class="control-label"></label>
-                <select asp-for="intervento" class="form-control" asp-items="ViewBag.intervento"></select>
-                <span asp-validation-for="intervento" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="fornitore" class="control-label"></label>
-                <select asp-for="fornitore" class="form-control" asp-items="ViewBag.fornitore"></select>
-                <span asp-validation-for="fornitore" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="motivo" class="control-label"></label>
-                <input asp-for="motivo" class="form-control" />
-                <span asp-validation-for="motivo" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="esitointervento" class="control-label"></label>
-                <input asp-for="esitointervento" class="form-control" />
-                <span asp-validation-for="esitointervento" class="text-danger"></span>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="statoIntervento" /> @Html.DisplayNameFor(model => model.statoIntervento)
-                </label>
-            </div>
+<div class="col-lg-12">
+    <div class="card card-primary">
+        <div class="card-header with-border">
+            <h3 class="card-title font-weight-bold">
+                @language.Getkey("Shared_Comp_Sb_Tree") - @language.Getkey("Global_Individual") : @(ViewData["progressivo"] ?? "")
+                <span> - </span> @language.Getkey("Global_Species")@Html.Label(" :  ") @(ViewData["nomescientifico"] ?? "")
+            </h3>
+        </div>
 
-            <div class="form-group">
-                <label asp-for="utenteapertura" class="control-label"></label>
-                <select asp-for="utenteapertura" class="form-control" asp-items="ViewBag.utenteapertura"></select>
-                <span asp-validation-for="utenteapertura" class="text-danger"></span>
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+            <div class="card-body">
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                <input type="hidden" asp-for="id" />
+                <input type="hidden" asp-for="individuo" />
+                <input type="hidden" asp-for="dataapertura" />
+                <input type="hidden" asp-for="utenteapertura" />
+                <input type="hidden" asp-for="utenteultimamodifica" />
+
+                <div class="row">
+                    <div class="form-group col">
+                        <label asp-for="priorita" class="control-label">@language.Getkey("Global_Tree_Priority")</label>
+                        <select asp-for="priorita" class="form-control" asp-items="ViewBag.priorita"></select>
+                        <span asp-validation-for="priorita" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col">
+                        <label asp-for="statoIntervento" class="control-label">Stato Intervento</label>
+                        <select asp-for="statoIntervento" class="form-control">
+                            <option value="false">Aperto</option>
+                            <option value="true">Chiuso</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col">
+                        <label asp-for="intervento" class="control-label"></label>
+                        <select asp-for="intervento" class="form-control" asp-items="ViewBag.intervento"></select>
+                        <span asp-validation-for="intervento" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col">
+                        <label asp-for="fornitore" class="control-label"></label>
+                        <select asp-for="fornitore" class="form-control" asp-items="ViewBag.fornitore"></select>
+                        <span asp-validation-for="fornitore" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <hr />
+                <div class="row text-center font-weight-bold">Dettagli</div>
+                <hr />
+
+                <div class="row">
+                    <div class="form-group col">
+                        <label asp-for="motivo" class="control-label"></label>
+                        <input asp-for="motivo" class="form-control" />
+                        <span asp-validation-for="motivo" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col">
+                        <label asp-for="esitointervento" class="control-label"></label>
+                        <input asp-for="esitointervento" class="form-control" />
+                        <span asp-validation-for="esitointervento" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col">
+                        <label class="control-label">@language.Getkey("Global_Individual_Status")</label>
+                        <select asp-for="statoIndividuo" class="form-control select2"
+                                asp-items="@(ViewData["statoIndividuo"] as SelectList)"></select>
+                    </div>
+
+                    <div class="form-group col">
+                        <label class="control-label">@language.Getkey("Global_Condition")</label>
+                        <select asp-for="condizione" class="form-control select2"
+                                asp-items="@(ViewData["condizione"] as SelectList)"></select>
+                    </div>
+                </div>
+
+                <hr />
+                <div class="form-group">
+                    <input type="submit" value="@language.Getkey("Global_Save")" class="btn btn-primary" />
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="utenteultimamodifica" class="control-label"></label>
-                <select asp-for="utenteultimamodifica" class="form-control" asp-items="ViewBag.utenteultimamodifica"></select>
-                <span asp-validation-for="utenteultimamodifica" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+        }
+
     </div>
+
+    <p>
+        <a asp-action="ElencoInterventi" asp-controller="InterventiAlberi" asp-route-id="@Model.individuo">
+            <span class="btn btn btn-info " title="@language.Getkey("Global_Go_Back")">
+                @language.Getkey("Global_Go_Back")
+            </span>
+        </a>
+    </p>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+@section Styles {
+    <link href="~/css/select2.min.css" rel="stylesheet" />
+}
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+    <script src="~/js/select2.min.js"></script>
+    <script src="~/js/jquery.validation.min.js"></script>
+}
+
+@section CustomScripts {
+    <script>
+        $(function () {
+            if ($.fn.select2) {
+                $('.select2').select2({
+                    width: '100%',
+                    theme: 'bootstrap4'
+                });
+            }
+        });
+    </script>
 }
