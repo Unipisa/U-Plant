@@ -295,6 +295,70 @@
         </div>
     </div>
 
+    <div id="documentiAccessione">
+        <div class="card card-primary col-xs-12">
+            <div class="card-header with-border col-xs-12">
+                <h3 class="card-title"><span class="btn btn-primary" data-toggle="collapse" data-target="#collapseDocAcc" aria-expanded="true" aria-controls="collapseDocAcc">Documenti</span></h3>
+                @{
+                    if (User.IsInRole("Administrator") || User.IsInRole("Operator") || User.IsInRole("TreeKeeper") || User.IsInRole("Discover") || User.IsInRole("Seminum") || User.IsInRole("Utility"))
+                    {
+                        <div class="float-right">
+                            <button type="button" id="UploadDocAcc" class="btn btn-success">@language.Getkey("Global_Add")</button>
+                            <div class="modal fade" id="myModalDocAcc" role="dialog" data-url='@Url.Action("UploadDoc", "Accessioni", new { @id = ViewBag.idaccessione, tipo = ViewBag.tipo })'></div>
+                        </div>
+                    }
+                }
+            </div>
+            <div id="collapseDocAcc" class="collapse show" data-parent="#documentiAccessione">
+                <div class="card-body">
+                    @if (ViewBag.listDocs != null && ViewBag.listDocs.Count > 0)
+                    {
+                        <table class="table table-bordered table-striped dataTable">
+                            <thead>
+                            <tr>
+                                <th>Nome file</th>
+                                <th>Formato</th>
+                                <th>Dimensione</th>
+                                <th>@language.Getkey("Global_Description")</th>
+                                <th>@language.Getkey("Global_Credits")</th>
+                                <th>@language.Getkey("Global_Entry_Date")</th>
+                                <th>@language.Getkey("Global_Author")</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @foreach (var doc in ViewBag.listDocs)
+                            {
+                                <tr>
+                                    <td>@doc.nomefile</td>
+                                    <td>@doc.estensione</td>
+                                    <td>@Math.Round(((double)doc.dimensioneBytes / 1024), 2) KB</td>
+                                    <td>@doc.descrizione</td>
+                                    <td>@doc.credits</td>
+                                    <td>@doc.dataInserimento</td>
+                                    <td>@doc.autore</td>
+                                    <td>
+                                        <button type="button" class="btn btn-primary btn-xs" onclick="window.location.href='@Url.Action("DownloadDoc", "Accessioni", new { id = doc.id, accessione = ViewBag.idaccessione })'"><i class="fa-solid fa-download"></i></button>
+                                        @if (User.IsInRole("Administrator") || User.IsInRole("Operator") || User.IsInRole("TreeKeeper") || User.IsInRole("Discover") || User.IsInRole("Seminum") || User.IsInRole("Utility"))
+                                        {
+                                            <button type="button" class="btn btn-danger btn-xs" onclick="CancellaDocAcc('@doc.id')"><i class="fa-solid fa-trash"></i></button>
+                                            <div class="modal fade" id="docacc-@doc.id" role="dialog" data-url='@Url.Action("DeleteDoc", "Accessioni", new { id = doc.id, accessione = ViewBag.idaccessione, tipo = ViewBag.tipo })'></div>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                            </tbody>
+                        </table>
+                    }
+                    else
+                    {
+                        <div>@language.Getkey("Global_Empty")</div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div id="individui">
         <div class="card  card-primary col-xs-12">
         <div class="card-header with-border col-xs-12" id="headingOne">
@@ -494,69 +558,7 @@
     </div>
 
 
-    <div id="documentiAccessione">
-        <div class="card card-primary col-xs-12">
-            <div class="card-header with-border col-xs-12">
-                <h3 class="card-title"><span class="btn btn-primary" data-toggle="collapse" data-target="#collapseDocAcc" aria-expanded="true" aria-controls="collapseDocAcc">Documenti</span></h3>
-                @{
-                    if (User.IsInRole("Administrator") || User.IsInRole("Operator") || User.IsInRole("TreeKeeper") || User.IsInRole("Discover") || User.IsInRole("Seminum") || User.IsInRole("Utility"))
-                    {
-                        <div class="float-right">
-                            <button type="button" id="UploadDocAcc" class="btn btn-success">@language.Getkey("Global_Add")</button>
-                            <div class="modal fade" id="myModalDocAcc" role="dialog" data-url='@Url.Action("UploadDoc", "Accessioni", new { @id = ViewBag.idaccessione, tipo = ViewBag.tipo })'></div>
-                        </div>
-                    }
-                }
-            </div>
-            <div id="collapseDocAcc" class="collapse show" data-parent="#documentiAccessione">
-                <div class="card-body">
-                    @if (ViewBag.listDocs != null && ViewBag.listDocs.Count > 0)
-                    {
-                        <table class="table table-bordered table-striped dataTable">
-                            <thead>
-                            <tr>
-                                <th>Nome file</th>
-                                <th>Formato</th>
-                                <th>Dimensione</th>
-                                <th>@language.Getkey("Global_Description")</th>
-                                <th>@language.Getkey("Global_Credits")</th>
-                                <th>@language.Getkey("Global_Entry_Date")</th>
-                                <th>@language.Getkey("Global_Author")</th>
-                                <th></th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            @foreach (var doc in ViewBag.listDocs)
-                            {
-                                <tr>
-                                    <td>@doc.nomefile</td>
-                                    <td>@doc.estensione</td>
-                                    <td>@Math.Round(((double)doc.dimensioneBytes / 1024), 2) KB</td>
-                                    <td>@doc.descrizione</td>
-                                    <td>@doc.credits</td>
-                                    <td>@doc.dataInserimento</td>
-                                    <td>@doc.autore</td>
-                                    <td>
-                                        <button type="button" class="btn btn-primary btn-xs" onclick="window.location.href='@Url.Action("DownloadDoc", "Accessioni", new { id = doc.id, accessione = ViewBag.idaccessione })'"><i class="fa-solid fa-download"></i></button>
-                                        @if (User.IsInRole("Administrator") || User.IsInRole("Operator") || User.IsInRole("TreeKeeper") || User.IsInRole("Discover") || User.IsInRole("Seminum") || User.IsInRole("Utility"))
-                                        {
-                                            <button type="button" class="btn btn-danger btn-xs" onclick="CancellaDocAcc('@doc.id')"><i class="fa-solid fa-trash"></i></button>
-                                            <div class="modal fade" id="docacc-@doc.id" role="dialog" data-url='@Url.Action("DeleteDoc", "Accessioni", new { id = doc.id, accessione = ViewBag.idaccessione, tipo = ViewBag.tipo })'></div>
-                                        }
-                                    </td>
-                                </tr>
-                            }
-                            </tbody>
-                        </table>
-                    }
-                    else
-                    {
-                        <div>@language.Getkey("Global_Empty")</div>
-                    }
-                </div>
-            </div>
-        </div>
-    </div>
+
 
 <p>
     @{
