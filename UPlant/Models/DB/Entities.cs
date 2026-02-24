@@ -309,18 +309,28 @@ public partial class Entities : DbContext
         {
             entity.HasKey(e => e.id).HasName("PK__document__3213E83F7307A2C3");
 
-            entity.ToTable("documenti");
+            entity.ToTable("Documenti");
 
             entity.Property(e => e.id).HasDefaultValueSql("(newid())");
+            entity.Property(e => e.accessioneId).HasColumnName("accessioneId");
             entity.Property(e => e.autore).HasMaxLength(100);
             entity.Property(e => e.credits).HasMaxLength(250);
             entity.Property(e => e.dataInserimento).HasColumnType("datetime");
             entity.Property(e => e.descrizione).HasMaxLength(500);
             entity.Property(e => e.estensione).HasMaxLength(10);
+            entity.Property(e => e.individuoId).HasColumnName("individuoId");
             entity.Property(e => e.mimeType).HasMaxLength(100);
             entity.Property(e => e.nomefile).HasMaxLength(255);
             entity.Property(e => e.nomefileFisico).HasMaxLength(255);
             entity.Property(e => e.tipoEntita).HasMaxLength(30);
+
+            entity.HasOne(d => d.accessioneNavigation).WithMany()
+                .HasForeignKey(d => d.accessioneId)
+                .HasConstraintName("FK_Documenti_Accessioni");
+
+            entity.HasOne(d => d.individuoNavigation).WithMany()
+                .HasForeignKey(d => d.individuoId)
+                .HasConstraintName("FK_Documenti_Individui");
         });
 
         modelBuilder.Entity<Contageneri>(entity =>

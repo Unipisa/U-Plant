@@ -106,7 +106,7 @@ namespace UPlant.Controllers
             ViewBag.tipo = tipo;
             ViewBag.maxupload = _opt.Value.Pathfile.LimitMaxUpload;
             ViewBag.listDocs = await _context.Documenti
-                .Where(x => x.tipoEntita == "Accessione" && x.entitaId == id)
+                .Where(x => x.tipoEntita == "Accessione" && x.accessioneId == id)
                 .OrderByDescending(x => x.dataInserimento)
                 .ToListAsync();
             var accessioni = await _context.Accessioni
@@ -195,7 +195,7 @@ namespace UPlant.Controllers
                 var documento = new Documenti
                 {
                     tipoEntita = "Accessione",
-                    entitaId = idaccessione,
+                    accessioneId = idaccessione,
                     nomefile = Path.GetFileName(file.FileName),
                     estensione = extension,
                     mimeType = file.ContentType,
@@ -228,7 +228,7 @@ namespace UPlant.Controllers
 
         public async Task<IActionResult> DownloadDoc(Guid id, Guid accessione)
         {
-            var documento = await _context.Documenti.FirstOrDefaultAsync(x => x.id == id && x.tipoEntita == "Accessione" && x.entitaId == accessione);
+            var documento = await _context.Documenti.FirstOrDefaultAsync(x => x.id == id && x.tipoEntita == "Accessione" && x.accessioneId == accessione);
             if (documento == null)
             {
                 return NotFound();
@@ -261,7 +261,7 @@ namespace UPlant.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteDocConfirmed(Guid id, Guid accessione, string tipo)
         {
-            var documento = await _context.Documenti.FirstOrDefaultAsync(x => x.id == id && x.tipoEntita == "Accessione" && x.entitaId == accessione);
+            var documento = await _context.Documenti.FirstOrDefaultAsync(x => x.id == id && x.tipoEntita == "Accessione" && x.accessioneId == accessione);
             if (documento != null)
             {
                 string path = Path.Combine(_opt.Value.Pathfile.Docs, "EntityDocs", "Accessioni", accessione.ToString(), documento.nomefileFisico);
