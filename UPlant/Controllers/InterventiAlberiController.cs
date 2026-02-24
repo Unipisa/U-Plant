@@ -488,7 +488,21 @@ namespace UPlant.Controllers
             {
                 return NotFound();
             }
+
+            var individuo = await _context.Individui
+                .Include(i => i.accessioneNavigation)
+                .ThenInclude(a => a.specieNavigation)
+                .FirstOrDefaultAsync(i => i.id == id);
+
+            if (individuo == null)
+            {
+                return NotFound();
+            }
+
             ViewBag.idindividuo = id;
+            ViewData["progressivo"] = individuo.progressivo;
+            ViewData["nomescientifico"] = individuo.accessioneNavigation?.specieNavigation?.nome_scientifico;
+
             var interventiAlberi = await _context.InterventiAlberi
                 .Include(a => a.fornitoreNavigation)
                 .Include(a => a.individuoNavigation)
@@ -503,10 +517,6 @@ namespace UPlant.Controllers
                 .ThenByDescending(x => x.prioritaNavigation.livello)
                 .ThenByDescending(x => x.dataultimamodifica ?? x.dataapertura)
                 .ToListAsync();
-            if (interventiAlberi == null)
-            {
-                return NotFound();
-            }
 
             return View(interventiAlberi);
         }
