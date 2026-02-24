@@ -222,10 +222,10 @@ namespace U_Plant.Controllers
             if (!String.IsNullOrEmpty(percorsi.nomefile))
             {
 
-                //  string path = StaticUtils.SetImgPath("Percorsi\\" + percorsi.id, percorsi.nomefile, _opt.Value.Pathfile.Basepath);
-                //  string paththumb = StaticUtils.SetThumbImgPath("Percorsi\\" + percorsi.id, percorsi.nomefile, _opt.Value.Pathfile.Basepath);
-                string path = StaticUtils.SetImgPath(percorsi.id.ToString(), percorsi.nomefile, _opt.Value.Pathfile.Basepath + "\\Percorsi\\");
-                string paththumb = StaticUtils.SetThumbImgPath(percorsi.id.ToString(), percorsi.nomefile, _opt.Value.Pathfile.Basepath + "\\Percorsi\\");
+                //  string path = StaticUtils.SetImgPath("Percorsi\\" + percorsi.id, percorsi.nomefile, _opt.Value.Pathfile.ImagesBasePath);
+                //  string paththumb = StaticUtils.SetThumbImgPath("Percorsi\\" + percorsi.id, percorsi.nomefile, _opt.Value.Pathfile.ImagesBasePath);
+                string path = StaticUtils.SetImgPath(percorsi.id.ToString(), percorsi.nomefile, _opt.Value.Pathfile.ImagesBasePath + "\\Percorsi\\");
+                string paththumb = StaticUtils.SetThumbImgPath(percorsi.id.ToString(), percorsi.nomefile, _opt.Value.Pathfile.ImagesBasePath + "\\Percorsi\\");
                 if (System.IO.File.Exists(path))
                 {
                     try
@@ -390,7 +390,7 @@ namespace U_Plant.Controllers
                 //   System.Drawing.Image sourceimage =
                 //   System.Drawing.Image.FromStream(file.InputStream);
 
-                if (file.Length > 0 && file.Length <= Convert.ToDecimal(t.Pathfile.LimitMaxUpload))
+                if (file.Length > 0 && file.Length <= Convert.ToDecimal(t.Pathfile.ImagesMaxUploadBytes))
 
                     try
                     {
@@ -411,11 +411,11 @@ namespace U_Plant.Controllers
                         {
                             estensione = ".jpg";
                         }
-                        //  string filename = StaticUtils.SetImgPath("Percorsi\\", percorsi.id.ToString() + estensione,t.Pathfile.Basepath);
-                        string filename = StaticUtils.SetImgPath(percorsi.id.ToString(), percorsi.nomefile, _opt.Value.Pathfile.Basepath + "\\Percorsi\\");
+                        //  string filename = StaticUtils.SetImgPath("Percorsi\\", percorsi.id.ToString() + estensione,t.Pathfile.ImagesBasePath);
+                        string filename = StaticUtils.SetImgPath(percorsi.id.ToString(), percorsi.nomefile, _opt.Value.Pathfile.ImagesBasePath + "\\Percorsi\\");
 
                         {
-                            string filePath = Path.Combine(t.Pathfile.Basepath, filename);
+                            string filePath = Path.Combine(t.Pathfile.ImagesBasePath, filename);
                             using (Stream fileStream = new FileStream(filePath, FileMode.Create))
                             {
                                 await file.CopyToAsync(fileStream);
@@ -425,8 +425,8 @@ namespace U_Plant.Controllers
 
                         if (System.IO.File.Exists(filename))
                         {
-                            string filenamethumb = StaticUtils.SetThumbImgPath(percorsi.id.ToString(), percorsi.nomefile, _opt.Value.Pathfile.Basepath + "\\Percorsi\\");
-                            //string filenamethumb = StaticUtils.SetThumbImgPath("Percorsi\\", percorsi.id + estensione, t.Pathfile.Basepath);
+                            string filenamethumb = StaticUtils.SetThumbImgPath(percorsi.id.ToString(), percorsi.nomefile, _opt.Value.Pathfile.ImagesBasePath + "\\Percorsi\\");
+                            //string filenamethumb = StaticUtils.SetThumbImgPath("Percorsi\\", percorsi.id + estensione, t.Pathfile.ImagesBasePath);
                             StaticUtils.ResizeAndSave(filename, filenamethumb, 400, true);
 
                         }
@@ -466,9 +466,9 @@ namespace U_Plant.Controllers
         }
         public ActionResult ViewImg(Guid percorso, string nomefile)
         {
-            //string path = StaticUtils.GetThumbImgPath("Percorsi\\", percorso.ToString(), nomefile, _opt.Value.Pathfile.Basepath);
+            //string path = StaticUtils.GetThumbImgPath("Percorsi\\", percorso.ToString(), nomefile, _opt.Value.Pathfile.ImagesBasePath);
             // string path = StaticUtils.SetThumbImgPath("Percorsi\\" + percorso.ToString(), nomefile);
-            string path = StaticUtils.SetThumbImgPath(percorso.ToString(), nomefile, _opt.Value.Pathfile.Basepath + "\\Percorsi\\");
+            string path = StaticUtils.SetThumbImgPath(percorso.ToString(), nomefile, _opt.Value.Pathfile.ImagesBasePath + "\\Percorsi\\");
             //completare con case se immagini hanno nome jpg
             //return base.File(path, "image/jpeg");
             var fileExists = System.IO.File.Exists(path);
@@ -486,7 +486,7 @@ namespace U_Plant.Controllers
             }
 
 
-            //string path = StaticUtils.SetThumbImgPath("Percorsi\\" + percorso, nomefile, t.Pathfile.Basepath);
+            //string path = StaticUtils.SetThumbImgPath("Percorsi\\" + percorso, nomefile, t.Pathfile.ImagesBasePath);
 
             //completare con case se immagini hanno nome jpg
             // return base.File(path, "image/jpeg");
@@ -494,8 +494,8 @@ namespace U_Plant.Controllers
         }
         public ActionResult ViewBigImg(Guid percorso, string nomefile)
         {
-            //string path = StaticUtils.GetImgPath("Percorsi\\", percorso.ToString(), nomefile, _opt.Value.Pathfile.Basepath);
-            string path = StaticUtils.SetImgPath(percorso.ToString(), nomefile, _opt.Value.Pathfile.Basepath + "\\Percorsi\\");
+            //string path = StaticUtils.GetImgPath("Percorsi\\", percorso.ToString(), nomefile, _opt.Value.Pathfile.ImagesBasePath);
+            string path = StaticUtils.SetImgPath(percorso.ToString(), nomefile, _opt.Value.Pathfile.ImagesBasePath + "\\Percorsi\\");
             var fileExists = System.IO.File.Exists(path);
             if (fileExists)
             {
@@ -530,8 +530,8 @@ namespace U_Plant.Controllers
         {
 
             Percorsi percorso = _context.Percorsi.Find(id);
-            string path = StaticUtils.GetImgPath("Percorsi\\", percorso.id.ToString(), percorso.nomefile, _opt.Value.Pathfile.Basepath);
-            string paththumb = StaticUtils.GetThumbImgPath("Percorsi\\", percorso.id.ToString(), percorso.nomefile, _opt.Value.Pathfile.Basepath);
+            string path = StaticUtils.GetImgPath("Percorsi\\", percorso.id.ToString(), percorso.nomefile, _opt.Value.Pathfile.ImagesBasePath);
+            string paththumb = StaticUtils.GetThumbImgPath("Percorsi\\", percorso.id.ToString(), percorso.nomefile, _opt.Value.Pathfile.ImagesBasePath);
 
 
             if (System.IO.File.Exists(path))

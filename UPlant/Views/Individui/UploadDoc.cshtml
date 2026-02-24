@@ -1,0 +1,39 @@
+@model IEnumerable<UPlant.Models.DB.Documenti>
+@inject LanguageService language
+@{
+    ViewBag.Title = "Upload documenti";
+}
+<div class="container">
+    <div class="row">
+        <div class="col-sm-4"></div>
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: #3c8dbc; ">
+                    <h4 class="modal-title" id="myModalDoc-label" style="color: azure">Upload Documenti</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                </div>
+                <div class="modal-body">
+                    @using (Html.BeginForm("UploadDoc", "Individui", FormMethod.Post, new
+                    {
+                        enctype = "multipart/form-data",
+                        @id = "updoc",
+                        onsubmit = "return validateDocForm(this);"
+                    }))
+                    {
+                        @Html.AntiForgeryToken()
+
+                        <input type="hidden" autocomplete="off" name="idindividuo" value="@ViewBag.individuo" required />
+                        <input type="hidden" autocomplete="off" name="tipo" value="@ViewBag.tipo" required />
+                        <label id="erroredoc" class="alert-danger" style="display:none"></label>
+                        <input type="file" name="files" multiple required />
+                        <textarea name="descrizione" rows="4" cols="50" autocomplete="off" placeholder="@language.Getkey("Global_Description")" required></textarea>
+                        <br />
+                        <input type="text" name="credits" placeholder="@language.Getkey("Global_Credits")" />
+                        <br />
+                        <input type="submit" value="@language.Getkey("Global_Add")" class="btn btn-default" />
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

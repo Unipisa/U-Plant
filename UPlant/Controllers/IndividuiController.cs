@@ -24,6 +24,7 @@ namespace UPlant.Controllers
         private readonly IOptions<AppSettings> _opt;
         private readonly IWebHostEnvironment _env;
         private readonly LanguageService _languageService;
+        private static readonly string[] AllowedDocExtensions = { ".pdf", ".doc", ".docx", ".xls", ".xlsx", ".csv", ".txt" };
 
         public IndividuiController(Entities context, IOptions<AppSettings> opt, IWebHostEnvironment env, LanguageService languageService)
         {
@@ -82,7 +83,7 @@ namespace UPlant.Controllers
             ViewBag.list = await _context.StoricoIndividuo.Include(i => i.condizioneNavigation).Include(i => i.statoIndividuoNavigation).Include(i => i.utenteNavigation).Where(x => x.individuo == id).ToListAsync();
             ViewBag.idindividuo = id;
             ViewBag.tipo = tipo;
-            ViewBag.maxupload = _opt.Value.Pathfile.LimitMaxUpload;
+            ViewBag.maxupload = _opt.Value.Pathfile.ImagesMaxUploadBytes;
             ViewBag.list = individui.StoricoIndividuo.OrderByDescending(x => x.dataInserimento).ToList();
             individui.StoricoIndividuo = ViewBag.list;
 
@@ -103,10 +104,135 @@ namespace UPlant.Controllers
             ViewBag.list2 = await _context.ImmaginiIndividuo.Include(i => i.individuoNavigation).Where(x => x.individuo == id).ToListAsync();
             ViewBag.list2 = individui.ImmaginiIndividuo.OrderByDescending(x => x.dataInserimento).ToList();
             individui.ImmaginiIndividuo = ViewBag.list2;
+            ViewBag.listDocs = await _context.Documenti
+                .Where(x => x.tipoEntita == "Individuo" && x.individuoId == id)
+                .OrderByDescending(x => x.dataInserimento)
+                .ToListAsync();
 
 
 
             return View(individui);
+        }
+
+        public ActionResult UploadDoc(Guid? id, string tipo)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            ViewBag.individuo = id;
+            ViewBag.tipo = tipo;
+            return PartialView();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UploadDoc(IEnumerable<IFormFile> files, Guid idindividuo, string descrizione, string credits, string tipo)
+        {
+            string autore = User.Identities.FirstOrDefault()?.Claims?.Where(c => c.Type == "given_name").FirstOrDefault()?.Value;
+            var maxUpload = Convert.ToDecimal(_opt.Value.Pathfile.ImagesMaxUploadBytes);
+
+            foreach (var file in files)
+            {
+                if (file.Length <= 0 || file.Length > maxUpload)
+                {
+                    AddPageAlerts(PageAlertType.Error, _languageService.Getkey("Message_15").ToString());
+                    TempData["MsgErr"] = _languageService.Getkey("Message_15").ToString();
+                    return RedirectToAction("Details", "Individui", new { id = idindividuo, tipo = tipo });
+                }
+
+                string extension = Path.GetExtension(file.FileName).ToLowerInvariant();
+                if (!AllowedDocExtensions.Contains(extension))
+                {
+                    AddPageAlerts(PageAlertType.Error, _languageService.Getkey("Message_13").ToString());
+                    TempData["MsgErr"] = _languageService.Getkey("Message_13").ToString();
+                    return RedirectToAction("Details", "Individui", new { id = idindividuo, tipo = tipo });
+                }
+
+                var documento = new Documenti
+                {
+                    tipoEntita = "Individuo",
+                    individuoId = idindividuo,
+                    nomefile = Path.GetFileName(file.FileName),
+                    estensione = extension,
+                    mimeType = file.ContentType,
+                    dimensioneBytes = file.Length,
+                    descrizione = descrizione,
+                    credits = credits,
+                    autore = autore,
+                    dataInserimento = DateTime.Now,
+                    visibile = false
+                };
+
+                _context.Documenti.Add(documento);
+                await _context.SaveChangesAsync();
+
+                documento.nomefileFisico = documento.id + extension;
+                _context.Entry(documento).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+
+                string folder = Path.Combine(_opt.Value.Pathfile.DocumentsBasePath, _opt.Value.Pathfile.EntityDocsRootFolder, _opt.Value.Pathfile.IndividualDocsFolder, idindividuo.ToString());
+                Directory.CreateDirectory(folder);
+                string filePath = Path.Combine(folder, documento.nomefileFisico);
+                await using var fileStream = new FileStream(filePath, FileMode.Create);
+                await file.CopyToAsync(fileStream);
+            }
+
+            AddPageAlerts(PageAlertType.Success, _languageService.Getkey("Message_9").ToString());
+            TempData["MsgSucc"] = _languageService.Getkey("Message_9").ToString();
+            return RedirectToAction("Details", "Individui", new { id = idindividuo, tipo = tipo });
+        }
+
+        public async Task<IActionResult> DownloadDoc(Guid id, Guid individuo)
+        {
+            var documento = await _context.Documenti.FirstOrDefaultAsync(x => x.id == id && x.tipoEntita == "Individuo" && x.individuoId == individuo);
+            if (documento == null)
+            {
+                return NotFound();
+            }
+
+            string path = Path.Combine(_opt.Value.Pathfile.DocumentsBasePath, _opt.Value.Pathfile.EntityDocsRootFolder, _opt.Value.Pathfile.IndividualDocsFolder, individuo.ToString(), documento.nomefileFisico);
+            if (!System.IO.File.Exists(path))
+            {
+                return NotFound();
+            }
+
+            var fs = System.IO.File.OpenRead(path);
+            return File(fs, string.IsNullOrWhiteSpace(documento.mimeType) ? "application/octet-stream" : documento.mimeType, documento.nomefile);
+        }
+
+        public ActionResult DeleteDoc(Guid? id, Guid individuo, string tipo)
+        {
+            if (id == null)
+            {
+                return PartialView();
+            }
+
+            ViewBag.documento = id;
+            ViewBag.individuo = individuo;
+            ViewBag.tipo = tipo;
+            return PartialView();
+        }
+
+        [HttpPost, ActionName("DeleteDoc")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteDocConfirmed(Guid id, Guid individuo, string tipo)
+        {
+            var documento = await _context.Documenti.FirstOrDefaultAsync(x => x.id == id && x.tipoEntita == "Individuo" && x.individuoId == individuo);
+            if (documento != null)
+            {
+                string path = Path.Combine(_opt.Value.Pathfile.DocumentsBasePath, _opt.Value.Pathfile.EntityDocsRootFolder, _opt.Value.Pathfile.IndividualDocsFolder, individuo.ToString(), documento.nomefileFisico);
+                if (System.IO.File.Exists(path))
+                {
+                    System.IO.File.Delete(path);
+                }
+
+                _context.Documenti.Remove(documento);
+                await _context.SaveChangesAsync();
+            }
+
+            return RedirectToAction("Details", "Individui", new { id = individuo, tipo = tipo });
         }
 
 
@@ -143,7 +269,7 @@ namespace UPlant.Controllers
             {
 
 
-                if (file.Length > 0 && file.Length <= Convert.ToDecimal(t.Pathfile.LimitMaxUpload))
+                if (file.Length > 0 && file.Length <= Convert.ToDecimal(t.Pathfile.ImagesMaxUploadBytes))
 
                 {
                     try
@@ -205,11 +331,11 @@ namespace UPlant.Controllers
                         {
                             estensione = ".jpg";
                         }
-                        string filename = StaticUtils.SetImgPath(immagini.individuo.ToString(), immagini.id + estensione, t.Pathfile.Basepath);
+                        string filename = StaticUtils.SetImgPath(immagini.individuo.ToString(), immagini.id + estensione, t.Pathfile.ImagesBasePath);
 
                         if (file.Length > 0)
                         {
-                            string filePath = Path.Combine(t.Pathfile.Basepath, filename);
+                            string filePath = Path.Combine(t.Pathfile.ImagesBasePath, filename);
                             await using (Stream fileStream = new FileStream(filePath, FileMode.Create))
                             {
                                 await imageStream.CopyToAsync(fileStream);
@@ -219,10 +345,10 @@ namespace UPlant.Controllers
 
                         //file.SaveAs(filename);
                         //creo thumb
-                        string path = StaticUtils.GetImgPath(immagini.individuo.ToString(), immagini.id.ToString(), immagini.nomefile, t.Pathfile.Basepath);
+                        string path = StaticUtils.GetImgPath(immagini.individuo.ToString(), immagini.id.ToString(), immagini.nomefile, t.Pathfile.ImagesBasePath);
                         if (System.IO.File.Exists(path))
                         {
-                            string filenamethumb = StaticUtils.SetThumbImgPath(immagini.individuo.ToString(), immagini.id + estensione, t.Pathfile.Basepath);
+                            string filenamethumb = StaticUtils.SetThumbImgPath(immagini.individuo.ToString(), immagini.id + estensione, t.Pathfile.ImagesBasePath);
                             StaticUtils.ResizeAndSave(filename, filenamethumb, 400, true);
 
                         }
@@ -253,7 +379,7 @@ namespace UPlant.Controllers
         public ActionResult ViewImg(Guid individuo, string img, string filename)
         {
 
-            string filePath = StaticUtils.GetThumbImgPath(individuo.ToString(), img, filename, _opt.Value.Pathfile.Basepath);
+            string filePath = StaticUtils.GetThumbImgPath(individuo.ToString(), img, filename, _opt.Value.Pathfile.ImagesBasePath);
             var fileExists = System.IO.File.Exists(filePath);
 
             if (fileExists)
@@ -276,7 +402,7 @@ namespace UPlant.Controllers
 
 
 
-            string filePath = StaticUtils.GetImgPath(individuo.ToString(), img, filename, _opt.Value.Pathfile.Basepath);
+            string filePath = StaticUtils.GetImgPath(individuo.ToString(), img, filename, _opt.Value.Pathfile.ImagesBasePath);
 
             var fileExists = System.IO.File.Exists(filePath);
             var fs = System.IO.File.OpenRead(filePath);
@@ -304,7 +430,7 @@ namespace UPlant.Controllers
         {
             try
             {
-                string path = StaticUtils.GetThumbImgPath(individuo.ToString(), img, filename, _opt.Value.Pathfile.Basepath);
+                string path = StaticUtils.GetThumbImgPath(individuo.ToString(), img, filename, _opt.Value.Pathfile.ImagesBasePath);
                 using var imgPhoto = Image.FromFile(path);
                 imgPhoto.RotateFlip(RotateFlipType.Rotate90FlipNone);
                 imgPhoto.Save(path);
@@ -369,8 +495,8 @@ namespace UPlant.Controllers
             ImmaginiIndividuo immagini = _context.ImmaginiIndividuo.Find(id);
             Guid numeroindividuo = immagini.individuo;
 
-            string path = StaticUtils.GetImgPath(immagini.individuo.ToString(), immagini.id.ToString(), immagini.nomefile, _opt.Value.Pathfile.Basepath);
-            string paththumb = StaticUtils.GetThumbImgPath(immagini.individuo.ToString(), immagini.id.ToString(), immagini.nomefile, _opt.Value.Pathfile.Basepath);
+            string path = StaticUtils.GetImgPath(immagini.individuo.ToString(), immagini.id.ToString(), immagini.nomefile, _opt.Value.Pathfile.ImagesBasePath);
+            string paththumb = StaticUtils.GetThumbImgPath(immagini.individuo.ToString(), immagini.id.ToString(), immagini.nomefile, _opt.Value.Pathfile.ImagesBasePath);
             if (System.IO.File.Exists(path))
             {
                 try
