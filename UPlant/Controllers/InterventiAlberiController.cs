@@ -26,70 +26,73 @@ namespace UPlant.Controllers
         // GET: Alberi
         public async Task<IActionResult> Index()
         {
-
-         
-
             var flat = await _context.InterventiAlberi
-     .Select(a => new
-     {
-         a.id,                      // <-- PK Alberi (cambia se diverso)
-         a.individuo,
-         a.statoIntervento,                   // false = aperto
-         a.dataultimamodifica,
-         livello = a.prioritaNavigation.livello  // 0..5 dalla tabella TipoPrioritaAlberi
-     })
-     .ToListAsync();
+                .Select(a => new
+                {
+                    a.id,
+                    a.individuo,
+                    a.statoIntervento, // bool -> false = aperto
+                    a.dataultimamodifica,
+                    livello = (int?)a.prioritaNavigation.livello ?? 0
+                })
+                .ToListAsync();
 
-            // Raggruppo e scelgo la riga migliore per ogni individuo
+            // Seleziono la riga migliore per ogni individuo
             var bestPerIndividuo = flat
                 .GroupBy(x => x.individuo)
                 .Select(g =>
                 {
-                    var hasOpen = g.Any(x => x.statoIntervento == false);
-
                     var best = g
-                        .OrderByDescending(x => x.statoIntervento == false) // aperti prima
-                        .ThenByDescending(x => x.livello)                   // 0 più alta
-                        .ThenByDescending(x => x.dataultimamodifica)
+                        .OrderByDescending(x => !x.statoIntervento) // ✅ aperti prima
+                        .ThenByDescending(x => x.livello)           // ✅ priorità 4->0
+                        .ThenByDescending(x => x.dataultimamodifica)// ✅ data più recente
                         .First();
 
                     return new
                     {
                         Individuo = g.Key,
-                        HasOpen = hasOpen,
                         BestId = best.id,
+                        BestIsOpen = !best.statoIntervento,
                         BestLivello = best.livello,
                         BestData = best.dataultimamodifica
                     };
                 })
-                .OrderByDescending(x => x.HasOpen)     // individui con aperti prima
-                .ThenByDescending(x => x.BestLivello)            // livello 0 prima
-                .ThenByDescending(x => x.BestData)     // ultima modifica più recente
+                // Ordine finale elenco individui
+                .OrderByDescending(x => x.BestIsOpen)   // ✅ prima tutti gli aperti
+                .ThenByDescending(x => x.BestLivello)   // ✅ poi priorità
+                .ThenByDescending(x => x.BestData)      // ✅ poi data
                 .ToList();
 
             var bestIds = bestPerIndividuo.Select(x => x.BestId).ToList();
 
-
-            // PASSO 2: carico SOLO le righe "best" con tutte le Include che servono
+            // Carico solo le entità selezionate
             var entities = await _context.InterventiAlberi
-                .Where(a => bestIds.Contains(a.id))    // <-- PK Alberi (cambia se diverso)
+                .Where(a => bestIds.Contains(a.id))
                 .Include(a => a.fornitoreNavigation)
                 .Include(a => a.interventoNavigation)
                 .Include(a => a.prioritaNavigation)
                 .Include(a => a.utenteaperturaNavigation)
                 .Include(a => a.utenteultimamodificaNavigation)
-                .Include(a => a.individuoNavigation).ThenInclude(i => i.StoricoIndividuo).ThenInclude(s => s.statoIndividuoNavigation)
-                .Include(a => a.individuoNavigation).ThenInclude(i => i.StoricoIndividuo).ThenInclude(s => s.condizioneNavigation)
-                .Include(a => a.individuoNavigation).ThenInclude(i => i.accessioneNavigation).ThenInclude(s => s.specieNavigation)
-                .Include(a => a.individuoNavigation).ThenInclude(i => i.collezioneNavigation).ThenInclude(c => c.settoreNavigation)
+                .Include(a => a.individuoNavigation)
+                    .ThenInclude(i => i.StoricoIndividuo)
+                        .ThenInclude(s => s.statoIndividuoNavigation)
+                .Include(a => a.individuoNavigation)
+                    .ThenInclude(i => i.StoricoIndividuo)
+                        .ThenInclude(s => s.condizioneNavigation)
+                .Include(a => a.individuoNavigation)
+                    .ThenInclude(i => i.accessioneNavigation)
+                        .ThenInclude(s => s.specieNavigation)
+                .Include(a => a.individuoNavigation)
+                    .ThenInclude(i => i.collezioneNavigation)
+                        .ThenInclude(c => c.settoreNavigation)
                 .ToListAsync();
 
-            // Contains() non preserva l'ordine: riordino come bestPerIndividuo
+            // Riordino entities secondo l’ordine calcolato sopra
             var order = bestPerIndividuo
                 .Select((x, idx) => new { x.BestId, idx })
                 .ToDictionary(x => x.BestId, x => x.idx);
 
-            entities = entities.OrderBy(e => order[e.id]).ToList(); // <-- PK Alberi (cambia se diverso)
+            entities = entities.OrderBy(e => order[e.id]).ToList();
 
             return View(entities);
         }

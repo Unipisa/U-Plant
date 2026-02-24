@@ -9,7 +9,6 @@
 
 <h4 class="box-title">@language.Getkey("Shared_Comp_Sb_Tree")</h4>
 
-<!-- Bottone toggle Aggiungi/Chiudi -->
 <button class="btn btn-primary btn-sm mb-2"
         type="button"
         id="btnToggleAggiungi"
@@ -20,7 +19,6 @@
     <i class="fa-solid fa-plus"></i> Aggiungi
 </button>
 
-<!-- Card Aggiungi Individuo (inizialmente nascosta) -->
 <div class="collapse" id="addIndividuoCollapse">
     <div class="card card-outline card-primary mt-2">
         <div class="card-body">
@@ -40,7 +38,6 @@
                 </div>
             </div>
 
-            <!-- Risultati ricerca (nascosti finché non arrivano) -->
             <div class="row mt-3">
                 <div class="col-12">
                     <div id="risultato2" class="card  card-info d-none">
@@ -58,10 +55,8 @@
     </div>
 </div>
 
-<!-- Elenco principale -->
 <div class="card card-primary mt-3">
 
-    <!-- Header: Visualizza a sinistra / Cerca a destra -->
     <div class="card-header with-border">
         <div class="d-flex align-items-center justify-content-between">
             <div class="d-flex align-items-center">
@@ -90,6 +85,12 @@
             <tbody>
                 @foreach (var item in Model)
                 {
+                    // ordinamenti numerici per DataTables:
+                    var isOpenOrder = (!item.statoIntervento) ? 1 : 0; // aperto=1, chiuso=0 (così DESC mette aperti prima)
+                    var livello = item.prioritaNavigation?.livello ?? 0; // 4 urgente ... 0 nd
+                    var dataIso = item.dataultimamodifica?.ToString("yyyy-MM-dd HH:mm:ss") ?? "0000-00-00 00:00:00";
+                    var dataHuman = item.dataultimamodifica?.ToString("dd/MM/yyyy HH:mm") ?? "-";
+
                     <tr>
                         <td class="text-center">
                             <a asp-action="ElencoInterventi"
@@ -105,9 +106,11 @@
                         <td class="text-center">@item.individuoNavigation.accessioneNavigation.specieNavigation.nome_scientifico</td>
                         <td class="text-center">@item.individuoNavigation.collezioneNavigation.settoreNavigation.settore</td>
                         <td class="text-center">@item.individuoNavigation.collezioneNavigation.collezione</td>
+
+                        @* PRIORITÀ: data-order = livello numerico *@
                         @if (currentCulture == "en-US")
                         {
-                            <td class="text-center">
+                            <td class="text-center" data-order="@livello">
                                 <span class="priority-chip" style="background-color:@item.prioritaNavigation.colore">
                                     @if (string.IsNullOrEmpty(item.prioritaNavigation.descrizione_en))
                                     {
@@ -115,7 +118,6 @@
                                     }
                                     else
                                     {
-
                                         @Html.DisplayFor(model => item.prioritaNavigation.descrizione_en)
                                     }
                                 </span>
@@ -123,12 +125,21 @@
                         }
                         else
                         {
-
-                            <td class="text-center"><span class="priority-chip" style="background-color:@item.prioritaNavigation.colore">@item.prioritaNavigation.descrizione</span></td>
+                            <td class="text-center" data-order="@livello">
+                                <span class="priority-chip" style="background-color:@item.prioritaNavigation.colore">
+                                    @item.prioritaNavigation.descrizione
+                                </span>
+                            </td>
                         }
-                        <td class="text-center">@(item.dataultimamodifica?.ToString("dd/MM/yyyy HH:mm") ?? "-")</td>
 
-                        <td class="text-center">@(item.statoIntervento == false ? language.Getkey("Global_Open") : language.Getkey("Global_Close"))</td>
+                        @* DATA: data-order ISO per sort corretto *@
+                        <td class="text-center" data-order="@dataIso">@dataHuman</td>
+
+                        @* STATO: data-order numerico *@
+                        <td class="text-center" data-order="@isOpenOrder">
+                            @(!item.statoIntervento ? language.Getkey("Global_Open") : language.Getkey("Global_Close"))
+                        </td>
+
                         <td class="text-center">
                             <a asp-action="Create"
                                asp-controller="InterventiAlberi"
@@ -137,7 +148,6 @@
                                title="@($"{language.Getkey("Global_Add")} {language.Getkey("Global_Individual")}")">
                                 <i class="fa-solid fa-plus"></i>
                             </a>
-                            
                         </td>
                     </tr>
                 }
@@ -156,14 +166,13 @@
 @section CustomStyles {
     <style>
         .priority-chip {
-            display:inline-block;
+            display: inline-block;
             padding: 0.2rem 0.5rem;
             border-radius: 0.25rem;
             color: #fff;
             font-weight: 600;
         }
 
-        /* Autocomplete */
         .ui-autocomplete {
             margin: 0px;
             font-family: Arial, Verdana, Sans-Serif;
@@ -202,7 +211,6 @@
                 cursor: pointer;
             }
 
-        /* Header controlli DataTables */
         #table1HeaderLeft label,
         #table1HeaderRight label {
             margin-bottom: 0;
@@ -221,7 +229,6 @@
             margin-left: 6px;
         }
 
-        /* evita che vada a capo */
         #table1HeaderLeft, #table1HeaderRight {
             gap: 10px;
         }
@@ -236,7 +243,6 @@
     <script type="text/javascript">
         $(document).ready(function () {
 
-            // Lingua DataTables
             var lingua = "@ViewBag.lang";
             if (lingua === "en-US") {
                 $.extend($.fn.dataTable.defaults, {
@@ -248,7 +254,6 @@
                 });
             }
 
-            // Autocomplete
             var baseUrlauto = '@Url.Action("AutoComplete", "InterventiAlberi")';
             $("#nomescientifico").autocomplete({
                 source: function (request, response) {
@@ -261,26 +266,28 @@
                 }
             });
 
-            // DataTables (DEFAULT layout, poi spostiamo i controlli)
             var dt = $('#table1').DataTable({
                 paging: true,
                 lengthChange: true,
                 searching: true,
                 info: true,
                 autoWidth: false,
-                ordering: true
+                ordering: true,
+
+                // ✅ Ordine iniziale: Stato(Aperti) -> Priorità -> Data
+                order: [
+                    [7, 'desc'],  // Stato: aperto=1, chiuso=0
+                    [5, 'desc'],  // Priorità: livello 4->0
+                    [6, 'desc']   // Data: ISO
+                ]
             });
 
-            // Sposta "Visualizza" a sinistra e "Cerca" a destra nel header
             var wrapper = $('#table1').closest('.dataTables_wrapper');
-
             $('#table1HeaderLeft').empty().append(wrapper.find('#table1_length').detach());
             $('#table1HeaderRight').empty().append(wrapper.find('#table1_filter').detach());
 
-            // Ordine iniziale: Data Ultima Modifica DESC (colonna 6)
-            dt.order([6, 'desc']).draw();
+            // ✅ NON fare più dt.order([6,'desc']).draw(); altrimenti rovina tutto
 
-            // Ricerca individui per aggiunta
             var baseUrlRicerca = '@Url.Action("Ricerca", "InterventiAlberi")';
 
             $("#cerca").click(function () {
@@ -370,7 +377,6 @@
                 });
             });
 
-            // Cambio testo bottone Aggiungi/Chiudi
             $('#addIndividuoCollapse')
                 .on('shown.bs.collapse', function () {
                     $('#btnToggleAggiungi')
