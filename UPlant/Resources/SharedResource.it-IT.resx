@@ -747,4 +747,25 @@
   <data name="Global_Level" xml:space="preserve">
     <value>Livello</value>
   </data>
+  <data name="Global_Search_Results" xml:space="preserve">
+    <value>Risultati Ricerca</value>
+  </data>
+  <data name="Global_List_Interventions" xml:space="preserve">
+    <value>Elenco Individui con Interventi</value>
+  </data>
+  <data name="Global_Intervention_Status" xml:space="preserve">
+    <value>Stato Intervento</value>
+  </data>
+  <data name="Global_Reason" xml:space="preserve">
+    <value>Motivo</value>
+  </data>
+  <data name="Global_Close" xml:space="preserve">
+    <value>Chiuso</value>
+  </data>
+  <data name="Global_Open" xml:space="preserve">
+    <value>Aperto</value>
+  </data>
+  <data name="Global_Outcome" xml:space="preserve">
+    <value>Esito Intervento</value>
+  </data>
 </root>

@@ -4,6 +4,7 @@
 @{
     ViewBag.Title = language.Getkey("Global_Tree");
     ViewBag.lang = language.GetCurrentCulture();
+    var currentCulture = language.GetCurrentCulture();
 }
 
 <h4 class="box-title">@language.Getkey("Shared_Comp_Sb_Tree")</h4>
@@ -42,9 +43,9 @@
             <!-- Risultati ricerca (nascosti finché non arrivano) -->
             <div class="row mt-3">
                 <div class="col-12">
-                    <div id="risultato2" class="card card-outline card-info d-none">
-                        <div class="card-header">
-                            <h5 class="card-title mb-0">Risultati ricerca</h5>
+                    <div id="risultato2" class="card  card-info d-none">
+                        <div class="card-header  with-border">
+                            <h5 class="card-title mb-0 font-weight-bold">@language.Getkey("Global_Search_Results")</h5>
                         </div>
                         <div class="card-body">
                             <div id="risultato2Content"></div>
@@ -58,13 +59,13 @@
 </div>
 
 <!-- Elenco principale -->
-<div class="card card-outline card-primary mt-3">
+<div class="card card-primary mt-3">
 
     <!-- Header: Visualizza a sinistra / Cerca a destra -->
-    <div class="card-header">
+    <div class="card-header with-border">
         <div class="d-flex align-items-center justify-content-between">
             <div class="d-flex align-items-center">
-                <h3 class="card-title mb-0 mr-3">Elenco Individui con Interventi</h3>
+                <h3 class="card-title mb-0 mr-3 font-weight-bold">@language.Getkey("Global_List_Interventions")</h3>
                 <div id="table1HeaderLeft" class="d-flex align-items-center"></div>
             </div>
             <div id="table1HeaderRight" class="d-flex align-items-center"></div>
@@ -104,11 +105,30 @@
                         <td class="text-center">@item.individuoNavigation.accessioneNavigation.specieNavigation.nome_scientifico</td>
                         <td class="text-center">@item.individuoNavigation.collezioneNavigation.settoreNavigation.settore</td>
                         <td class="text-center">@item.individuoNavigation.collezioneNavigation.collezione</td>
-                        <td class="text-center"><span class="priority-chip" style="background-color:@item.prioritaNavigation.colore">@item.prioritaNavigation.descrizione</span></td>
+                        @if (currentCulture == "en-US")
+                        {
+                            <td class="text-center">
+                                <span class="priority-chip" style="background-color:@item.prioritaNavigation.colore">
+                                    @if (string.IsNullOrEmpty(item.prioritaNavigation.descrizione_en))
+                                    {
+                                        @Html.DisplayFor(model => item.prioritaNavigation.descrizione)
+                                    }
+                                    else
+                                    {
 
+                                        @Html.DisplayFor(model => item.prioritaNavigation.descrizione_en)
+                                    }
+                                </span>
+                            </td>
+                        }
+                        else
+                        {
+
+                            <td class="text-center"><span class="priority-chip" style="background-color:@item.prioritaNavigation.colore">@item.prioritaNavigation.descrizione</span></td>
+                        }
                         <td class="text-center">@(item.dataultimamodifica?.ToString("dd/MM/yyyy HH:mm") ?? "-")</td>
 
-                        <td class="text-center">@(item.statoIntervento == false ? "Aperto" : "Chiuso")</td>
+                        <td class="text-center">@(item.statoIntervento == false ? language.Getkey("Global_Open") : language.Getkey("Global_Close"))</td>
                         <td class="text-center">
                             <a asp-action="Create"
                                asp-controller="InterventiAlberi"

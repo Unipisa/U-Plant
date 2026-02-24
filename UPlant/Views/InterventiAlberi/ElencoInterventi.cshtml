@@ -4,6 +4,7 @@
 @{
     ViewBag.Title = language.Getkey("Global_Tree_Interventions");
     ViewBag.lang = language.GetCurrentCulture();
+    var currentCulture = language.GetCurrentCulture();
 }
 
 <p>
@@ -20,12 +21,12 @@
     </a>
 </p>
 
-<div class="card card-outline card-primary mt-3">
+<div class="card  card-primary mt-3">
 
-    <div class="card-header">
+    <div class="card-header with-border">
         <div class="d-flex align-items-center justify-content-between">
             <div class="d-flex align-items-center">
-                <h3 class="card-title mb-0 mr-3">
+                <h3 class="card-title mb-0 mr-3  font-weight-bold">
                     @(ViewData["nomescientifico"] ?? "") - @(ViewData["progressivo"] ?? "")
                 </h3>
                 <div id="table1HeaderLeft" class="d-flex align-items-center"></div>
@@ -39,10 +40,10 @@
             <thead>
                 <tr>
                     <th>@language.Getkey("Global_Tree_Priority")</th>
-                    <th>@language.Getkey("Global_Intervention")</th>
+                    <th>@language.Getkey("Global_Tree_Interventions")</th>
                     <th>@language.Getkey("Global_Reason")</th>
                     <th>@language.Getkey("Global_Last_Modified_Date")</th>
-                    <th>Stato</th>
+                    <th>@language.Getkey("Global_Intervention_Status")</th>
                     <th style="width:60px;">@language.Getkey("Global_Edit")</th>
                 </tr>
             </thead>
@@ -50,11 +51,31 @@
                 @foreach (var item in Model)
                 {
                     <tr class="@(item.statoIntervento ? "intervento-chiuso" : string.Empty)">
-                        <td class="text-center"><span class="priority-chip" style="background-color:@item.prioritaNavigation.colore">@item.prioritaNavigation.descrizione</span></td>
+                        @if (currentCulture == "en-US")
+                        {
+                            <td class="text-center">
+                                <span class="priority-chip" style="background-color:@item.prioritaNavigation.colore">
+                                    @if (string.IsNullOrEmpty(item.prioritaNavigation.descrizione_en))
+                                    {
+                                        @Html.DisplayFor(model => item.prioritaNavigation.descrizione)
+                                    }
+                                    else
+                                    {
+
+                                        @Html.DisplayFor(model => item.prioritaNavigation.descrizione_en)
+                                    }
+                                </span>
+                            </td>
+                        }
+                        else
+                        {
+
+                            <td class="text-center"><span class="priority-chip" style="background-color:@item.prioritaNavigation.colore">@item.prioritaNavigation.descrizione</span></td>
+                        }
                         <td class="text-center">@item.interventoNavigation.descrizione</td>
                         <td class="text-center">@item.motivo</td>
                         <td class="text-center">@(item.dataultimamodifica?.ToString("dd/MM/yyyy HH:mm") ?? "-")</td>
-                        <td class="text-center">@(item.statoIntervento == false ? "Aperto" : "Chiuso")</td>
+                        <td class="text-center">@(item.statoIntervento == false ? language.Getkey("Global_Open") : language.Getkey("Global_Close"))</td>
                         <td class="text-center">
                             <a asp-action="Edit" asp-route-id="@item.id" class="btn btn-warning btn-sm" title="@language.Getkey("Global_Edit")">
                                 <i class="fa-solid fa-pencil" style="color: #fafafa;"></i>
