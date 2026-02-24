@@ -25,7 +25,9 @@
     <div class="card-header">
         <div class="d-flex align-items-center justify-content-between">
             <div class="d-flex align-items-center">
-                <h3 class="card-title mb-0 mr-3">@language.Getkey("Global_Tree_Interventions")</h3>
+                <h3 class="card-title mb-0 mr-3">
+                    @(ViewData["nomescientifico"] ?? "") - @(ViewData["progressivo"] ?? "")
+                </h3>
                 <div id="table1HeaderLeft" class="d-flex align-items-center"></div>
             </div>
             <div id="table1HeaderRight" class="d-flex align-items-center"></div>
