@@ -85,6 +85,19 @@ namespace UPlant.Controllers
             ViewBag.maxupload = _opt.Value.Pathfile.LimitMaxUpload;
             ViewBag.list = individui.StoricoIndividuo.OrderByDescending(x => x.dataInserimento).ToList();
             individui.StoricoIndividuo = ViewBag.list;
+
+            var interventiChiusi = await _context.InterventiAlberi
+                .Where(x => x.individuo == id && x.statoIntervento)
+                .Select(x => new { x.statoIndividuo, x.condizione, x.esitointervento })
+                .ToListAsync();
+
+            ViewBag.storicoDaInterventoIds = individui.StoricoIndividuo
+                .Where(s => interventiChiusi.Any(i =>
+                    i.statoIndividuo == s.statoIndividuo &&
+                    i.condizione == s.condizione &&
+                    ((i.esitointervento ?? string.Empty) == (s.operazioniColturali ?? string.Empty))))
+                .Select(s => s.id)
+                .ToHashSet();
             //    ViewBag.list = individui.ListaStoricoIndividui.OrderByDescending(x => x.dataInserimento).ToList();
             //            individui.ListaStoricoIndividui = ViewBag.list;
             ViewBag.list2 = await _context.ImmaginiIndividuo.Include(i => i.individuoNavigation).Where(x => x.individuo == id).ToListAsync();

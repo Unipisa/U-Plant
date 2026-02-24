@@ -306,6 +306,8 @@
 
                                                     @foreach (var item in Model.StoricoIndividuo)
                                                     {
+                                                        var storicoDaInterventoIds = ViewBag.storicoDaInterventoIds as System.Collections.Generic.HashSet<System.Guid>;
+                                                        var storicoDaIntervento = storicoDaInterventoIds != null && storicoDaInterventoIds.Contains(item.id);
 
                                                         <tr>
 
@@ -364,6 +366,15 @@
                                                                       
                                                                         
 
+                                                                    }
+
+                                                                    if (storicoDaIntervento)
+                                                                    {
+                                                                        <a asp-action="ElencoInterventi" asp-controller="InterventiAlberi" asp-route-id="@item.individuo">
+                                                                            <span class="btn btn-info btn-xs" title="Vai agli interventi dell'individuo">
+                                                                                <i class="fa-solid fa-list"></i>
+                                                                            </span>
+                                                                        </a>
                                                                     }
 
                                                                 }

@@ -47,7 +47,7 @@
             <tbody>
                 @foreach (var item in Model)
                 {
-                    <tr>
+                    <tr class="@(item.statoIntervento ? "intervento-chiuso" : string.Empty)">
                         <td class="text-center"><span class="priority-chip" style="background-color:@item.prioritaNavigation.colore">@item.prioritaNavigation.descrizione</span></td>
                         <td class="text-center">@item.interventoNavigation.descrizione</td>
                         <td class="text-center">@item.motivo</td>
@@ -102,6 +102,16 @@
 
         #table1HeaderLeft, #table1HeaderRight {
             gap: 10px;
+        }
+
+
+        #table1 tbody tr.intervento-chiuso {
+            color: #6c757d;
+            background-color: #f3f4f6;
+        }
+
+        #table1 tbody tr.intervento-chiuso td {
+            opacity: 0.85;
         }
     </style>
 }
