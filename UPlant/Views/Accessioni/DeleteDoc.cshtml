@@ -1,0 +1,29 @@
+@model IEnumerable<UPlant.Models.DB.Documenti>
+@inject LanguageService language
+<div class="container">
+    <div class="row">
+        <div class="col-sm-4"></div>
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: #3c8dbc; ">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" style="color: azure">@language.Getkey("Global_Delete") Documento</h4>
+                </div>
+                <div class="modal-body">
+                    <h4>@language.Getkey("Global_Question_Delete") documento?</h4>
+                    <hr />
+                    @using (Html.BeginForm())
+                    {
+                        @Html.AntiForgeryToken()
+                        <div class="form-actions no-color">
+                            <input type="hidden" autocomplete="off" name="id" value="@ViewBag.documento" required />
+                            <input type="hidden" autocomplete="off" name="accessione" value="@ViewBag.accessione" required />
+                            <input type="hidden" autocomplete="off" name="tipo" value="@ViewBag.tipo" required />
+                            <input type="submit" value="@language.Getkey("Global_Delete")" class="btn btn-warning" />
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

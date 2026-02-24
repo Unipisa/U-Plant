@@ -24,6 +24,7 @@ namespace UPlant.Controllers
         private readonly IOptions<AppSettings> _opt;
         private readonly IWebHostEnvironment _env;
         private readonly LanguageService _languageService;
+        private static readonly string[] AllowedDocExtensions = { ".pdf", ".doc", ".docx", ".xls", ".xlsx", ".csv", ".txt" };
 
         public IndividuiController(Entities context, IOptions<AppSettings> opt, IWebHostEnvironment env, LanguageService languageService)
         {
@@ -103,10 +104,135 @@ namespace UPlant.Controllers
             ViewBag.list2 = await _context.ImmaginiIndividuo.Include(i => i.individuoNavigation).Where(x => x.individuo == id).ToListAsync();
             ViewBag.list2 = individui.ImmaginiIndividuo.OrderByDescending(x => x.dataInserimento).ToList();
             individui.ImmaginiIndividuo = ViewBag.list2;
+            ViewBag.listDocs = await _context.Documenti
+                .Where(x => x.tipoEntita == "Individuo" && x.entitaId == id)
+                .OrderByDescending(x => x.dataInserimento)
+                .ToListAsync();
 
 
 
             return View(individui);
+        }
+
+        public ActionResult UploadDoc(Guid? id, string tipo)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            ViewBag.individuo = id;
+            ViewBag.tipo = tipo;
+            return PartialView();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UploadDoc(IEnumerable<IFormFile> files, Guid idindividuo, string descrizione, string credits, string tipo)
+        {
+            string autore = User.Identities.FirstOrDefault()?.Claims?.Where(c => c.Type == "given_name").FirstOrDefault()?.Value;
+            var maxUpload = Convert.ToDecimal(_opt.Value.Pathfile.LimitMaxUpload);
+
+            foreach (var file in files)
+            {
+                if (file.Length <= 0 || file.Length > maxUpload)
+                {
+                    AddPageAlerts(PageAlertType.Error, _languageService.Getkey("Message_15").ToString());
+                    TempData["MsgErr"] = _languageService.Getkey("Message_15").ToString();
+                    return RedirectToAction("Details", "Individui", new { id = idindividuo, tipo = tipo });
+                }
+
+                string extension = Path.GetExtension(file.FileName).ToLowerInvariant();
+                if (!AllowedDocExtensions.Contains(extension))
+                {
+                    AddPageAlerts(PageAlertType.Error, _languageService.Getkey("Message_13").ToString());
+                    TempData["MsgErr"] = _languageService.Getkey("Message_13").ToString();
+                    return RedirectToAction("Details", "Individui", new { id = idindividuo, tipo = tipo });
+                }
+
+                var documento = new Documenti
+                {
+                    tipoEntita = "Individuo",
+                    entitaId = idindividuo,
+                    nomefile = Path.GetFileName(file.FileName),
+                    estensione = extension,
+                    mimeType = file.ContentType,
+                    dimensioneBytes = file.Length,
+                    descrizione = descrizione,
+                    credits = credits,
+                    autore = autore,
+                    dataInserimento = DateTime.Now,
+                    visibile = false
+                };
+
+                _context.Documenti.Add(documento);
+                await _context.SaveChangesAsync();
+
+                documento.nomefileFisico = documento.id + extension;
+                _context.Entry(documento).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+
+                string folder = Path.Combine(_opt.Value.Pathfile.Docs, "EntityDocs", "Individui", idindividuo.ToString());
+                Directory.CreateDirectory(folder);
+                string filePath = Path.Combine(folder, documento.nomefileFisico);
+                await using var fileStream = new FileStream(filePath, FileMode.Create);
+                await file.CopyToAsync(fileStream);
+            }
+
+            AddPageAlerts(PageAlertType.Success, _languageService.Getkey("Message_9").ToString());
+            TempData["MsgSucc"] = _languageService.Getkey("Message_9").ToString();
+            return RedirectToAction("Details", "Individui", new { id = idindividuo, tipo = tipo });
+        }
+
+        public async Task<IActionResult> DownloadDoc(Guid id, Guid individuo)
+        {
+            var documento = await _context.Documenti.FirstOrDefaultAsync(x => x.id == id && x.tipoEntita == "Individuo" && x.entitaId == individuo);
+            if (documento == null)
+            {
+                return NotFound();
+            }
+
+            string path = Path.Combine(_opt.Value.Pathfile.Docs, "EntityDocs", "Individui", individuo.ToString(), documento.nomefileFisico);
+            if (!System.IO.File.Exists(path))
+            {
+                return NotFound();
+            }
+
+            var fs = System.IO.File.OpenRead(path);
+            return File(fs, string.IsNullOrWhiteSpace(documento.mimeType) ? "application/octet-stream" : documento.mimeType, documento.nomefile);
+        }
+
+        public ActionResult DeleteDoc(Guid? id, Guid individuo, string tipo)
+        {
+            if (id == null)
+            {
+                return PartialView();
+            }
+
+            ViewBag.documento = id;
+            ViewBag.individuo = individuo;
+            ViewBag.tipo = tipo;
+            return PartialView();
+        }
+
+        [HttpPost, ActionName("DeleteDoc")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteDocConfirmed(Guid id, Guid individuo, string tipo)
+        {
+            var documento = await _context.Documenti.FirstOrDefaultAsync(x => x.id == id && x.tipoEntita == "Individuo" && x.entitaId == individuo);
+            if (documento != null)
+            {
+                string path = Path.Combine(_opt.Value.Pathfile.Docs, "EntityDocs", "Individui", individuo.ToString(), documento.nomefileFisico);
+                if (System.IO.File.Exists(path))
+                {
+                    System.IO.File.Delete(path);
+                }
+
+                _context.Documenti.Remove(documento);
+                await _context.SaveChangesAsync();
+            }
+
+            return RedirectToAction("Details", "Individui", new { id = individuo, tipo = tipo });
         }
 
 

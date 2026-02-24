@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.Globalization;
+using Microsoft.AspNetCore.Http;
+using System.IO;
 using UPlant.Models;
 using UPlant.Models.DB;
 
@@ -19,15 +21,18 @@ namespace UPlant.Controllers
         private readonly IOptions<Application> _appOpt;
         private readonly IOptions<MapSettings> _googlemap;
         private readonly LanguageService _languageService;
+        private readonly IOptions<AppSettings> _opt;
+        private static readonly string[] AllowedDocExtensions = { ".pdf", ".doc", ".docx", ".xls", ".xlsx", ".csv", ".txt" };
 
 
-        public AccessioniController(Entities context, IConfiguration Configuration,  IOptions<Application> appOpt, IOptions<MapSettings> googlemap, LanguageService languageService)
+        public AccessioniController(Entities context, IConfiguration Configuration,  IOptions<Application> appOpt, IOptions<MapSettings> googlemap, IOptions<AppSettings> opt, LanguageService languageService)
         {
             _context = context;
             _configuration = Configuration;
             _languageService = languageService;
             _appOpt = appOpt;
             _googlemap = googlemap;
+            _opt = opt;
 
            
         }
@@ -99,6 +104,11 @@ namespace UPlant.Controllers
             }
             ViewBag.idaccessione = id;
             ViewBag.tipo = tipo;
+            ViewBag.maxupload = _opt.Value.Pathfile.LimitMaxUpload;
+            ViewBag.listDocs = await _context.Documenti
+                .Where(x => x.tipoEntita == "Accessione" && x.entitaId == id)
+                .OrderByDescending(x => x.dataInserimento)
+                .ToListAsync();
             var accessioni = await _context.Accessioni
                 .Include(a => a.Individui).ThenInclude(a => a.collezioneNavigation)
                 .Include(a => a.Individui).ThenInclude(a => a.settoreNavigation)
@@ -144,6 +154,127 @@ namespace UPlant.Controllers
             }
             
             return View(accessioni);
+        }
+
+        public ActionResult UploadDoc(Guid? id, string tipo)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            ViewBag.accessione = id;
+            ViewBag.tipo = tipo;
+            return PartialView();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UploadDoc(IEnumerable<IFormFile> files, Guid idaccessione, string descrizione, string credits, string tipo)
+        {
+            string autore = User.Identities.FirstOrDefault()?.Claims?.Where(c => c.Type == "given_name").FirstOrDefault()?.Value;
+            var maxUpload = Convert.ToDecimal(_opt.Value.Pathfile.LimitMaxUpload);
+
+            foreach (var file in files)
+            {
+                if (file.Length <= 0 || file.Length > maxUpload)
+                {
+                    AddPageAlerts(PageAlertType.Error, _languageService.Getkey("Message_15").ToString());
+                    TempData["MsgErr"] = _languageService.Getkey("Message_15").ToString();
+                    return RedirectToAction("Details", "Accessioni", new { id = idaccessione, tipo = tipo });
+                }
+
+                string extension = Path.GetExtension(file.FileName).ToLowerInvariant();
+                if (!AllowedDocExtensions.Contains(extension))
+                {
+                    AddPageAlerts(PageAlertType.Error, _languageService.Getkey("Message_13").ToString());
+                    TempData["MsgErr"] = _languageService.Getkey("Message_13").ToString();
+                    return RedirectToAction("Details", "Accessioni", new { id = idaccessione, tipo = tipo });
+                }
+
+                var documento = new Documenti
+                {
+                    tipoEntita = "Accessione",
+                    entitaId = idaccessione,
+                    nomefile = Path.GetFileName(file.FileName),
+                    estensione = extension,
+                    mimeType = file.ContentType,
+                    dimensioneBytes = file.Length,
+                    descrizione = descrizione,
+                    credits = credits,
+                    autore = autore,
+                    dataInserimento = DateTime.Now,
+                    visibile = false
+                };
+
+                _context.Documenti.Add(documento);
+                await _context.SaveChangesAsync();
+
+                documento.nomefileFisico = documento.id + extension;
+                _context.Entry(documento).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+
+                string folder = Path.Combine(_opt.Value.Pathfile.Docs, "EntityDocs", "Accessioni", idaccessione.ToString());
+                Directory.CreateDirectory(folder);
+                string filePath = Path.Combine(folder, documento.nomefileFisico);
+                await using var fileStream = new FileStream(filePath, FileMode.Create);
+                await file.CopyToAsync(fileStream);
+            }
+
+            AddPageAlerts(PageAlertType.Success, _languageService.Getkey("Message_9").ToString());
+            TempData["MsgSucc"] = _languageService.Getkey("Message_9").ToString();
+            return RedirectToAction("Details", "Accessioni", new { id = idaccessione, tipo = tipo });
+        }
+
+        public async Task<IActionResult> DownloadDoc(Guid id, Guid accessione)
+        {
+            var documento = await _context.Documenti.FirstOrDefaultAsync(x => x.id == id && x.tipoEntita == "Accessione" && x.entitaId == accessione);
+            if (documento == null)
+            {
+                return NotFound();
+            }
+
+            string path = Path.Combine(_opt.Value.Pathfile.Docs, "EntityDocs", "Accessioni", accessione.ToString(), documento.nomefileFisico);
+            if (!System.IO.File.Exists(path))
+            {
+                return NotFound();
+            }
+
+            var fs = System.IO.File.OpenRead(path);
+            return File(fs, string.IsNullOrWhiteSpace(documento.mimeType) ? "application/octet-stream" : documento.mimeType, documento.nomefile);
+        }
+
+        public ActionResult DeleteDoc(Guid? id, Guid accessione, string tipo)
+        {
+            if (id == null)
+            {
+                return PartialView();
+            }
+
+            ViewBag.documento = id;
+            ViewBag.accessione = accessione;
+            ViewBag.tipo = tipo;
+            return PartialView();
+        }
+
+        [HttpPost, ActionName("DeleteDoc")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteDocConfirmed(Guid id, Guid accessione, string tipo)
+        {
+            var documento = await _context.Documenti.FirstOrDefaultAsync(x => x.id == id && x.tipoEntita == "Accessione" && x.entitaId == accessione);
+            if (documento != null)
+            {
+                string path = Path.Combine(_opt.Value.Pathfile.Docs, "EntityDocs", "Accessioni", accessione.ToString(), documento.nomefileFisico);
+                if (System.IO.File.Exists(path))
+                {
+                    System.IO.File.Delete(path);
+                }
+
+                _context.Documenti.Remove(documento);
+                await _context.SaveChangesAsync();
+            }
+
+            return RedirectToAction("Details", "Accessioni", new { id = accessione, tipo = tipo });
         }
         [Authorize(Roles = "Administrator,Operator")]
         // GET: Accessioni/Create
