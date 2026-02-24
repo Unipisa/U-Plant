@@ -8,7 +8,9 @@ public partial class Documenti
 
     public string tipoEntita { get; set; }
 
-    public Guid entitaId { get; set; }
+    public Guid? accessioneId { get; set; }
+
+    public Guid? individuoId { get; set; }
 
     public string nomefile { get; set; }
 
@@ -29,4 +31,8 @@ public partial class Documenti
     public DateTime dataInserimento { get; set; }
 
     public bool visibile { get; set; }
+
+    public virtual Accessioni accessioneNavigation { get; set; }
+
+    public virtual Individui individuoNavigation { get; set; }
 }

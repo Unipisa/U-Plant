@@ -105,17 +105,10 @@ namespace UPlant.Controllers
             ViewBag.list2 = await _context.ImmaginiIndividuo.Include(i => i.individuoNavigation).Where(x => x.individuo == id).ToListAsync();
             ViewBag.list2 = individui.ImmaginiIndividuo.OrderByDescending(x => x.dataInserimento).ToList();
             individui.ImmaginiIndividuo = ViewBag.list2;
-            try
-            {
-                ViewBag.listDocs = await _context.Documenti
-                    .Where(x => x.tipoEntita == "Individuo" && x.entitaId == id)
-                    .OrderByDescending(x => x.dataInserimento)
-                    .ToListAsync();
-            }
-            catch (SqlException)
-            {
-                ViewBag.listDocs = new List<Documenti>();
-            }
+            ViewBag.listDocs = await _context.Documenti
+                .Where(x => x.tipoEntita == "Individuo" && x.individuoId == id)
+                .OrderByDescending(x => x.dataInserimento)
+                .ToListAsync();
 
 
 
@@ -161,7 +154,7 @@ namespace UPlant.Controllers
                 var documento = new Documenti
                 {
                     tipoEntita = "Individuo",
-                    entitaId = idindividuo,
+                    individuoId = idindividuo,
                     nomefile = Path.GetFileName(file.FileName),
                     estensione = extension,
                     mimeType = file.ContentType,
@@ -194,7 +187,7 @@ namespace UPlant.Controllers
 
         public async Task<IActionResult> DownloadDoc(Guid id, Guid individuo)
         {
-            var documento = await _context.Documenti.FirstOrDefaultAsync(x => x.id == id && x.tipoEntita == "Individuo" && x.entitaId == individuo);
+            var documento = await _context.Documenti.FirstOrDefaultAsync(x => x.id == id && x.tipoEntita == "Individuo" && x.individuoId == individuo);
             if (documento == null)
             {
                 return NotFound();
@@ -227,7 +220,7 @@ namespace UPlant.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteDocConfirmed(Guid id, Guid individuo, string tipo)
         {
-            var documento = await _context.Documenti.FirstOrDefaultAsync(x => x.id == id && x.tipoEntita == "Individuo" && x.entitaId == individuo);
+            var documento = await _context.Documenti.FirstOrDefaultAsync(x => x.id == id && x.tipoEntita == "Individuo" && x.individuoId == individuo);
             if (documento != null)
             {
                 string path = Path.Combine(_opt.Value.Pathfile.DocumentsBasePath, _opt.Value.Pathfile.EntityDocsRootFolder, _opt.Value.Pathfile.IndividualDocsFolder, individuo.ToString(), documento.nomefileFisico);
