@@ -83,7 +83,7 @@ namespace UPlant.Controllers
             ViewBag.list = await _context.StoricoIndividuo.Include(i => i.condizioneNavigation).Include(i => i.statoIndividuoNavigation).Include(i => i.utenteNavigation).Where(x => x.individuo == id).ToListAsync();
             ViewBag.idindividuo = id;
             ViewBag.tipo = tipo;
-            ViewBag.maxupload = _opt.Value.Pathfile.LimitMaxUpload;
+            ViewBag.maxupload = _opt.Value.Pathfile.ImagesMaxUploadBytes;
             ViewBag.list = individui.StoricoIndividuo.OrderByDescending(x => x.dataInserimento).ToList();
             individui.StoricoIndividuo = ViewBag.list;
 
@@ -131,7 +131,7 @@ namespace UPlant.Controllers
         public async Task<IActionResult> UploadDoc(IEnumerable<IFormFile> files, Guid idindividuo, string descrizione, string credits, string tipo)
         {
             string autore = User.Identities.FirstOrDefault()?.Claims?.Where(c => c.Type == "given_name").FirstOrDefault()?.Value;
-            var maxUpload = Convert.ToDecimal(_opt.Value.Pathfile.LimitMaxUpload);
+            var maxUpload = Convert.ToDecimal(_opt.Value.Pathfile.ImagesMaxUploadBytes);
 
             foreach (var file in files)
             {
@@ -172,7 +172,7 @@ namespace UPlant.Controllers
                 _context.Entry(documento).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
 
-                string folder = Path.Combine(_opt.Value.Pathfile.Docs, "EntityDocs", "Individui", idindividuo.ToString());
+                string folder = Path.Combine(_opt.Value.Pathfile.DocumentsBasePath, _opt.Value.Pathfile.EntityDocsRootFolder, _opt.Value.Pathfile.IndividualDocsFolder, idindividuo.ToString());
                 Directory.CreateDirectory(folder);
                 string filePath = Path.Combine(folder, documento.nomefileFisico);
                 await using var fileStream = new FileStream(filePath, FileMode.Create);
@@ -192,7 +192,7 @@ namespace UPlant.Controllers
                 return NotFound();
             }
 
-            string path = Path.Combine(_opt.Value.Pathfile.Docs, "EntityDocs", "Individui", individuo.ToString(), documento.nomefileFisico);
+            string path = Path.Combine(_opt.Value.Pathfile.DocumentsBasePath, _opt.Value.Pathfile.EntityDocsRootFolder, _opt.Value.Pathfile.IndividualDocsFolder, individuo.ToString(), documento.nomefileFisico);
             if (!System.IO.File.Exists(path))
             {
                 return NotFound();
@@ -222,7 +222,7 @@ namespace UPlant.Controllers
             var documento = await _context.Documenti.FirstOrDefaultAsync(x => x.id == id && x.tipoEntita == "Individuo" && x.individuoId == individuo);
             if (documento != null)
             {
-                string path = Path.Combine(_opt.Value.Pathfile.Docs, "EntityDocs", "Individui", individuo.ToString(), documento.nomefileFisico);
+                string path = Path.Combine(_opt.Value.Pathfile.DocumentsBasePath, _opt.Value.Pathfile.EntityDocsRootFolder, _opt.Value.Pathfile.IndividualDocsFolder, individuo.ToString(), documento.nomefileFisico);
                 if (System.IO.File.Exists(path))
                 {
                     System.IO.File.Delete(path);
@@ -269,7 +269,7 @@ namespace UPlant.Controllers
             {
 
 
-                if (file.Length > 0 && file.Length <= Convert.ToDecimal(t.Pathfile.LimitMaxUpload))
+                if (file.Length > 0 && file.Length <= Convert.ToDecimal(t.Pathfile.ImagesMaxUploadBytes))
 
                 {
                     try
@@ -331,11 +331,11 @@ namespace UPlant.Controllers
                         {
                             estensione = ".jpg";
                         }
-                        string filename = StaticUtils.SetImgPath(immagini.individuo.ToString(), immagini.id + estensione, t.Pathfile.Basepath);
+                        string filename = StaticUtils.SetImgPath(immagini.individuo.ToString(), immagini.id + estensione, t.Pathfile.ImagesBasePath);
 
                         if (file.Length > 0)
                         {
-                            string filePath = Path.Combine(t.Pathfile.Basepath, filename);
+                            string filePath = Path.Combine(t.Pathfile.ImagesBasePath, filename);
                             await using (Stream fileStream = new FileStream(filePath, FileMode.Create))
                             {
                                 await imageStream.CopyToAsync(fileStream);
@@ -345,10 +345,10 @@ namespace UPlant.Controllers
 
                         //file.SaveAs(filename);
                         //creo thumb
-                        string path = StaticUtils.GetImgPath(immagini.individuo.ToString(), immagini.id.ToString(), immagini.nomefile, t.Pathfile.Basepath);
+                        string path = StaticUtils.GetImgPath(immagini.individuo.ToString(), immagini.id.ToString(), immagini.nomefile, t.Pathfile.ImagesBasePath);
                         if (System.IO.File.Exists(path))
                         {
-                            string filenamethumb = StaticUtils.SetThumbImgPath(immagini.individuo.ToString(), immagini.id + estensione, t.Pathfile.Basepath);
+                            string filenamethumb = StaticUtils.SetThumbImgPath(immagini.individuo.ToString(), immagini.id + estensione, t.Pathfile.ImagesBasePath);
                             StaticUtils.ResizeAndSave(filename, filenamethumb, 400, true);
 
                         }
@@ -379,7 +379,7 @@ namespace UPlant.Controllers
         public ActionResult ViewImg(Guid individuo, string img, string filename)
         {
 
-            string filePath = StaticUtils.GetThumbImgPath(individuo.ToString(), img, filename, _opt.Value.Pathfile.Basepath);
+            string filePath = StaticUtils.GetThumbImgPath(individuo.ToString(), img, filename, _opt.Value.Pathfile.ImagesBasePath);
             var fileExists = System.IO.File.Exists(filePath);
 
             if (fileExists)
@@ -402,7 +402,7 @@ namespace UPlant.Controllers
 
 
 
-            string filePath = StaticUtils.GetImgPath(individuo.ToString(), img, filename, _opt.Value.Pathfile.Basepath);
+            string filePath = StaticUtils.GetImgPath(individuo.ToString(), img, filename, _opt.Value.Pathfile.ImagesBasePath);
 
             var fileExists = System.IO.File.Exists(filePath);
             var fs = System.IO.File.OpenRead(filePath);
@@ -430,7 +430,7 @@ namespace UPlant.Controllers
         {
             try
             {
-                string path = StaticUtils.GetThumbImgPath(individuo.ToString(), img, filename, _opt.Value.Pathfile.Basepath);
+                string path = StaticUtils.GetThumbImgPath(individuo.ToString(), img, filename, _opt.Value.Pathfile.ImagesBasePath);
                 using var imgPhoto = Image.FromFile(path);
                 imgPhoto.RotateFlip(RotateFlipType.Rotate90FlipNone);
                 imgPhoto.Save(path);
@@ -495,8 +495,8 @@ namespace UPlant.Controllers
             ImmaginiIndividuo immagini = _context.ImmaginiIndividuo.Find(id);
             Guid numeroindividuo = immagini.individuo;
 
-            string path = StaticUtils.GetImgPath(immagini.individuo.ToString(), immagini.id.ToString(), immagini.nomefile, _opt.Value.Pathfile.Basepath);
-            string paththumb = StaticUtils.GetThumbImgPath(immagini.individuo.ToString(), immagini.id.ToString(), immagini.nomefile, _opt.Value.Pathfile.Basepath);
+            string path = StaticUtils.GetImgPath(immagini.individuo.ToString(), immagini.id.ToString(), immagini.nomefile, _opt.Value.Pathfile.ImagesBasePath);
+            string paththumb = StaticUtils.GetThumbImgPath(immagini.individuo.ToString(), immagini.id.ToString(), immagini.nomefile, _opt.Value.Pathfile.ImagesBasePath);
             if (System.IO.File.Exists(path))
             {
                 try

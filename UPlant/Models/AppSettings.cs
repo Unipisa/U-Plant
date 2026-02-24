@@ -54,12 +54,21 @@ namespace UPlant.Models
     
     public class Pathfile
     {
-        ///<value>Basepath dell'applicazioni </value>
-        public string Basepath { get; set; }
-        ///<value>LimitMaxUpload dell'applicazioni </value>
-        public string LimitMaxUpload { get; set; }
+        ///<value>Path fisico root delle immagini </value>
+        public string ImagesBasePath { get; set; }
+        ///<value>Dimensione massima upload immagini/documenti in bytes </value>
+        public string ImagesMaxUploadBytes { get; set; }
 
-        public string Docs { get; set; }
+        ///<value>Path fisico dei file temporanei export (ricerche/estrazioni) </value>
+        public string TempExportsPath { get; set; }
+
+        ///<value>Path fisico root dei documenti caricati su entità (Accessioni/Individui) </value>
+        public string DocumentsBasePath { get; set; }
+
+        ///<value>Sotto-cartella per documenti entità dentro DocumentsBasePath </value>
+        public string EntityDocsRootFolder { get; set; } = "EntityDocs";
+        public string AccessionDocsFolder { get; set; } = "Accessioni";
+        public string IndividualDocsFolder { get; set; } = "Individui";
     }
 
     public class AppSettings

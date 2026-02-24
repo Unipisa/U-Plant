@@ -104,7 +104,7 @@ namespace UPlant.Controllers
             }
             ViewBag.idaccessione = id;
             ViewBag.tipo = tipo;
-            ViewBag.maxupload = _opt.Value.Pathfile.LimitMaxUpload;
+            ViewBag.maxupload = _opt.Value.Pathfile.ImagesMaxUploadBytes;
             ViewBag.listDocs = await _context.Documenti
                 .Where(x => x.tipoEntita == "Accessione" && x.accessioneId == id)
                 .OrderByDescending(x => x.dataInserimento)
@@ -173,7 +173,7 @@ namespace UPlant.Controllers
         public async Task<IActionResult> UploadDoc(IEnumerable<IFormFile> files, Guid idaccessione, string descrizione, string credits, string tipo)
         {
             string autore = User.Identities.FirstOrDefault()?.Claims?.Where(c => c.Type == "given_name").FirstOrDefault()?.Value;
-            var maxUpload = Convert.ToDecimal(_opt.Value.Pathfile.LimitMaxUpload);
+            var maxUpload = Convert.ToDecimal(_opt.Value.Pathfile.ImagesMaxUploadBytes);
 
             foreach (var file in files)
             {
@@ -214,7 +214,7 @@ namespace UPlant.Controllers
                 _context.Entry(documento).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
 
-                string folder = Path.Combine(_opt.Value.Pathfile.Docs, "EntityDocs", "Accessioni", idaccessione.ToString());
+                string folder = Path.Combine(_opt.Value.Pathfile.DocumentsBasePath, _opt.Value.Pathfile.EntityDocsRootFolder, _opt.Value.Pathfile.AccessionDocsFolder, idaccessione.ToString());
                 Directory.CreateDirectory(folder);
                 string filePath = Path.Combine(folder, documento.nomefileFisico);
                 await using var fileStream = new FileStream(filePath, FileMode.Create);
@@ -234,7 +234,7 @@ namespace UPlant.Controllers
                 return NotFound();
             }
 
-            string path = Path.Combine(_opt.Value.Pathfile.Docs, "EntityDocs", "Accessioni", accessione.ToString(), documento.nomefileFisico);
+            string path = Path.Combine(_opt.Value.Pathfile.DocumentsBasePath, _opt.Value.Pathfile.EntityDocsRootFolder, _opt.Value.Pathfile.AccessionDocsFolder, accessione.ToString(), documento.nomefileFisico);
             if (!System.IO.File.Exists(path))
             {
                 return NotFound();
@@ -264,7 +264,7 @@ namespace UPlant.Controllers
             var documento = await _context.Documenti.FirstOrDefaultAsync(x => x.id == id && x.tipoEntita == "Accessione" && x.accessioneId == accessione);
             if (documento != null)
             {
-                string path = Path.Combine(_opt.Value.Pathfile.Docs, "EntityDocs", "Accessioni", accessione.ToString(), documento.nomefileFisico);
+                string path = Path.Combine(_opt.Value.Pathfile.DocumentsBasePath, _opt.Value.Pathfile.EntityDocsRootFolder, _opt.Value.Pathfile.AccessionDocsFolder, accessione.ToString(), documento.nomefileFisico);
                 if (System.IO.File.Exists(path))
                 {
                     System.IO.File.Delete(path);

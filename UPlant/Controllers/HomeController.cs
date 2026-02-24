@@ -575,7 +575,7 @@ namespace UPlant.Controllers
         public ActionResult Download(string file)
         {
             var t = _opt.Value;
-            string basepath = t.Pathfile.Docs;
+            string basepath = t.Pathfile.TempExportsPath;
             string fullPath = Path.Combine(basepath, file);
             var mimeType = "application/vnd.ms-excel";
             FileStream fileStream = new FileStream(fullPath, FileMode.Open, FileAccess.Read);
@@ -965,7 +965,7 @@ namespace UPlant.Controllers
             foreach (var item in immagini)
             {
 
-                string basepath = t.Pathfile.Basepath;
+                string basepath = t.Pathfile.ImagesBasePath;
                 string pathdirindividuo = Path.Combine(basepath, item.individuo.ToString());
                 if (Directory.Exists(pathdirindividuo))
                 {
@@ -1028,7 +1028,7 @@ namespace UPlant.Controllers
             {
                  fileName = "Individui" + Guid.NewGuid().ToString() + ".xlsx";
             }
-                string basepath = t.Pathfile.Docs;
+                string basepath = t.Pathfile.TempExportsPath;
 
             string fileFullname = Path.Combine(basepath, fileName);
           
