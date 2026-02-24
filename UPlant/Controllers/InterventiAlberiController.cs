@@ -172,7 +172,7 @@ namespace UPlant.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("id,individuo,dataapertura,priorita,intervento,fornitore,motivo,esitointervento,statoIntervento,dataultimamodifica,utenteapertura,utenteultimamodifica,statoIndividuo,condizione")] InterventiAlberi interventiAlberi)
+        public async Task<IActionResult> Create([Bind("id,individuo,dataapertura,priorita,intervento,fornitore,motivo,esitointervento,statoIntervento,dataultimamodifica,utenteapertura,utenteultimamodifica")] InterventiAlberi interventiAlberi)
         {
             var linguacorrente = _languageService.GetCurrentCulture();
             if (ModelState.IsValid)
