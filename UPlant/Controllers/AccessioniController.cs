@@ -192,11 +192,14 @@ namespace UPlant.Controllers
                     return RedirectToAction("Details", "Accessioni", new { id = idaccessione, tipo = tipo });
                 }
 
+                var documentoId = Guid.NewGuid();
                 var documento = new Documenti
                 {
+                    id = documentoId,
                     tipoEntita = "Accessione",
                     AccessioneId = idaccessione,
                     nomefile = Path.GetFileName(file.FileName),
+                    nomefileFisico = documentoId + extension,
                     estensione = extension,
                     mimeType = file.ContentType,
                     dimensioneBytes = file.Length,
@@ -208,10 +211,6 @@ namespace UPlant.Controllers
                 };
 
                 _context.Documenti.Add(documento);
-                await _context.SaveChangesAsync();
-
-                documento.nomefileFisico = documento.id + extension;
-                _context.Entry(documento).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
 
                 string folder = Path.Combine(_opt.Value.Pathfile.DocumentsBasePath, _opt.Value.Pathfile.EntityDocsRootFolder, _opt.Value.Pathfile.AccessionDocsFolder, idaccessione.ToString());
