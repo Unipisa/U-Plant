@@ -83,13 +83,13 @@
                 <div class="row" id="statoCondizioneRow">
                     <div class="form-group col">
                         <label class="control-label">@language.Getkey("Global_Individual_Status")</label>
-                        <select asp-for="statoIndividuo" class="form-control select2"
+                        <select asp-for="statoIndividuo" class="form-control"
                                 asp-items="@(ViewData["statoIndividuo"] as SelectList)"></select>
                     </div>
 
                     <div class="form-group col">
                         <label class="control-label">@language.Getkey("Global_Condition")</label>
-                        <select asp-for="condizione" class="form-control select2"
+                        <select asp-for="condizione" class="form-control"
                                 asp-items="@(ViewData["condizione"] as SelectList)"></select>
                     </div>
                 </div>
