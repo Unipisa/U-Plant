@@ -40,13 +40,13 @@ namespace UPlant.Controllers
             Guid organizzazione = _context.Users.Where(a => a.UnipiUserName == (username).Substring(0, username.IndexOf("@"))).Select(a => a.Organizzazione).FirstOrDefault();
             if (valida == null)
             {
-                return View(await _context.Individui.Include(i => i.accessioneNavigation).Include(i => i.cartellinoNavigation).Include(i => i.collezioneNavigation).Include(i => i.propagatoModalitaNavigation).Include(i => i.sessoNavigation).Include(i => i.settoreNavigation).Where(a => a.accessioneNavigation.organizzazione == organizzazione).ToListAsync());
+                return View(await _context.Individui.Include(i => i.AccessioneNavigation).Include(i => i.cartellinoNavigation).Include(i => i.collezioneNavigation).Include(i => i.propagatoModalitaNavigation).Include(i => i.sessoNavigation).Include(i => i.settoreNavigation).Where(a => a.AccessioneNavigation.organizzazione == organizzazione).ToListAsync());
 
             }
             else
             {
 
-                return View(await _context.Individui.Include(i => i.accessioneNavigation).Include(i => i.cartellinoNavigation).Include(i => i.collezioneNavigation).Include(i => i.propagatoModalitaNavigation).Include(i => i.sessoNavigation).Include(i => i.settoreNavigation).Where(a => a.accessioneNavigation.organizzazione == organizzazione && a.validazione == false).ToListAsync());
+                return View(await _context.Individui.Include(i => i.AccessioneNavigation).Include(i => i.cartellinoNavigation).Include(i => i.collezioneNavigation).Include(i => i.propagatoModalitaNavigation).Include(i => i.sessoNavigation).Include(i => i.settoreNavigation).Where(a => a.AccessioneNavigation.organizzazione == organizzazione && a.validazione == false).ToListAsync());
 
             }
 
@@ -57,11 +57,11 @@ namespace UPlant.Controllers
             {
                 return NotFound();
             }
-            //Storico storico = await _context.Storico.Where(x => x.individuo == id).OrderByDescending(x => x.dataInserimento).FirstOrDefaultAsync(m => m.individuoNavigation.id == id);
+            //Storico storico = await _context.Storico.Where(x => x.individuo == id).OrderByDescending(x => x.dataInserimento).FirstOrDefaultAsync(m => m.IndividuoNavigation.id == id);
             //Individui individui = await _context.Individui.FindAsync(id);
             var individui = await _context.Individui
 
-                 .Include(i => i.accessioneNavigation).ThenInclude(i => i.specieNavigation)
+                 .Include(i => i.AccessioneNavigation).ThenInclude(i => i.specieNavigation)
                  .Include(i => i.cartellinoNavigation)
                  .Include(i => i.collezioneNavigation)
 
@@ -71,8 +71,8 @@ namespace UPlant.Controllers
                  .FirstOrDefaultAsync(m => m.id == id);
 
 
-            //   .Include(i => i.individuoNavigation)
-            // .FirstOrDefaultAsync(m => m.individuoNavigation.id == id);
+            //   .Include(i => i.IndividuoNavigation)
+            // .FirstOrDefaultAsync(m => m.IndividuoNavigation.id == id);
 
 
             if (individui == null)
@@ -101,11 +101,11 @@ namespace UPlant.Controllers
                 .ToHashSet();
             //    ViewBag.list = individui.ListaStoricoIndividui.OrderByDescending(x => x.dataInserimento).ToList();
             //            individui.ListaStoricoIndividui = ViewBag.list;
-            ViewBag.list2 = await _context.ImmaginiIndividuo.Include(i => i.individuoNavigation).Where(x => x.individuo == id).ToListAsync();
+            ViewBag.list2 = await _context.ImmaginiIndividuo.Include(i => i.IndividuoNavigation).Where(x => x.individuo == id).ToListAsync();
             ViewBag.list2 = individui.ImmaginiIndividuo.OrderByDescending(x => x.dataInserimento).ToList();
             individui.ImmaginiIndividuo = ViewBag.list2;
             ViewBag.listDocs = await _context.Documenti
-                .Where(x => x.tipoEntita == "Individuo" && x.individuoId == id)
+                .Where(x => x.tipoEntita == "Individuo" && x.IndividuoId == id)
                 .OrderByDescending(x => x.dataInserimento)
                 .ToListAsync();
 
@@ -153,7 +153,7 @@ namespace UPlant.Controllers
                 var documento = new Documenti
                 {
                     tipoEntita = "Individuo",
-                    individuoId = idindividuo,
+                    IndividuoId = idindividuo,
                     nomefile = Path.GetFileName(file.FileName),
                     estensione = extension,
                     mimeType = file.ContentType,
@@ -186,7 +186,7 @@ namespace UPlant.Controllers
 
         public async Task<IActionResult> DownloadDoc(Guid id, Guid individuo)
         {
-            var documento = await _context.Documenti.FirstOrDefaultAsync(x => x.id == id && x.tipoEntita == "Individuo" && x.individuoId == individuo);
+            var documento = await _context.Documenti.FirstOrDefaultAsync(x => x.id == id && x.tipoEntita == "Individuo" && x.IndividuoId == individuo);
             if (documento == null)
             {
                 return NotFound();
@@ -219,7 +219,7 @@ namespace UPlant.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteDocConfirmed(Guid id, Guid individuo, string tipo)
         {
-            var documento = await _context.Documenti.FirstOrDefaultAsync(x => x.id == id && x.tipoEntita == "Individuo" && x.individuoId == individuo);
+            var documento = await _context.Documenti.FirstOrDefaultAsync(x => x.id == id && x.tipoEntita == "Individuo" && x.IndividuoId == individuo);
             if (documento != null)
             {
                 string path = Path.Combine(_opt.Value.Pathfile.DocumentsBasePath, _opt.Value.Pathfile.EntityDocsRootFolder, _opt.Value.Pathfile.IndividualDocsFolder, individuo.ToString(), documento.nomefileFisico);
@@ -414,7 +414,7 @@ namespace UPlant.Controllers
         public async Task<IActionResult> ShowHidden(Guid individuo, Guid img, string tipo)
         {
             var immagini = await _context.ImmaginiIndividuo
-                .Include(i => i.individuoNavigation)
+                .Include(i => i.IndividuoNavigation)
                 .FirstOrDefaultAsync(m => m.id == img);
 
             //  ImmaginiIndividuo immagini = _context.ImmaginiIndividuo.Find(img);
@@ -459,7 +459,7 @@ namespace UPlant.Controllers
 
 
             var immagini = await _context.ImmaginiIndividuo
-                .Include(i => i.individuoNavigation)
+                .Include(i => i.IndividuoNavigation)
                 .FirstOrDefaultAsync(m => m.id == img);
 
             immagini.predefinita = true;
@@ -743,7 +743,7 @@ namespace UPlant.Controllers
             {
                 return new BadRequestResult();
             }
-            Individui individui = await _context.Individui.Include(i => i.accessioneNavigation).ThenInclude(i => i.specieNavigation)
+            Individui individui = await _context.Individui.Include(i => i.AccessioneNavigation).ThenInclude(i => i.specieNavigation)
                 .Include(i => i.cartellinoNavigation)
                 .Include(i => i.collezioneNavigation)
 
@@ -823,7 +823,7 @@ namespace UPlant.Controllers
 
 
         {
-            Individui individui = await _context.Individui.Include(i => i.accessioneNavigation)
+            Individui individui = await _context.Individui.Include(i => i.AccessioneNavigation)
                 .Include(i => i.propagatoModalitaNavigation)
                 .Include(i => i.cartellinoNavigation)
                 .Include(i => i.collezioneNavigation)

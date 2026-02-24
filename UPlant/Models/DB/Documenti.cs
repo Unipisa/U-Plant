@@ -8,9 +8,9 @@ public partial class Documenti
 
     public string tipoEntita { get; set; }
 
-    public Guid? accessioneId { get; set; }
+    public Guid? AccessioneId { get; set; }
 
-    public Guid? individuoId { get; set; }
+    public Guid? IndividuoId { get; set; }
 
     public string nomefile { get; set; }
 
@@ -32,7 +32,7 @@ public partial class Documenti
 
     public bool visibile { get; set; }
 
-    public virtual Accessioni accessioneNavigation { get; set; }
+    public virtual Accessioni AccessioneNavigation { get; set; }
 
-    public virtual Individui individuoNavigation { get; set; }
+    public virtual Individui IndividuoNavigation { get; set; }
 }

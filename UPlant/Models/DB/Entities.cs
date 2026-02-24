@@ -312,24 +312,24 @@ public partial class Entities : DbContext
             entity.ToTable("Documenti");
 
             entity.Property(e => e.id).HasDefaultValueSql("(newid())");
-            entity.Property(e => e.accessioneId).HasColumnName("accessioneId");
+            entity.Property(e => e.AccessioneId).HasColumnName("AccessioneId");
             entity.Property(e => e.autore).HasMaxLength(100);
             entity.Property(e => e.credits).HasMaxLength(250);
             entity.Property(e => e.dataInserimento).HasColumnType("datetime");
             entity.Property(e => e.descrizione).HasMaxLength(500);
             entity.Property(e => e.estensione).HasMaxLength(10);
-            entity.Property(e => e.individuoId).HasColumnName("individuoId");
+            entity.Property(e => e.IndividuoId).HasColumnName("IndividuoId");
             entity.Property(e => e.mimeType).HasMaxLength(100);
             entity.Property(e => e.nomefile).HasMaxLength(255);
             entity.Property(e => e.nomefileFisico).HasMaxLength(255);
             entity.Property(e => e.tipoEntita).HasMaxLength(30);
 
-            entity.HasOne(d => d.accessioneNavigation).WithMany()
-                .HasForeignKey(d => d.accessioneId)
+            entity.HasOne(d => d.AccessioneNavigation).WithMany()
+                .HasForeignKey(d => d.AccessioneId)
                 .HasConstraintName("FK_Documenti_Accessioni");
 
-            entity.HasOne(d => d.individuoNavigation).WithMany()
-                .HasForeignKey(d => d.individuoId)
+            entity.HasOne(d => d.IndividuoNavigation).WithMany()
+                .HasForeignKey(d => d.IndividuoId)
                 .HasConstraintName("FK_Documenti_Individui");
         });
 
@@ -452,7 +452,7 @@ public partial class Entities : DbContext
                 .HasMaxLength(100)
                 .IsUnicode(false);
 
-            entity.HasOne(d => d.individuoNavigation).WithMany(p => p.ImmaginiIndividuo)
+            entity.HasOne(d => d.IndividuoNavigation).WithMany(p => p.ImmaginiIndividuo)
                 .HasForeignKey(d => d.individuo)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_ImmaginiIndividuo_Individui");
@@ -476,7 +476,7 @@ public partial class Entities : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false);
 
-            entity.HasOne(d => d.accessioneNavigation).WithMany(p => p.Individui)
+            entity.HasOne(d => d.AccessioneNavigation).WithMany(p => p.Individui)
                 .HasForeignKey(d => d.accessione)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Individui_Accessioni");
@@ -515,7 +515,7 @@ public partial class Entities : DbContext
         {
             entity.Property(e => e.id).HasDefaultValueSql("(newid())");
 
-            entity.HasOne(d => d.individuoNavigation).WithMany(p => p.IndividuiPercorso)
+            entity.HasOne(d => d.IndividuoNavigation).WithMany(p => p.IndividuiPercorso)
                 .HasForeignKey(d => d.individuo)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_IndividuiPercorso_Individui");
@@ -548,7 +548,7 @@ public partial class Entities : DbContext
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Alberi_Fornitori");
 
-            entity.HasOne(d => d.individuoNavigation).WithMany(p => p.InterventiAlberi)
+            entity.HasOne(d => d.IndividuoNavigation).WithMany(p => p.InterventiAlberi)
                 .HasForeignKey(d => d.individuo)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Alberi_Individui");
@@ -1002,7 +1002,7 @@ public partial class Entities : DbContext
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_StoricoIndividuo_Condizioni");
 
-            entity.HasOne(d => d.individuoNavigation).WithMany(p => p.StoricoIndividuo)
+            entity.HasOne(d => d.IndividuoNavigation).WithMany(p => p.StoricoIndividuo)
                 .HasForeignKey(d => d.individuo)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_StoricoIndividuo_Individui");
