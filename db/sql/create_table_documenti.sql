@@ -13,8 +13,8 @@ BEGIN
         tipoEntita NVARCHAR(30) NOT NULL,
 
         -- FK opzionali (una valorizzata in base al tipoEntita)
-        accessioneId UNIQUEIDENTIFIER NULL,
-        individuoId UNIQUEIDENTIFIER NULL,
+        AccessioneId UNIQUEIDENTIFIER NULL,
+        IndividuoId UNIQUEIDENTIFIER NULL,
 
         -- Nome originale file lato utente
         nomefile NVARCHAR(255) NOT NULL,
@@ -39,31 +39,31 @@ BEGIN
             CONSTRAINT DF_Documenti_visibile DEFAULT (0),
 
         CONSTRAINT FK_Documenti_Accessioni
-            FOREIGN KEY (accessioneId) REFERENCES dbo.Accessioni(id),
+            FOREIGN KEY (AccessioneId) REFERENCES dbo.Accessioni(id),
 
         CONSTRAINT FK_Documenti_Individui
-            FOREIGN KEY (individuoId) REFERENCES dbo.Individui(id),
+            FOREIGN KEY (IndividuoId) REFERENCES dbo.Individui(id),
 
         CONSTRAINT CK_Documenti_tipoEntita CHECK (tipoEntita IN (N'Accessione', N'Individuo')),
         CONSTRAINT CK_Documenti_dimensioneBytes CHECK (dimensioneBytes >= 0),
         CONSTRAINT CK_Documenti_parent CHECK (
-            (tipoEntita = N'Accessione' AND accessioneId IS NOT NULL AND individuoId IS NULL)
+            (tipoEntita = N'Accessione' AND AccessioneId IS NOT NULL AND IndividuoId IS NULL)
             OR
-            (tipoEntita = N'Individuo' AND individuoId IS NOT NULL AND accessioneId IS NULL)
+            (tipoEntita = N'Individuo' AND IndividuoId IS NOT NULL AND AccessioneId IS NULL)
         )
     );
 
     -- Indice principale per le query per contesto + entità (Details Accessione/Individuo)
-    CREATE INDEX IX_Documenti_tipoEntita_accessioneId_individuoId_data
-        ON dbo.Documenti (tipoEntita, accessioneId, individuoId, dataInserimento DESC);
+    CREATE INDEX IX_Documenti_tipoEntita_AccessioneId_IndividuoId_data
+        ON dbo.Documenti (tipoEntita, AccessioneId, IndividuoId, dataInserimento DESC);
 
     -- Evita duplicati fisici per la stessa entità (filtrati)
     CREATE UNIQUE INDEX UX_Documenti_Accessione_nomefileFisico
-        ON dbo.Documenti (accessioneId, nomefileFisico)
-        WHERE accessioneId IS NOT NULL;
+        ON dbo.Documenti (AccessioneId, nomefileFisico)
+        WHERE AccessioneId IS NOT NULL;
 
     CREATE UNIQUE INDEX UX_Documenti_Individuo_nomefileFisico
-        ON dbo.Documenti (individuoId, nomefileFisico)
-        WHERE individuoId IS NOT NULL;
+        ON dbo.Documenti (IndividuoId, nomefileFisico)
+        WHERE IndividuoId IS NOT NULL;
 END;
 GO
