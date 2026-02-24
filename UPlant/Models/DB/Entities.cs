@@ -452,7 +452,7 @@ public partial class Entities : DbContext
                 .HasMaxLength(100)
                 .IsUnicode(false);
 
-            entity.HasOne(d => d.IndividuoNavigation).WithMany(p => p.ImmaginiIndividuo)
+            entity.HasOne(d => d.individuoNavigation).WithMany(p => p.ImmaginiIndividuo)
                 .HasForeignKey(d => d.individuo)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_ImmaginiIndividuo_Individui");
@@ -476,7 +476,7 @@ public partial class Entities : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false);
 
-            entity.HasOne(d => d.AccessioneNavigation).WithMany(p => p.Individui)
+            entity.HasOne(d => d.accessioneNavigation).WithMany(p => p.Individui)
                 .HasForeignKey(d => d.accessione)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Individui_Accessioni");
@@ -515,7 +515,7 @@ public partial class Entities : DbContext
         {
             entity.Property(e => e.id).HasDefaultValueSql("(newid())");
 
-            entity.HasOne(d => d.IndividuoNavigation).WithMany(p => p.IndividuiPercorso)
+            entity.HasOne(d => d.individuoNavigation).WithMany(p => p.IndividuiPercorso)
                 .HasForeignKey(d => d.individuo)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_IndividuiPercorso_Individui");
@@ -548,7 +548,7 @@ public partial class Entities : DbContext
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Alberi_Fornitori");
 
-            entity.HasOne(d => d.IndividuoNavigation).WithMany(p => p.InterventiAlberi)
+            entity.HasOne(d => d.individuoNavigation).WithMany(p => p.InterventiAlberi)
                 .HasForeignKey(d => d.individuo)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Alberi_Individui");
@@ -1002,7 +1002,7 @@ public partial class Entities : DbContext
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_StoricoIndividuo_Condizioni");
 
-            entity.HasOne(d => d.IndividuoNavigation).WithMany(p => p.StoricoIndividuo)
+            entity.HasOne(d => d.individuoNavigation).WithMany(p => p.StoricoIndividuo)
                 .HasForeignKey(d => d.individuo)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_StoricoIndividuo_Individui");

@@ -40,13 +40,13 @@ namespace UPlant.Controllers
             Guid organizzazione = _context.Users.Where(a => a.UnipiUserName == (username).Substring(0, username.IndexOf("@"))).Select(a => a.Organizzazione).FirstOrDefault();
             if (valida == null)
             {
-                return View(await _context.Individui.Include(i => i.AccessioneNavigation).Include(i => i.cartellinoNavigation).Include(i => i.collezioneNavigation).Include(i => i.propagatoModalitaNavigation).Include(i => i.sessoNavigation).Include(i => i.settoreNavigation).Where(a => a.AccessioneNavigation.organizzazione == organizzazione).ToListAsync());
+                return View(await _context.Individui.Include(i => i.accessioneNavigation).Include(i => i.cartellinoNavigation).Include(i => i.collezioneNavigation).Include(i => i.propagatoModalitaNavigation).Include(i => i.sessoNavigation).Include(i => i.settoreNavigation).Where(a => a.accessioneNavigation.organizzazione == organizzazione).ToListAsync());
 
             }
             else
             {
 
-                return View(await _context.Individui.Include(i => i.AccessioneNavigation).Include(i => i.cartellinoNavigation).Include(i => i.collezioneNavigation).Include(i => i.propagatoModalitaNavigation).Include(i => i.sessoNavigation).Include(i => i.settoreNavigation).Where(a => a.AccessioneNavigation.organizzazione == organizzazione && a.validazione == false).ToListAsync());
+                return View(await _context.Individui.Include(i => i.accessioneNavigation).Include(i => i.cartellinoNavigation).Include(i => i.collezioneNavigation).Include(i => i.propagatoModalitaNavigation).Include(i => i.sessoNavigation).Include(i => i.settoreNavigation).Where(a => a.accessioneNavigation.organizzazione == organizzazione && a.validazione == false).ToListAsync());
 
             }
 
@@ -61,7 +61,7 @@ namespace UPlant.Controllers
             //Individui individui = await _context.Individui.FindAsync(id);
             var individui = await _context.Individui
 
-                 .Include(i => i.AccessioneNavigation).ThenInclude(i => i.specieNavigation)
+                 .Include(i => i.accessioneNavigation).ThenInclude(i => i.specieNavigation)
                  .Include(i => i.cartellinoNavigation)
                  .Include(i => i.collezioneNavigation)
 
@@ -101,7 +101,7 @@ namespace UPlant.Controllers
                 .ToHashSet();
             //    ViewBag.list = individui.ListaStoricoIndividui.OrderByDescending(x => x.dataInserimento).ToList();
             //            individui.ListaStoricoIndividui = ViewBag.list;
-            ViewBag.list2 = await _context.ImmaginiIndividuo.Include(i => i.IndividuoNavigation).Where(x => x.individuo == id).ToListAsync();
+            ViewBag.list2 = await _context.ImmaginiIndividuo.Include(i => i.individuoNavigation).Where(x => x.individuo == id).ToListAsync();
             ViewBag.list2 = individui.ImmaginiIndividuo.OrderByDescending(x => x.dataInserimento).ToList();
             individui.ImmaginiIndividuo = ViewBag.list2;
             ViewBag.listDocs = await _context.Documenti
@@ -413,7 +413,7 @@ namespace UPlant.Controllers
         public async Task<IActionResult> ShowHidden(Guid individuo, Guid img, string tipo)
         {
             var immagini = await _context.ImmaginiIndividuo
-                .Include(i => i.IndividuoNavigation)
+                .Include(i => i.individuoNavigation)
                 .FirstOrDefaultAsync(m => m.id == img);
 
             //  ImmaginiIndividuo immagini = _context.ImmaginiIndividuo.Find(img);
@@ -458,7 +458,7 @@ namespace UPlant.Controllers
 
 
             var immagini = await _context.ImmaginiIndividuo
-                .Include(i => i.IndividuoNavigation)
+                .Include(i => i.individuoNavigation)
                 .FirstOrDefaultAsync(m => m.id == img);
 
             immagini.predefinita = true;
@@ -742,7 +742,7 @@ namespace UPlant.Controllers
             {
                 return new BadRequestResult();
             }
-            Individui individui = await _context.Individui.Include(i => i.AccessioneNavigation).ThenInclude(i => i.specieNavigation)
+            Individui individui = await _context.Individui.Include(i => i.accessioneNavigation).ThenInclude(i => i.specieNavigation)
                 .Include(i => i.cartellinoNavigation)
                 .Include(i => i.collezioneNavigation)
 
@@ -822,7 +822,7 @@ namespace UPlant.Controllers
 
 
         {
-            Individui individui = await _context.Individui.Include(i => i.AccessioneNavigation)
+            Individui individui = await _context.Individui.Include(i => i.accessioneNavigation)
                 .Include(i => i.propagatoModalitaNavigation)
                 .Include(i => i.cartellinoNavigation)
                 .Include(i => i.collezioneNavigation)
