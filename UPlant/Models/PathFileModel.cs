@@ -2,16 +2,21 @@
 {
     public class PathFile
     {
-        public string Basepath { get; set; }
-        public string LimitMaxUpload { get; set; }
-        public string Docs { get; set; }
+        public string ImagesBasePath { get; set; }
+        public string ImagesMaxUploadBytes { get; set; }
+        public string TempExportsPath { get; set; }
+        public string EntityDocsRootFolder { get; set; }
+        public string AccessionDocsFolder { get; set; }
+        public string IndividualDocsFolder { get; set; }
     }
 
     public class PathFileStatic
     {
-        public string Basepath { get; set; }
-        public string LimitMaxUpload { get; set; }
-
-        public string Docs { get; set; }
+        public string ImagesBasePath { get; set; }
+        public string ImagesMaxUploadBytes { get; set; }
+        public string TempExportsPath { get; set; }
+        public string EntityDocsRootFolder { get; set; }
+        public string AccessionDocsFolder { get; set; }
+        public string IndividualDocsFolder { get; set; }
     }
 }

@@ -399,6 +399,71 @@
 
                 }
                 
+                    <div id="documenti">
+                        <div class="card card-outline card-primary col-xs-12">
+                            <div class="card-header with-border ml-2 col-xs-12">
+                                <h3 class="card-title mb-0"><button class="btn btn-link" data-toggle="collapse" data-target="#collapseDoc" aria-expanded="true" aria-controls="collapseDoc">@language.Getkey("Global_List") Documenti</button></h3>
+                                @{
+                                    if (User.IsInRole("Administrator") || User.IsInRole("Operator") || User.IsInRole("TreeKeeper") || User.IsInRole("Discover") || User.IsInRole("Seminum") || User.IsInRole("Utility"))
+                                    {
+                                        <div class="float-right">
+                                            <button type="button" id="UploadDoc" class="btn btn-success">@language.Getkey("Global_Add")</button>
+                                            <div class="modal fade" id="myModalDoc" role="dialog" data-url='@Url.Action("UploadDoc", "Individui", new { @id = ViewBag.idindividuo, tipo = ViewBag.tipo })'></div>
+                                        </div>
+                                    }
+                                }
+                            </div>
+                            <div id="collapseDoc" class="collapse show" data-parent="#documenti">
+                                <div class="card-body">
+                                    @if (ViewBag.listDocs != null && ViewBag.listDocs.Count > 0)
+                                    {
+                                        <table class="table table-bordered table-striped dataTable">
+                                            <thead>
+                                            <tr>
+                                                <th>Nome file</th>
+                                                <th>Formato</th>
+                                                <th>Dimensione</th>
+                                                <th>@language.Getkey("Global_Description")</th>
+                                                <th>@language.Getkey("Global_Credits")</th>
+                                                <th>@language.Getkey("Global_Entry_Date")</th>
+                                                <th>@language.Getkey("Global_Author")</th>
+                                                <th></th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            @foreach (var doc in ViewBag.listDocs)
+                                            {
+                                                <tr>
+                                                    <td>@doc.nomefile</td>
+                                                    <td>@doc.estensione</td>
+                                                    <td>@Math.Round(((double)doc.dimensioneBytes / 1024), 2) KB</td>
+                                                    <td>@doc.descrizione</td>
+                                                    <td>@doc.credits</td>
+                                                    <td>@doc.dataInserimento</td>
+                                                    <td>@doc.autore</td>
+                                                    <td>
+                                                        <button type="button" class="btn btn-primary btn-xs" onclick="window.location.href='@Url.Action("DownloadDoc", "Individui", new { id = doc.id, individuo = ViewBag.idindividuo })'"><i class="fa-solid fa-download"></i></button>
+                                                        @if (User.IsInRole("Administrator") || User.IsInRole("Operator") || User.IsInRole("TreeKeeper") || User.IsInRole("Discover") || User.IsInRole("Seminum") || User.IsInRole("Utility"))
+                                                        {
+                                                            <button type="button" class="btn btn-danger btn-xs" onclick="CancellaDoc('@doc.id')"><i class="fa-solid fa-trash"></i></button>
+                                                            <div class="modal fade" id="doc-@doc.id" role="dialog" data-url='@Url.Action("DeleteDoc", "Individui", new { id = doc.id, individuo = ViewBag.idindividuo, tipo = ViewBag.tipo })'></div>
+                                                        }
+                                                    </td>
+                                                </tr>
+                                            }
+                                            </tbody>
+                                        </table>
+                                    }
+                                    else
+                                    {
+                                        <div>@language.Getkey("Global_Empty")</div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
                     <div id="immagini">
                         <div class="card card-outline card-primary col-xs-12">
                             <div class="card-header with-border ml-2  col-xs-12" id="headingOne">
@@ -577,6 +642,8 @@
 
 
 
+
+
             </div>
 
 
@@ -676,6 +743,28 @@
        
     </script>
 
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#UploadDoc').click(function () {
+                var url = $('#myModalDoc').data('url');
+                $.get(url, function (data) {
+                    $("#myModalDoc").html(data);
+                    $("#myModalDoc").modal({ backdrop: "static" });
+                });
+            });
+        });
+
+        function CancellaDoc(x) {
+            var id = 'doc-' + x;
+            var url = $('#' + id).data('url');
+            $.get(url, function (data) {
+                $('#' + id).html(data);
+                $('#' + id).modal({ backdrop: "static" });
+            });
+        }
+    </script>
+
     <script type="text/javascript">
         function CancellaImg(x) {
 
@@ -753,6 +842,23 @@
 
     </script>
 
+
+
+    <script type="text/javascript">
+        var _validDocExtensions = [".pdf", ".doc", ".docx", ".xls", ".xlsx", ".csv", ".txt"];
+        function validateDocForm(oForm) {
+            var input = oForm.querySelector('input[type="file"]');
+            if (!input || !input.value) return false;
+            var fileName = input.value.toLowerCase();
+            var ok = _validDocExtensions.some(function (e) { return fileName.endsWith(e); });
+            if (!ok) {
+                document.getElementById("erroredoc").innerHTML = "Formato documento non valido: " + _validDocExtensions.join(", ");
+                document.getElementById("erroredoc").style.display = "block";
+                return false;
+            }
+            return true;
+        }
+    </script>
 
     <script type="text/javascript">
         var map;
