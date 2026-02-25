@@ -368,11 +368,11 @@
 
                                                                     }
 
-                                                                    if (storicoDaIntervento)
+                                                                    if (storicoDaIntervento && User.IsInRole("Administrator") || User.IsInRole("TreeKeeper"))
                                                                     {
                                                                         <a asp-action="ElencoInterventi" asp-controller="InterventiAlberi" asp-route-id="@item.individuo">
                                                                             <span class="btn btn-info btn-xs" title="Vai agli interventi dell'individuo">
-                                                                                <i class="fa-solid fa-list"></i>
+                                                                                <i class="fa-solid fa-tree"></i>
                                                                             </span>
                                                                         </a>
                                                                     }
