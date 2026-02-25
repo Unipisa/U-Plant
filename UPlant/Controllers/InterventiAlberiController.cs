@@ -2,8 +2,12 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using DocumentFormat.OpenXml;
+using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Spreadsheet;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using UPlant.Models;
@@ -95,6 +99,150 @@ namespace UPlant.Controllers
             entities = entities.OrderBy(e => order[e.id]).ToList();
 
             return View(entities);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ExportTotaleInterventi()
+        {
+            var linguaCorrente = _languageService.GetCurrentCulture();
+
+            var interventi = await _context.InterventiAlberi
+                .Include(a => a.fornitoreNavigation)
+                .Include(a => a.interventoNavigation)
+                .Include(a => a.prioritaNavigation)
+                .Include(a => a.statoIndividuoNavigation)
+                .Include(a => a.condizioneNavigation)
+                .Include(a => a.utenteaperturaNavigation)
+                .Include(a => a.utenteultimamodificaNavigation)
+                .Include(a => a.individuoNavigation)
+                    .ThenInclude(i => i.accessioneNavigation)
+                        .ThenInclude(s => s.specieNavigation)
+                .Include(a => a.individuoNavigation)
+                    .ThenInclude(i => i.collezioneNavigation)
+                        .ThenInclude(c => c.settoreNavigation)
+                .OrderByDescending(a => a.dataapertura)
+                .ToListAsync();
+
+            var headers = new[]
+            {
+                "Progressivo",
+                "Nome scientifico",
+                "Settore",
+                "Collezione",
+                "Data apertura",
+                "Data ultima modifica",
+                "Stato intervento",
+                "Priorità",
+                "Tipo intervento",
+                "Fornitore",
+                "Motivo",
+                "Esito intervento",
+                "Stato individuo",
+                "Condizione",
+                "Utente apertura",
+                "Utente ultima modifica"
+            };
+
+            using var stream = new MemoryStream();
+            using (var document = SpreadsheetDocument.Create(stream, SpreadsheetDocumentType.Workbook, true))
+            {
+                var workbookPart = document.AddWorkbookPart();
+                workbookPart.Workbook = new Workbook();
+
+                var worksheetPart = workbookPart.AddNewPart<WorksheetPart>();
+                var sheetData = new SheetData();
+                worksheetPart.Worksheet = new Worksheet(sheetData);
+
+                var sheets = workbookPart.Workbook.AppendChild(new Sheets());
+                sheets.Append(new Sheet
+                {
+                    Id = workbookPart.GetIdOfPart(worksheetPart),
+                    SheetId = 1,
+                    Name = "Interventi Alberi"
+                });
+
+                sheetData.Append(CreateTextRow(headers));
+
+                foreach (var intervento in interventi)
+                {
+                    var priorita = linguaCorrente == "en-US"
+                        ? (string.IsNullOrWhiteSpace(intervento.prioritaNavigation?.descrizione_en)
+                            ? intervento.prioritaNavigation?.descrizione
+                            : intervento.prioritaNavigation?.descrizione_en)
+                        : intervento.prioritaNavigation?.descrizione;
+
+                    var tipoIntervento = linguaCorrente == "en-US"
+                        ? (string.IsNullOrWhiteSpace(intervento.interventoNavigation?.descrizione_en)
+                            ? intervento.interventoNavigation?.descrizione
+                            : intervento.interventoNavigation?.descrizione_en)
+                        : intervento.interventoNavigation?.descrizione;
+
+                    var fornitore = linguaCorrente == "en-US"
+                        ? (string.IsNullOrWhiteSpace(intervento.fornitoreNavigation?.descrizione_en)
+                            ? intervento.fornitoreNavigation?.descrizione
+                            : intervento.fornitoreNavigation?.descrizione_en)
+                        : intervento.fornitoreNavigation?.descrizione;
+
+                    var statoIndividuo = linguaCorrente == "en-US"
+                        ? (string.IsNullOrWhiteSpace(intervento.statoIndividuoNavigation?.descrizione_en)
+                            ? intervento.statoIndividuoNavigation?.stato
+                            : intervento.statoIndividuoNavigation?.descrizione_en)
+                        : intervento.statoIndividuoNavigation?.stato;
+
+                    var condizione = linguaCorrente == "en-US"
+                        ? (string.IsNullOrWhiteSpace(intervento.condizioneNavigation?.descrizione_en)
+                            ? intervento.condizioneNavigation?.condizione
+                            : intervento.condizioneNavigation?.descrizione_en)
+                        : intervento.condizioneNavigation?.condizione;
+
+                    var utenteApertura = $"{intervento.utenteaperturaNavigation?.Name} {intervento.utenteaperturaNavigation?.LastName}".Trim();
+                    var utenteUltimaModifica = $"{intervento.utenteultimamodificaNavigation?.Name} {intervento.utenteultimamodificaNavigation?.LastName}".Trim();
+
+                    sheetData.Append(CreateTextRow(new[]
+                    {
+                        intervento.individuoNavigation?.progressivo,
+                        intervento.individuoNavigation?.accessioneNavigation?.specieNavigation?.nome_scientifico,
+                        intervento.individuoNavigation?.collezioneNavigation?.settoreNavigation?.settore,
+                        intervento.individuoNavigation?.collezioneNavigation?.collezione,
+                        intervento.dataapertura.ToString("dd/MM/yyyy HH:mm"),
+                        intervento.dataultimamodifica?.ToString("dd/MM/yyyy HH:mm"),
+                        intervento.statoIntervento ? _languageService.Getkey("Global_Close") : _languageService.Getkey("Global_Open"),
+                        priorita,
+                        tipoIntervento,
+                        fornitore,
+                        intervento.motivo,
+                        intervento.esitointervento,
+                        statoIndividuo,
+                        condizione,
+                        utenteApertura,
+                        utenteUltimaModifica
+                    }));
+                }
+
+                workbookPart.Workbook.Save();
+            }
+
+            var fileName = $"InterventiAlberi_{DateTime.Now:yyyyMMdd_HHmmss}.xlsx";
+            return File(
+                stream.ToArray(),
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                fileName);
+        }
+
+        private static Row CreateTextRow(IEnumerable<string> values)
+        {
+            var row = new Row();
+
+            foreach (var value in values)
+            {
+                row.Append(new Cell
+                {
+                    DataType = CellValues.InlineString,
+                    InlineString = new InlineString(new Text(value ?? string.Empty))
+                });
+            }
+
+            return row;
         }
 
         // GET: Alberi/Details/5
