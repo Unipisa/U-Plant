@@ -24,13 +24,9 @@ public partial class Documenti
 
     public string descrizione { get; set; }
 
-    public string credits { get; set; }
-
     public string utente { get; set; }
 
     public DateTime dataInserimento { get; set; }
-
-    public bool visibile { get; set; }
 
     public virtual Accessioni AccessioneNavigation { get; set; }
 

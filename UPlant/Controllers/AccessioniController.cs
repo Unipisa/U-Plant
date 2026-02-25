@@ -217,8 +217,7 @@ namespace UPlant.Controllers
                     dimensioneBytes = file.Length,
                     descrizione = descrizione,
                     utente = utente,
-                    dataInserimento = DateTime.Now,
-                    visibile = false
+                    dataInserimento = DateTime.Now
                 };
 
                 _context.Documenti.Add(documento);

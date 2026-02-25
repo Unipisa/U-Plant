@@ -313,10 +313,7 @@ public partial class Entities : DbContext
 
             entity.Property(e => e.id).HasDefaultValueSql("(newid())");
             entity.Property(e => e.AccessioneId).HasColumnName("AccessioneId");
-            entity.Property(e => e.utente)
-                .HasColumnName("autore")
-                .HasMaxLength(100);
-            entity.Property(e => e.credits).HasMaxLength(250);
+            entity.Property(e => e.utente).HasMaxLength(100);
             entity.Property(e => e.dataInserimento).HasColumnType("datetime");
             entity.Property(e => e.descrizione).HasMaxLength(500);
             entity.Property(e => e.estensione).HasMaxLength(10);

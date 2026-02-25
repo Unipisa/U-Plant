@@ -29,14 +29,10 @@ BEGIN
         dimensioneBytes BIGINT NOT NULL,
 
         descrizione NVARCHAR(500) NULL,
-        credits NVARCHAR(250) NULL,
-        autore NVARCHAR(100) NULL,
+        utente NVARCHAR(100) NULL,
 
         dataInserimento DATETIME NOT NULL
             CONSTRAINT DF_Documenti_dataInserimento DEFAULT GETDATE(),
-
-        visibile BIT NOT NULL
-            CONSTRAINT DF_Documenti_visibile DEFAULT (0),
 
         CONSTRAINT FK_Documenti_Accessioni
             FOREIGN KEY (AccessioneId) REFERENCES dbo.Accessioni(id),
