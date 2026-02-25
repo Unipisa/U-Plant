@@ -104,6 +104,13 @@ namespace UPlant.Controllers
             ViewBag.idaccessione = id;
             ViewBag.tipo = tipo;
             ViewBag.maxupload = _opt.Value.Pathfile.ImagesMaxUploadBytes;
+            ViewBag.maxuploadDoc = string.IsNullOrWhiteSpace(_opt.Value.Pathfile.DocumentsMaxUploadBytes)
+                ? _opt.Value.Pathfile.ImagesMaxUploadBytes
+                : _opt.Value.Pathfile.DocumentsMaxUploadBytes;
+            ViewBag.allowedDocExtensions = (_opt.Value.Pathfile.AllowedDocExtensions ?? Array.Empty<string>())
+                .Select(x => x.StartsWith(".") ? x.ToLowerInvariant() : "." + x.ToLowerInvariant())
+                .Distinct()
+                .ToArray();
             ViewBag.listDocs = await _context.Documenti
                 .Where(x => x.tipoEntita == "Accessione" && x.AccessioneId == id)
                 .OrderByDescending(x => x.dataInserimento)
@@ -169,10 +176,12 @@ namespace UPlant.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UploadDoc(IEnumerable<IFormFile> files, Guid idaccessione, string descrizione, string credits, string tipo)
+        public async Task<IActionResult> UploadDoc(IEnumerable<IFormFile> files, Guid idaccessione, string descrizione, string tipo)
         {
-            string autore = User.Identities.FirstOrDefault()?.Claims?.Where(c => c.Type == "given_name").FirstOrDefault()?.Value;
-            var maxUpload = Convert.ToDecimal(_opt.Value.Pathfile.ImagesMaxUploadBytes);
+            string utente = User.Identities.FirstOrDefault()?.Claims?.Where(c => c.Type == "given_name").FirstOrDefault()?.Value;
+            var maxUpload = Convert.ToDecimal(string.IsNullOrWhiteSpace(_opt.Value.Pathfile.DocumentsMaxUploadBytes)
+                ? _opt.Value.Pathfile.ImagesMaxUploadBytes
+                : _opt.Value.Pathfile.DocumentsMaxUploadBytes);
 
             foreach (var file in files)
             {
@@ -207,8 +216,7 @@ namespace UPlant.Controllers
                     mimeType = file.ContentType,
                     dimensioneBytes = file.Length,
                     descrizione = descrizione,
-                    credits = credits,
-                    autore = autore,
+                    utente = utente,
                     dataInserimento = DateTime.Now,
                     visibile = false
                 };

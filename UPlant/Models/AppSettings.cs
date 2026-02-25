@@ -62,6 +62,9 @@ namespace UPlant.Models
         ///<value>Path fisico dei file temporanei export (ricerche/estrazioni) </value>
         public string TempExportsPath { get; set; }
 
+        ///<value>Dimensione massima upload documenti in bytes (se vuoto usa ImagesMaxUploadBytes) </value>
+        public string DocumentsMaxUploadBytes { get; set; }
+
         ///<value>Path fisico root dei documenti caricati su entità (Accessioni/Individui) </value>
         public string DocumentsBasePath { get; set; }
 

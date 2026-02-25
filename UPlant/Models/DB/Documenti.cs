@@ -26,7 +26,7 @@ public partial class Documenti
 
     public string credits { get; set; }
 
-    public string autore { get; set; }
+    public string utente { get; set; }
 
     public DateTime dataInserimento { get; set; }
 
