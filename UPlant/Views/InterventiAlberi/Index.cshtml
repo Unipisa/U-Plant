@@ -1,10 +1,30 @@
 ﻿@model List<UPlant.Models.DB.InterventiAlberi>
 @inject LanguageService language
+@using System.Text.Json
 
 @{
     ViewBag.Title = language.Getkey("Global_Tree");
     ViewBag.lang = language.GetCurrentCulture();
     var currentCulture = language.GetCurrentCulture();
+    var openInterventiMapData = Model
+        .Where(item => !item.statoIntervento && item.individuoNavigation != null)
+        .Select(item => new
+        {
+            lat = item.individuoNavigation.latitudine,
+            lng = item.individuoNavigation.longitudine,
+            progressivo = item.individuoNavigation.progressivo,
+            specie = item.individuoNavigation.accessioneNavigation?.specieNavigation?.nome_scientifico,
+            settore = item.individuoNavigation.collezioneNavigation?.settoreNavigation?.settore,
+            collezione = item.individuoNavigation.collezioneNavigation?.collezione,
+            priorita = currentCulture == "en-US"
+                ? (string.IsNullOrEmpty(item.prioritaNavigation?.descrizione_en)
+                    ? item.prioritaNavigation?.descrizione
+                    : item.prioritaNavigation?.descrizione_en)
+                : item.prioritaNavigation?.descrizione,
+            prioritaColore = item.prioritaNavigation?.colore,
+            detailUrl = Url.Action("Details", "Individui", new { id = item.individuo, tipo = "elenco" })
+        })
+        .ToList();
 }
 
 <h4 class="box-title">@language.Getkey("Shared_Comp_Sb_Tree")</h4>
@@ -163,8 +183,45 @@
     </div>
 </div>
 
+<div class="card card-primary mt-3">
+    <div class="card-header with-border">
+        <h3 class="card-title mb-0 font-weight-bold">Mappa interventi aperti</h3>
+    </div>
+    <div class="card-body">
+        <div id="openInterventiMap" class="open-interventi-map"></div>
+        <div id="openInterventiMapEmpty" class="alert alert-info mb-0 d-none">
+            Nessuna coordinata disponibile per gli interventi aperti.
+        </div>
+    </div>
+</div>
+
 @section CustomStyles {
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+          crossorigin="" />
     <style>
+        .open-interventi-map {
+            width: 100%;
+            min-height: 420px;
+            border-radius: 0.25rem;
+        }
+
+
+        .map-priority-marker-wrapper {
+            background: transparent;
+            border: 0;
+        }
+
+        .map-priority-pin {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border-radius: 50% 50% 50% 0;
+            border: 2px solid #ffffff;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
+            transform: rotate(-45deg);
+        }
+
         .priority-chip {
             display: inline-block;
             padding: 0.2rem 0.5rem;
@@ -251,11 +308,93 @@
 
 @section Scripts {
     <script src="~/js/datatables.min.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+            crossorigin=""></script>
 }
 
 @section CustomScripts {
     <script type="text/javascript">
         $(document).ready(function () {
+            var openInterventiRawData = @Html.Raw(JsonSerializer.Serialize(openInterventiMapData));
+
+            function parseCoordinate(value) {
+                if (value === null || value === undefined) {
+                    return null;
+                }
+
+                var normalized = String(value).trim().replace(',', '.');
+                if (!normalized) {
+                    return null;
+                }
+
+                var parsed = Number(normalized);
+                return Number.isFinite(parsed) ? parsed : null;
+            }
+
+            function initializeOpenInterventiMap() {
+                var mapContainer = $('#openInterventiMap');
+                var emptyState = $('#openInterventiMapEmpty');
+
+                if (!mapContainer.length || typeof L === 'undefined') {
+                    return;
+                }
+
+                var markersData = (openInterventiRawData || []).map(function (entry) {
+                    return {
+                        lat: parseCoordinate(entry.lat),
+                        lng: parseCoordinate(entry.lng),
+                        progressivo: entry.progressivo,
+                        specie: entry.specie,
+                        settore: entry.settore,
+                        collezione: entry.collezione,
+                        priorita: entry.priorita,
+                        detailUrl: entry.detailUrl,
+                        prioritaColore: entry.prioritaColore
+                    };
+                }).filter(function (entry) {
+                    return entry.lat !== null && entry.lng !== null;
+                });
+
+                if (markersData.length === 0) {
+                    mapContainer.addClass('d-none');
+                    emptyState.removeClass('d-none');
+                    return;
+                }
+
+                var map = L.map('openInterventiMap');
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 20,
+                    attribution: '&copy; OpenStreetMap contributors'
+                }).addTo(map);
+
+                var bounds = [];
+                markersData.forEach(function (item) {
+                    var markerHtml = '<span class="map-priority-pin" style="background-color:' + (item.prioritaColore || '#2b7de9') + ';"></span>';
+                    var markerIcon = L.divIcon({
+                        className: 'map-priority-marker-wrapper',
+                        html: markerHtml,
+                        iconSize: [20, 20],
+                        iconAnchor: [10, 20],
+                        popupAnchor: [0, -20]
+                    });
+
+                    var marker = L.marker([item.lat, item.lng], { icon: markerIcon }).addTo(map);
+                    var popup =
+                        '<div><strong>' + (item.progressivo || '-') + '</strong></div>' +
+                        '<div>' + (item.specie || '-') + '</div>' +
+                        '<div>' + (item.settore || '-') + ' · ' + (item.collezione || '-') + '</div>' +
+                        '<div>Priorità: ' + (item.priorita || '-') + '</div>' +
+                        '<div class="mt-1"><a href="' + item.detailUrl + '" target="_blank" rel="noopener noreferrer">Apri individuo</a></div>';
+
+                    marker.bindPopup(popup);
+                    bounds.push([item.lat, item.lng]);
+                });
+
+                map.fitBounds(bounds, { padding: [30, 30] });
+            }
+
+            initializeOpenInterventiMap();
 
             var lingua = "@ViewBag.lang";
             if (lingua === "en-US") {
