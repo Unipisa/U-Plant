@@ -22,7 +22,6 @@ namespace UPlant.Controllers
         private readonly IOptions<MapSettings> _googlemap;
         private readonly LanguageService _languageService;
         private readonly IOptions<AppSettings> _opt;
-        private static readonly string[] AllowedDocExtensions = { ".pdf", ".doc", ".docx", ".xls", ".xlsx", ".csv", ".txt" };
 
 
         public AccessioniController(Entities context, IConfiguration Configuration,  IOptions<Application> appOpt, IOptions<MapSettings> googlemap, IOptions<AppSettings> opt, LanguageService languageService)
@@ -185,7 +184,11 @@ namespace UPlant.Controllers
                 }
 
                 string extension = Path.GetExtension(file.FileName).ToLowerInvariant();
-                if (!AllowedDocExtensions.Contains(extension))
+                var allowedDocExtensions = (_opt.Value.Pathfile.AllowedDocExtensions ?? Array.Empty<string>())
+                    .Select(x => x.StartsWith(".") ? x.ToLowerInvariant() : "." + x.ToLowerInvariant())
+                    .ToHashSet();
+
+                if (!allowedDocExtensions.Contains(extension))
                 {
                     AddPageAlerts(PageAlertType.Error, _languageService.Getkey("Message_13").ToString());
                     TempData["MsgErr"] = _languageService.Getkey("Message_13").ToString();
