@@ -24,10 +24,9 @@
                         <input type="hidden" autocomplete="off" name="idaccessione" value="@ViewBag.accessione" required />
                         <input type="hidden" autocomplete="off" name="tipo" value="@ViewBag.tipo" required />
                         <label id="erroredoc" class="alert-danger" style="display:none"></label>
-                        <input type="file" name="files" multiple required />
+                        <input type="file" id="docFiles" name="files" multiple required />
+                        <small id="selectedDocFiles" class="form-text text-muted"></small>
                         <textarea name="descrizione" rows="4" cols="50" autocomplete="off" placeholder="@language.Getkey("Global_Description")" required></textarea>
-                        <br />
-                        <input type="text" name="credits" placeholder="@language.Getkey("Global_Credits")" />
                         <br />
                         <input type="submit" value="@language.Getkey("Global_Add")" class="btn btn-default" />
                     }
@@ -36,3 +35,16 @@
         </div>
     </div>
 </div>
+
+<script type="text/javascript">
+    (function () {
+        var fileInput = document.getElementById("docFiles");
+        var label = document.getElementById("selectedDocFiles");
+        if (!fileInput || !label) return;
+
+        fileInput.addEventListener("change", function () {
+            var names = Array.from(fileInput.files || []).map(function (f) { return f.name; });
+            label.textContent = names.length ? names.join(", ") : "";
+        });
+    })();
+</script>

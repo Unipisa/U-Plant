@@ -62,6 +62,9 @@ namespace UPlant.Models
         ///<value>Path fisico dei file temporanei export (ricerche/estrazioni) </value>
         public string TempExportsPath { get; set; }
 
+        ///<value>Dimensione massima upload documenti in bytes (se vuoto usa ImagesMaxUploadBytes) </value>
+        public string DocumentsMaxUploadBytes { get; set; }
+
         ///<value>Path fisico root dei documenti caricati su entità (Accessioni/Individui) </value>
         public string DocumentsBasePath { get; set; }
 
@@ -69,6 +72,9 @@ namespace UPlant.Models
         public string EntityDocsRootFolder { get; set; } = "EntityDocs";
         public string AccessionDocsFolder { get; set; } = "Accessioni";
         public string IndividualDocsFolder { get; set; } = "Individui";
+
+        ///<value>Elenco estensioni consentite per upload documenti (con o senza punto iniziale) </value>
+        public string[] AllowedDocExtensions { get; set; } = Array.Empty<string>();
     }
 
     public class AppSettings

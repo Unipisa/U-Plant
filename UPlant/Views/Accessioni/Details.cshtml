@@ -320,9 +320,8 @@
                                 <th>Formato</th>
                                 <th>Dimensione</th>
                                 <th>@language.Getkey("Global_Description")</th>
-                                <th>@language.Getkey("Global_Credits")</th>
                                 <th>@language.Getkey("Global_Entry_Date")</th>
-                                <th>@language.Getkey("Global_Author")</th>
+                                <th>Utente</th>
                                 <th></th>
                             </tr>
                             </thead>
@@ -334,9 +333,8 @@
                                     <td>@doc.estensione</td>
                                     <td>@Math.Round(((double)doc.dimensioneBytes / 1024), 2) KB</td>
                                     <td>@doc.descrizione</td>
-                                    <td>@doc.credits</td>
                                     <td>@doc.dataInserimento</td>
-                                    <td>@doc.autore</td>
+                                    <td>@doc.utente</td>
                                     <td>
                                         <button type="button" class="btn btn-primary btn-xs" onclick="window.location.href='@Url.Action("DownloadDoc", "Accessioni", new { id = doc.id, accessione = ViewBag.idaccessione })'"><i class="fa-solid fa-download"></i></button>
                                         @if (User.IsInRole("Administrator") || User.IsInRole("Operator") || User.IsInRole("TreeKeeper") || User.IsInRole("Discover") || User.IsInRole("Seminum") || User.IsInRole("Utility"))
@@ -689,17 +687,31 @@
             });
         }
 
-        var _validDocExtensions = [".pdf", ".doc", ".docx", ".xls", ".xlsx", ".csv", ".txt"];
+        var _validDocExtensions = @Html.Raw(System.Text.Json.JsonSerializer.Serialize((string[])ViewBag.allowedDocExtensions));
+        var _maxDocFileSizeBytes = @ViewBag.maxuploadDoc;
+
         function validateDocForm(oForm) {
             var input = oForm.querySelector('input[type="file"]');
-            if (!input || !input.value) return false;
-            var fileName = input.value.toLowerCase();
-            var ok = _validDocExtensions.some(function (e) { return fileName.endsWith(e); });
-            if (!ok) {
-                document.getElementById("erroredoc").innerHTML = "Formato documento non valido: " + _validDocExtensions.join(", ");
-                document.getElementById("erroredoc").style.display = "block";
-                return false;
+            if (!input || !input.files || input.files.length === 0) return false;
+
+            for (var i = 0; i < input.files.length; i++) {
+                var file = input.files[i];
+                var fileName = (file.name || "").toLowerCase();
+                var ok = _validDocExtensions.some(function (e) { return fileName.endsWith(e); });
+                if (!ok) {
+                    document.getElementById("erroredoc").innerHTML = "Formato documento non valido: " + _validDocExtensions.join(", ");
+                    document.getElementById("erroredoc").style.display = "block";
+                    return false;
+                }
+
+                if (file.size > _maxDocFileSizeBytes) {
+                    document.getElementById("erroredoc").innerHTML = "Dimensione file non valida. Max: " + Math.round(_maxDocFileSizeBytes / 1024) + " KB";
+                    document.getElementById("erroredoc").style.display = "block";
+                    return false;
+                }
             }
+
+            document.getElementById("erroredoc").style.display = "none";
             return true;
         }
     </script>
