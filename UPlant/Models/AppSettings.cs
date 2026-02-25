@@ -69,6 +69,9 @@ namespace UPlant.Models
         public string EntityDocsRootFolder { get; set; } = "EntityDocs";
         public string AccessionDocsFolder { get; set; } = "Accessioni";
         public string IndividualDocsFolder { get; set; } = "Individui";
+
+        ///<value>Elenco estensioni consentite per upload documenti (con o senza punto iniziale) </value>
+        public string[] AllowedDocExtensions { get; set; } = Array.Empty<string>();
     }
 
     public class AppSettings
