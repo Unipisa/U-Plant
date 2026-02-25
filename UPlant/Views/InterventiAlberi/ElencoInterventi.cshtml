@@ -29,6 +29,15 @@
                 <h3 class="card-title mb-0 mr-3  font-weight-bold">
                     @(ViewData["nomescientifico"] ?? "") - @(ViewData["progressivo"] ?? "")
                 </h3>
+                <a asp-action="Details"
+                   asp-controller="Individui"
+                   asp-route-id="@ViewBag.idindividuo"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   class="btn btn-outline-light btn-sm mr-2"
+                   title="@language.Getkey("Global_Details")">
+                    @language.Getkey("Global_Details")
+                </a>
                 <div id="table1HeaderLeft" class="d-flex align-items-center"></div>
             </div>
             <div id="table1HeaderRight" class="d-flex align-items-center"></div>
