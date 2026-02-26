@@ -29,7 +29,7 @@ BEGIN
         dimensioneBytes BIGINT NOT NULL,
 
         descrizione NVARCHAR(500) NULL,
-        utente NVARCHAR(100) NULL,
+        utenteAcquisizione UNIQUEIDENTIFIER NOT NULL,
 
         dataInserimento DATETIME NOT NULL
             CONSTRAINT DF_Documenti_dataInserimento DEFAULT GETDATE(),
@@ -39,6 +39,9 @@ BEGIN
 
         CONSTRAINT FK_Documenti_Individui
             FOREIGN KEY (IndividuoId) REFERENCES dbo.Individui(id),
+
+        CONSTRAINT FK_Documenti_Users
+            FOREIGN KEY (utenteAcquisizione) REFERENCES dbo.Users(Id),
 
         CONSTRAINT CK_Documenti_tipoEntita CHECK (tipoEntita IN (N'Accessione', N'Individuo')),
         CONSTRAINT CK_Documenti_dimensioneBytes CHECK (dimensioneBytes >= 0),

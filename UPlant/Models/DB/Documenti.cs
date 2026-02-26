@@ -24,11 +24,13 @@ public partial class Documenti
 
     public string descrizione { get; set; }
 
-    public string utente { get; set; }
+    public Guid utenteAcquisizione { get; set; }
 
     public DateTime dataInserimento { get; set; }
 
     public virtual Accessioni AccessioneNavigation { get; set; }
 
     public virtual Individui IndividuoNavigation { get; set; }
+
+    public virtual Users utenteAcquisizioneNavigation { get; set; }
 }

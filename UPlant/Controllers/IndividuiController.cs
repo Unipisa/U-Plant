@@ -112,6 +112,7 @@ namespace UPlant.Controllers
             individui.ImmaginiIndividuo = ViewBag.list2;
             ViewBag.listDocs = await _context.Documenti
                 .Where(x => x.tipoEntita == "Individuo" && x.IndividuoId == id)
+                .Include(x => x.utenteAcquisizioneNavigation)
                 .OrderByDescending(x => x.dataInserimento)
                 .ToListAsync();
 
@@ -136,7 +137,8 @@ namespace UPlant.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UploadDoc(IEnumerable<IFormFile> files, Guid idindividuo, string descrizione, string tipo)
         {
-            string utente = User.Identities.FirstOrDefault()?.Claims?.Where(c => c.Type == "given_name").FirstOrDefault()?.Value;
+            string username = User.Identities.FirstOrDefault()?.Claims?.Where(c => c.Type == "UnipiUserID").FirstOrDefault()?.Value;
+            Guid utente = _context.Users.Where(a => a.UnipiUserName == (username).Substring(0, username.IndexOf("@"))).Select(a => a.Id).FirstOrDefault();
             var maxUpload = Convert.ToDecimal(string.IsNullOrWhiteSpace(_opt.Value.Pathfile.DocumentsMaxUploadBytes)
                 ? _opt.Value.Pathfile.ImagesMaxUploadBytes
                 : _opt.Value.Pathfile.DocumentsMaxUploadBytes);
@@ -174,7 +176,7 @@ namespace UPlant.Controllers
                     mimeType = file.ContentType,
                     dimensioneBytes = file.Length,
                     descrizione = descrizione,
-                    utente = utente,
+                    utenteAcquisizione = utente,
                     dataInserimento = DateTime.Now
                 };
 
