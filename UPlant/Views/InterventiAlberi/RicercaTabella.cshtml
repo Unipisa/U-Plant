@@ -77,10 +77,34 @@
                 <div class="form-row">
                     <div class="form-group col-md-3">
                         <label>Stato intervento</label>
+                        @{ var statoInterventoSelezionato = (ViewBag.statoIntervento as string) ?? string.Empty; }
                         <select id="statoIntervento" name="statoIntervento" class="form-control">
-                            <option value="">@language.Getkey("Global_All")</option>
-                            <option value="open" selected="@(ViewBag.statoIntervento == "open")">@language.Getkey("Global_Open")</option>
-                            <option value="close" selected="@(ViewBag.statoIntervento == "close")">@language.Getkey("Global_Close")</option>
+                            @if (string.IsNullOrEmpty(statoInterventoSelezionato))
+                            {
+                                <option value="" selected>@language.Getkey("Global_All")</option>
+                            }
+                            else
+                            {
+                                <option value="">@language.Getkey("Global_All")</option>
+                            }
+
+                            @if (statoInterventoSelezionato == "open")
+                            {
+                                <option value="open" selected>@language.Getkey("Global_Open")</option>
+                            }
+                            else
+                            {
+                                <option value="open">@language.Getkey("Global_Open")</option>
+                            }
+
+                            @if (statoInterventoSelezionato == "close")
+                            {
+                                <option value="close" selected>@language.Getkey("Global_Close")</option>
+                            }
+                            else
+                            {
+                                <option value="close">@language.Getkey("Global_Close")</option>
+                            }
                         </select>
                     </div>
                     <div class="form-group col-md-3">
