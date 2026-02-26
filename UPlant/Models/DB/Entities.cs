@@ -313,7 +313,7 @@ public partial class Entities : DbContext
 
             entity.Property(e => e.id).HasDefaultValueSql("(newid())");
             entity.Property(e => e.AccessioneId).HasColumnName("AccessioneId");
-            entity.Property(e => e.utente).HasMaxLength(100);
+            entity.Property(e => e.utenteAcquisizione).HasColumnName("utenteAcquisizione");
             entity.Property(e => e.dataInserimento).HasColumnType("datetime");
             entity.Property(e => e.descrizione).HasMaxLength(500);
             entity.Property(e => e.estensione).HasMaxLength(10);
@@ -330,6 +330,11 @@ public partial class Entities : DbContext
             entity.HasOne(d => d.IndividuoNavigation).WithMany()
                 .HasForeignKey(d => d.IndividuoId)
                 .HasConstraintName("FK_Documenti_Individui");
+
+            entity.HasOne(d => d.utenteAcquisizioneNavigation).WithMany()
+                .HasForeignKey(d => d.utenteAcquisizione)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Documenti_Users");
         });
 
         modelBuilder.Entity<Contageneri>(entity =>

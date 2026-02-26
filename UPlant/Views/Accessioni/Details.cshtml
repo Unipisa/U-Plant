@@ -334,7 +334,7 @@
                                     <td>@Math.Round(((double)doc.dimensioneBytes / 1024), 2) KB</td>
                                     <td>@doc.descrizione</td>
                                     <td>@doc.dataInserimento</td>
-                                    <td>@doc.utente</td>
+                                    <td>@doc.utenteAcquisizioneNavigation?.NomeCognome</td>
                                     <td>
                                         <button type="button" class="btn btn-primary btn-xs" onclick="window.location.href='@Url.Action("DownloadDoc", "Accessioni", new { id = doc.id, accessione = ViewBag.idaccessione })'"><i class="fa-solid fa-download"></i></button>
                                         @if (User.IsInRole("Administrator") || User.IsInRole("Operator") || User.IsInRole("TreeKeeper") || User.IsInRole("Discover") || User.IsInRole("Seminum") || User.IsInRole("Utility"))
