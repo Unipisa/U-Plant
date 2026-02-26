@@ -22,7 +22,7 @@
                     : item.prioritaNavigation?.descrizione_en)
                 : item.prioritaNavigation?.descrizione,
             prioritaColore = item.prioritaNavigation?.colore,
-            detailUrl = Url.Action("Details", "Individui", new { id = item.individuo, tipo = "elenco" })
+            detailUrl = Url.Action("ElencoInterventi", "InterventiAlberi", new { id = item.individuo })
         })
         .ToList();
 }
@@ -394,7 +394,7 @@
                         '<div>' + (item.specie || '-') + '</div>' +
                         '<div>' + (item.settore || '-') + ' · ' + (item.collezione || '-') + '</div>' +
                         '<div>Priorità: ' + (item.priorita || '-') + '</div>' +
-                        '<div class="mt-1"><a href="' + item.detailUrl + '" target="_blank" rel="noopener noreferrer">Apri individuo</a></div>';
+                        '<div class="mt-1"><a href="' + item.detailUrl + '" target="_blank" rel="noopener noreferrer">Elenco interventi</a></div>';
 
                     marker.bindPopup(popup);
                     bounds.push([item.lat, item.lng]);
