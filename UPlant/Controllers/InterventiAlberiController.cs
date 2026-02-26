@@ -114,6 +114,122 @@ namespace UPlant.Controllers
             Guid? collezione, DateTime? dataUltimaModificaDa, DateTime? dataUltimaModificaA, string statoIntervento,
             Guid? priorita, Guid? tipoIntervento, Guid? fornitore)
         {
+            var query = BuildRicercaTabellaQuery(nomeScientifico, progressivo, destinazione, settore,
+                collezione, dataUltimaModificaDa, dataUltimaModificaA, statoIntervento, priorita, tipoIntervento, fornitore);
+
+            var risultati = await query
+                .OrderByDescending(a => a.dataultimamodifica ?? a.dataapertura)
+                .ToListAsync();
+
+            PopulateRicercaTabellaViewData();
+            ViewBag.nomeScientifico = nomeScientifico;
+            ViewBag.progressivo = progressivo;
+            ViewBag.destinazione = destinazione;
+            ViewBag.settore = settore;
+            ViewBag.collezione = collezione;
+            ViewBag.dataUltimaModificaDa = dataUltimaModificaDa;
+            ViewBag.dataUltimaModificaA = dataUltimaModificaA;
+            ViewBag.statoIntervento = statoIntervento;
+            ViewBag.priorita = priorita;
+            ViewBag.tipoIntervento = tipoIntervento;
+            ViewBag.fornitore = fornitore;
+
+            return View(risultati);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ExportRicercaTabella(string nomeScientifico, string progressivo, string destinazione, Guid? settore,
+            Guid? collezione, DateTime? dataUltimaModificaDa, DateTime? dataUltimaModificaA, string statoIntervento,
+            Guid? priorita, Guid? tipoIntervento, Guid? fornitore)
+        {
+            var linguaCorrente = _languageService.GetCurrentCulture();
+            var interventi = await BuildRicercaTabellaQuery(nomeScientifico, progressivo, destinazione, settore,
+                collezione, dataUltimaModificaDa, dataUltimaModificaA, statoIntervento, priorita, tipoIntervento, fornitore)
+                .OrderByDescending(a => a.dataultimamodifica ?? a.dataapertura)
+                .ToListAsync();
+
+            var headers = new[]
+            {
+                "Progressivo",
+                "Nome scientifico",
+                "Destinazione",
+                "Settore",
+                "Collezione",
+                "Stato",
+                "Priorità",
+                "Tipo intervento",
+                "Fornitore",
+                "Data ultima modifica"
+            };
+
+            using var stream = new MemoryStream();
+            using (var document = SpreadsheetDocument.Create(stream, SpreadsheetDocumentType.Workbook, true))
+            {
+                var workbookPart = document.AddWorkbookPart();
+                workbookPart.Workbook = new Workbook();
+
+                var worksheetPart = workbookPart.AddNewPart<WorksheetPart>();
+                var sheetData = new SheetData();
+                worksheetPart.Worksheet = new Worksheet(sheetData);
+
+                var sheets = workbookPart.Workbook.AppendChild(new Sheets());
+                sheets.Append(new Sheet
+                {
+                    Id = workbookPart.GetIdOfPart(worksheetPart),
+                    SheetId = 1,
+                    Name = "Ricerca Interventi"
+                });
+
+                sheetData.Append(CreateTextRow(headers));
+
+                foreach (var intervento in interventi)
+                {
+                    var prioritaDescrizione = linguaCorrente == "en-US"
+                        ? (string.IsNullOrWhiteSpace(intervento.prioritaNavigation?.descrizione_en)
+                            ? intervento.prioritaNavigation?.descrizione
+                            : intervento.prioritaNavigation?.descrizione_en)
+                        : intervento.prioritaNavigation?.descrizione;
+
+                    var tipoInterventoDescrizione = linguaCorrente == "en-US"
+                        ? (string.IsNullOrWhiteSpace(intervento.interventoNavigation?.descrizione_en)
+                            ? intervento.interventoNavigation?.descrizione
+                            : intervento.interventoNavigation?.descrizione_en)
+                        : intervento.interventoNavigation?.descrizione;
+
+                    var fornitoreDescrizione = linguaCorrente == "en-US"
+                        ? (string.IsNullOrWhiteSpace(intervento.fornitoreNavigation?.descrizione_en)
+                            ? intervento.fornitoreNavigation?.descrizione
+                            : intervento.fornitoreNavigation?.descrizione_en)
+                        : intervento.fornitoreNavigation?.descrizione;
+
+                    sheetData.Append(CreateTextRow(new[]
+                    {
+                        intervento.individuoNavigation?.progressivo,
+                        intervento.individuoNavigation?.accessioneNavigation?.specieNavigation?.nome_scientifico,
+                        intervento.individuoNavigation?.destinazioni,
+                        intervento.individuoNavigation?.collezioneNavigation?.settoreNavigation?.settore,
+                        intervento.individuoNavigation?.collezioneNavigation?.collezione,
+                        intervento.statoIntervento ? _languageService.Getkey("Global_Close") : _languageService.Getkey("Global_Open"),
+                        prioritaDescrizione,
+                        tipoInterventoDescrizione,
+                        fornitoreDescrizione,
+                        (intervento.dataultimamodifica ?? intervento.dataapertura).ToString("dd/MM/yyyy")
+                    }));
+                }
+
+                workbookPart.Workbook.Save();
+            }
+
+            var fileName = $"RicercaInterventiAlberi_{DateTime.Now:yyyyMMdd_HHmmss}.xlsx";
+            return File(stream.ToArray(),
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                fileName);
+        }
+
+        private IQueryable<InterventiAlberi> BuildRicercaTabellaQuery(string nomeScientifico, string progressivo, string destinazione, Guid? settore,
+            Guid? collezione, DateTime? dataUltimaModificaDa, DateTime? dataUltimaModificaA, string statoIntervento,
+            Guid? priorita, Guid? tipoIntervento, Guid? fornitore)
+        {
             var query = _context.InterventiAlberi
                 .Include(a => a.individuoNavigation)
                     .ThenInclude(i => i.accessioneNavigation)
@@ -193,24 +309,7 @@ namespace UPlant.Controllers
                 query = query.Where(a => a.fornitore == fornitore.Value);
             }
 
-            var risultati = await query
-                .OrderByDescending(a => a.dataultimamodifica ?? a.dataapertura)
-                .ToListAsync();
-
-            PopulateRicercaTabellaViewData();
-            ViewBag.nomeScientifico = nomeScientifico;
-            ViewBag.progressivo = progressivo;
-            ViewBag.destinazione = destinazione;
-            ViewBag.settore = settore;
-            ViewBag.collezione = collezione;
-            ViewBag.dataUltimaModificaDa = dataUltimaModificaDa;
-            ViewBag.dataUltimaModificaA = dataUltimaModificaA;
-            ViewBag.statoIntervento = statoIntervento;
-            ViewBag.priorita = priorita;
-            ViewBag.tipoIntervento = tipoIntervento;
-            ViewBag.fornitore = fornitore;
-
-            return View(risultati);
+            return query;
         }
 
         private void PopulateRicercaTabellaViewData()

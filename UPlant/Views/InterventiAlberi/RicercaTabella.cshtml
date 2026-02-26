@@ -16,6 +16,8 @@
             specie = item.individuoNavigation.accessioneNavigation?.specieNavigation?.nome_scientifico,
             stato = item.statoIntervento ? language.Getkey("Global_Close") : language.Getkey("Global_Open"),
             priorita = item.prioritaNavigation?.descrizione,
+            prioritaColore = item.prioritaNavigation?.colore,
+            isClosed = item.statoIntervento,
             detailUrl = Url.Action("Details", "InterventiAlberi", new { id = item.id })
         })
         .ToList();
@@ -95,8 +97,27 @@
                     </div>
                 </div>
 
-                <div>
-                    <button class="btn btn-success" type="submit">@language.Getkey("Global_Search")</button>
+                <div class="d-flex align-items-center">
+                    <button class="btn btn-success mr-2" type="submit">@language.Getkey("Global_Search")</button>
+                    @if (Model.Any())
+                    {
+                        <a class="btn btn-success"
+                           href="@Url.Action("ExportRicercaTabella", "InterventiAlberi", new {
+                               nomeScientifico = ViewBag.nomeScientifico,
+                               progressivo = ViewBag.progressivo,
+                               destinazione = ViewBag.destinazione,
+                               settore = ViewBag.settore,
+                               collezione = ViewBag.collezione,
+                               dataUltimaModificaDa = ViewBag.dataUltimaModificaDa,
+                               dataUltimaModificaA = ViewBag.dataUltimaModificaA,
+                               statoIntervento = ViewBag.statoIntervento,
+                               priorita = ViewBag.priorita,
+                               tipoIntervento = ViewBag.tipoIntervento,
+                               fornitore = ViewBag.fornitore
+                           })">
+                            Download File di ricerca
+                        </a>
+                    }
                 </div>
             }
         </div>
@@ -140,7 +161,7 @@
                 <tbody>
                     @foreach (var item in Model)
                     {
-                        <tr>
+                        <tr class="@(item.statoIntervento ? "intervento-chiuso" : string.Empty)">
                             <td>
                                 <a asp-action="Details" asp-controller="InterventiAlberi" asp-route-id="@item.id" class="btn btn-info btn-sm">
                                     <i class="fa-solid fa-eye"></i>
@@ -152,7 +173,11 @@
                             <td>@item.individuoNavigation?.collezioneNavigation?.settoreNavigation?.settore</td>
                             <td>@item.individuoNavigation?.collezioneNavigation?.collezione</td>
                             <td>@(item.statoIntervento ? language.Getkey("Global_Close") : language.Getkey("Global_Open"))</td>
-                            <td>@item.prioritaNavigation?.descrizione</td>
+                            <td>
+                                <span class="priority-chip" style="background-color:@(item.statoIntervento ? "#c2c1bd" : (item.prioritaNavigation?.colore ?? "#2b7de9"))">
+                                    @item.prioritaNavigation?.descrizione
+                                </span>
+                            </td>
                             <td>@item.interventoNavigation?.descrizione</td>
                             <td>@item.fornitoreNavigation?.descrizione</td>
                             <td>@((item.dataultimamodifica ?? item.dataapertura).ToString("dd/MM/yyyy"))</td>
@@ -168,6 +193,44 @@
     <link href="~/css/select2.min.css" rel="stylesheet" />
     <link href="~/css/datatables.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+    <style>
+        .map-priority-marker-wrapper {
+            background: transparent;
+            border: 0;
+        }
+
+        .map-priority-pin {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border-radius: 50% 50% 50% 0;
+            border: 2px solid #ffffff;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
+            transform: rotate(-45deg);
+        }
+
+        .priority-chip {
+            display: inline-block;
+            padding: 0.2rem 0.5rem;
+            border-radius: 0.25rem;
+            color: #fff;
+            font-weight: 600;
+        }
+
+        #tableRicercaInterventi tbody tr.intervento-chiuso {
+            color: #6c757d;
+            background-color: #f3f4f6;
+        }
+
+            #tableRicercaInterventi tbody tr.intervento-chiuso td {
+                opacity: 0.85;
+            }
+
+            #tableRicercaInterventi tbody tr.intervento-chiuso .priority-chip {
+                background-color: #c2c1bd !important;
+                color: #ffffff !important;
+            }
+    </style>
 }
 
 @section Scripts {
@@ -210,6 +273,8 @@
                     specie: entry.specie,
                     stato: entry.stato,
                     priorita: entry.priorita,
+                    prioritaColore: entry.prioritaColore,
+                    isClosed: entry.isClosed,
                     detailUrl: entry.detailUrl
                 };
             }).filter(function (x) { return x !== null; });
@@ -228,12 +293,21 @@
 
             var bounds = [];
             markersData.forEach(function (item) {
-                var marker = L.marker([item.lat, item.lng]).addTo(map);
+                var markerHtml = "<span class=\"map-priority-pin\" style=\"background-color:" + (item.isClosed ? "#c2c1bd" : (item.prioritaColore || "#2b7de9")) + ";\"></span>";
+                var markerIcon = L.divIcon({
+                    className: "map-priority-marker-wrapper",
+                    html: markerHtml,
+                    iconSize: [20, 20],
+                    iconAnchor: [10, 20],
+                    popupAnchor: [0, -20]
+                });
+
+                var marker = L.marker([item.lat, item.lng], { icon: markerIcon }).addTo(map);
                 marker.bindPopup(
                     '<div><strong>' + (item.progressivo || '-') + '</strong></div>' +
                     '<div>' + (item.specie || '-') + '</div>' +
                     '<div>Stato: ' + (item.stato || '-') + '</div>' +
-                    '<div>Priorità: ' + (item.priorita || '-') + '</div>' +
+                    '<div>Priorità: <span class="priority-chip" style="background-color:' + (item.isClosed ? '#c2c1bd' : (item.prioritaColore || '#2b7de9')) + ';">' + (item.priorita || '-') + '</span></div>' +
                     '<div class="mt-1"><a href="' + item.detailUrl + '" target="_blank" rel="noopener noreferrer">Dettaglio intervento</a></div>'
                 );
                 bounds.push([item.lat, item.lng]);
