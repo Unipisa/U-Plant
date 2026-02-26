@@ -102,6 +102,164 @@ namespace UPlant.Controllers
         }
 
         [HttpGet]
+        public IActionResult RicercaTabella()
+        {
+            PopulateRicercaTabellaViewData();
+            return View(new List<InterventiAlberi>());
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RicercaTabella(string nomeScientifico, string progressivo, string destinazione, Guid? settore,
+            Guid? collezione, DateTime? dataUltimaModificaDa, DateTime? dataUltimaModificaA, string statoIntervento,
+            Guid? priorita, Guid? tipoIntervento, Guid? fornitore)
+        {
+            var query = _context.InterventiAlberi
+                .Include(a => a.individuoNavigation)
+                    .ThenInclude(i => i.accessioneNavigation)
+                        .ThenInclude(a => a.specieNavigation)
+                .Include(a => a.individuoNavigation)
+                    .ThenInclude(i => i.collezioneNavigation)
+                        .ThenInclude(c => c.settoreNavigation)
+                .Include(a => a.interventoNavigation)
+                .Include(a => a.prioritaNavigation)
+                .Include(a => a.fornitoreNavigation)
+                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(nomeScientifico))
+            {
+                var filtro = nomeScientifico.Trim().ToLower();
+                query = query.Where(a => (a.individuoNavigation.accessioneNavigation.specieNavigation.nome_scientifico ?? "").ToLower().Contains(filtro));
+            }
+
+            if (!string.IsNullOrWhiteSpace(progressivo))
+            {
+                var filtro = progressivo.Trim();
+                query = query.Where(a => (a.individuoNavigation.progressivo ?? "").Contains(filtro));
+            }
+
+            if (!string.IsNullOrWhiteSpace(destinazione))
+            {
+                var filtro = destinazione.Trim().ToLower();
+                query = query.Where(a => (a.individuoNavigation.destinazioni ?? "").ToLower().Contains(filtro));
+            }
+
+            if (settore.HasValue)
+            {
+                query = query.Where(a => a.individuoNavigation.settore == settore.Value);
+            }
+
+            if (collezione.HasValue)
+            {
+                query = query.Where(a => a.individuoNavigation.collezione == collezione.Value);
+            }
+
+            if (dataUltimaModificaDa.HasValue)
+            {
+                var da = dataUltimaModificaDa.Value.Date;
+                query = query.Where(a => (a.dataultimamodifica ?? a.dataapertura) >= da);
+            }
+
+            if (dataUltimaModificaA.HasValue)
+            {
+                var a = dataUltimaModificaA.Value.Date.AddDays(1);
+                query = query.Where(x => (x.dataultimamodifica ?? x.dataapertura) < a);
+            }
+
+            if (!string.IsNullOrWhiteSpace(statoIntervento))
+            {
+                if (statoIntervento == "open")
+                {
+                    query = query.Where(a => !a.statoIntervento);
+                }
+                else if (statoIntervento == "close")
+                {
+                    query = query.Where(a => a.statoIntervento);
+                }
+            }
+
+            if (priorita.HasValue)
+            {
+                query = query.Where(a => a.priorita == priorita.Value);
+            }
+
+            if (tipoIntervento.HasValue)
+            {
+                query = query.Where(a => a.intervento == tipoIntervento.Value);
+            }
+
+            if (fornitore.HasValue)
+            {
+                query = query.Where(a => a.fornitore == fornitore.Value);
+            }
+
+            var risultati = await query
+                .OrderByDescending(a => a.dataultimamodifica ?? a.dataapertura)
+                .ToListAsync();
+
+            PopulateRicercaTabellaViewData();
+            ViewBag.nomeScientifico = nomeScientifico;
+            ViewBag.progressivo = progressivo;
+            ViewBag.destinazione = destinazione;
+            ViewBag.settore = settore;
+            ViewBag.collezione = collezione;
+            ViewBag.dataUltimaModificaDa = dataUltimaModificaDa;
+            ViewBag.dataUltimaModificaA = dataUltimaModificaA;
+            ViewBag.statoIntervento = statoIntervento;
+            ViewBag.priorita = priorita;
+            ViewBag.tipoIntervento = tipoIntervento;
+            ViewBag.fornitore = fornitore;
+
+            return View(risultati);
+        }
+
+        private void PopulateRicercaTabellaViewData()
+        {
+            var linguacorrente = _languageService.GetCurrentCulture();
+
+            ViewBag.listaDestinazioni = _context.Individui
+                .Where(i => !string.IsNullOrWhiteSpace(i.destinazioni))
+                .Select(i => i.destinazioni)
+                .Distinct()
+                .OrderBy(i => i)
+                .Select(i => new SelectListItem { Value = i, Text = i })
+                .ToList();
+
+            if (linguacorrente == "en-US")
+            {
+                ViewBag.listasettori = new SelectList(_context.Settori.OrderBy(a => a.ordinamento)
+                    .Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.settore_en) ? a.settore : a.settore_en }), "id", "Desc").ToList();
+
+                ViewBag.listacollezioni = new SelectList(_context.Collezioni.OrderBy(a => a.collezione)
+                    .Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.collezione_en) ? a.collezione : a.collezione_en }), "id", "Desc").ToList();
+
+                ViewBag.listapriorita = new SelectList(_context.TipoPrioritaAlberi.OrderByDescending(a => a.ordinamento)
+                    .Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.descrizione : a.descrizione_en }), "id", "Desc").ToList();
+
+                ViewBag.listatipointervento = new SelectList(_context.TipoInterventiAlberi.OrderByDescending(a => a.ordinamento)
+                    .Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.descrizione : a.descrizione_en }), "id", "Desc").ToList();
+
+                ViewBag.listafornitori = new SelectList(_context.Fornitori.OrderBy(a => a.descrizione)
+                    .Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.descrizione : a.descrizione_en }), "id", "Desc").ToList();
+            }
+            else
+            {
+                ViewBag.listasettori = new SelectList(_context.Settori.OrderBy(a => a.settore), "id", "settore").ToList();
+                ViewBag.listacollezioni = new SelectList(_context.Collezioni.OrderBy(a => a.collezione), "id", "collezione").ToList();
+                ViewBag.listapriorita = new SelectList(_context.TipoPrioritaAlberi.OrderByDescending(a => a.ordinamento), "id", "descrizione").ToList();
+                ViewBag.listatipointervento = new SelectList(_context.TipoInterventiAlberi.OrderByDescending(a => a.ordinamento), "id", "descrizione").ToList();
+                ViewBag.listafornitori = new SelectList(_context.Fornitori.OrderBy(a => a.descrizione), "id", "descrizione").ToList();
+            }
+
+            ViewBag.nomeScientifico ??= string.Empty;
+            ViewBag.progressivo ??= string.Empty;
+            ViewBag.destinazione ??= string.Empty;
+            ViewBag.dataUltimaModificaDa ??= DateTime.Today.AddMonths(-1);
+            ViewBag.dataUltimaModificaA ??= DateTime.Today;
+            ViewBag.statoIntervento ??= string.Empty;
+        }
+
+        [HttpGet]
         public async Task<IActionResult> ExportTotaleInterventi()
         {
             var linguaCorrente = _languageService.GetCurrentCulture();

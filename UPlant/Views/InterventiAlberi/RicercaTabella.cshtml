@@ -1,0 +1,249 @@
+@model IEnumerable<UPlant.Models.DB.InterventiAlberi>
+@inject LanguageService language
+@using System.Text.Json
+
+@{
+    ViewBag.Title = "Ricerca Interventi Alberi";
+    ViewBag.lang = language.GetCurrentCulture();
+
+    var mapData = Model
+        .Where(item => item.individuoNavigation != null)
+        .Select(item => new
+        {
+            lat = item.individuoNavigation.latitudine,
+            lng = item.individuoNavigation.longitudine,
+            progressivo = item.individuoNavigation.progressivo,
+            specie = item.individuoNavigation.accessioneNavigation?.specieNavigation?.nome_scientifico,
+            stato = item.statoIntervento ? language.Getkey("Global_Close") : language.Getkey("Global_Open"),
+            priorita = item.prioritaNavigation?.descrizione,
+            detailUrl = Url.Action("Details", "InterventiAlberi", new { id = item.id })
+        })
+        .ToList();
+}
+
+<h4 class="box-title">Ricerca tabella interventi alberi</h4>
+
+<div class="card card-primary mt-2">
+    <div class="card-header" data-toggle="collapse" data-target="#ricercaCollapse" style="cursor:pointer;">
+        <h3 class="card-title mb-0 font-weight-bold">Ricerca</h3>
+    </div>
+    <div id="ricercaCollapse" class="collapse show">
+        <div class="card-body">
+            @using (Html.BeginForm("RicercaTabella", "InterventiAlberi", FormMethod.Post, new { id = "ricercaInterventiForm" }))
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="form-row">
+                    <div class="form-group col-md-4">
+                        <label>Nome scientifico</label>
+                        <input type="text" id="nomeScientifico" name="nomeScientifico" class="form-control" value="@ViewBag.nomeScientifico" />
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label>Progressivo</label>
+                        <input type="text" id="progressivo" name="progressivo" class="form-control" value="@ViewBag.progressivo" />
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label>Destinazione</label>
+                        @Html.DropDownList("destinazione", (IEnumerable<SelectListItem>)ViewBag.listaDestinazioni, language.Getkey("Global_All"), new { @class = "form-control", @id = "destinazione" })
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-md-3">
+                        <label>@language.Getkey("Global_Sector")</label>
+                        @Html.DropDownList("settore", (IEnumerable<SelectListItem>)ViewBag.listasettori, language.Getkey("Global_All"), new { @class = "form-control", @id = "settore" })
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label>@language.Getkey("Global_Collection")</label>
+                        @Html.DropDownList("collezione", (IEnumerable<SelectListItem>)ViewBag.listacollezioni, language.Getkey("Global_All"), new { @class = "form-control", @id = "collezione" })
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label>Data ultima modifica</label>
+                        <div class="d-flex">
+                            <div class="input-group mr-2">
+                                <div class="input-group-prepend"><span class="input-group-text">@language.Getkey("Global_From")</span></div>
+                                <input type="date" id="dataUltimaModificaDa" name="dataUltimaModificaDa" class="form-control" value="@(((DateTime)ViewBag.dataUltimaModificaDa).ToString("yyyy-MM-dd"))" />
+                            </div>
+                            <div class="input-group">
+                                <div class="input-group-prepend"><span class="input-group-text">@language.Getkey("Global_To")</span></div>
+                                <input type="date" id="dataUltimaModificaA" name="dataUltimaModificaA" class="form-control" value="@(((DateTime)ViewBag.dataUltimaModificaA).ToString("yyyy-MM-dd"))" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-md-3">
+                        <label>Stato intervento</label>
+                        <select id="statoIntervento" name="statoIntervento" class="form-control">
+                            <option value="">@language.Getkey("Global_All")</option>
+                            <option value="open" selected="@(ViewBag.statoIntervento == "open")">@language.Getkey("Global_Open")</option>
+                            <option value="close" selected="@(ViewBag.statoIntervento == "close")">@language.Getkey("Global_Close")</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label>@language.Getkey("Global_Tree_Priority")</label>
+                        @Html.DropDownList("priorita", (IEnumerable<SelectListItem>)ViewBag.listapriorita, language.Getkey("Global_All"), new { @class = "form-control", @id = "priorita" })
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label>Tipo intervento</label>
+                        @Html.DropDownList("tipoIntervento", (IEnumerable<SelectListItem>)ViewBag.listatipointervento, language.Getkey("Global_All"), new { @class = "form-control", @id = "tipoIntervento" })
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label>Fornitore</label>
+                        @Html.DropDownList("fornitore", (IEnumerable<SelectListItem>)ViewBag.listafornitori, language.Getkey("Global_All"), new { @class = "form-control", @id = "fornitore" })
+                    </div>
+                </div>
+
+                <div>
+                    <button class="btn btn-success" type="submit">@language.Getkey("Global_Search")</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<div class="card card-primary mt-3">
+    <div class="card-header" data-toggle="collapse" data-target="#mappaCollapse" style="cursor:pointer;">
+        <h3 class="card-title mb-0 font-weight-bold">Mappa risultati</h3>
+    </div>
+    <div id="mappaCollapse" class="collapse show">
+        <div class="card-body">
+            <div id="interventiRicercaMap" style="width:100%; min-height:420px;"></div>
+            <div id="interventiRicercaMapEmpty" class="alert alert-info d-none mb-0">Nessuna coordinata disponibile.</div>
+        </div>
+    </div>
+</div>
+
+<div class="card card-primary mt-3">
+    <div class="card-header" data-toggle="collapse" data-target="#risultatiCollapse" style="cursor:pointer;">
+        <h3 class="card-title mb-0 font-weight-bold">Risultati ricerca</h3>
+    </div>
+    <div id="risultatiCollapse" class="collapse show">
+        <div class="card-body">
+            <table id="tableRicercaInterventi" class="table table-bordered table-striped table-sm">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Progressivo</th>
+                        <th>Nome scientifico</th>
+                        <th>Destinazione</th>
+                        <th>@language.Getkey("Global_Sector")</th>
+                        <th>@language.Getkey("Global_Collection")</th>
+                        <th>Stato</th>
+                        <th>@language.Getkey("Global_Tree_Priority")</th>
+                        <th>Tipo intervento</th>
+                        <th>Fornitore</th>
+                        <th>@language.Getkey("Global_Last_Modified_Date")</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                <a asp-action="Details" asp-controller="InterventiAlberi" asp-route-id="@item.id" class="btn btn-info btn-sm">
+                                    <i class="fa-solid fa-eye"></i>
+                                </a>
+                            </td>
+                            <td>@item.individuoNavigation?.progressivo</td>
+                            <td>@item.individuoNavigation?.accessioneNavigation?.specieNavigation?.nome_scientifico</td>
+                            <td>@item.individuoNavigation?.destinazioni</td>
+                            <td>@item.individuoNavigation?.collezioneNavigation?.settoreNavigation?.settore</td>
+                            <td>@item.individuoNavigation?.collezioneNavigation?.collezione</td>
+                            <td>@(item.statoIntervento ? language.Getkey("Global_Close") : language.Getkey("Global_Open"))</td>
+                            <td>@item.prioritaNavigation?.descrizione</td>
+                            <td>@item.interventoNavigation?.descrizione</td>
+                            <td>@item.fornitoreNavigation?.descrizione</td>
+                            <td>@((item.dataultimamodifica ?? item.dataapertura).ToString("dd/MM/yyyy"))</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section CustomStyles {
+    <link href="~/css/select2.min.css" rel="stylesheet" />
+    <link href="~/css/datatables.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+}
+
+@section Scripts {
+    <script src="~/js/select2.min.js"></script>
+    <script src="~/js/datatables.min.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+}
+
+@section CustomScripts {
+    <script>
+        $(document).ready(function () {
+            $('#settore,#collezione,#destinazione,#priorita,#tipoIntervento,#fornitore').select2();
+
+            var lingua = "@ViewBag.lang";
+            if (lingua == "en-US") {
+                $.extend($.fn.dataTable.defaults, { language: { url: "/js/dataTables.english.json" } });
+            } else {
+                $.extend($.fn.dataTable.defaults, { language: { url: "/js/dataTables.default.json" } });
+            }
+
+            $('#tableRicercaInterventi').DataTable({
+                paging: true,
+                searching: true,
+                ordering: true,
+                info: true,
+                autoWidth: false
+            });
+
+            var rawData = @Html.Raw(JsonSerializer.Serialize(mapData));
+            var markersData = (rawData || []).map(function (entry) {
+                var lat = Number(String(entry.lat || '').replace(',', '.'));
+                var lng = Number(String(entry.lng || '').replace(',', '.'));
+                if (!Number.isFinite(lat) || !Number.isFinite(lng)) {
+                    return null;
+                }
+                return {
+                    lat: lat,
+                    lng: lng,
+                    progressivo: entry.progressivo,
+                    specie: entry.specie,
+                    stato: entry.stato,
+                    priorita: entry.priorita,
+                    detailUrl: entry.detailUrl
+                };
+            }).filter(function (x) { return x !== null; });
+
+            if (markersData.length === 0) {
+                $('#interventiRicercaMap').addClass('d-none');
+                $('#interventiRicercaMapEmpty').removeClass('d-none');
+                return;
+            }
+
+            var map = L.map('interventiRicercaMap');
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 20,
+                attribution: '&copy; OpenStreetMap contributors'
+            }).addTo(map);
+
+            var bounds = [];
+            markersData.forEach(function (item) {
+                var marker = L.marker([item.lat, item.lng]).addTo(map);
+                marker.bindPopup(
+                    '<div><strong>' + (item.progressivo || '-') + '</strong></div>' +
+                    '<div>' + (item.specie || '-') + '</div>' +
+                    '<div>Stato: ' + (item.stato || '-') + '</div>' +
+                    '<div>Priorità: ' + (item.priorita || '-') + '</div>' +
+                    '<div class="mt-1"><a href="' + item.detailUrl + '" target="_blank" rel="noopener noreferrer">Dettaglio intervento</a></div>'
+                );
+                bounds.push([item.lat, item.lng]);
+            });
+
+            map.fitBounds(bounds, { padding: [30, 30] });
+
+            $('#mappaCollapse').on('shown.bs.collapse', function () {
+                setTimeout(function () { map.invalidateSize(); }, 180);
+            });
+        });
+    </script>
+}
