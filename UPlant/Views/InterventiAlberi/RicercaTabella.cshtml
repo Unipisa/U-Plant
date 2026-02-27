@@ -18,7 +18,7 @@
             priorita = item.prioritaNavigation?.descrizione,
             prioritaColore = item.prioritaNavigation?.colore,
             isClosed = item.statoIntervento,
-            detailUrl = Url.Action("Details", "InterventiAlberi", new { id = item.id })
+            detailUrl = Url.Action("Edit", "InterventiAlberi", new { id = item.id })
         })
         .ToList();
 }
