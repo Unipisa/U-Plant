@@ -114,6 +114,19 @@
 
 @section Styles {
     <link href="~/css/select2.min.css" rel="stylesheet" />
+    <style>
+        #fornitore + .select2-container--bootstrap4 .select2-selection {
+            border: 2px solid #6c757d;
+            border-radius: 0.25rem;
+            background-color: #fff;
+        }
+
+        #fornitore + .select2-container--bootstrap4.select2-container--focus .select2-selection,
+        #fornitore + .select2-container--bootstrap4.select2-container--open .select2-selection {
+            border-color: #007bff;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
+    </style>
 }
 
 @section Scripts {
