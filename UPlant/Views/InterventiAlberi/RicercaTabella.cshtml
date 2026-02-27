@@ -14,7 +14,7 @@
             lng = item.individuoNavigation.longitudine,
             progressivo = item.individuoNavigation.progressivo,
             specie = item.individuoNavigation.accessioneNavigation?.specieNavigation?.nome_scientifico,
-            stato = item.statoIntervento ? language.Getkey("Global_Close") : language.Getkey("Global_Open"),
+            stato = (item.statoIntervento ? language.Getkey("Global_Close") : language.Getkey("Global_Open")).ToString(),
             priorita = item.prioritaNavigation?.descrizione,
             prioritaColore = item.prioritaNavigation?.colore,
             isClosed = item.statoIntervento,
