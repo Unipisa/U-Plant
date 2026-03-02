@@ -25,7 +25,13 @@ namespace UPlant.Controllers
         // GET: Users
         public async Task<IActionResult> Index()
         {
-            var entities = _context.UserRole.Include(u => u.UserFKNavigation).ThenInclude(u => u.AccessioniutenteUltimaModificaNavigation).Include(u => u.UserFKNavigation).ThenInclude(u => u.OrganizzazioneNavigation).Include(u => u.UserFKNavigation).ThenInclude(u => u.TipologiaUtenteNavigation).Include(u => u.RoleFKNavigation).OrderBy(u => u.UserFKNavigation.LastName);
+            var entities = _context.Users
+                .Include(u => u.AccessioniutenteUltimaModificaNavigation)
+                .Include(u => u.OrganizzazioneNavigation)
+                .Include(u => u.TipologiaUtenteNavigation)
+                .Include(u => u.UserRole)
+                    .ThenInclude(ur => ur.RoleFKNavigation)
+                .OrderBy(u => u.LastName);
             return View(await entities.ToListAsync());
         }
 
@@ -62,7 +68,7 @@ namespace UPlant.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Guid ruolo,[Bind("Id,Name,LastName,Email,UnipiUserName,CF,IsEnabled,CreatedAt,CreatedBy,CreatedFrom,TipologiaUtente,Organizzazione")] Users users)
+        public async Task<IActionResult> Create(Guid[] ruoli,[Bind("Id,Name,LastName,Email,UnipiUserName,CF,IsEnabled,CreatedAt,CreatedBy,CreatedFrom,TipologiaUtente,Organizzazione")] Users users)
         {
             string username = User.Identities.FirstOrDefault()?.Claims?.Where(c => c.Type == "UnipiUserID").FirstOrDefault()?.Value;
             string cognomecreatore = @User.Identities.FirstOrDefault()?.Claims?.Where(c => c.Type == "family_name").FirstOrDefault()?.Value;
@@ -76,7 +82,9 @@ namespace UPlant.Controllers
             string hostName = Dns.GetHostName();
             string Ip = Dns.GetHostEntry(hostName).AddressList[1].ToString();
 
-            var utenteesistente = _context.UserRole.Include(u => u.UserFKNavigation).Include(u => u.RoleFKNavigation).Where(u => u.UserFKNavigation.UnipiUserName == users.UnipiUserName && u.RoleFK == ruolo);
+            var normalizedRoleIds = await NormalizeRoleSelectionAsync(ruoli);
+
+            var utenteesistente = _context.UserRole.Include(u => u.UserFKNavigation).Include(u => u.RoleFKNavigation).Where(u => u.UserFKNavigation.UnipiUserName == users.UnipiUserName && normalizedRoleIds.Contains(u.RoleFK));
 
                // var utenteesistente = _context.Users.Where(a => a.UnipiUserName == users.UnipiUserName );
             if (utenteesistente.Count() >0)
@@ -92,11 +100,16 @@ namespace UPlant.Controllers
                
                
                 // return RedirectToAction(nameof(Index));
-                ViewData["Organizzazione"] = new SelectList(_context.Organizzazioni.OrderBy(x => x.descrizione), "id", "descrizione", users.Organizzazione);
-                ViewData["Ruolo"] = new SelectList(_context.Roles.OrderBy(x => x.Descr), "Id", "Descr");
+            ViewData["Organizzazione"] = new SelectList(_context.Organizzazioni.OrderBy(x => x.descrizione), "id", "descrizione", users.Organizzazione);
+                ViewData["Ruolo"] = new SelectList(_context.Roles.OrderBy(x => x.Descr), "Id", "Descr", normalizedRoleIds);
                 ViewData["TipologiaUtente"] = new SelectList(_context.TipologiaUtente.OrderBy(x => x.descrizione), "id", "descrizione", users.TipologiaUtente);
                 return View(users);
             }
+            if (!normalizedRoleIds.Any())
+            {
+                ModelState.AddModelError(string.Empty, "Selezionare almeno un ruolo.");
+            }
+
             if (ModelState.IsValid)
             {
 
@@ -105,21 +118,20 @@ namespace UPlant.Controllers
                 users.CreatedBy = nomecreatore + " " + cognomecreatore;
                 users.CreatedFrom = Ip;
 
-                users.UserRole = new List<UserRole>
-                {
-                    new UserRole
+                users.UserRole = normalizedRoleIds
+                    .Select(roleId => new UserRole
                     {
                     Id= Guid.NewGuid(),
                     UserFK = users.Id,
-                    RoleFK = ruolo // devo mettere i valori giusti passati dal form
-                    }
-                };
+                    RoleFK = roleId
+                    })
+                    .ToList();
                 _context.Add(users);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             ViewData["Organizzazione"] = new SelectList(_context.Organizzazioni.OrderBy(x => x.descrizione), "id", "descrizione", users.Organizzazione);
-            ViewData["Ruolo"] = new SelectList(_context.Roles.OrderBy(x => x.Descr), "Id", "Descr");
+            ViewData["Ruolo"] = new SelectList(_context.Roles.OrderBy(x => x.Descr), "Id", "Descr", normalizedRoleIds);
             ViewData["TipologiaUtente"] = new SelectList(_context.TipologiaUtente.OrderBy(x => x.descrizione), "id", "descrizione", users.TipologiaUtente);
             return View(users);
         }
@@ -133,13 +145,13 @@ namespace UPlant.Controllers
             }
 
             var users = await _context.Users.FindAsync(id);
-            var userrole = _context.UserRole.Where(c => c.UserFK == users.Id).FirstOrDefault();
             if (users == null)
             {
                 return NotFound();
             }
+            var selectedRoles = _context.UserRole.Where(c => c.UserFK == users.Id).Select(c => c.RoleFK).ToList();
             ViewData["Organizzazione"] = new SelectList(_context.Organizzazioni.OrderBy(x => x.descrizione), "id", "descrizione", users.Organizzazione);
-            ViewData["Ruolo"] = new SelectList(_context.Roles.OrderBy(x => x.Descr), "Id", "Descr", userrole.RoleFK);
+            ViewData["Ruolo"] = new SelectList(_context.Roles.OrderBy(x => x.Descr), "Id", "Descr", selectedRoles);
             ViewData["TipologiaUtente"] = new SelectList(_context.TipologiaUtente.OrderBy(x => x.descrizione), "id", "descrizione", users.TipologiaUtente);
             return View(users);
         }
@@ -149,7 +161,7 @@ namespace UPlant.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, Guid ruolo, [Bind("Id,Name,LastName,Email,UnipiUserName,CF,IsEnabled,CreatedAt,CreatedBy,CreatedFrom,TipologiaUtente,Organizzazione")] Users users)
+        public async Task<IActionResult> Edit(Guid id, Guid[] ruoli, [Bind("Id,Name,LastName,Email,UnipiUserName,CF,IsEnabled,CreatedAt,CreatedBy,CreatedFrom,TipologiaUtente,Organizzazione")] Users users)
         {
             
             if (id != users.Id)
@@ -161,7 +173,13 @@ namespace UPlant.Controllers
             string nomecreatore = @User.Identities.FirstOrDefault()?.Claims?.Where(c => c.Type == "given_name").FirstOrDefault()?.Value;
             string hostName = Dns.GetHostName();
             string Ip = Dns.GetHostEntry(hostName).AddressList[1].ToString();
-            UserRole userrole = _context.UserRole.AsNoTracking().Where(c => c.UserFK == id).FirstOrDefault();
+            var normalizedRoleIds = await NormalizeRoleSelectionAsync(ruoli);
+
+            if (!normalizedRoleIds.Any())
+            {
+                ModelState.AddModelError(string.Empty, "Selezionare almeno un ruolo.");
+            }
+
             if (ModelState.IsValid)
             {
                 try
@@ -184,25 +202,18 @@ namespace UPlant.Controllers
                         throw;
                     }
                 }
-                
-               
-                try
+                var existingRoles = await _context.UserRole.Where(c => c.UserFK == id).ToListAsync();
+                _context.UserRole.RemoveRange(existingRoles);
+
+                var newRoles = normalizedRoleIds.Select(roleId => new UserRole
                 {
-                    userrole.RoleFK = ruolo;
-                    _context.Update(userrole);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!UsersExists(users.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                    Id = Guid.NewGuid(),
+                    UserFK = id,
+                    RoleFK = roleId
+                });
+
+                await _context.UserRole.AddRangeAsync(newRoles);
+                await _context.SaveChangesAsync();
 
 
                 
@@ -210,7 +221,7 @@ namespace UPlant.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["Organizzazione"] = new SelectList(_context.Organizzazioni.OrderBy(x => x.descrizione), "id", "descrizione", users.Organizzazione);
-            ViewData["Ruolo"] = new SelectList(_context.Roles.OrderBy(x => x.Descr), "Id", "Descr", userrole.RoleFK);
+            ViewData["Ruolo"] = new SelectList(_context.Roles.OrderBy(x => x.Descr), "Id", "Descr", normalizedRoleIds);
             ViewData["TipologiaUtente"] = new SelectList(_context.TipologiaUtente.OrderBy(x => x.descrizione), "id", "descrizione", users.TipologiaUtente);
             return View(users);
         }
@@ -245,11 +256,11 @@ namespace UPlant.Controllers
             }
 
             var users = await _context.Users.FindAsync(id);
-            var userrole =  _context.UserRole.Where(c => c.UserFK == users.Id).FirstOrDefault();
+            var userRoles = _context.UserRole.Where(c => c.UserFK == users.Id).ToList();
 
             if (users != null)
             {
-                _context.UserRole.Remove(userrole);
+                _context.UserRole.RemoveRange(userRoles);
                 _context.Users.Remove(users);
             }
             
@@ -260,6 +271,33 @@ namespace UPlant.Controllers
         private bool UsersExists(Guid id)
         {
           return _context.Users.Any(e => e.Id == id);
+        }
+
+        private async Task<List<Guid>> NormalizeRoleSelectionAsync(Guid[] selectedRoleIds)
+        {
+            selectedRoleIds ??= Array.Empty<Guid>();
+
+            var roleMap = await _context.Roles
+                .Where(r => selectedRoleIds.Contains(r.Id))
+                .ToDictionaryAsync(r => r.Id, r => r.Descr);
+
+            var administratorRole = roleMap.FirstOrDefault(r => string.Equals(r.Value, "Administrator", StringComparison.OrdinalIgnoreCase));
+            if (administratorRole.Key != Guid.Empty)
+            {
+                return new List<Guid> { administratorRole.Key };
+            }
+
+            var hasOperator = roleMap.Any(r => string.Equals(r.Value, "Operator", StringComparison.OrdinalIgnoreCase));
+            if (!hasOperator)
+            {
+                return roleMap
+                    .Where(r => !string.Equals(r.Value, "Discover", StringComparison.OrdinalIgnoreCase) &&
+                                !string.Equals(r.Value, "TreeManager", StringComparison.OrdinalIgnoreCase))
+                    .Select(r => r.Key)
+                    .ToList();
+            }
+
+            return roleMap.Keys.ToList();
         }
     }
 }
