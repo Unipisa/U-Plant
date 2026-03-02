@@ -287,17 +287,24 @@ namespace UPlant.Controllers
                 return new List<Guid> { administratorRole.Key };
             }
 
+            var readerRole = roleMap.FirstOrDefault(r => string.Equals(r.Value, "Reader", StringComparison.OrdinalIgnoreCase));
+            if (readerRole.Key != Guid.Empty)
+            {
+                return new List<Guid> { readerRole.Key };
+            }
+
             var hasOperator = roleMap.Any(r => string.Equals(r.Value, "Operator", StringComparison.OrdinalIgnoreCase));
             if (!hasOperator)
             {
-                return roleMap
-                    .Where(r => !string.Equals(r.Value, "Discover", StringComparison.OrdinalIgnoreCase) &&
-                                !string.Equals(r.Value, "TreeManager", StringComparison.OrdinalIgnoreCase))
-                    .Select(r => r.Key)
-                    .ToList();
+                return new List<Guid>();
             }
 
-            return roleMap.Keys.ToList();
+            return roleMap
+                .Where(r => string.Equals(r.Value, "Operator", StringComparison.OrdinalIgnoreCase) ||
+                            string.Equals(r.Value, "Discover", StringComparison.OrdinalIgnoreCase) ||
+                            string.Equals(r.Value, "TreeManager", StringComparison.OrdinalIgnoreCase))
+                .Select(r => r.Key)
+                .ToList();
         }
     }
 }
