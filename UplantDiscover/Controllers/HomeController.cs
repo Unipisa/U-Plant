@@ -13,7 +13,6 @@ using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using NuGet.Configuration;
@@ -28,15 +27,14 @@ namespace UplantDiscover.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly Entities _context;
         private readonly IOptions<Wso2> _wso2;
-        private readonly IConfiguration _conf;
+        
 
 
-        public HomeController(Entities context, ILogger<HomeController> logger, IOptions<Wso2> wso2, IConfiguration conf)
+        public HomeController(Entities context, ILogger<HomeController> logger, IOptions<Wso2> wso2)
         {
             _logger = logger;
             _context = context;
             _wso2 = wso2;
-            _conf = conf;
         }
         
         public IActionResult Index()
@@ -61,13 +59,6 @@ namespace UplantDiscover.Controllers
             ViewBag.collezioni = common.GetCollezioni(linguacorrente);
 
             // ViewBag.token = common.GetToken();
-            ViewBag.GoogleMapUrl =_conf.GetValue<string>("Maps:Url");
-            ViewBag.GoogleMapKey = _conf.GetValue<string>("Maps:Key");
-            ViewBag.GoogleMapOptions = _conf.GetValue<string>("Maps:Options");
-            ViewBag.GoogleMapIcons = _conf.GetValue<string>("Maps:Icons");
-            
-            // string apiUrl = _conf.GetValue<string>("DataApi:Url");
-            // ViewBag.apiUrl = apiUrl;
 
 
 
@@ -101,14 +92,7 @@ namespace UplantDiscover.Controllers
             
             if (individuo != null) { ///TODO: gestire null
                                      ///
-                //string apiUrl = _conf.GetValue<string>("DataApi:Url");
-                // ViewBag.apiUrl = apiUrl;
-                // ViewBag.token = common.GetToken();
-                ViewBag.GoogleMapUrl = _conf.GetValue<string>("Maps:Url");
-                ViewBag.GoogleMapKey = _conf.GetValue<string>("Maps:Key");
-                ViewBag.GoogleMapOptions = _conf.GetValue<string>("Maps:Options");
-                ViewBag.GoogleMapIcons = _conf.GetValue<string>("Maps:Icons");
-               
+                                // ViewBag.token = common.GetToken();
                 return View(individuo);
             }
             return RedirectToAction("Index");//aggiungere un pagealert

@@ -19,21 +19,16 @@
         </div>
     </div>
     @section scripts {
-    <script src="@ViewBag.GoogleMapUrl@ViewBag.GoogleMapKey@ViewBag.GoogleMapOptions"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
    
     <script type="text/javascript">
            function initialize() {
-                var geocoder = new google.maps.Geocoder();
-                var infowindow = new google.maps.InfoWindow();
-                var myLatlng = new google.maps.LatLng(43.71944963861506, 10.396344067111961);
-                var mapOptions = {
-                    zoom: 13,
-                    center: myLatlng,
-                    mapTypeId: google.maps.MapTypeId.ROADMAP
-                };
-                var map = new google.maps.Map(document.getElementById("map"), mapOptions);
-
-
+                var map = L.map('map').setView([43.71944963861506, 10.396344067111961], 13);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 20,
+                    attribution: '&copy; OpenStreetMap contributors'
+                }).addTo(map);
 
                 return map;
 
@@ -63,7 +58,7 @@
                 success: function (data)
                 {
                     var map = initialize();
-                    var bounds = new google.maps.LatLngBounds();
+                    var bounds = L.latLngBounds();
                     var a = '';
                     var s = '';
                     var desc = data[0].descrizione.split('[p]').join('<p></p>');
@@ -83,7 +78,7 @@
 
                     var elencoindividui = data[0].listaIndividui;
                     for (var i = 0; i < elencoindividui.length; i++) {
-                        var iconBase = '@ViewBag.GoogleMapIcons';
+                        var iconBase = 'https://maps.google.com/mapfiles/ms/icons/';
                         var icons;
 
                         switch (elencoindividui[i].ordinamento) {
@@ -132,22 +127,22 @@
                             var longitudine = elencoindividui[i].longitudine;
                             var icona = icons;
                         }
-                        var marker = new google.maps.Marker({
-                            position: new google.maps.LatLng(latitudine, longitudine),
+                        var marker = L.marker([latitudine, longitudine], {
                             title: elencoindividui[i].indentitatassonomica,
-                            icon: icona
-                        });
+                            icon: L.icon({
+                                iconUrl: icona,
+                                iconSize: [32, 32],
+                                iconAnchor: [16, 32]
+                            })
+                        }).addTo(map);
 
 
-                        marker.setMap(map);
-
-
-                        bounds.extend(marker.getPosition());
-                        google.maps.event.addListener(marker, 'click', (function (marker, i) {
+                        bounds.extend([latitudine, longitudine]);
+                        marker.on('click', (function (i) {
                             return function () {
                                 window.location.href = "@Url.Action("Details", "Home")?id=" + elencoindividui[i].id + '&percorso=yes&nome='+data[0].titolo;
                             }
-                        })(marker, i));
+                        })(i));
 
                         s += '<tr><td id ="immagine' + i + '" data-label="Immagine" >'
                             + '<input type="hidden" id="longitudine' + i + '" name="longitudine' + i + '" value="' + elencoindividui[i].longitudine + '">'
@@ -198,24 +193,11 @@
 
                     }
                     s += '</tbody></table>';
-                    marker.setMap(map);
-                    bounds.extend(marker.getPosition());
-                    map.setCenter(bounds.getCenter());
+                    map.setView(bounds.getCenter(), 17);
 
-                    //map.setCenter(bounds.getCenter());
                     if (numerorisultato != 1) {
                         map.fitBounds(bounds);
                     }
-                    map.setZoom(17);
-                    var noPoi = [
-                        {
-                            featureType: "poi.business",
-                            stylers: [
-                                { visibility: "off" }
-                            ]
-                        }
-                    ];
-                    map.setOptions({ styles: noPoi });
                     $("#bloccopercorso").html(a);
                     $("#listaindividui").html(s);
                 },

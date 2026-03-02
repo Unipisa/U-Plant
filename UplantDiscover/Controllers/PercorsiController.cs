@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using UplantDiscover.Models;
 using UplantDiscover.Models.DB;
@@ -20,12 +19,10 @@ namespace UplantDiscover.Controllers
     {
         private readonly Entities _context;
         private readonly IOptions<Wso2> _wso2; 
-        private readonly IConfiguration _conf;
-        public PercorsiController(Entities context, IOptions<Wso2> wso2, IConfiguration conf)
+        public PercorsiController(Entities context, IOptions<Wso2> wso2)
         {
             _context = context;
             _wso2 = wso2;
-            _conf = conf;
         }
 
         // GET: Pippo
@@ -44,12 +41,7 @@ namespace UplantDiscover.Controllers
             {
                 ViewBag.bandiera = "en";
             }
-            ViewBag.GoogleMapUrl = _conf.GetValue<string>("Maps:Url");
-            ViewBag.GoogleMapKey = _conf.GetValue<string>("Maps:Key");
-            ViewBag.GoogleMapOptions = _conf.GetValue<string>("Maps:Options");
-            ViewBag.GoogleMapIcons = _conf.GetValue<string>("Maps:Icons");
             //ViewBag.token = common.GetToken();
-            //ViewBag.ApiUrl = _conf.GetValue<string>("DataApi:Url");
             return View(await dBPlant.ToListAsync());
         }
         public IActionResult Details(Guid? id)
@@ -83,11 +75,6 @@ namespace UplantDiscover.Controllers
             }
            // ViewBag.token = common.GetToken();
             ViewBag.idpercorso = id;
-            ViewBag.GoogleMapUrl = _conf.GetValue<string>("Maps:Url");
-            ViewBag.GoogleMapKey = _conf.GetValue<string>("Maps:Key");
-            ViewBag.GoogleMapOptions = _conf.GetValue<string>("Maps:Options");
-            ViewBag.GoogleMapIcons = _conf.GetValue<string>("Maps:Icons");
-            // ViewBag.ApiUrl = _conf.GetValue<string>("DataApi:Url");
             return View(percorsi);
         }
     }
