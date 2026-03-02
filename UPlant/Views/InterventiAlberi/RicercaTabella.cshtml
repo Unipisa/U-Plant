@@ -319,7 +319,7 @@
                 return;
             }
 
-            var map = L.map('interventiRicercaMap');
+            var map = L.map('interventiRicercaMap', { scrollWheelZoom: false });
             map.attributionControl.setPrefix(false);
             map.attributionControl.setPosition('bottomleft');
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
