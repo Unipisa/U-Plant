@@ -24,7 +24,7 @@ using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Options;
 using System.Text.Json.Serialization;
 
-// Progetto UplantDiscover ,rappresentazione dei dati inseriti su UPlant per la fruibilità pubblica ideato e scritto da Pietro Picconi pietro.picconi@unipi.it
+// Progetto UplantDiscover ,rappresentazione dei dati inseriti su UPlant per la fruibilitÃ  pubblica ideato e scritto da Pietro Picconi pietro.picconi@unipi.it
 
 
 namespace UplantDiscover
@@ -45,7 +45,7 @@ namespace UplantDiscover
             services.AddControllers()
                 .AddJsonOptions(options =>
                  {
-                     options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;///sostituito options.JsonSerializerOptions.IgnoreNullValues = true; perchè obsoleto
+            services.Configure<GoogleMap>(Configuration.GetSection("Maps"));
                      options.JsonSerializerOptions.WriteIndented = true;
                 });
 

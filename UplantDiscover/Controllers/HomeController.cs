@@ -61,10 +61,10 @@ namespace UplantDiscover.Controllers
             ViewBag.collezioni = common.GetCollezioni(linguacorrente);
 
             // ViewBag.token = common.GetToken();
-            ViewBag.GoogleMapUrl =_conf.GetValue<string>("GoogleMap:Url");
-            ViewBag.GoogleMapKey = _conf.GetValue<string>("GoogleMap:Key");
-            ViewBag.GoogleMapOptions = _conf.GetValue<string>("GoogleMap:Options");
-            ViewBag.GoogleMapIcons = _conf.GetValue<string>("GoogleMap:Icons");
+            ViewBag.GoogleMapUrl =_conf.GetValue<string>("Maps:Url");
+            ViewBag.GoogleMapKey = _conf.GetValue<string>("Maps:Key");
+            ViewBag.GoogleMapOptions = _conf.GetValue<string>("Maps:Options");
+            ViewBag.GoogleMapIcons = _conf.GetValue<string>("Maps:Icons");
             
             // string apiUrl = _conf.GetValue<string>("DataApi:Url");
             // ViewBag.apiUrl = apiUrl;
@@ -104,10 +104,10 @@ namespace UplantDiscover.Controllers
                 //string apiUrl = _conf.GetValue<string>("DataApi:Url");
                 // ViewBag.apiUrl = apiUrl;
                 // ViewBag.token = common.GetToken();
-                ViewBag.GoogleMapUrl = _conf.GetValue<string>("GoogleMap:Url");
-                ViewBag.GoogleMapKey = _conf.GetValue<string>("GoogleMap:Key");
-                ViewBag.GoogleMapOptions = _conf.GetValue<string>("GoogleMap:Options");
-                ViewBag.GoogleMapIcons = _conf.GetValue<string>("GoogleMap:Icons");
+                ViewBag.GoogleMapUrl = _conf.GetValue<string>("Maps:Url");
+                ViewBag.GoogleMapKey = _conf.GetValue<string>("Maps:Key");
+                ViewBag.GoogleMapOptions = _conf.GetValue<string>("Maps:Options");
+                ViewBag.GoogleMapIcons = _conf.GetValue<string>("Maps:Icons");
                
                 return View(individuo);
             }

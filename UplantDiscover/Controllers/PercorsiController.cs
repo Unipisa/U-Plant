@@ -44,10 +44,10 @@ namespace UplantDiscover.Controllers
             {
                 ViewBag.bandiera = "en";
             }
-            ViewBag.GoogleMapUrl = _conf.GetValue<string>("GoogleMap:Url");
-            ViewBag.GoogleMapKey = _conf.GetValue<string>("GoogleMap:Key");
-            ViewBag.GoogleMapOptions = _conf.GetValue<string>("GoogleMap:Options");
-            ViewBag.GoogleMapIcons = _conf.GetValue<string>("GoogleMap:Icons");
+            ViewBag.GoogleMapUrl = _conf.GetValue<string>("Maps:Url");
+            ViewBag.GoogleMapKey = _conf.GetValue<string>("Maps:Key");
+            ViewBag.GoogleMapOptions = _conf.GetValue<string>("Maps:Options");
+            ViewBag.GoogleMapIcons = _conf.GetValue<string>("Maps:Icons");
             //ViewBag.token = common.GetToken();
             //ViewBag.ApiUrl = _conf.GetValue<string>("DataApi:Url");
             return View(await dBPlant.ToListAsync());
@@ -83,10 +83,10 @@ namespace UplantDiscover.Controllers
             }
            // ViewBag.token = common.GetToken();
             ViewBag.idpercorso = id;
-            ViewBag.GoogleMapUrl = _conf.GetValue<string>("GoogleMap:Url");
-            ViewBag.GoogleMapKey = _conf.GetValue<string>("GoogleMap:Key");
-            ViewBag.GoogleMapOptions = _conf.GetValue<string>("GoogleMap:Options");
-            ViewBag.GoogleMapIcons = _conf.GetValue<string>("GoogleMap:Icons");
+            ViewBag.GoogleMapUrl = _conf.GetValue<string>("Maps:Url");
+            ViewBag.GoogleMapKey = _conf.GetValue<string>("Maps:Key");
+            ViewBag.GoogleMapOptions = _conf.GetValue<string>("Maps:Options");
+            ViewBag.GoogleMapIcons = _conf.GetValue<string>("Maps:Icons");
             // ViewBag.ApiUrl = _conf.GetValue<string>("DataApi:Url");
             return View(percorsi);
         }
