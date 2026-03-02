@@ -207,11 +207,12 @@
 
         .map-priority-pin {
             display: inline-block;
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
+            width: 16px;
+            height: 16px;
+            border-radius: 50% 50% 50% 0;
             border: 2px solid #ffffff;
-            box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.35);
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
+            transform: rotate(-45deg);
         }
     </style>
 }
@@ -257,8 +258,8 @@
             return L.divIcon({
                 className: 'map-priority-marker-wrapper',
                 html: '<span class="map-priority-pin" style="background-color:' + color + ';"></span>',
-                iconSize: [18, 18],
-                iconAnchor: [9, 9]
+                iconSize: [20, 20],
+                iconAnchor: [10, 20]
             });
         }
 
