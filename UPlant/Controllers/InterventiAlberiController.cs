@@ -16,7 +16,7 @@ using UPlant.Models.DB;
 
 namespace UPlant.Controllers
 {
-    [Authorize(Roles = "Administrator,Operator,TreeManager")]
+    [Authorize(Roles = "Administrator,Operator")]
     public class InterventiAlberiController : BaseController
     {
         private readonly Entities _context;
@@ -25,6 +25,11 @@ namespace UPlant.Controllers
         {
             _context = context;
             _languageService = languageService;
+        }
+
+        private bool CanManageTreeInterventions()
+        {
+            return User.IsInRole("Administrator") || User.IsInRole("TreeManager");
         }
 
         // GET: Alberi
@@ -527,10 +532,15 @@ namespace UPlant.Controllers
 
             return View(alberi);
         }
-        [Authorize(Roles = "Administrator,TreeManager")]
+        [Authorize(Roles = "Administrator,Operator")]
         // GET: Alberi/Create
         public IActionResult Create(Guid idindividuo)
         {
+            if (!CanManageTreeInterventions())
+            {
+                return Forbid();
+            }
+
             var linguacorrente = _languageService.GetCurrentCulture();
             var individuo = _context.Individui
                   .Include(i => i.StoricoIndividuo).ThenInclude(s => s.statoIndividuoNavigation)
@@ -579,11 +589,16 @@ namespace UPlant.Controllers
         // POST: Alberi/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [Authorize(Roles = "Administrator,TreeManager")]
+        [Authorize(Roles = "Administrator,Operator")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("id,individuo,dataapertura,priorita,intervento,fornitore,motivo,esitointervento,statoIntervento,dataultimamodifica,utenteapertura,utenteultimamodifica")] InterventiAlberi interventiAlberi)
         {
+            if (!CanManageTreeInterventions())
+            {
+                return Forbid();
+            }
+
             var linguacorrente = _languageService.GetCurrentCulture();
             if (ModelState.IsValid)
             {
@@ -637,10 +652,15 @@ namespace UPlant.Controllers
             
             return View(interventiAlberi);
         }
-        [Authorize(Roles = "Administrator,TreeManager")]
+        [Authorize(Roles = "Administrator,Operator")]
         // GET: Alberi/Edit/5
         public async Task<IActionResult> Edit(Guid? id)
         {
+            if (!CanManageTreeInterventions())
+            {
+                return Forbid();
+            }
+
             var linguacorrente = _languageService.GetCurrentCulture();
             if (id == null)
             {
@@ -684,11 +704,16 @@ namespace UPlant.Controllers
         // POST: Alberi/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [Authorize(Roles = "Administrator,TreeManager")]
+        [Authorize(Roles = "Administrator,Operator")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Guid id, [Bind("id,individuo,dataapertura,priorita,intervento,fornitore,motivo,esitointervento,statoIntervento,dataultimamodifica,utenteapertura,utenteultimamodifica,statoIndividuo,condizione")] InterventiAlberi interventiAlberi)
         {
+            if (!CanManageTreeInterventions())
+            {
+                return Forbid();
+            }
+
             var linguacorrente = _languageService.GetCurrentCulture();
             if (id != interventiAlberi.id)
             {

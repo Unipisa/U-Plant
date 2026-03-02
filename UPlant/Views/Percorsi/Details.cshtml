@@ -4,6 +4,7 @@
 @{
     ViewBag.Title = language.Getkey("Global_Thematic_Visits");
     ViewBag.lang = language.GetCurrentCulture();
+    var canManagePercorsi = User.IsInRole("Administrator") || (User.IsInRole("Operator") && User.IsInRole("Discover"));
 }
 
 <div class="row">
@@ -78,7 +79,7 @@
 
                             <td style="vertical-align: middle;">
                                 @{
-                                    if (User.IsInRole("Administrator") || User.IsInRole("Discover"))
+                                    if (canManagePercorsi)
                                     {
                                         <a asp-action="Edit" asp-controller="Percorsi" asp-route-id="@Model.id">
                                             <span class="btn btn-warning btn-xs"
@@ -99,6 +100,8 @@
         <div class="row mt-3">
             <div class="col-sm-12">
 
+                @if (canManagePercorsi)
+                {
                 <button class="btn btn-primary btn-sm mb-2"
                         type="button"
                         id="btnToggleAddInd"
@@ -145,6 +148,7 @@
                         </div>
                     </div>
                 </div>
+                }
 
             </div>
         </div>
@@ -232,7 +236,7 @@
 
                                         <td>
                                             @{
-                                                if (User.IsInRole("Administrator") || User.IsInRole("Discover"))
+                                                if (canManagePercorsi)
                                                 {
                                                     var idindper = @Html.Raw(item.id);
 
