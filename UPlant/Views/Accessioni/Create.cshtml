@@ -1,5 +1,6 @@
 ﻿@model UPlant.Models.DB.Accessioni
 @inject LanguageService language
+@inject Microsoft.Extensions.Options.IOptions<UPlant.Models.AppSettings> AppSettings
 @{
     ViewBag.Title = "Accessioni";
     string url = string.Empty;
@@ -496,8 +497,8 @@
  
 
     <script type="text/javascript">
-        const defaultLat = 43.71944963861506;
-        const defaultLng = 10.396344067111961;
+        const defaultLat = @AppSettings.Value.GoogleMap.DefaultLatitude.ToString(System.Globalization.CultureInfo.InvariantCulture);
+        const defaultLng = @AppSettings.Value.GoogleMap.DefaultLongitude.ToString(System.Globalization.CultureInfo.InvariantCulture);
         const map = L.map('myMap').setView([defaultLat, defaultLng], 18);
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
