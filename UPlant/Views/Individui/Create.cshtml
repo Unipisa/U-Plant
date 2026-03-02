@@ -239,6 +239,8 @@
         const startLng = lngInput ? parseFloat(lngInput) : defaultLng;
 
         const map = L.map('myMap').setView([startLat, startLng], 18);
+        map.attributionControl.setPrefix(false);
+        map.attributionControl.setPosition('bottomleft');
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 20,
             attribution: '&copy; OpenStreetMap contributors'
