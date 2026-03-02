@@ -1,5 +1,6 @@
 ﻿@model UPlant.Models.DB.Individui
 @inject LanguageService language
+@inject Microsoft.Extensions.Options.IOptions<UPlant.Models.AppSettings> AppSettings
 @{
     ViewData["Title"] = "Edit";
 }
@@ -198,6 +199,20 @@
             .zoom:hover {
                 transform: scale(6.5); /* (150% zoom - Note: if the zoom is too large, it will go outside of the viewport) */
             }
+
+        .map-priority-marker-wrapper {
+            background: transparent;
+            border: none;
+        }
+
+        .map-priority-pin {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            border: 2px solid #ffffff;
+            box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.35);
+        }
     </style>
 }
 @section Scripts {
@@ -216,8 +231,8 @@
 @section CustomScripts {
 
     <script type="text/javascript">
-        const defaultLat = 43.71944963861506;
-        const defaultLng = 10.396344067111961;
+        const defaultLat = @AppSettings.Value.GoogleMap.DefaultLatitude.ToString(System.Globalization.CultureInfo.InvariantCulture);
+        const defaultLng = @AppSettings.Value.GoogleMap.DefaultLongitude.ToString(System.Globalization.CultureInfo.InvariantCulture);
         const latInput = $('#latitudine').val();
         const lngInput = $('#longitudine').val();
         const startLat = latInput ? parseFloat(latInput) : defaultLat;
@@ -229,7 +244,28 @@
             attribution: '&copy; OpenStreetMap contributors'
         }).addTo(map);
 
-        const marker = L.marker([startLat, startLng], { draggable: true }).addTo(map);
+        function getSelectedSettoreColor() {
+            var selectedSettore = $('#settore').val();
+            if (!selectedSettore || !window.settoriColorMap) {
+                return '#6c757d';
+            }
+
+            return settoriColorMap[selectedSettore] || '#6c757d';
+        }
+
+        function buildColoredMarkerIcon(color) {
+            return L.divIcon({
+                className: 'map-priority-marker-wrapper',
+                html: '<span class="map-priority-pin" style="background-color:' + color + ';"></span>',
+                iconSize: [18, 18],
+                iconAnchor: [9, 9]
+            });
+        }
+
+        const marker = L.marker([startLat, startLng], {
+            draggable: true,
+            icon: buildColoredMarkerIcon(getSelectedSettoreColor())
+        }).addTo(map);
 
         function updateCoordinates(latlng) {
             $('#latitudine').val(latlng.lat.toFixed(8));
@@ -250,6 +286,19 @@
        // $('#collezione').prop('disabled', true);// aggiunta altrimenti si poteva selezionare una collezione senza aver selezionato prima un settore
         var baseUrlSettori = '@Url.Action("GetSettori", "Common")';
         var baseUrlCollezioni = '@Url.Action("GetCollezioni", "Common")';
+        var settoriColorMap = {};
+
+        $.getJSON(baseUrlSettori, function (settori) {
+            (settori || []).forEach(function (item) {
+                settoriColorMap[item.codicesettore] = item.coloresettore || '#6c757d';
+            });
+
+            marker.setIcon(buildColoredMarkerIcon(getSelectedSettoreColor()));
+        });
+
+        $('#settore').on('change', function () {
+            marker.setIcon(buildColoredMarkerIcon(getSelectedSettoreColor()));
+        });
     </script>
     <script type="text/javascript">
         $(function () {

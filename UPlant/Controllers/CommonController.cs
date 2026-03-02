@@ -353,7 +353,8 @@ namespace UPlant.Controllers
                 return Json(_context.Settori.Select(x => new
                 {
                     codicesettore = x.id,
-                    descrizionesettore = string.IsNullOrEmpty(x.settore_en) ? x.settore : x.settore_en
+                    descrizionesettore = string.IsNullOrEmpty(x.settore_en) ? x.settore : x.settore_en,
+                    coloresettore = x.colore
                 }).ToList(), new System.Text.Json.JsonSerializerOptions());
             }
             else
@@ -361,7 +362,8 @@ namespace UPlant.Controllers
                 return Json(_context.Settori.Select(x => new
                 {
                     codicesettore = x.id,
-                    descrizionesettore = x.settore
+                    descrizionesettore = x.settore,
+                    coloresettore = x.colore
                 }).ToList(), new System.Text.Json.JsonSerializerOptions());
             }
         }
