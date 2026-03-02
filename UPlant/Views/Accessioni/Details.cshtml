@@ -774,7 +774,7 @@
         const startLng = parseCoordinate(lngInput) ?? defaultLng;
 
         if ($('#myMap').length && typeof L !== 'undefined') {
-            const map = L.map('myMap').setView([startLat, startLng], 16);
+            const map = L.map('myMap', { scrollWheelZoom: false }).setView([startLat, startLng], 16);
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 maxZoom: 20,
                 attribution: '&copy; OpenStreetMap contributors'

@@ -896,7 +896,7 @@
         const startLat = latInput ? parseFloat(latInput) : defaultLat;
         const startLng = lngInput ? parseFloat(lngInput) : defaultLng;
 
-        const map = L.map('myMap').setView([startLat, startLng], 16);
+        const map = L.map('myMap', { scrollWheelZoom: false }).setView([startLat, startLng], 16);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 20,
             attribution: '&copy; OpenStreetMap contributors'
