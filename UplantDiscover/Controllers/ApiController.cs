@@ -150,7 +150,8 @@ namespace UplantDiscover.Controllers
                     Propagatodata = string.Format(Convert.ToDateTime(x.individuoNavigation.propagatoData).ToString(), "{0:yyyy-MM-dd HH:mm:ss}", "yyyy"),
                     Stato = x.statoIndividuoNavigation.stato,
                     NumeroImmagini = x.individuoNavigation.ImmaginiIndividuo.Where(a => a.visibile).Count(),
-                    Ordinamento = x.individuoNavigation.settoreNavigation.ordinamento
+                    Ordinamento = x.individuoNavigation.settoreNavigation.ordinamento,
+                    SettoreColore = x.individuoNavigation.settoreNavigation.colore
 
                 }).ToList();
 
@@ -419,7 +420,8 @@ namespace UplantDiscover.Controllers
                 Propagatodata =  string.Format(Convert.ToDateTime(x.individuoNavigation.propagatoData).ToString(), "{0:yyyy-MM-dd HH:mm:ss}", "yyyy") ,
                 Percorso = _images.Percorso,
                 ListaImmagini = listaimma,
-                Ordinamento = x.individuoNavigation.settoreNavigation.ordinamento
+                Ordinamento = x.individuoNavigation.settoreNavigation.ordinamento,
+                    SettoreColore = x.individuoNavigation.settoreNavigation.colore
 
             }).ToList();
 
@@ -555,7 +557,8 @@ namespace UplantDiscover.Controllers
                             Nomecomuneen = item.individuoNavigation.accessioneNavigation.specieNavigation.nome_comune_en,
                             Stato = item.individuoNavigation.StoricoIndividuo.OrderByDescending(x => x.dataInserimento).Select(x => x.statoIndividuoNavigation.stato).First(),
                             Immagine = pathimma,
-                            Ordinamento = item.individuoNavigation.settoreNavigation.ordinamento
+                            Ordinamento = item.individuoNavigation.settoreNavigation.ordinamento,
+                            SettoreColore = item.individuoNavigation.settoreNavigation.colore
                         });
 
 

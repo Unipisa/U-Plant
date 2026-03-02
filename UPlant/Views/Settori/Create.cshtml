@@ -28,6 +28,11 @@
                 <span asp-validation-for="visualizzazioneweb" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="colore" class="control-label">Colore settore</label>
+                <input asp-for="colore" type="color" class="form-control" value="#6c757d" />
+                <span asp-validation-for="colore" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <label asp-for="ordinamento" class="control-label">@language.Getkey("Global_Sorting")</label>
                 <input asp-for="ordinamento" class="form-control" value="@ViewData["ordinesuccessivo"]" />
                 <span asp-validation-for="ordinamento" class="text-danger"></span>

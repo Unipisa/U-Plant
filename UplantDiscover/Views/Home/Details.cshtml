@@ -28,23 +28,26 @@
 
 
 @section scripts {
-        <script src="@ViewBag.GoogleMapUrl@ViewBag.GoogleMapKey">
-    </script>
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
     <script type="text/javascript">
          var basepath = '@Url.Action("Index","Home")';
+        function createColoredIcon(color) {
+            var safeColor = color && color.length > 0 ? color : '#6c757d';
+            return L.divIcon({
+                className: 'custom-sector-marker-wrapper',
+                html: '<span style="display:inline-block;width:16px;height:16px;border-radius:50% 50% 50% 0;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.35);transform:rotate(-45deg);background:' + safeColor + ';"></span>',
+                iconSize: [16, 16],
+                iconAnchor: [8, 16]
+            });
+        }
+
         function initialize() {
-            var geocoder = new google.maps.Geocoder();
-            var infowindow = new google.maps.InfoWindow();
-            var myLatlng = new google.maps.LatLng(43.71944963861506, 10.396344067111961);
-            var mapOptions = {
-                zoom: 14,
-                center: myLatlng,
-                mapTypeId: google.maps.MapTypeId.ROADMAP
-            };
-            var map = new google.maps.Map(document.getElementById("map"), mapOptions);
-
-
-
+            var map = L.map('map').setView([43.71944963861506, 10.396344067111961], 14);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 20,
+                attribution: '&copy; OpenStreetMap contributors'
+            }).addTo(map);
             return map;
 
         }
@@ -233,76 +236,25 @@
 
                     //creo mappa
                     var map = initialize();
-                    var bounds = new google.maps.LatLngBounds();
+                    var bounds = L.latLngBounds();
 
-                        var iconBase = '@ViewBag.GoogleMapIcons';
-                    var icons;
-                    switch (data[0].Ordinamento) {
-                                case 0:
-                                    icons = iconBase + 'grey-pushpin.png';
-                                    break;
-                                case 1:
-                                    icons = iconBase + 'lily-pushpin.png';
-                                    break;
-                                case 2:
-                                    icons = iconBase + 'orange-pushpin.png';
-                                    break;
-                                case 3:
-                                    icons = iconBase + 'blue-pushpin.png';
-                                    break;
-                                case 4:
-                                    icons = iconBase + 'grn-pushpin.png';
-                                    break;
-                                case 5:
-                                    icons = iconBase + 'pink-pushpin.png';
-                                    break;
-                                case 6:
-                                    icons = iconBase + 'red-pushpin.png';
-                                    break;
-                                case 7:
-                                    icons = iconBase + 'ltblu-pushpin.png';
-                                    break;
-                                case 8:
-                                    icons = iconBase + 'orange-pushpin.png';
-                                    break;
-                                case 9:
-                                    icons = iconBase + 'ylw-pushpin.png';
-                                    break;
-                                case 10:
-                                    icons = iconBase + 'purple-pushpin.png';
-                                    break;
-                                default:
-                                icons = iconBase + 'grey-pushpin.png'
-                    }
+                        var markerColor = data[0].SettoreColore || '#6c757d';
 
                     if (data[0].Latitudine == "" || data[0].Longitudine == "") {
                         var latitudine = "43.71944963861506";
                         var longitudine = "10.396344067111961";
-                        var icona = iconBase + 'question.png';
+                        var icona = createColoredIcon('#6c757d');
                     } else {
                         var latitudine = data[0].Latitudine;
                         var longitudine = data[0].Longitudine;
-                        var icona = icons;
+                        var icona = createColoredIcon(markerColor);
                     }
-                    var marker = new google.maps.Marker({
-                        position: new google.maps.LatLng(latitudine, longitudine),
-                        title: data[0].Indentitatassonomica,
-                        icon: icona
-                    });
-
-                    marker.setMap(map);
-                    bounds.extend(marker.getPosition());
-                    map.setCenter(bounds.getCenter());
+                    var marker = L.marker([latitudine, longitudine], { icon: icona, title: data[0].Indentitatassonomica }).addTo(map);
+                    bounds.extend(marker.getLatLng());
+                    if (bounds.isValid()) {
+                        map.fitBounds(bounds);
+                    }
                     map.setZoom(17);
-                    var noPoi = [
-                        {
-                            featureType: "poi.business",
-                            stylers: [
-                                { visibility: "off" }
-                            ]
-                        }
-                    ];
-                    map.setOptions({ styles: noPoi });
                     var nimg = false;
                     if (immagini.length == 1) {
                         nimg = true;

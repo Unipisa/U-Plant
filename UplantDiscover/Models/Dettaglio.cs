@@ -44,6 +44,7 @@ namespace UplantDiscover.Models
         public string Immagine { get; set; }
         public List<ListaImmagini> ListaImmagini { get; set; }
         public int Ordinamento { get; set; }
+        public string SettoreColore { get; set; }
 
     }
 }

@@ -20,5 +20,6 @@ namespace UplantDiscover.Models
         public string Stato { get; set; }
         public string Immagine { get; set; }
         public int Ordinamento { get; set; }
+        public string SettoreColore { get; set; }
     }
 }

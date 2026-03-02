@@ -107,7 +107,8 @@
     <div class="row row-cols-1 row-cols-lg-1 align-items-stretch g-4 py-5">
         <div class="col-12 col-md-6 col-lg-6 text-white mb-4">
             <div id="ultimoimg" style="        background-image: url('@Context.Request.PathBase/bst-master/images/ricercaatema.png');
-        background-size: cover;" class="square square50">
+        background-size: cover;
+" class="square square50">
                 <div class="text-white text-shadow-1 fw-bold">
                     <a href="@Context.Request.PathBase/Percorsi" class="text-decoration-none">
                         <h2 class="mb-4 display-7 lh-1 text-white text-shadow-1 fw-bold">
@@ -158,27 +159,28 @@
             });
 
         </script>
-    <script src="@ViewBag.GoogleMapUrl@ViewBag.GoogleMapKey">
-        </script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
         <script type="text/javascript">
 
-            function initialize() {
-                var geocoder = new google.maps.Geocoder();
-                var infowindow = new google.maps.InfoWindow();
-                var myLatlng = new google.maps.LatLng(43.71944963861506, 10.396344067111961);
-                var mapOptions = {
-                    zoom: 13,
-                    center: myLatlng,
-                    mapTypeId: google.maps.MapTypeId.ROADMAP
-                };
-                var map = new google.maps.Map(document.getElementById("map"), mapOptions);
-                 // Add controls to the map, allowing users to hide/show features.
-               
-
-                return map;
-
+            function createColoredIcon(color) {
+                var safeColor = color && color.length > 0 ? color : '#6c757d';
+                return L.divIcon({
+                    className: 'custom-sector-marker-wrapper',
+                    html: '<span style="display:inline-block;width:16px;height:16px;border-radius:50% 50% 50% 0;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.35);transform:rotate(-45deg);background:' + safeColor + ';"></span>',
+                    iconSize: [16, 16],
+                    iconAnchor: [8, 16]
+                });
             }
-            //  google.maps.event.addDomListener(window, 'load', initialize);
+
+            function initialize() {
+                var map = L.map('map').setView([43.71944963861506, 10.396344067111961], 13);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 20,
+                    attribution: '&copy; OpenStreetMap contributors'
+                }).addTo(map);
+                return map;
+            }
 
         </script>
         <script>
@@ -187,12 +189,13 @@
         var nomecomune = '@language.Getkey("nomecomune")';
         var det = '@language.Getkey("dettaglio")';
         var bandiera = '@language.Getkey("bandiera")';
+        var detailBaseUrl = '@Url.Action("Details", "Home")?id=';
 
         function generatabella(data) {
             if (data.length != 0) {
                 var pathimg = '';
                 var map = initialize();
-                var bounds = new google.maps.LatLngBounds();
+                var bounds = L.latLngBounds();
                 var s = '';
                 var numerorisultato = 0;
 
@@ -203,75 +206,24 @@
 
                 for (var i = 0; i < data.length; i++) {
 
-                    var iconBase = '@ViewBag.GoogleMapIcons';
-                    var icons;
-                                   
-                    switch (data[i].Ordinamento) {
-                            case 0:
-                                    icons = iconBase + 'grey-pushpin.png';
-                                    break;
-                                case 1:
-                                    icons = iconBase + 'lily-pushpin.png';
-                                    break;
-                                case 2:
-                                    icons = iconBase + 'orange-pushpin.png';
-                                    break;
-                                case 3:
-                                    icons = iconBase + 'blue-pushpin.png';
-                                    break;
-                                case 4:
-                                    icons = iconBase + 'grn-pushpin.png';
-                                    break;
-                                case 5:
-                                    icons = iconBase + 'pink-pushpin.png';
-                                    break;
-                                case 6:
-                                    icons = iconBase + 'red-pushpin.png';
-                                    break;
-                                case 7:
-                                    icons = iconBase + 'ltblu-pushpin.png';
-                                    break;
-                                case 8:
-                                    icons = iconBase + 'orange-pushpin.png';
-                                    break;
-                                case 9:
-                                    icons = iconBase + 'ylw-pushpin.png';
-                                    break;
-                                case 10:
-                                    icons = iconBase + 'purple-pushpin.png';
-                                    break;
-                                default:
-                                icons = iconBase + 'grey-pushpin.png'
-                    }
-                    if (data[i].Latitudine == "" || data[i].Longitudine == "") {
+                                        if (data[i].Latitudine == "" || data[i].Longitudine == "") {
                         var latitudine = "43.71944963861506";
                         var longitudine = "10.396344067111961";
-                        var icona = iconBase + 'question.png';
+                        var icona = createColoredIcon('#6c757d');
                     } else {
                         var latitudine = data[i].Latitudine;
                         var longitudine = data[i].Longitudine;
-                        var icona = icons;
+                        var icona = createColoredIcon(data[i].SettoreColore);
                     }
-                    var marker = new google.maps.Marker({
-                        position: new google.maps.LatLng(latitudine, longitudine),
-                        title: data[i].Indentitatassonomica,
-                        icon: icona
-                    });
-
-                    marker.setMap(map);
-
-
-                    bounds.extend(marker.getPosition());
-                    google.maps.event.addListener(marker, 'click', (function (marker, i) {
-                            return function () {
-                                window.location.href = "@Url.Action("Details", "Home")?id=" + data[i].Individuo;
-                            }
-                    })(marker, i));
+                    var itemId = data[i].Individuo;
+                    var marker = L.marker([latitudine, longitudine], { icon: icona, title: data[i].Indentitatassonomica }).addTo(map);
+                    bounds.extend(marker.getLatLng());
+                    marker.on('click', function () { window.location.href = detailBaseUrl + itemId; });
 
                     s += '<tr><td id ="immagine' + i + '" data-label="Immagine" >'
                         + '<input type="hidden" id="longitudine' + i + '" name="longitudine' + i + '" value="' + data[i].Longitudine + '">'
                         + '<input type="hidden" id="latitudine' + i + '" name="latitudine' + i + '" value="' + data[i].Latitudine + '">'
-                        +'<a href ="@Url.Action("Details", "Home")?id='+data[i].Individuo+'">'
+                        +'<a href="' + detailBaseUrl + data[i].Individuo + "">'
                     if (data[i].Immagine.length > 3) {
 
                         s += '<img src="' + data[i].Immagine + '"  class="img-fluid preview-specie md-2" alt="" loading ="lazy">';
@@ -289,33 +241,18 @@
                         + '<td data-label="dati" id="dati"><b>IPEN</b>: ' + data[i].Ipen + ' <br><b>' + nomescientifico + '</b>: ' + data[i].Indentitatassonomica + ' <br><b>' + nomecomune + '</b>: ' + nm + '<br><b>@language.Getkey("settore")</b>: ' + data[i].Settore + '<br><b>@language.Getkey("collezione")</b>:  ' + data[i].Collezione + '<br> ';
                      
 
-                    s += '<a href ="@Url.Action("Details", "Home")?id=' + data[i].Individuo + '" class="link-success text-decoration-none fw-bold">' + det +' <i class="bi bi-zoom-in"></i></a></td></tr>';
+                    s += '<a href="' + detailBaseUrl + data[i].Individuo + '" class="link-success text-decoration-none fw-bold">' + det +' <i class="bi bi-zoom-in"></i></a></td></tr>';
 
 
                     numerorisultato = data.length;
 
                 }
                 s += '</tbody></table>';
-                marker.setMap(map);
-                bounds.extend(marker.getPosition());
-                map.setCenter(bounds.getCenter());
-
-                //map.setCenter(bounds.getCenter());
-                if (numerorisultato != 1) {
-                    map.fitBounds(bounds);
-                }
-                map.setZoom(17);
+                if (bounds.isValid()) { map.fitBounds(bounds); }
+                if (numerorisultato == 1) { map.setZoom(17); }
                 document.getElementById('map').style.width = '100%';
                 document.getElementById('map').style.height = "600px";
-                var noPoi = [
-                    {
-                        featureType: "poi.business",
-                        stylers: [
-                            { visibility: "off" }
-                        ]
-                    }
-                ];
-                map.setOptions({ styles: noPoi });
+
             } else {
                 s = '@language.Getkey("risultato")';
                 document.getElementById('map').style.width = '0%';
@@ -336,6 +273,7 @@
             }
             //var token = '@ViewBag.token';
             var bandiera = '@language.Getkey("bandiera")';
+        var detailBaseUrl = '@Url.Action("Details", "Home")?id=';
             //const apiurl = '@ViewBag.ApiUrl' + 'ricerca';
            
             //console.log("apiurl : " + apiurl);
@@ -400,6 +338,7 @@
         $(document).ready(function () {
             var basepath = '@Url.Action("Index","Home")';
             var bandiera = '@language.Getkey("bandiera")';
+        var detailBaseUrl = '@Url.Action("Details", "Home")?id=';
            // var token = '@ViewBag.token';
        
             $("input[type='radio']").click(function(){
@@ -578,4 +517,5 @@
     });
     }
         </script>
+    }
     }

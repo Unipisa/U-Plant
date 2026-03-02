@@ -589,6 +589,7 @@
 
 }
 @section CustomStyles {
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
     <style>
         #myMap {
             height: 250px;
@@ -733,38 +734,20 @@
     
 
     <script type="text/javascript">
-    let map;
-        if (document.getElementById("latitudine").value != '' && document.getElementById("longitudine").value != '') {
+        const defaultLat = 43.71944963861506;
+        const defaultLng = 10.396344067111961;
+        const latInput = $('#latitudine').val();
+        const lngInput = $('#longitudine').val();
+        const startLat = latInput ? parseFloat(latInput) : defaultLat;
+        const startLng = lngInput ? parseFloat(lngInput) : defaultLng;
 
-            var myLatlng = new google.maps.LatLng(document.getElementById("latitudine").value, document.getElementById("longitudine").value);
-        } else {
-            var myLatlng = new google.maps.LatLng(43.71944963861506, 10.396344067111961);
-        }
-    async function initMap() {
-     
-            const position = myLatlng;
-     
-      
-      const { Map } = await google.maps.importLibrary("maps");
-      const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
+        const map = L.map('myMap').setView([startLat, startLng], 16);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 20,
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
 
-      
-            map = new Map(document.getElementById("myMap"), {
-                zoom: 6,
-        center: position,
-                mapId: "dd9d3d35a9e256c5",
-      });
-
-      
-      const marker = new AdvancedMarkerElement({
-                map: map,
-                position: myLatlng,
-                draggable: false,
-        title: "Orto",
-      });
-    }
-
-    initMap();
+        L.marker([startLat, startLng]).addTo(map);
     </script>
  
     <script>
