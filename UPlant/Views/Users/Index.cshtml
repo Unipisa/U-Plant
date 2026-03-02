@@ -1,4 +1,4 @@
-﻿@model IEnumerable<UPlant.Models.DB.UserRole>
+﻿@model IEnumerable<UPlant.Models.DB.Users>
 @inject LanguageService language
 @{
     ViewData["Title"] = @language.Getkey("Global_Users");
@@ -68,18 +68,19 @@
 
                                     @foreach (var item in Model)
                                     {
+                                        var roleDescriptions = item.UserRole.Select(r => r.RoleFKNavigation.Descr).OrderBy(r => r).ToList();
                                         <tr>
                                             <td>
-                                                @Html.DisplayFor(modelItem => item.UserFKNavigation.Name)
+                                                @Html.DisplayFor(modelItem => item.Name)
                                             </td>
                                             <td>
-                                                @Html.DisplayFor(modelItem => item.UserFKNavigation.LastName)
+                                                @Html.DisplayFor(modelItem => item.LastName)
                                             </td>
                                             <td>
-                                                @Html.DisplayFor(modelItem => item.UserFKNavigation.Email)
+                                                @Html.DisplayFor(modelItem => item.Email)
                                             </td>
                                             <td>
-                                        @if (item.UserFKNavigation.IsEnabled == true)
+                                        @if (item.IsEnabled == true)
                                         {
                                             <span> Si </span>
                                                                 }else
@@ -89,37 +90,32 @@
                                        
                                             </td>
                                             <td>
-                                                @Html.DisplayFor(modelItem => item.RoleFKNavigation.Descr)
+                                                @string.Join(", ", roleDescriptions)
                                             </td>
                                             <td>
-                                                @Html.DisplayFor(modelItem => item.UserFKNavigation.UnipiUserName)
+                                                @Html.DisplayFor(modelItem => item.UnipiUserName)
                                             </td>
                                             <td>
-                                             @Html.DisplayFor(modelItem => item.UserFKNavigation.CF)
+                                             @Html.DisplayFor(modelItem => item.CF)
                                             </td>
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.UserFKNavigation.TipologiaUtenteNavigation.descrizione)
+                                        @Html.DisplayFor(modelItem => item.TipologiaUtenteNavigation.descrizione)
                                     </td>
                                             <td>
-                                                @Html.DisplayFor(modelItem => item.UserFKNavigation.OrganizzazioneNavigation.descrizione)
+                                                @Html.DisplayFor(modelItem => item.OrganizzazioneNavigation.descrizione)
                                             </td>
                                             <td>
                                                 @if (User.IsInRole("Administrator"))
                                                 {
-                                           /* <a asp-action="Details" asp-controller="Users" asp-route-id="@item.UserFKNavigation.Id">
-                                                        <span class="btn btn-primary btn-xs" title="Dettaglio Utente">
-                                                            <i class="fa-solid fa-search"></i>
-                                                        </span>
-                                                    </a>*/
-                                            <a asp-action="Edit" asp-controller="Users" asp-route-id="@item.UserFKNavigation.Id">
+                                            <a asp-action="Edit" asp-controller="Users" asp-route-id="@item.Id">
                                         <span class="btn btn-warning btn-xs" title="@language.Getkey("Global_Edit") @language.Getkey("Global_User")">
                                                     <i class="fa-solid fa-pencil" style="color: #fafafa;"></i>
                                                     </span>
                                                     </a>
-                                            if (@item.UserFKNavigation.AccessioniutenteUltimaModificaNavigation.Count() == 0)
+                                            if (@item.AccessioniutenteUltimaModificaNavigation.Count() == 0)
                                             {
                                             
-                                            <a asp-action="Delete" asp-controller="Users" asp-route-id="@item.UserFKNavigation.Id">
+                                            <a asp-action="Delete" asp-controller="Users" asp-route-id="@item.Id">
                                         <span class="btn btn-danger btn-xs" title="@language.Getkey("Global_Delete") @language.Getkey("Global_User")">
                                                     <i class="fa-solid fa-trash"></i>
                                                         </span>

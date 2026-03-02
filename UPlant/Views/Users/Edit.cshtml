@@ -59,7 +59,8 @@
             </div>*@
             <div class="form-group">
                 <label class="control-label">@language.Getkey("Global_Role")</label>
-                <select name="ruolo" class="form-control" asp-items="ViewBag.Ruolo"></select>
+                @Html.ListBox("ruoli", (SelectList)ViewData["Ruolo"], new { @class = "form-control" })
+                <small class="form-text text-muted">Administrator è esclusivo; Discover e TreeManager sono validi solo se è selezionato Operator.</small>
             </div>
             <div class="form-group">
                 <label asp-for="TipologiaUtente" class="control-label">@language.Getkey("Global_User_Type")</label>
