@@ -596,6 +596,21 @@
             width: 100%;
         }
 
+        .map-priority-marker-wrapper {
+            background: transparent;
+            border: 0;
+        }
+
+        .map-priority-pin {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border-radius: 50% 50% 50% 0;
+            border: 2px solid #ffffff;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
+            transform: rotate(-45deg);
+        }
+
         .bg-light-blue-active {
             background-color: #357CA5;
             color: #FFFFFF
@@ -661,6 +676,9 @@
 
 
     <script src="@AppSettings.Value.GoogleMap.Url@AppSettings.Value.GoogleMap.Key&libraries=marker"></script>  
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+            crossorigin=""></script>
     <script src="~/js/select2.min.js"></script>
     <script src="~/js/jquery.validation.min.js"></script>
     <script src="~/js/datatables.min.js"></script>
@@ -734,20 +752,44 @@
     
 
     <script type="text/javascript">
+        function parseCoordinate(value) {
+            if (value === null || value === undefined) {
+                return null;
+            }
+
+            const normalized = String(value).trim().replace(',', '.');
+            if (!normalized) {
+                return null;
+            }
+
+            const parsed = Number(normalized);
+            return Number.isFinite(parsed) ? parsed : null;
+        }
+
         const defaultLat = 43.71944963861506;
         const defaultLng = 10.396344067111961;
         const latInput = $('#latitudine').val();
         const lngInput = $('#longitudine').val();
-        const startLat = latInput ? parseFloat(latInput) : defaultLat;
-        const startLng = lngInput ? parseFloat(lngInput) : defaultLng;
+        const startLat = parseCoordinate(latInput) ?? defaultLat;
+        const startLng = parseCoordinate(lngInput) ?? defaultLng;
 
-        const map = L.map('myMap').setView([startLat, startLng], 16);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 20,
-            attribution: '&copy; OpenStreetMap contributors'
-        }).addTo(map);
+        if ($('#myMap').length && typeof L !== 'undefined') {
+            const map = L.map('myMap').setView([startLat, startLng], 16);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 20,
+                attribution: '&copy; OpenStreetMap contributors'
+            }).addTo(map);
 
-        L.marker([startLat, startLng]).addTo(map);
+            const markerIcon = L.divIcon({
+                className: 'map-priority-marker-wrapper',
+                html: '<span class="map-priority-pin" style="background-color:#2b7de9;"></span>',
+                iconSize: [20, 20],
+                iconAnchor: [10, 20],
+                popupAnchor: [0, -20]
+            });
+
+            L.marker([startLat, startLng], { icon: markerIcon }).addTo(map);
+        }
     </script>
  
     <script>
@@ -866,6 +908,5 @@
     </script>
 
 }
-
 
 
