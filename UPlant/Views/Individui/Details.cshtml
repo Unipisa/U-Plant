@@ -706,9 +706,23 @@
             margin: 0 auto;
         }
 
-            .zoom:hover {
-                transform: scale(6.5); /* (150% zoom - Note: if the zoom is too large, it will go outside of the viewport) */
-            }
+        .zoom:hover {
+            transform: scale(6.5); /* (150% zoom - Note: if the zoom is too large, it will go outside of the viewport) */
+        }
+
+        .map-priority-marker-wrapper {
+            background: transparent;
+            border: none;
+        }
+
+        .map-priority-pin {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            border: 2px solid #ffffff;
+            box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.35);
+        }
     </style>
 }
 @section Scripts {
@@ -887,7 +901,17 @@
             attribution: '&copy; OpenStreetMap contributors'
         }).addTo(map);
 
-        L.marker([startLat, startLng]).addTo(map);
+        function buildColoredMarkerIcon(color) {
+            return L.divIcon({
+                className: 'map-priority-marker-wrapper',
+                html: '<span class="map-priority-pin" style="background-color:' + color + ';"></span>',
+                iconSize: [18, 18],
+                iconAnchor: [9, 9]
+            });
+        }
+
+        const settoreColor = '@(Model.settoreNavigation?.colore ?? "#6c757d")';
+        L.marker([startLat, startLng], { icon: buildColoredMarkerIcon(settoreColor) }).addTo(map);
     </script>
     <script type="text/javascript">
         $(function () {
