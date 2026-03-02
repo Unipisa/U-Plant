@@ -16,7 +16,7 @@ using UPlant.Models.DB;
 
 namespace UPlant.Controllers
 {
-    [Authorize(Roles = "Administrator,Tree")]
+    [Authorize(Roles = "Administrator,Operator,TreeManager")]
     public class InterventiAlberiController : BaseController
     {
         private readonly Entities _context;
@@ -527,7 +527,7 @@ namespace UPlant.Controllers
 
             return View(alberi);
         }
-
+        [Authorize(Roles = "Administrator,TreeManager")]
         // GET: Alberi/Create
         public IActionResult Create(Guid idindividuo)
         {
@@ -579,6 +579,7 @@ namespace UPlant.Controllers
         // POST: Alberi/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Administrator,TreeManager")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("id,individuo,dataapertura,priorita,intervento,fornitore,motivo,esitointervento,statoIntervento,dataultimamodifica,utenteapertura,utenteultimamodifica")] InterventiAlberi interventiAlberi)
@@ -636,7 +637,7 @@ namespace UPlant.Controllers
             
             return View(interventiAlberi);
         }
-
+        [Authorize(Roles = "Administrator,TreeManager")]
         // GET: Alberi/Edit/5
         public async Task<IActionResult> Edit(Guid? id)
         {
@@ -683,6 +684,7 @@ namespace UPlant.Controllers
         // POST: Alberi/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Administrator,TreeManager")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Guid id, [Bind("id,individuo,dataapertura,priorita,intervento,fornitore,motivo,esitointervento,statoIntervento,dataultimamodifica,utenteapertura,utenteultimamodifica,statoIndividuo,condizione")] InterventiAlberi interventiAlberi)
@@ -805,7 +807,7 @@ namespace UPlant.Controllers
             var userNameOnly = username.Substring(0, username.IndexOf("@"));
             return _context.Users.Where(u => u.UnipiUserName == userNameOnly).Select(u => u.Id).FirstOrDefault();
         }
-
+        [Authorize(Roles = "Administrator")]
         // GET: Alberi/Delete/5
         public async Task<IActionResult> Delete(Guid? id)
         {
@@ -829,7 +831,7 @@ namespace UPlant.Controllers
 
             return View(interventiAlberi);
         }
-
+        [Authorize(Roles = "Administrator")]
         // POST: Alberi/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]

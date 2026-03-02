@@ -30,7 +30,10 @@
 <h4 class="box-title">@language.Getkey("Shared_Comp_Sb_Tree")</h4>
 
 <div class="d-flex align-items-center justify-content-between mb-2">
-    <button class="btn btn-primary btn-sm"
+    @{
+     @if (User.IsInRole("Administrator") || User.IsInRole("TreeManager"))
+      {
+     <button class="btn btn-primary btn-sm"
             type="button"
             id="btnToggleAggiungi"
             data-toggle="collapse"
@@ -38,7 +41,11 @@
             aria-expanded="false"
             aria-controls="addIndividuoCollapse">
         <i class="fa-solid fa-plus"></i> Aggiungi
-    </button>
+        </button>
+        }
+
+        }
+    
 
     <a asp-action="ExportTotaleInterventi"
        asp-controller="InterventiAlberi"
@@ -108,8 +115,14 @@
                     <th>@language.Getkey("Global_Tree_Priority")</th>
                     <th>@language.Getkey("Global_Last_Modified_Date")</th>
                     <th>Stato</th>
-                    <th>Aggiungi</th>
-                </tr>
+                    @{
+                        @if (User.IsInRole("Administrator") || User.IsInRole("TreeManager"))
+                        {
+                            <th></th>
+                        }
+                    
+                    }
+                        </tr>
             </thead>
             <tbody>
                 @foreach (var item in Model)
@@ -168,17 +181,21 @@
                         <td class="text-center" data-order="@isOpenOrder">
                             @(!item.statoIntervento ? language.Getkey("Global_Open") : language.Getkey("Global_Close"))
                         </td>
-
-                        <td class="text-center">
-                            <a asp-action="Create"
-                               asp-controller="InterventiAlberi"
-                               asp-route-idindividuo="@item.individuo"
-                               class="btn btn-primary btn-sm"
-                               title="@($"{language.Getkey("Global_Add")} {language.Getkey("Global_Individual")}")">
-                                <i class="fa-solid fa-plus"></i>
-                            </a>
-                        </td>
-                    </tr>
+                        @{
+                            @if (User.IsInRole("Administrator") || User.IsInRole("TreeManager"))
+                            {
+                                <td class="text-center">
+                                    <a asp-action="Create"
+                                    asp-controller="InterventiAlberi"
+                                    asp-route-idindividuo="@item.individuo"
+                                    class="btn btn-primary btn-sm"
+                                    title="@($"{language.Getkey("Global_Add")} {language.Getkey("Global_Individual")}")">
+                                        <i class="fa-solid fa-plus"></i>
+                                    </a>
+                                </td>
+                            }
+                        }
+                            </tr>
                 }
             </tbody>
         </table>

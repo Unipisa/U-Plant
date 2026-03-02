@@ -768,4 +768,10 @@
   <data name="Global_Outcome" xml:space="preserve">
     <value>Esito Intervento</value>
   </data>
+  <data name="Global_Download_Search_File" xml:space="preserve">
+    <value>Download File di ricerca</value>
+  </data>
+  <data name="Shared_Intervention_Research" xml:space="preserve">
+    <value>Ricerca Interventi</value>
+  </data>
 </root>

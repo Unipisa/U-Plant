@@ -13,12 +13,16 @@
             @language.Getkey("Global_Go_Back")
         </span>
     </a>
-
-    <a asp-action="Create" asp-controller="InterventiAlberi" asp-route-idindividuo="@ViewBag.idindividuo">
-        <span class="btn btn-success" title="@language.Getkey("Global_Add") @language.Getkey("Global_Tree_Interventions")">
+    @{
+        @if (User.IsInRole("Administrator") ||  User.IsInRole("TreeManager"))
+        {
+            <a asp-action="Create" asp-controller="InterventiAlberi" asp-route-idindividuo="@ViewBag.idindividuo">
+                <span class="btn btn-success" title="@language.Getkey("Global_Add") @language.Getkey("Global_Tree_Interventions")">
             @language.Getkey("Global_Add") @language.Getkey("Global_Tree_Interventions")
         </span>
     </a>
+    }
+    }
 </p>
 
 <div class="card  card-primary mt-3">
@@ -53,8 +57,13 @@
                     <th>@language.Getkey("Global_Reason")</th>
                     <th>@language.Getkey("Global_Last_Modified_Date")</th>
                     <th>@language.Getkey("Global_Intervention_Status")</th>
-                    <th style="width:60px;">@language.Getkey("Global_Edit")</th>
-                </tr>
+                    @{
+                        @if (User.IsInRole("Administrator") ||  User.IsInRole("TreeManager"))
+                        {
+                            <th style="width:60px;"></th>
+                        }
+                     }
+                        </tr>
             </thead>
             <tbody>
                 @foreach (var item in Model)
@@ -85,11 +94,17 @@
                         <td class="text-center">@item.motivo</td>
                         <td class="text-center">@(item.dataultimamodifica?.ToString("dd/MM/yyyy HH:mm") ?? "-")</td>
                         <td class="text-center">@(item.statoIntervento == false ? language.Getkey("Global_Open") : language.Getkey("Global_Close"))</td>
-                        <td class="text-center">
+                          @{
+                            @if (User.IsInRole("Administrator") || User.IsInRole("TreeManager"))
+                            {
+                        
+                            <td class="text-center">
                             <a asp-action="Edit" asp-route-id="@item.id" class="btn btn-warning btn-sm" title="@language.Getkey("Global_Edit")">
                                 <i class="fa-solid fa-pencil" style="color: #fafafa;"></i>
                             </a>
-                        </td>
+                            </td>
+                            }
+                          }
                     </tr>
                 }
             </tbody>
