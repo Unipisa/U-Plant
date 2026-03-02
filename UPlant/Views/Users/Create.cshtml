@@ -41,7 +41,7 @@
             <div class="form-group">
                 <label class="control-label">@language.Getkey("Global_Role")</label>
                @Html.ListBox("ruoli", (SelectList)ViewData["Ruolo"], new { @class = "form-control" })
-                <small class="form-text text-muted">Administrator è esclusivo; Discover e TreeManager sono validi solo se è selezionato Operator.</small>
+                <small class="form-text text-muted">Ruoli fondamentali: Administrator (esclusivo), Operator (può includere Discover e TreeManager), Reader (solo consultazione).</small>
             </div>
             <div class="form-group">
                 <label asp-for="TipologiaUtente" class="control-label">@language.Getkey("Global_User_Type")</label>
