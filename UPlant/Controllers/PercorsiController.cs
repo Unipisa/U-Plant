@@ -17,7 +17,7 @@ using UPlant.Models.DB;
 
 namespace U_Plant.Controllers
 {
-    [Authorize(Roles = "Administrator,Discover")]
+    [Authorize(Roles = "Administrator,Operator")]
     public class PercorsiController : BaseController
     {
         private readonly Entities _context;
@@ -33,8 +33,18 @@ namespace U_Plant.Controllers
             _languageService = languageService;
 
         }
+        private bool CanManagePercorsi()
+        {
+            return User.IsInRole("Administrator") || User.IsInRole("Discover");
+        }
+
         public ActionResult Index()
         {
+            if (!CanManagePercorsi())
+            {
+                return Forbid();
+            }
+
             List<Guid> perindmorto = new List<Guid>();
             IEnumerable<Percorsi> percorsi = _context.Percorsi.ToList();
             foreach (var i in percorsi)
@@ -59,6 +69,11 @@ namespace U_Plant.Controllers
         }
         public async Task<IActionResult> Details(Guid? id)
         {
+            if (!CanManagePercorsi())
+            {
+                return Forbid();
+            }
+
             if (StatoIndanomalo(id))
             {
                 AddPageAlerts(PageAlertType.Warning, _languageService.Getkey("Message_4").ToString());
@@ -97,6 +112,11 @@ namespace U_Plant.Controllers
         
         public ActionResult Create()
         {
+            if (!CanManagePercorsi())
+            {
+                return Forbid();
+            }
+
             ViewBag.titolo = "";
             ViewBag.descrizione = "";
             return View();
@@ -107,6 +127,11 @@ namespace U_Plant.Controllers
        
         public ActionResult Create(string titolo, string descrizione, string titolo_en, string descrizione_en)
         {
+            if (!CanManagePercorsi())
+            {
+                return Forbid();
+            }
+
             Percorsi percorsi = new Percorsi();
             if (!String.IsNullOrEmpty(titolo))
             {
@@ -149,6 +174,11 @@ namespace U_Plant.Controllers
         
         public ActionResult Edit(Guid? id)
         {
+            if (!CanManagePercorsi())
+            {
+                return Forbid();
+            }
+
             if (id == null)
             {
                 return new StatusCodeResult(400);
@@ -166,6 +196,11 @@ namespace U_Plant.Controllers
         //public ActionResult Edit([Bind(Include = "id,titolo,descrizione,datacreazione,ordinamento,attivo")] Percorsi percorsi)
         public ActionResult Edit(Guid id, string titolo, string descrizione, string titolo_en, string descrizione_en)
         {
+            if (!CanManagePercorsi())
+            {
+                return Forbid();
+            }
+
             Percorsi percorsi = _context.Percorsi.Find(id);
             percorsi.titolo = titolo.Trim();
             if (descrizione.Length > 1)
@@ -249,6 +284,11 @@ namespace U_Plant.Controllers
         
         public ActionResult DeleteIndividuoPercorso(Guid? id, Guid percorso)
         {
+            if (!CanManagePercorsi())
+            {
+                return Forbid();
+            }
+
             if (id == null)
             {
                 return new StatusCodeResult(400);
@@ -261,6 +301,11 @@ namespace U_Plant.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteIndividuoPercorsoConfirmed(Guid id, Guid percorso)
         {
+            if (!CanManagePercorsi())
+            {
+                return Forbid();
+            }
+
             IndividuiPercorso individuopercorso = _context.IndividuiPercorso.Find(id);
             _context.IndividuiPercorso.Remove(individuopercorso);
             _context.SaveChanges();

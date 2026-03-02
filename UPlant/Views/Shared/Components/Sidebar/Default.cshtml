@@ -11,6 +11,8 @@
 
             var cognome = @User.Identities.FirstOrDefault()?.Claims?.Where(c => c.Type == "family_name").FirstOrDefault()?.Value;
             var nome = @User.Identities.FirstOrDefault()?.Claims?.Where(c => c.Type == "given_name").FirstOrDefault()?.Value;
+            var canAccessDiscoverTools = User.IsInRole("Administrator") || (User.IsInRole("Operator") && User.IsInRole("Discover"));
+            var canAccessTreeModule = User.IsInRole("Administrator") || User.IsInRole("Operator");
             <div class="user-panel pull-left image">
                 <a href="/" class="brand-link logo-switch ">
                     <img src="~/@logos" alt="logosmall" class="brand-image-xl logo-xs">
@@ -398,7 +400,7 @@
                             </li>
                         }
 
-                        @if (User.IsInRole("Administrator") || User.IsInRole("Operator"))
+                        @if (canAccessDiscoverTools || canAccessTreeModule)
                         {
                             <li class="nav-item has-treeview">
                                 <a href="#" class="nav-link">
@@ -406,7 +408,7 @@
                                     <p class="text-xs-right">@language.Getkey("Shared_Comp_Sb_Support_Tools")</p><i class="right fa fa-angle-left"></i>
                                 </a>
                                 <ul class="nav nav-treeview">
-                                    @if (User.IsInRole("Administrator") || (User.IsInRole("Operator")) && (User.IsInRole("Discover")))
+                                    @if (canAccessDiscoverTools)
                                     {
                                         <li class="nav-item has-treeview">
                                             <a href="#" class="nav-link">
@@ -424,7 +426,7 @@
                                             </ul>
                                         </li>
                                     }
-                                    @if (User.IsInRole("Administrator") || User.IsInRole("Operator"))
+                                    @if (canAccessTreeModule)
                                     {
                                         <li class="nav-item has-treeview">
                                             <a href="#" class="nav-link">

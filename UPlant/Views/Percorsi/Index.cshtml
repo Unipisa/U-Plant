@@ -5,6 +5,7 @@
 
     // Safe enumerables
     var percorsi = Model ?? Enumerable.Empty<UPlant.Models.DB.Percorsi>();
+    var canManagePercorsi = User.IsInRole("Administrator") || (User.IsInRole("Operator") && User.IsInRole("Discover"));
    
 
     // Local helpers
@@ -15,7 +16,7 @@
 <div class="card card-outline card-primary">
     <div class="card-header with-border">
         <h1 class="card-title">@language.Getkey("Global_List")</h1>
-        @if (User.IsInRole("Administrator") || User.IsInRole("Discover"))
+        @if (canManagePercorsi)
         {
             <div class="float-right success">
                 <a asp-action="Create" asp-controller="Percorsi">
@@ -88,7 +89,7 @@
                                     <td style="vertical-align: top;">
                                         @{
                                             var isAdmin = User.IsInRole("Administrator");
-                                            var isDiscover = User.IsInRole("Discover");
+                                            var isDiscover = User.IsInRole("Operator") && User.IsInRole("Discover");
                                         }
                                         @if (isAdmin || isDiscover)
                                         {

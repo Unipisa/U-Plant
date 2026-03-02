@@ -6,6 +6,7 @@
     ViewBag.Title = language.Getkey("Global_Tree");
     ViewBag.lang = language.GetCurrentCulture();
     var currentCulture = language.GetCurrentCulture();
+    var canManageTreeInterventions = User.IsInRole("Administrator") || (User.IsInRole("Operator") && User.IsInRole("TreeManager"));
     var openInterventiMapData = Model
         .Where(item => !item.statoIntervento && item.individuoNavigation != null)
         .Select(item => new
@@ -31,7 +32,7 @@
 
 <div class="d-flex align-items-center justify-content-between mb-2">
     @{
-     @if (User.IsInRole("Administrator") || User.IsInRole("TreeManager"))
+     @if (canManageTreeInterventions)
       {
      <button class="btn btn-primary btn-sm"
             type="button"
@@ -55,6 +56,8 @@
     </a>
 </div>
 
+@if (canManageTreeInterventions)
+{
 <div class="collapse" id="addIndividuoCollapse">
     <div class="card card-outline card-primary mt-2">
         <div class="card-body">
@@ -90,6 +93,7 @@
         </div>
     </div>
 </div>
+}
 
 <div class="card card-primary mt-3">
 
@@ -116,7 +120,7 @@
                     <th>@language.Getkey("Global_Last_Modified_Date")</th>
                     <th>Stato</th>
                     @{
-                        @if (User.IsInRole("Administrator") || User.IsInRole("TreeManager"))
+                        @if (canManageTreeInterventions)
                         {
                             <th></th>
                         }
@@ -182,7 +186,7 @@
                             @(!item.statoIntervento ? language.Getkey("Global_Open") : language.Getkey("Global_Close"))
                         </td>
                         @{
-                            @if (User.IsInRole("Administrator") || User.IsInRole("TreeManager"))
+                            @if (canManageTreeInterventions)
                             {
                                 <td class="text-center">
                                     <a asp-action="Create"
