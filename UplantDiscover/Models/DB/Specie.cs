@@ -13,7 +13,7 @@ public partial class Specie
 
     public string nome_scientifico { get; set; }
 
-    public string nome_volgare { get; set; }
+    public string note { get; set; }
 
     public string autori { get; set; }
 
