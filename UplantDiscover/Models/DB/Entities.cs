@@ -766,6 +766,9 @@ public partial class Entities : DbContext
             entity.Property(e => e.settore_en)
                 .HasMaxLength(50)
                 .IsUnicode(false);
+            entity.Property(e => e.colore)
+                .HasMaxLength(20)
+                .IsUnicode(false);
 
             entity.HasOne(d => d.organizzazioneNavigation).WithMany(p => p.Settori)
                 .HasForeignKey(d => d.organizzazione)

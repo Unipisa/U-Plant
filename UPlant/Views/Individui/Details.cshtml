@@ -690,6 +690,7 @@
  
 }
 @section CustomStyles {
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
     <style>
         #myMap {
             height: 250px;
@@ -713,7 +714,7 @@
 @section Scripts {
 
   
-    <script src="@AppSettings.Value.GoogleMap.Url@AppSettings.Value.GoogleMap.Key"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
  
 
    
@@ -873,35 +874,20 @@
     </script>
 
     <script type="text/javascript">
-        var map;
-        var marker;
-        if (document.getElementById("latitudine").value != '' && document.getElementById("longitudine").value != '') {
+        const defaultLat = 43.71944963861506;
+        const defaultLng = 10.396344067111961;
+        const latInput = $('#latitudine').val();
+        const lngInput = $('#longitudine').val();
+        const startLat = latInput ? parseFloat(latInput) : defaultLat;
+        const startLng = lngInput ? parseFloat(lngInput) : defaultLng;
 
-            var myLatlng = new google.maps.LatLng(document.getElementById("latitudine").value, document.getElementById("longitudine").value);
-        } else {
-            var myLatlng = new google.maps.LatLng(43.71944963861506, 10.396344067111961);
-        }
+        const map = L.map('myMap').setView([startLat, startLng], 16);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 20,
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
 
-        var geocoder = new google.maps.Geocoder();
-        var infowindow = new google.maps.InfoWindow();
-        function initialize() {
-            var mapOptions = {
-                zoom: 17,
-                center: myLatlng,
-                mapTypeId: google.maps.MapTypeId.ROADMAP
-            };
-
-            map = new google.maps.Map(document.getElementById("myMap"), mapOptions);
-
-            marker = new google.maps.Marker({
-                map: map,
-                position: myLatlng,
-                draggable: false
-            });
-
-
-        }
-        google.maps.event.addDomListener(window, 'load', initialize);
+        L.marker([startLat, startLng]).addTo(map);
     </script>
     <script type="text/javascript">
         $(function () {

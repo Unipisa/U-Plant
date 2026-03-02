@@ -17,6 +17,8 @@ public partial class Settori
 
     public int ordinamento { get; set; }
 
+    public string colore { get; set; }
+
     public virtual ICollection<Collezioni> Collezioni { get; set; } = new List<Collezioni>();
 
     public virtual ICollection<Individui> Individui { get; set; } = new List<Individui>();

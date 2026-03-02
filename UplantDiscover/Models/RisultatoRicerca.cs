@@ -22,6 +22,7 @@ namespace UplantDiscover.Models
         public string Propagatodata { get; set; }
         public int NumeroImmagini { get; set; }
         public int Ordinamento { get; set; }
+        public string SettoreColore { get; set; }
 
         public string Immagine { get; set; }
         
