@@ -34,41 +34,23 @@
 
             }
 
-            function getMarkerColorByOrder(order) {
-                switch (order) {
-                    case 1: return '#c27ba0';
-                    case 2: return '#f39c12';
-                    case 3: return '#3498db';
-                    case 4: return '#2ecc71';
-                    case 5: return '#ff66cc';
-                    case 6: return '#e74c3c';
-                    case 7: return '#5dade2';
-                    case 8: return '#ff8c00';
-                    case 9: return '#f1c40f';
-                    case 10: return '#8e44ad';
-                    default: return '#6c757d';
-                }
-            }
-
-            function createRouteMarkerIcon(order) {
-                var markerNumber = Number(order);
-                var label = Number.isFinite(markerNumber) && markerNumber > 0 ? markerNumber : '&bull;';
-                var color = getMarkerColorByOrder(markerNumber);
+            function createSectorMarkerIcon(color) {
+                var safeColor = color && color.length > 0 ? color : '#6c757d';
 
                 return L.divIcon({
                     className: 'route-marker-wrapper',
-                    html: '<div class="route-marker-pin" style="background-color:' + color + '">' + label + '</div>',
-                    iconSize: [28, 28],
-                    iconAnchor: [14, 14]
+                    html: '<span class="route-marker-pin" style="background-color:' + safeColor + ';"></span>',
+                    iconSize: [16, 16],
+                    iconAnchor: [8, 16]
                 });
             }
 
             function createFallbackMarkerIcon() {
                 return L.divIcon({
                     className: 'route-marker-wrapper',
-                    html: '<div class="route-marker-pin route-marker-fallback">?</div>',
-                    iconSize: [28, 28],
-                    iconAnchor: [14, 14]
+                    html: '<span class="route-marker-pin route-marker-fallback"></span>',
+                    iconSize: [16, 16],
+                    iconAnchor: [8, 16]
                 });
             }
 
@@ -81,17 +63,13 @@
             }
 
             .route-marker-pin {
-                width: 28px;
-                height: 28px;
-                border-radius: 50%;
+                width: 16px;
+                height: 16px;
+                display: inline-block;
+                border-radius: 50% 50% 50% 0;
                 border: 2px solid #fff;
-                color: #fff;
-                font-weight: 700;
-                font-size: 13px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
                 box-shadow: 0 1px 4px rgba(0, 0, 0, 0.45);
+                transform: rotate(-45deg);
             }
 
             .route-marker-fallback {
@@ -148,7 +126,7 @@
                         } else {
                             var latitudine = elencoindividui[i].latitudine;
                             var longitudine = elencoindividui[i].longitudine;
-                            markerIcon = createRouteMarkerIcon(elencoindividui[i].ordinamento);
+                            markerIcon = createSectorMarkerIcon(elencoindividui[i].settoreColore);
                         }
                         var marker = L.marker([latitudine, longitudine], {
                             title: elencoindividui[i].indentitatassonomica,
