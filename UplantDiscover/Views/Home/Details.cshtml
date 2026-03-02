@@ -44,6 +44,8 @@
 
         function initialize() {
             var map = L.map('map').setView([43.71944963861506, 10.396344067111961], 14);
+            map.attributionControl.setPrefix(false);
+            map.attributionControl.setPosition('bottomleft');
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 maxZoom: 20,
                 attribution: '&copy; OpenStreetMap contributors'
