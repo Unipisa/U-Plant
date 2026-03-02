@@ -5,7 +5,7 @@
     ViewBag.Title = "Accessioni";
     string url = string.Empty;
     var setting = AppSettings.Value;
-    var map = setting.GoogleMap;
+    var map = setting.Maps;
 }
 
 
@@ -497,8 +497,8 @@
  
 
     <script type="text/javascript">
-        const defaultLat = @AppSettings.Value.GoogleMap.DefaultLatitude.ToString(System.Globalization.CultureInfo.InvariantCulture);
-        const defaultLng = @AppSettings.Value.GoogleMap.DefaultLongitude.ToString(System.Globalization.CultureInfo.InvariantCulture);
+        const defaultLat = @AppSettings.Value.Maps.DefaultLatitude.ToString(System.Globalization.CultureInfo.InvariantCulture);
+        const defaultLng = @AppSettings.Value.Maps.DefaultLongitude.ToString(System.Globalization.CultureInfo.InvariantCulture);
         const map = L.map('myMap').setView([defaultLat, defaultLng], 18);
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {

@@ -231,8 +231,8 @@
     
 
     <script type="text/javascript">
-        const defaultLat = @AppSettings.Value.GoogleMap.DefaultLatitude.ToString(System.Globalization.CultureInfo.InvariantCulture);
-        const defaultLng = @AppSettings.Value.GoogleMap.DefaultLongitude.ToString(System.Globalization.CultureInfo.InvariantCulture);
+        const defaultLat = @AppSettings.Value.Maps.DefaultLatitude.ToString(System.Globalization.CultureInfo.InvariantCulture);
+        const defaultLng = @AppSettings.Value.Maps.DefaultLongitude.ToString(System.Globalization.CultureInfo.InvariantCulture);
         const latInput = $('#latitudine').val();
         const lngInput = $('#longitudine').val();
         const startLat = latInput ? parseFloat(latInput) : defaultLat;

@@ -19,18 +19,18 @@ namespace UPlant.Controllers
         private readonly IConfiguration _configuration;
         
         private readonly IOptions<Application> _appOpt;
-        private readonly IOptions<MapSettings> _googlemap;
+        private readonly IOptions<MapSettings> _maps;
         private readonly LanguageService _languageService;
         private readonly IOptions<AppSettings> _opt;
 
 
-        public AccessioniController(Entities context, IConfiguration Configuration,  IOptions<Application> appOpt, IOptions<MapSettings> googlemap, IOptions<AppSettings> opt, LanguageService languageService)
+        public AccessioniController(Entities context, IConfiguration Configuration,  IOptions<Application> appOpt, IOptions<MapSettings> maps, IOptions<AppSettings> opt, LanguageService languageService)
         {
             _context = context;
             _configuration = Configuration;
             _languageService = languageService;
             _appOpt = appOpt;
-            _googlemap = googlemap;
+            _maps = maps;
             _opt = opt;
 
            
