@@ -84,7 +84,7 @@ namespace UPlant.Models
         public Application Application { get; set; }
         public Pathfile Pathfile { get; set; }
 
-        public MapSettings GoogleMap { get; set; }
+        public MapSettings Maps { get; set; }
 
        
     }
