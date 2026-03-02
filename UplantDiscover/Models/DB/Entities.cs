@@ -807,7 +807,7 @@ public partial class Entities : DbContext
             entity.Property(e => e.nome_scientifico)
                 .HasMaxLength(200)
                 .IsUnicode(false);
-            entity.Property(e => e.nome_volgare)
+            entity.Property(e => e.note)
                 .HasMaxLength(100)
                 .IsUnicode(false);
             entity.Property(e => e.subspecie)
