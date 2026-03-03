@@ -152,6 +152,7 @@ namespace UPlant.Controllers
             var selectedRoles = _context.UserRole.Where(c => c.UserFK == users.Id).Select(c => c.RoleFK).ToList();
             ViewData["Organizzazione"] = new SelectList(_context.Organizzazioni.OrderBy(x => x.descrizione), "id", "descrizione", users.Organizzazione);
             ViewData["Ruolo"] = new SelectList(_context.Roles.OrderBy(x => x.Descr), "Id", "Descr", selectedRoles);
+            ViewData["SelectedRoleIds"] = selectedRoles;
             ViewData["TipologiaUtente"] = new SelectList(_context.TipologiaUtente.OrderBy(x => x.descrizione), "id", "descrizione", users.TipologiaUtente);
             return View(users);
         }
@@ -222,6 +223,7 @@ namespace UPlant.Controllers
             }
             ViewData["Organizzazione"] = new SelectList(_context.Organizzazioni.OrderBy(x => x.descrizione), "id", "descrizione", users.Organizzazione);
             ViewData["Ruolo"] = new SelectList(_context.Roles.OrderBy(x => x.Descr), "Id", "Descr", normalizedRoleIds);
+            ViewData["SelectedRoleIds"] = normalizedRoleIds;
             ViewData["TipologiaUtente"] = new SelectList(_context.TipologiaUtente.OrderBy(x => x.descrizione), "id", "descrizione", users.TipologiaUtente);
             return View(users);
         }
