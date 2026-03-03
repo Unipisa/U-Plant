@@ -62,6 +62,7 @@ namespace UPlant.Controllers
 
                  .Include(i => i.accessioneNavigation).ThenInclude(i => i.specieNavigation)
                  .Include(i => i.cartellinoNavigation)
+                 .Include(i => i.tipocartellinoNavigation)
                  .Include(i => i.collezioneNavigation)
 
                  .Include(i => i.propagatoModalitaNavigation)
@@ -587,6 +588,7 @@ namespace UPlant.Controllers
                 ViewBag.collezione = new SelectList(_context.Collezioni.OrderBy(a => a.collezione).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.collezione_en) ? a.collezione : a.collezione_en }), "id", "Desc");
                 ViewBag.settore = new SelectList(_context.Settori.OrderBy(a => a.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.settore_en) ? a.settore : a.settore_en }), "id", "Desc");
                 ViewBag.cartellino = new SelectList(_context.Cartellini.OrderBy(a => a.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.descrizione : a.descrizione_en }), "id", "Desc");
+                ViewBag.tipocartellino = new SelectList(_context.TipoCartellino.OrderBy(a => a.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.descrizione : a.descrizione_en }), "id", "Desc");
                 ViewBag.propagatoModalita = new SelectList(_context.ModalitaPropagazione.OrderBy(a => a.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.propagatoModalita : a.descrizione_en }), "id", "Desc");
                 ViewBag.statoindividuo = new SelectList(_context.StatoIndividuo.OrderBy(a => a.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.stato : a.descrizione_en }), "id", "Desc");
                 ViewBag.condizione = new SelectList(_context.Condizioni.OrderBy(p => p.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.condizione : a.descrizione_en }), "id", "Desc");
@@ -598,6 +600,7 @@ namespace UPlant.Controllers
                 ViewBag.collezione = new SelectList(_context.Collezioni.OrderBy(a => a.collezione), "id", "collezione");
                 ViewBag.settore = new SelectList(_context.Settori.OrderBy(a => a.ordinamento), "id", "settore");
                 ViewBag.cartellino = new SelectList(_context.Cartellini.OrderBy(a => a.ordinamento), "id", "descrizione");
+                ViewBag.tipocartellino = new SelectList(_context.TipoCartellino.OrderBy(a => a.ordinamento), "id", "descrizione");
                 ViewBag.propagatoModalita = new SelectList(_context.ModalitaPropagazione.OrderBy(a => a.ordinamento), "id", "propagatoModalita");
                 ViewBag.statoindividuo = new SelectList(_context.StatoIndividuo.OrderBy(a => a.ordinamento), "id", "stato");
                 ViewBag.condizione = new SelectList(_context.Condizioni.OrderBy(p => p.ordinamento), "id", "condizione");
@@ -624,7 +627,7 @@ namespace UPlant.Controllers
         public async Task<IActionResult> Create(Guid accessione, Guid idindividuo, string progressivo,
                                    Guid sesso, string propagatoData, Guid propagatoModalita, Guid settore, Guid collezione,// non mi serve la famiglia e il genere
                                    bool indexSeminum, string destinazioni, string note, Guid statoindividuo,
-                                   Guid condizione, string operazioniColturali, Guid cartellino, string vecchioprogressivo, string accvecprog, string latitudine, string longitudine, string tipo)  // solo campi 
+                                   Guid condizione, string operazioniColturali, Guid cartellino, Guid tipocartellino, string vecchioprogressivo, string accvecprog, string latitudine, string longitudine, string tipo)  // solo campi 
 
 
         {
@@ -639,6 +642,7 @@ namespace UPlant.Controllers
             individuo.individuo = null;
             individuo.sesso = sesso;
             individuo.cartellino = cartellino;
+            individuo.tipocartellino = tipocartellino;
             individuo.propagatoData = DateTime.Parse(propagatoData);
             individuo.propagatoModalita = propagatoModalita;
             individuo.settore = settore;
@@ -719,6 +723,7 @@ namespace UPlant.Controllers
                 ViewBag.collezione = new SelectList(_context.Collezioni.OrderBy(a => a.collezione).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.collezione_en) ? a.collezione : a.collezione_en }), "id", "Desc", collezione);
                 ViewBag.settore = new SelectList(_context.Settori.OrderBy(a => a.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.settore_en) ? a.settore : a.settore_en }), "id", "Desc", settore);
                 ViewBag.cartellino = new SelectList(_context.Cartellini.OrderBy(a => a.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.descrizione : a.descrizione_en }), "id", "Desc", individuo.cartellino);
+                ViewBag.tipocartellino = new SelectList(_context.TipoCartellino.OrderBy(a => a.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.descrizione : a.descrizione_en }), "id", "Desc", individuo.tipocartellino);
                 ViewBag.propagatoModalita = new SelectList(_context.ModalitaPropagazione.OrderBy(a => a.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.propagatoModalita : a.descrizione_en }), "id", "Desc", propagatoModalita);
                 ViewBag.statoindividuo = new SelectList(_context.StatoIndividuo.OrderBy(a => a.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.stato : a.descrizione_en }), "id", "Desc", statoindividuo);
                 ViewBag.condizione = new SelectList(_context.Condizioni.OrderBy(p => p.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.condizione : a.descrizione_en }), "id", "Desc", condizione);
@@ -730,6 +735,7 @@ namespace UPlant.Controllers
                 ViewBag.collezione = new SelectList(_context.Collezioni.OrderBy(a => a.collezione), "id", "collezione", collezione);
                 ViewBag.settore = new SelectList(_context.Settori.OrderBy(a => a.ordinamento), "id", "settore", settore);
                 ViewBag.cartellino = new SelectList(_context.Cartellini.OrderBy(a => a.ordinamento), "id", "descrizione", individuo.cartellino);
+                ViewBag.tipocartellino = new SelectList(_context.TipoCartellino.OrderBy(a => a.ordinamento), "id", "descrizione", individuo.tipocartellino);
                 ViewBag.propagatoModalita = new SelectList(_context.ModalitaPropagazione.OrderBy(a => a.ordinamento), "id", "propagatoModalita", propagatoModalita);
                 ViewBag.statoindividuo = new SelectList(_context.StatoIndividuo.OrderBy(a => a.ordinamento), "id", "stato", statoindividuo);
                 ViewBag.condizione = new SelectList(_context.Condizioni.OrderBy(p => p.ordinamento), "id", "condizione", condizione);
@@ -756,6 +762,7 @@ namespace UPlant.Controllers
             }
             Individui individui = await _context.Individui.Include(i => i.accessioneNavigation).ThenInclude(i => i.specieNavigation)
                 .Include(i => i.cartellinoNavigation)
+                .Include(i => i.tipocartellinoNavigation)
                 .Include(i => i.collezioneNavigation)
 
                 .Include(i => i.propagatoModalitaNavigation)
@@ -778,6 +785,7 @@ namespace UPlant.Controllers
                 ViewBag.collezione = new SelectList(_context.Collezioni.Where(x => x.settore == individui.settore).OrderBy(a => a.collezione).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.collezione_en) ? a.collezione : a.collezione_en }), "id", "Desc", individui.collezione);
                 ViewBag.settore = new SelectList(_context.Settori.OrderBy(a => a.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.settore_en) ? a.settore : a.settore_en }), "id", "Desc", individui.settore);
                 ViewBag.cartellino = new SelectList(_context.Cartellini.OrderBy(a => a.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.descrizione : a.descrizione_en }), "id", "Desc", individui.cartellino);
+                ViewBag.tipocartellino = new SelectList(_context.TipoCartellino.OrderBy(a => a.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.descrizione : a.descrizione_en }), "id", "Desc", individui.tipocartellino);
 
             }
             else
@@ -788,6 +796,7 @@ namespace UPlant.Controllers
                 ViewBag.collezione = new SelectList(_context.Collezioni.Where(x => x.settore == individui.settore).OrderBy(a => a.collezione), "id", "collezione", individui.collezione);
                 ViewBag.settore = new SelectList(_context.Settori.OrderBy(a => a.ordinamento), "id", "settore", individui.settore);
                 ViewBag.cartellino = new SelectList(_context.Cartellini.OrderBy(a => a.ordinamento), "id", "descrizione", individui.cartellino);
+                ViewBag.tipocartellino = new SelectList(_context.TipoCartellino.OrderBy(a => a.ordinamento), "id", "descrizione", individui.tipocartellino);
 
 
 
@@ -829,7 +838,7 @@ namespace UPlant.Controllers
         //  public ActionResult Edit([Bind(Include = "id,accessione,individuo,progressivo,sesso,propagatoData,propagatoModalita,settore,collezione,cartellino,statoindividuo,condizione,indexSeminum,destinazioni,note")] Individui individui)
         public async Task<IActionResult> Edit(Guid id, Guid sesso, string propagatoData, Guid propagatoModalita, Guid settore, Guid collezione,
                                    bool indexSeminum, string destinazioni, string note, string statoindividuo,
-                                   Guid condizione, string operazioniColturali, Guid cartellino, string vecchioprogressivo, string longitudine, string latitudine, string tipo)
+                                   Guid condizione, string operazioniColturali, Guid cartellino, Guid tipocartellino, string vecchioprogressivo, string longitudine, string latitudine, string tipo)
 
 
 
@@ -837,6 +846,7 @@ namespace UPlant.Controllers
             Individui individui = await _context.Individui.Include(i => i.accessioneNavigation)
                 .Include(i => i.propagatoModalitaNavigation)
                 .Include(i => i.cartellinoNavigation)
+                .Include(i => i.tipocartellinoNavigation)
                 .Include(i => i.collezioneNavigation)
                 .Include(i => i.propagatoModalitaNavigation)
                 .Include(i => i.sessoNavigation)
@@ -860,6 +870,7 @@ namespace UPlant.Controllers
                 individui.settore = settore;
                 individui.collezione = collezione;
                 individui.cartellino = cartellino;
+                individui.tipocartellino = tipocartellino;
                 individui.indexSeminum = indexSeminum;
                 individui.destinazioni = destinazioni;
                 individui.note = note;
@@ -894,6 +905,7 @@ namespace UPlant.Controllers
                 ViewBag.collezione = new SelectList(_context.Collezioni.Where(x => x.settore == individui.settore).OrderBy(a => a.collezione).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.collezione_en) ? a.collezione : a.collezione_en }), "id", "Desc", individui.collezione);
                 ViewBag.settore = new SelectList(_context.Settori.OrderBy(a => a.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.settore_en) ? a.settore : a.settore_en }), "id", "Desc", individui.settore);
                 ViewBag.cartellino = new SelectList(_context.Cartellini.OrderBy(a => a.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.descrizione : a.descrizione_en }), "id", "Desc", individui.cartellino);
+                ViewBag.tipocartellino = new SelectList(_context.TipoCartellino.OrderBy(a => a.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.descrizione : a.descrizione_en }), "id", "Desc", individui.tipocartellino);
 
 
             }
@@ -904,6 +916,7 @@ namespace UPlant.Controllers
                 ViewBag.settore = new SelectList(_context.Settori.OrderBy(a => a.ordinamento), "id", "settore", individui.settore);
                 ViewBag.collezione = new SelectList(_context.Collezioni.Where(x => x.settore == individui.settore).OrderBy(a => a.collezione), "id", "collezione", individui.collezione);
                 ViewBag.cartellino = new SelectList(_context.Cartellini.OrderBy(a => a.ordinamento), "id", "descrizione", individui.cartellino);
+                ViewBag.tipocartellino = new SelectList(_context.TipoCartellino.OrderBy(a => a.ordinamento), "id", "descrizione", individui.tipocartellino);
 
             }
 
