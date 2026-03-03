@@ -427,7 +427,9 @@
             }
         }
 
-                var map = L.map('openInterventiMap');
+                var map = L.map('openInterventiMap', {
+                    scrollWheelZoom: false
+                });
                 map.attributionControl.setPrefix(false);
                 map.attributionControl.setPosition('bottomleft');
                 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
