@@ -319,6 +319,41 @@
                 return;
             }
 
+        function addFullscreenMapControl(map) {
+            var FullscreenControl = L.Control.extend({
+                options: { position: 'topright' },
+                onAdd: function () {
+                    var container = L.DomUtil.create('div', 'leaflet-bar');
+                    var button = L.DomUtil.create('a', '', container);
+                    button.href = '#';
+                    button.title = 'Schermo intero';
+                    button.setAttribute('role', 'button');
+                    button.innerHTML = '&#x26F6;';
+                    button.style.fontSize = '18px';
+                    button.style.lineHeight = '28px';
+                    button.style.textAlign = 'center';
+
+                    L.DomEvent.on(button, 'click', function (e) {
+                        L.DomEvent.stop(e);
+                        var mapElement = map.getContainer();
+                        if (!document.fullscreenElement) {
+                            mapElement.requestFullscreen();
+                        } else {
+                            document.exitFullscreen();
+                        }
+                    });
+
+                    return container;
+                }
+            });
+
+            map.addControl(new FullscreenControl());
+            if (!map._fullscreenChangeBound) {
+                document.addEventListener('fullscreenchange', function () { map.invalidateSize(); });
+                map._fullscreenChangeBound = true;
+            }
+        }
+
             var map = L.map('interventiRicercaMap', { scrollWheelZoom: false });
             map.attributionControl.setPrefix(false);
             map.attributionControl.setPosition('bottomleft');
@@ -326,6 +361,8 @@
                 maxZoom: 20,
                 attribution: '&copy; OpenStreetMap contributors'
             }).addTo(map);
+
+        addFullscreenMapControl(map);
 
             var bounds = [];
             markersData.forEach(function (item) {
