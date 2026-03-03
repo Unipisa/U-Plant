@@ -1,0 +1,54 @@
+﻿@model UPlant.Models.DB.TipoCartellino
+@inject LanguageService language
+@{
+    ViewData["Title"] = "Create";
+}
+<div class="card card-outline card-primary">
+    <div class="card-header with-border">
+        <h3 class="card-title">@language.Getkey("Global_Add") @language.Getkey("Global_Label_Type")</h3>
+    </div>
+    <div class="card-body">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="descrizione" class="control-label">@language.Getkey("Global_Description")</label>
+                <input asp-for="descrizione" class="form-control" />
+                <span asp-validation-for="descrizione" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="descrizione_en" class="control-label">@language.Getkey("Global_English_Description") </label>
+                <input asp-for="descrizione_en" class="form-control" />
+                <span asp-validation-for="descrizione_en" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ordinamento" class="control-label">@language.Getkey("Global_Sorting")</label>
+                <input asp-for="ordinamento" class="form-control" value="@ViewData["ordinesuccessivo"]" />
+                <span asp-validation-for="ordinamento" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Crea" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    @Html.ActionLink(@language.Getkey("Global_Go_Back"), null, null, null, new { @class = "btn btn-info go_back" })
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+
+@section CustomScripts {
+    <script type="text/javascript">
+        $(function () {
+            $('.go_back').click(function (e) {
+                e.preventDefault();
+                history.go(-1);
+            });
+        });
+    </script>
+}
