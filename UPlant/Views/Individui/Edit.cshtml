@@ -116,9 +116,11 @@
                         <input asp-for="destinazioni" class="form-control" id="destinazioni" name="destinazioni" />
                         <span asp-validation-for="destinazioni" class="text-danger"></span>
                     </div>
-                    <div class="form-group col">
-                        <label asp-for="indexSeminum" class="control-label">Index Seminum</label><br />
-                        <input asp-for="indexSeminum" class="form-check-input"  id="indexSeminum" name="indexSeminum" />
+                    <div class="form-group col d-flex align-items-end">
+                        <div class="form-check mb-2">
+                            <input asp-for="indexSeminum" class="form-check-input" id="indexSeminum" name="indexSeminum" />
+                            <label asp-for="indexSeminum" class="form-check-label">Index Seminum</label>
+                        </div>
                         <span asp-validation-for="indexSeminum" class="text-danger"></span>
                     </div>
 
