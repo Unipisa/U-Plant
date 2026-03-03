@@ -3,15 +3,23 @@
 @{
     ViewData["Title"] = "Edit";
     var ruoloItems = ((SelectList)ViewData["Ruolo"]).ToList();
-    var administratorRole = ruoloItems.FirstOrDefault(r => string.Equals(r.Text, "Administrator", StringComparison.OrdinalIgnoreCase));
-    var operatorRole = ruoloItems.FirstOrDefault(r => string.Equals(r.Text, "Operator", StringComparison.OrdinalIgnoreCase));
-    var readerRole = ruoloItems.FirstOrDefault(r => string.Equals(r.Text, "Reader", StringComparison.OrdinalIgnoreCase));
-    var discoverRole = ruoloItems.FirstOrDefault(r => string.Equals(r.Text, "Discover", StringComparison.OrdinalIgnoreCase));
-    var treeManagerRole = ruoloItems.FirstOrDefault(r => string.Equals(r.Text, "TreeManager", StringComparison.OrdinalIgnoreCase));
+    string NormalizeRoleName(string roleName) => roleName?.Trim() ?? string.Empty;
+
+    var administratorRole = ruoloItems.FirstOrDefault(r => string.Equals(NormalizeRoleName(r.Text), "Administrator", StringComparison.OrdinalIgnoreCase));
+    var operatorRole = ruoloItems.FirstOrDefault(r => string.Equals(NormalizeRoleName(r.Text), "Operator", StringComparison.OrdinalIgnoreCase));
+    var readerRole = ruoloItems.FirstOrDefault(r => string.Equals(NormalizeRoleName(r.Text), "Reader", StringComparison.OrdinalIgnoreCase));
+    var discoverRole = ruoloItems.FirstOrDefault(r => string.Equals(NormalizeRoleName(r.Text), "Discover", StringComparison.OrdinalIgnoreCase));
+    var treeManagerRole = ruoloItems.FirstOrDefault(r => string.Equals(NormalizeRoleName(r.Text), "TreeManager", StringComparison.OrdinalIgnoreCase));
     var selectedRoleIds = (ViewData["SelectedRoleIds"] as IEnumerable<Guid>)?.ToHashSet() ?? new HashSet<Guid>();
-    var isAdministratorSelected = administratorRole != null && selectedRoleIds.Contains(Guid.Parse(administratorRole.Value));
-    var isOperatorSelected = operatorRole != null && selectedRoleIds.Contains(Guid.Parse(operatorRole.Value));
-    var isReaderSelected = readerRole != null && selectedRoleIds.Contains(Guid.Parse(readerRole.Value));
+
+    bool IsRoleSelected(SelectListItem roleItem)
+    {
+        return roleItem != null && Guid.TryParse(roleItem.Value, out var roleId) && selectedRoleIds.Contains(roleId);
+    }
+
+    var isAdministratorSelected = IsRoleSelected(administratorRole);
+    var isOperatorSelected = IsRoleSelected(operatorRole);
+    var isReaderSelected = IsRoleSelected(readerRole);
     var selectedPrimaryRole = isAdministratorSelected ? administratorRole : isOperatorSelected ? operatorRole : isReaderSelected ? readerRole : readerRole;
 }
 
