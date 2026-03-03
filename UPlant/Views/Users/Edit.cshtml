@@ -8,8 +8,11 @@
     var readerRole = ruoloItems.FirstOrDefault(r => string.Equals(r.Text, "Reader", StringComparison.OrdinalIgnoreCase));
     var discoverRole = ruoloItems.FirstOrDefault(r => string.Equals(r.Text, "Discover", StringComparison.OrdinalIgnoreCase));
     var treeManagerRole = ruoloItems.FirstOrDefault(r => string.Equals(r.Text, "TreeManager", StringComparison.OrdinalIgnoreCase));
-    var selectedPrimaryRole = administratorRole?.Selected == true ? administratorRole : operatorRole?.Selected == true ? operatorRole : readerRole;
-    var isOperatorSelected = operatorRole?.Selected == true;
+    var selectedRoleIds = (ViewData["SelectedRoleIds"] as IEnumerable<Guid>)?.ToHashSet() ?? new HashSet<Guid>();
+    var isAdministratorSelected = administratorRole != null && selectedRoleIds.Contains(Guid.Parse(administratorRole.Value));
+    var isOperatorSelected = operatorRole != null && selectedRoleIds.Contains(Guid.Parse(operatorRole.Value));
+    var isReaderSelected = readerRole != null && selectedRoleIds.Contains(Guid.Parse(readerRole.Value));
+    var selectedPrimaryRole = isAdministratorSelected ? administratorRole : isOperatorSelected ? operatorRole : isReaderSelected ? readerRole : readerRole;
 }
 
 <div class="card card-outline card-primary">
@@ -94,14 +97,14 @@
                     @if (discoverRole != null)
                     {
                         <div class="form-check">
-                            <input class="form-check-input js-operator-extra" type="checkbox" name="ruoli" id="role-discover" value="@discoverRole.Value" @(discoverRole.Selected ? "checked" : "") @(!isOperatorSelected ? "disabled" : "") />
+                            <input class="form-check-input js-operator-extra" type="checkbox" name="ruoli" id="role-discover" value="@discoverRole.Value" @(selectedRoleIds.Contains(Guid.Parse(discoverRole.Value)) ? "checked" : "") @(!isOperatorSelected ? "disabled" : "") />
                             <label class="form-check-label" for="role-discover">Discover</label>
                         </div>
                     }
                     @if (treeManagerRole != null)
                     {
                         <div class="form-check">
-                            <input class="form-check-input js-operator-extra" type="checkbox" name="ruoli" id="role-treemanager" value="@treeManagerRole.Value" @(treeManagerRole.Selected ? "checked" : "") @(!isOperatorSelected ? "disabled" : "") />
+                            <input class="form-check-input js-operator-extra" type="checkbox" name="ruoli" id="role-treemanager" value="@treeManagerRole.Value" @(selectedRoleIds.Contains(Guid.Parse(treeManagerRole.Value)) ? "checked" : "") @(!isOperatorSelected ? "disabled" : "") />
                             <label class="form-check-label" for="role-treemanager">TreeManager</label>
                         </div>
                     }
