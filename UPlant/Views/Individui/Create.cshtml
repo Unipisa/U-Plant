@@ -122,10 +122,10 @@
                         <input asp-for="individuoNavigation.destinazioni" class="form-control" id="destinazioni" name="destinazioni" />
                         <span asp-validation-for="individuoNavigation.destinazioni" class="text-danger"></span>
                     </div>
-                    <div class="form-group col d-flex align-items-end">
-                        <div class="form-check mb-2">
-                            <input class="form-check-input" asp-for="individuoNavigation.indexSeminum" id="indexSeminum" name="indexSeminum" />
-                            <label class="form-check-label" for="indexSeminum">Index Seminum</label>
+                    <div class="form-group col">
+                        <label class="control-label d-block" for="indexSeminum">Index Seminum</label>
+                        <div class="form-check">
+                            <input class="form-check-input position-static" asp-for="individuoNavigation.indexSeminum" id="indexSeminum" name="indexSeminum" aria-label="Index Seminum" />
                         </div>
                     </div>
                    
