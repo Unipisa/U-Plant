@@ -236,17 +236,10 @@
                         </th>
                     </tr>
                     <tr>
-                        <td style="width: 33%">
-                            @if (Model.indexSeminum == true)
-                            {
-                                <span> Si</span>
-                            }
-                            else
-                            {
-                                <span> No</span>
-                            }
-
-
+                        <td style="width: 33%" class="align-middle text-center">
+                            <div class="form-check d-inline-flex justify-content-center mb-0">
+                                <input type="checkbox" class="form-check-input position-static" @(Model.indexSeminum == true ? "checked" : "") disabled aria-label="Index Seminum" />
+                            </div>
                         </td>
                         <td style="width: 33% ">
                             @Html.DisplayFor(model => model.destinazioni)
