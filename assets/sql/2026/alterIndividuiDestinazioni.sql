@@ -1,0 +1,1 @@
+alter table individui alter column destinazioni varchar(1000) null
