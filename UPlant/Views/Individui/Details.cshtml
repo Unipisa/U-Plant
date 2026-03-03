@@ -153,69 +153,63 @@
                             @language.Getkey("Global_Sector")
                         </th>
                         <th style="width: 33% ">
-                            @language.Getkey("Global_Collection")
-                        </th>
-                        <th style="width: 33% ">
                             @language.Getkey("Global_Label")
                         </th>
-                     
+                        <th style="width: 33% ">
+                            @language.Getkey("Global_Longitude")
+                        </th>
                     </tr>
 
                     <tr>
                         @if (currentCulture == "en-US")
                         {
-                               <td style="width:33%"> @if(string.IsNullOrEmpty(Model.settoreNavigation.settore_en)) { @Html.DisplayFor(model => model.settoreNavigation.settore)} else{ @Html.DisplayFor(model => model.settoreNavigation.settore_en)}</td>
-                            <td style="width:33%"> @if(string.IsNullOrEmpty(Model.collezioneNavigation.collezione_en)) { @Html.DisplayFor(model => model.collezioneNavigation.collezione)} else{ @Html.DisplayFor(model => model.collezioneNavigation.collezione_en)}</td>
-                             <td style="width:33%"> @if(string.IsNullOrEmpty(Model.cartellinoNavigation.descrizione_en)) { @Html.DisplayFor(model => model.cartellinoNavigation.descrizione)} else{ @Html.DisplayFor(model => model.cartellinoNavigation.descrizione_en)}</td>
-                            
-                        }else{
-                             <td style="width:33%">
-                            @Html.DisplayFor(model => model.settoreNavigation.settore)
-                        </td>
-                        <td style="width:33%">
-                            @Html.DisplayFor(model => model.collezioneNavigation.collezione)
-                        </td>
-                        <td style="width:33%">
-                            @Html.DisplayFor(model => model.cartellinoNavigation.descrizione)
-                        </td>
-                    
-
+                            <td style="width:33%">@if (string.IsNullOrEmpty(Model.settoreNavigation.settore_en)) { @Html.DisplayFor(model => model.settoreNavigation.settore) } else { @Html.DisplayFor(model => model.settoreNavigation.settore_en) }</td>
+                            <td style="width:33%">@if (string.IsNullOrEmpty(Model.cartellinoNavigation.descrizione_en)) { @Html.DisplayFor(model => model.cartellinoNavigation.descrizione) } else { @Html.DisplayFor(model => model.cartellinoNavigation.descrizione_en) }</td>
                         }
-
-                       
-                    </tr>
-                    <tr>
-                        <th style="width: 33% ">
-                            @language.Getkey("Global_Label_Type")
-                        </th>
-                        
-                        <th style="width:33%">
-                            @language.Getkey("Global_Longitude")
-                        </th>
-                        <th style="width:33%">
-                            @language.Getkey("Global_Latitude")
-                        </th>
-                        
-                    </tr>
-                    <tr>
-                         @if (currentCulture == "en-US")
+                        else
                         {
-                             <td style="width:33%"> @if(string.IsNullOrEmpty(Model.tipocartellinoNavigation.descrizione_en)) { @Html.DisplayFor(model => model.tipocartellinoNavigation.descrizione)} else{ @Html.DisplayFor(model => model.tipocartellinoNavigation.descrizione_en)}</td>                            
-                        }
-                        else{
                             <td style="width:33%">
-                            @Html.DisplayFor(model => model.tipocartellinoNavigation.descrizione)
-                        </td>
+                                @Html.DisplayFor(model => model.settoreNavigation.settore)
+                            </td>
+                            <td style="width:33%">
+                                @Html.DisplayFor(model => model.cartellinoNavigation.descrizione)
+                            </td>
                         }
                         <td style="width:33%">
                             @Html.DisplayFor(model => model.longitudine)
                             @Html.HiddenFor(model => model.longitudine, new { @id = "longitudine", @name = "longitudine" })
                         </td>
+                    </tr>
+                    <tr>
+                        <th style="width: 33% ">
+                            @language.Getkey("Global_Collection")
+                        </th>
+                        <th style="width: 33% ">
+                            @language.Getkey("Global_Label_Type")
+                        </th>
+                        <th style="width: 33% ">
+                            @language.Getkey("Global_Latitude")
+                        </th>
+                    </tr>
+                    <tr>
+                        @if (currentCulture == "en-US")
+                        {
+                            <td style="width:33%">@if (string.IsNullOrEmpty(Model.collezioneNavigation.collezione_en)) { @Html.DisplayFor(model => model.collezioneNavigation.collezione) } else { @Html.DisplayFor(model => model.collezioneNavigation.collezione_en) }</td>
+                            <td style="width:33%">@if (string.IsNullOrEmpty(Model.tipocartellinoNavigation.descrizione_en)) { @Html.DisplayFor(model => model.tipocartellinoNavigation.descrizione) } else { @Html.DisplayFor(model => model.tipocartellinoNavigation.descrizione_en) }</td>
+                        }
+                        else
+                        {
+                            <td style="width:33%">
+                                @Html.DisplayFor(model => model.collezioneNavigation.collezione)
+                            </td>
+                            <td style="width:33%">
+                                @Html.DisplayFor(model => model.tipocartellinoNavigation.descrizione)
+                            </td>
+                        }
                         <td style="width:33%">
                             @Html.DisplayFor(model => model.latitudine)
                             @Html.HiddenFor(model => model.latitudine, new { @id = "latitudine", @name = "latitudine" })
                         </td>
-                       
                     </tr>
                     <tr><td colspan="3"><div id="myMap"></div></td></tr>
                     <tr style="height:12px;">
