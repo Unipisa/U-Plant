@@ -2,6 +2,14 @@
 @inject LanguageService language
 @{
     ViewData["Title"] = "Edit";
+    var ruoloItems = ((SelectList)ViewData["Ruolo"]).ToList();
+    var administratorRole = ruoloItems.FirstOrDefault(r => string.Equals(r.Text, "Administrator", StringComparison.OrdinalIgnoreCase));
+    var operatorRole = ruoloItems.FirstOrDefault(r => string.Equals(r.Text, "Operator", StringComparison.OrdinalIgnoreCase));
+    var readerRole = ruoloItems.FirstOrDefault(r => string.Equals(r.Text, "Reader", StringComparison.OrdinalIgnoreCase));
+    var discoverRole = ruoloItems.FirstOrDefault(r => string.Equals(r.Text, "Discover", StringComparison.OrdinalIgnoreCase));
+    var treeManagerRole = ruoloItems.FirstOrDefault(r => string.Equals(r.Text, "TreeManager", StringComparison.OrdinalIgnoreCase));
+    var selectedPrimaryRole = administratorRole?.Selected == true ? administratorRole : operatorRole?.Selected == true ? operatorRole : readerRole;
+    var isOperatorSelected = operatorRole?.Selected == true;
 }
 
 <div class="card card-outline card-primary">
@@ -59,8 +67,46 @@
             </div>*@
             <div class="form-group">
                 <label class="control-label">@language.Getkey("Global_Role")</label>
-                @Html.ListBox("ruoli", (SelectList)ViewData["Ruolo"], new { @class = "form-control" })
-                <small class="form-text text-muted">Ruoli fondamentali: Administrator (esclusivo), Operator (può includere Discover e TreeManager), Reader (solo consultazione).</small>
+                <div class="mt-2">
+                    @if (administratorRole != null)
+                    {
+                        <div class="form-check">
+                            <input class="form-check-input js-primary-role" type="radio" name="ruoli" id="role-administrator" value="@administratorRole.Value" @(selectedPrimaryRole?.Value == administratorRole.Value ? "checked" : "") />
+                            <label class="form-check-label" for="role-administrator">Administrator</label>
+                        </div>
+                    }
+                    @if (operatorRole != null)
+                    {
+                        <div class="form-check">
+                            <input class="form-check-input js-primary-role" type="radio" name="ruoli" id="role-operator" value="@operatorRole.Value" @(selectedPrimaryRole?.Value == operatorRole.Value ? "checked" : "") />
+                            <label class="form-check-label" for="role-operator">Operator</label>
+                        </div>
+                    }
+                    @if (readerRole != null)
+                    {
+                        <div class="form-check">
+                            <input class="form-check-input js-primary-role" type="radio" name="ruoli" id="role-reader" value="@readerRole.Value" @(selectedPrimaryRole?.Value == readerRole.Value ? "checked" : "") />
+                            <label class="form-check-label" for="role-reader">Reader</label>
+                        </div>
+                    }
+                </div>
+                <div class="mt-2 ms-3">
+                    @if (discoverRole != null)
+                    {
+                        <div class="form-check">
+                            <input class="form-check-input js-operator-extra" type="checkbox" name="ruoli" id="role-discover" value="@discoverRole.Value" @(discoverRole.Selected ? "checked" : "") @(!isOperatorSelected ? "disabled" : "") />
+                            <label class="form-check-label" for="role-discover">Discover</label>
+                        </div>
+                    }
+                    @if (treeManagerRole != null)
+                    {
+                        <div class="form-check">
+                            <input class="form-check-input js-operator-extra" type="checkbox" name="ruoli" id="role-treemanager" value="@treeManagerRole.Value" @(treeManagerRole.Selected ? "checked" : "") @(!isOperatorSelected ? "disabled" : "") />
+                            <label class="form-check-label" for="role-treemanager">TreeManager</label>
+                        </div>
+                    }
+                </div>
+                <small class="form-text text-muted">Administrator, Operator e Reader sono alternativi. Discover e TreeManager sono selezionabili solo con Operator.</small>
             </div>
             <div class="form-group">
                 <label asp-for="TipologiaUtente" class="control-label">@language.Getkey("Global_User_Type")</label>
@@ -85,4 +131,28 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        (function () {
+            const operatorRadio = document.getElementById('role-operator');
+            const primaryRoleRadios = document.querySelectorAll('.js-primary-role');
+            const operatorExtras = document.querySelectorAll('.js-operator-extra');
+
+            const toggleOperatorExtras = () => {
+                const enableExtras = operatorRadio && operatorRadio.checked;
+
+                operatorExtras.forEach(extra => {
+                    extra.disabled = !enableExtras;
+                    if (!enableExtras) {
+                        extra.checked = false;
+                    }
+                });
+            };
+
+            primaryRoleRadios.forEach(radio => {
+                radio.addEventListener('change', toggleOperatorExtras);
+            });
+
+            toggleOperatorExtras();
+        })();
+    </script>
 }
