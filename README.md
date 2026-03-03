@@ -23,8 +23,8 @@ Questa repository contiene la nuova versione in **.NET 8**; la versione oggi in 
 - **Backend:** ASP.NET Core (.NET 8)
 - **Database:** SQL Server
 - **Hosting:** IIS (Windows)
-- **Autenticazione:** OAuth2 (WSO2) oppure SAML2
-- **Opzionale:** Google Maps API, stampa etichette QRCode con DYMO 450
+- **Autenticazione:** OAuth2/OIDC (WSO2 o Azure) oppure SAML2
+- **Opzionale:** OpenStreetMap, stampa etichette QRCode con DYMO 450
 
 ---
 
@@ -33,10 +33,9 @@ Questa repository contiene la nuova versione in **.NET 8**; la versione oggi in 
 - SQL Server disponibile
 - IIS configurato
 - .NET 8 Hosting Bundle installato su server IIS
-- Sistema di autenticazione esterno configurato (WSO2 o SAML2)
+- Sistema di autenticazione esterno configurato (WSO2, Azure o SAML2)
 
 ### Opzionali
-- API Key Google Maps
 - Stampante DYMO 450 per etichette con QRCode
 
 ---
@@ -73,7 +72,7 @@ Lo script include:
 ### 3) Popolamento minimo indispensabile
 Prima del primo avvio:
 1. valorizzare **Organizzazioni**;
-2. creare almeno un record in **Users** con identificativo coerente con claim ricevuto da autenticatore (WSO2/SAML).
+2. creare almeno un record in **Users** con identificativo coerente con claim ricevuto da autenticatore (WSO2/Azure/SAML).
 
 Senza questi dati iniziali, il login non va a buon fine.
 
@@ -90,15 +89,15 @@ Questi file **sovrascrivono** i valori del file base `appsettings.json`.
 
 ### Sezioni chiave
 - `AppSettings:Application`
-  - nome applicazione, branding (logo/testi), URL base, tipo autenticazione (`TypeAuth`: `WSO2` o `SAML2`).
-- `AppSettings:GoogleMap`
-  - URL script Google Maps + API key.
+  - nome applicazione, branding (logo/testi), URL base, tipo autenticazione (`TypeAuth`: `WSO2`, `AZURE` o `SAML2`).
 - `AppSettings:Pathfile`
   - path filesystem per immagini/documenti e limite upload.
 - `ConnectionStrings:UPlant`
   - stringa connessione SQL Server.
 - `Wso2Auth`
   - endpoint OAuth2/OIDC e claim utilizzati.
+- `AzureAd`
+  - tenant, client id/secret e callback per autenticazione Azure (OIDC).
 - `Saml2Auth`
   - entity ID SP, metadata IdP, mapping claim, certificato di firma (`.pfx`).
 
@@ -111,7 +110,7 @@ Questi file **sovrascrivono** i valori del file base `appsettings.json`.
       "NomeAppLong": "UPlant - Orto Botanico",
       "UrlPrefix": "https://localhost:7038/",
       "UrlBaseCode": "https://localhost:7038/",
-      "TypeAuth": "WSO2"
+      "TypeAuth": "WSO2" // possibili valori: WSO2, AZURE, SAML2
     },
     "Pathfile": {
       "Basepath": "C:\\immagini",
@@ -153,6 +152,9 @@ Impostare in `appsettings.json`:
 - `ClientID`, `ClientSecret`;
 - lista claim previsti in ingresso.
 
+### Azure (OpenID Connect)
+Impostare in `appsettings.json` la sezione `AzureAd` (TenantId, ClientId, ClientSecret, callback) e usare `TypeAuth = "AZURE"`.
+
 ### SAML2
 Impostare in `appsettings.json`:
 - `TypeAuth = "SAML2"`
@@ -187,7 +189,7 @@ Impostare in `appsettings.json`:
 ## Roadmap proposta (prossimi passi)
 1. Aggiungere una sezione **"Installazione in 15 minuti"** con checklist passo-passo.
 2. Fornire un file `appsettings.example.json` senza segreti.
-3. Documentare troubleshooting (errori più comuni OAuth2/SAML/IIS).
+3. Documentare troubleshooting (errori più comuni OAuth2/Azure/SAML/IIS).
 4. Inserire screenshot dell'interfaccia e diagramma base entità.
 
 ---
