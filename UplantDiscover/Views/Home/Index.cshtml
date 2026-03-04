@@ -132,6 +132,22 @@
     </div>
 </div>
 
+<style>
+    .map-sector-marker-wrapper {
+        background: transparent;
+        border: 0;
+    }
+
+    .map-sector-pin {
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+        border-radius: 50% 50% 50% 0;
+        border: 2px solid #ffffff;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
+        transform: rotate(-45deg);
+    }
+</style>
 
     @section scripts {
 
@@ -159,17 +175,39 @@
             });
 
         </script>
-    <script src="@ViewBag.GoogleMapUrl@ViewBag.GoogleMapKey">
+        <script>
+            if (!document.querySelector('link[data-leaflet="true"]')) {
+                var leafletCss = document.createElement('link');
+                leafletCss.rel = 'stylesheet';
+                leafletCss.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
+                leafletCss.setAttribute('data-leaflet', 'true');
+                document.head.appendChild(leafletCss);
+            }
         </script>
+        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
         <script type="text/javascript">
 
             function initialize() {
-                var map = L.map('map').setView([43.71944963861506, 10.396344067111961], 13);
+                if (typeof L === 'undefined') {
+                    return null;
+                }
+
+                if (homeMap != null) {
+                    homeMap.remove();
+                    homeMap = null;
+                }
+
+                var mapContainer = document.getElementById('map');
+                if (mapContainer && mapContainer._leaflet_id) {
+                    mapContainer._leaflet_id = null;
+                }
+
+                homeMap = L.map('map').setView([43.71944963861506, 10.396344067111961], 13);
                 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                     maxZoom: 20,
                     attribution: '&copy; OpenStreetMap contributors'
-                }).addTo(map);
-                return map;
+                }).addTo(homeMap);
+                return homeMap;
 
             }
             //  google.maps.event.addDomListener(window, 'load', initialize);
@@ -181,12 +219,19 @@
         var nomecomune = '@language.Getkey("nomecomune")';
         var det = '@language.Getkey("dettaglio")';
         var bandiera = '@language.Getkey("bandiera")';
+        var detailBaseUrl = '@Url.Action("Details", "Home")?id=';
+        var homeMap = null;
 
         function generatabella(data) {
             if (data.length != 0) {
                 var pathimg = '';
+                document.getElementById('map').style.width = '100%';
+                document.getElementById('map').style.height = "600px";
                 var map = initialize();
-                var bounds = new google.maps.LatLngBounds();
+                if (map == null) {
+                    return '@language.Getkey("risultato")';
+                }
+                var bounds = L.latLngBounds();
                 var s = '';
                 var numerorisultato = 0;
 
@@ -197,56 +242,24 @@
 
                 for (var i = 0; i < data.length; i++) {
 
-                    var iconBase = '@ViewBag.GoogleMapIcons';
-                    var icons;
-                                   
-                    switch (data[i].Ordinamento) {
-                            case 0:
-                                    icons = iconBase + 'grey-pushpin.png';
-                                    break;
-                                case 1:
-                                    icons = iconBase + 'lily-pushpin.png';
-                                    break;
-                                case 2:
-                                    icons = iconBase + 'orange-pushpin.png';
-                                    break;
-                                case 3:
-                                    icons = iconBase + 'blue-pushpin.png';
-                                    break;
-                                case 4:
-                                    icons = iconBase + 'grn-pushpin.png';
-                                    break;
-                                case 5:
-                                    icons = iconBase + 'pink-pushpin.png';
-                                    break;
-                                case 6:
-                                    icons = iconBase + 'red-pushpin.png';
-                                    break;
-                                case 7:
-                                    icons = iconBase + 'ltblu-pushpin.png';
-                                    break;
-                                case 8:
-                                    icons = iconBase + 'orange-pushpin.png';
-                                    break;
-                                case 9:
-                                    icons = iconBase + 'ylw-pushpin.png';
-                                    break;
-                                case 10:
-                                    icons = iconBase + 'purple-pushpin.png';
-                                    break;
-                                default:
-                                icons = iconBase + 'grey-pushpin.png'
+                    var latitudine = data[i].Latitudine == "" ? "43.71944963861506" : data[i].Latitudine;
+                    var longitudine = data[i].Longitudine == "" ? "10.396344067111961" : data[i].Longitudine;
+
+                    var settoreColore = data[i].SettoreColore || '#2b7de9';
+                    if (settoreColore.indexOf('#') !== 0 && settoreColore.indexOf('rgb') !== 0) {
+                        settoreColore = '#' + settoreColore;
                     }
-                    if (data[i].Latitudine == "" || data[i].Longitudine == "") {
-                        var latitudine = "43.71944963861506";
-                        var longitudine = "10.396344067111961";
-                        var icona = iconBase + 'question.png';
-                    } else {
-                        var latitudine = data[i].Latitudine;
-                        var longitudine = data[i].Longitudine;
-                        var icona = icons;
-                    }
-                    var marker = L.marker([latitudine, longitudine], { icon: icona, title: data[i].Indentitatassonomica }).addTo(map);
+
+                    var markerHtml = '<span class="map-sector-pin" style="background-color:' + settoreColore + ';"></span>';
+                    var markerIcon = L.divIcon({
+                        className: 'map-sector-marker-wrapper',
+                        html: markerHtml,
+                        iconSize: [20, 20],
+                        iconAnchor: [10, 20],
+                        popupAnchor: [0, -20]
+                    });
+
+                    var marker = L.marker([latitudine, longitudine], { icon: markerIcon, title: data[i].Indentitatassonomica }).addTo(map);
                     bounds.extend(marker.getLatLng());
                     marker.on('click', (function (itemId) {
                         return function () { window.location.href = detailBaseUrl + itemId; };
@@ -280,26 +293,13 @@
 
                 }
                 s += '</tbody></table>';
-                marker.setMap(map);
-                bounds.extend(marker.getPosition());
-                map.setCenter(bounds.getCenter());
-
-                //map.setCenter(bounds.getCenter());
-                if (numerorisultato != 1) {
-                    map.fitBounds(bounds);
-                }
-                map.setZoom(17);
-                document.getElementById('map').style.width = '100%';
-                document.getElementById('map').style.height = "600px";
-                var noPoi = [
-                    {
-                        featureType: "poi.business",
-                        stylers: [
-                            { visibility: "off" }
-                        ]
+                if (numerorisultato > 0) {
+                    map.invalidateSize();
+                    map.fitBounds(bounds, { maxZoom: 18 });
+                    if (numerorisultato == 1) {
+                        map.setZoom(17);
                     }
-                ];
-                map.setOptions({ styles: noPoi });
+                }
             } else {
                 s = '@language.Getkey("risultato")';
                 document.getElementById('map').style.width = '0%';
@@ -313,9 +313,97 @@
 
         </script>
         <script>
+            $(function () {
+                function generaUltimiArrivi(data) {
+                    var html = '';
+                    var numeroarrivi = 0;
 
+                    for (var i = 0; i < data.length; i++) {
+                        if (!data[i].Immagine || data[i].Immagine.length <= 3) {
+                            continue;
+                        }
 
+                        html += '<div class="col-12 col-md-4 col-lg-3 text-white rounded-5">';
+                        html += '<a href="' + detailBaseUrl + data[i].Individuo + '" class="text-decoration-none d-block mb-4">';
+                        html += '<div style="background-image: url(' + data[i].Immagine + '); background-size: cover;" class="square">';
+                        html += '<div class="text-white text-shadow-1 fw-bold">';
+                        html += '<h5 class="mb-3 fw-medium text-truncate">' + data[i].Indentitatassonomica + '</h5>';
+                        html += '<p></p>';
+                        html += '<ul class="d-flex list-unstyled mt-auto mb-0">';
+                        html += '<li class="me-auto">';
+                        html += '<img src="@Context.Request.PathBase/bst-master/images/logo-footer-orto-e-museo-botanico.png" alt="Orto Botanico Pisa" width="32" height="32" class="rounded-circle border border-white">';
+                        html += '</li>';
+                        html += '<li class="d-flex align-items-center">';
+                        html += '<small>' + data[i].Settore + '</small>';
+                        html += '</li>';
+                        html += '</ul>';
+                        html += '</div>';
+                        html += '</div>';
+                        html += '</a>';
+                        html += '</div>';
 
+                        numeroarrivi = numeroarrivi + 1;
+                        if (numeroarrivi > 3) {
+                            break;
+                        }
+                    }
+
+                    return html;
+                }
+
+                function caricaUltimiArrivi() {
+                    $.ajax({
+                        url: '/api/orto/ultimoinserito',
+                        method: 'GET',
+                        dataType: 'json',
+                        data: {
+                            lingua: $('#lingua').val()
+                        },
+                        success: function (data) {
+                            $('#ultimi').html(generaUltimiArrivi(data || []));
+                        },
+                        error: function () {
+                            $('#ultimi').html('');
+                        }
+                    });
+                }
+
+                caricaUltimiArrivi();
+
+                $("#specie").autocomplete({
+                    minLength: 2,
+                    source: function (request, response) {
+                        $.ajax({
+                            url: '/api/orto/cercaspecie',
+                            method: 'GET',
+                            dataType: 'json',
+                            data: {
+                                term: request.term,
+                                lingua: $('#lingua').val(),
+                                tipo: $('input[name="tiporicerca"]:checked').val()
+                            },
+                            success: response,
+                            error: function () { response([]); }
+                        });
+                    }
+                });
+
+                $('#ricerca').on('submit', function (event) {
+                    event.preventDefault();
+                    $.ajax({
+                        url: '/api/orto/ricerca',
+                        method: 'GET',
+                        dataType: 'json',
+                        data: $(this).serialize(),
+                        success: function (data) {
+                            $('#risultato').html(generatabella(data));
+                        },
+                        error: function (xhr) {
+                            alert('Error during process: \n' + xhr.responseText);
+                        }
+                    });
+                });
+            });
         </script>
         <script>
         $('#settore').on("change", function () {
