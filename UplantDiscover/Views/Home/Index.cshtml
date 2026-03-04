@@ -175,12 +175,23 @@
                 if (typeof L === 'undefined') {
                     return null;
                 }
-                var map = L.map('map').setView([43.71944963861506, 10.396344067111961], 13);
+
+                if (homeMap != null) {
+                    homeMap.remove();
+                    homeMap = null;
+                }
+
+                var mapContainer = document.getElementById('map');
+                if (mapContainer && mapContainer._leaflet_id) {
+                    mapContainer._leaflet_id = null;
+                }
+
+                homeMap = L.map('map').setView([43.71944963861506, 10.396344067111961], 13);
                 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                     maxZoom: 20,
                     attribution: '&copy; OpenStreetMap contributors'
-                }).addTo(map);
-                return map;
+                }).addTo(homeMap);
+                return homeMap;
 
             }
             //  google.maps.event.addDomListener(window, 'load', initialize);
@@ -193,6 +204,7 @@
         var det = '@language.Getkey("dettaglio")';
         var bandiera = '@language.Getkey("bandiera")';
         var detailBaseUrl = '@Url.Action("Details", "Home")?id=';
+        var homeMap = null;
 
         function generatabella(data) {
             if (data.length != 0) {
@@ -325,24 +337,38 @@
             $(function () {
                 function generaUltimiArrivi(data) {
                     var html = '';
+                    var numeroarrivi = 0;
+
                     for (var i = 0; i < data.length; i++) {
-                        var img = data[i].Immagine && data[i].Immagine.length > 3
-                            ? data[i].Immagine
-                            : '@Context.Request.PathBase/bst-master/images/noimageb.jpg';
-                        var nomeComune = bandiera == "it" ? data[i].Nomecomune : data[i].Nomecomuneen;
-                        if (!nomeComune) {
-                            nomeComune = '';
+                        if (!data[i].Immagine || data[i].Immagine.length <= 3) {
+                            continue;
                         }
 
-                        html += '<div class="col-12 col-md-6 col-lg-4 mb-4">'
-                            + '<a href="' + detailBaseUrl + data[i].Individuo + '" class="text-decoration-none">'
-                            + '<div class="card h-100">'
-                            + '<img src="' + img + '" class="card-img-top preview-specie" alt="" loading="lazy">'
-                            + '<div class="card-body">'
-                            + '<h6 class="card-title text-success mb-2">' + data[i].Indentitatassonomica + '</h6>'
-                            + '<p class="card-text small text-dark mb-0">' + nomeComune + '</p>'
-                            + '</div></div></a></div>';
+                        html += '<div class="col-12 col-md-4 col-lg-3 text-white rounded-5">';
+                        html += '<a href="' + detailBaseUrl + data[i].Individuo + '" class="text-decoration-none d-block mb-4">';
+                        html += '<div style="background-image: url(' + data[i].Immagine + '); background-size: cover;" class="square">';
+                        html += '<div class="text-white text-shadow-1 fw-bold">';
+                        html += '<h5 class="mb-3 fw-medium text-truncate">' + data[i].Indentitatassonomica + '</h5>';
+                        html += '<p></p>';
+                        html += '<ul class="d-flex list-unstyled mt-auto mb-0">';
+                        html += '<li class="me-auto">';
+                        html += '<img src="@Context.Request.PathBase/bst-master/images/logo-footer-orto-e-museo-botanico.png" alt="Orto Botanico Pisa" width="32" height="32" class="rounded-circle border border-white">';
+                        html += '</li>';
+                        html += '<li class="d-flex align-items-center">';
+                        html += '<small>' + data[i].Settore + '</small>';
+                        html += '</li>';
+                        html += '</ul>';
+                        html += '</div>';
+                        html += '</div>';
+                        html += '</a>';
+                        html += '</div>';
+
+                        numeroarrivi = numeroarrivi + 1;
+                        if (numeroarrivi > 3) {
+                            break;
+                        }
                     }
+
                     return html;
                 }
 
