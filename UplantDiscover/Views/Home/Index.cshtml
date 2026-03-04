@@ -159,34 +159,27 @@
             });
 
         </script>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+    <script src="@ViewBag.GoogleMapUrl@ViewBag.GoogleMapKey">
+        </script>
         <script type="text/javascript">
 
-            function createColoredIcon(color) {
-                var safeColor = color && color.length > 0 ? color : '#6c757d';
-                return L.divIcon({
-                    className: 'custom-sector-marker-wrapper',
-                    html: '<span style="display:inline-block;width:16px;height:16px;border-radius:50% 50% 50% 0;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.35);transform:rotate(-45deg);background:' + safeColor + ';"></span>',
-                    iconSize: [16, 16],
-                    iconAnchor: [8, 16]
-                });
-            }
-
             function initialize() {
-                if (typeof L === 'undefined') {
-                    return null;
-                }
+                var geocoder = new google.maps.Geocoder();
+                var infowindow = new google.maps.InfoWindow();
+                var myLatlng = new google.maps.LatLng(43.71944963861506, 10.396344067111961);
+                var mapOptions = {
+                    zoom: 13,
+                    center: myLatlng,
+                    mapTypeId: google.maps.MapTypeId.ROADMAP
+                };
+                var map = new google.maps.Map(document.getElementById("map"), mapOptions);
+                 // Add controls to the map, allowing users to hide/show features.
+               
 
-                var map = L.map('map').setView([43.71944963861506, 10.396344067111961], 13);
-                map.attributionControl.setPrefix(false);
-                map.attributionControl.setPosition('bottomleft');
-                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                    maxZoom: 20,
-                    attribution: '&copy; OpenStreetMap contributors'
-                }).addTo(map);
                 return map;
+
             }
+            //  google.maps.event.addDomListener(window, 'load', initialize);
 
         </script>
         <script>
@@ -195,14 +188,12 @@
         var nomecomune = '@language.Getkey("nomecomune")';
         var det = '@language.Getkey("dettaglio")';
         var bandiera = '@language.Getkey("bandiera")';
-        var detailBaseUrl = '@Url.Action("Details", "Home")?id=';
 
         function generatabella(data) {
             if (data.length != 0) {
                 var pathimg = '';
                 var map = initialize();
-                var canRenderMap = map !== null;
-                var bounds = canRenderMap ? L.latLngBounds() : null;
+                var bounds = new google.maps.LatLngBounds();
                 var s = '';
                 var numerorisultato = 0;
 
@@ -213,32 +204,75 @@
 
                 for (var i = 0; i < data.length; i++) {
 
-                                        var latitudine;
-                    var longitudine;
-
+                    var iconBase = '@ViewBag.GoogleMapIcons';
+                    var icons;
+                                   
+                    switch (data[i].Ordinamento) {
+                            case 0:
+                                    icons = iconBase + 'grey-pushpin.png';
+                                    break;
+                                case 1:
+                                    icons = iconBase + 'lily-pushpin.png';
+                                    break;
+                                case 2:
+                                    icons = iconBase + 'orange-pushpin.png';
+                                    break;
+                                case 3:
+                                    icons = iconBase + 'blue-pushpin.png';
+                                    break;
+                                case 4:
+                                    icons = iconBase + 'grn-pushpin.png';
+                                    break;
+                                case 5:
+                                    icons = iconBase + 'pink-pushpin.png';
+                                    break;
+                                case 6:
+                                    icons = iconBase + 'red-pushpin.png';
+                                    break;
+                                case 7:
+                                    icons = iconBase + 'ltblu-pushpin.png';
+                                    break;
+                                case 8:
+                                    icons = iconBase + 'orange-pushpin.png';
+                                    break;
+                                case 9:
+                                    icons = iconBase + 'ylw-pushpin.png';
+                                    break;
+                                case 10:
+                                    icons = iconBase + 'purple-pushpin.png';
+                                    break;
+                                default:
+                                icons = iconBase + 'grey-pushpin.png'
+                    }
                     if (data[i].Latitudine == "" || data[i].Longitudine == "") {
-                        latitudine = "43.71944963861506";
-                        longitudine = "10.396344067111961";
+                        var latitudine = "43.71944963861506";
+                        var longitudine = "10.396344067111961";
+                        var icona = iconBase + 'question.png';
                     } else {
-                        latitudine = data[i].Latitudine;
-                        longitudine = data[i].Longitudine;
+                        var latitudine = data[i].Latitudine;
+                        var longitudine = data[i].Longitudine;
+                        var icona = icons;
                     }
+                    var marker = new google.maps.Marker({
+                        position: new google.maps.LatLng(latitudine, longitudine),
+                        title: data[i].Indentitatassonomica,
+                        icon: icona
+                    });
 
-                    if (canRenderMap) {
-                        var icona = (data[i].Latitudine == "" || data[i].Longitudine == "")
-                            ? createColoredIcon('#6c757d')
-                            : createColoredIcon(data[i].SettoreColore);
-                        var marker = L.marker([latitudine, longitudine], { icon: icona, title: data[i].Indentitatassonomica }).addTo(map);
-                        bounds.extend(marker.getLatLng());
-                        marker.on('click', (function (itemId) {
-                            return function () { window.location.href = detailBaseUrl + itemId; };
-                        })(data[i].Individuo));
-                    }
+                    marker.setMap(map);
+
+
+                    bounds.extend(marker.getPosition());
+                    google.maps.event.addListener(marker, 'click', (function (marker, i) {
+                            return function () {
+                                window.location.href = "@Url.Action("Details", "Home")?id=" + data[i].Individuo;
+                            }
+                    })(marker, i));
 
                     s += '<tr><td id ="immagine' + i + '" data-label="Immagine" >'
                         + '<input type="hidden" id="longitudine' + i + '" name="longitudine' + i + '" value="' + data[i].Longitudine + '">'
                         + '<input type="hidden" id="latitudine' + i + '" name="latitudine' + i + '" value="' + data[i].Latitudine + '">'
-                        +'<a href="' + detailBaseUrl + data[i].Individuo + "">'
+                        +'<a href ="@Url.Action("Details", "Home")?id='+data[i].Individuo+'">'
                     if (data[i].Immagine.length > 3) {
 
                         s += '<img src="' + data[i].Immagine + '"  class="img-fluid preview-specie md-2" alt="" loading ="lazy">';
@@ -256,18 +290,33 @@
                         + '<td data-label="dati" id="dati"><b>IPEN</b>: ' + data[i].Ipen + ' <br><b>' + nomescientifico + '</b>: ' + data[i].Indentitatassonomica + ' <br><b>' + nomecomune + '</b>: ' + nm + '<br><b>@language.Getkey("settore")</b>: ' + data[i].Settore + '<br><b>@language.Getkey("collezione")</b>:  ' + data[i].Collezione + '<br> ';
                      
 
-                    s += '<a href="' + detailBaseUrl + data[i].Individuo + '" class="link-success text-decoration-none fw-bold">' + det +' <i class="bi bi-zoom-in"></i></a></td></tr>';
+                    s += '<a href ="@Url.Action("Details", "Home")?id=' + data[i].Individuo + '" class="link-success text-decoration-none fw-bold">' + det +' <i class="bi bi-zoom-in"></i></a></td></tr>';
 
 
                     numerorisultato = data.length;
 
                 }
                 s += '</tbody></table>';
-                if (canRenderMap && bounds.isValid()) { map.fitBounds(bounds); }
-                if (canRenderMap && numerorisultato == 1) { map.setZoom(17); }
-                document.getElementById('map').style.width = canRenderMap ? '100%' : '0%';
-                document.getElementById('map').style.height = canRenderMap ? '600px' : '0px';
+                marker.setMap(map);
+                bounds.extend(marker.getPosition());
+                map.setCenter(bounds.getCenter());
 
+                //map.setCenter(bounds.getCenter());
+                if (numerorisultato != 1) {
+                    map.fitBounds(bounds);
+                }
+                map.setZoom(17);
+                document.getElementById('map').style.width = '100%';
+                document.getElementById('map').style.height = "600px";
+                var noPoi = [
+                    {
+                        featureType: "poi.business",
+                        stylers: [
+                            { visibility: "off" }
+                        ]
+                    }
+                ];
+                map.setOptions({ styles: noPoi });
             } else {
                 s = '@language.Getkey("risultato")';
                 document.getElementById('map').style.width = '0%';
@@ -278,170 +327,6 @@
 
         }
 
-        
-        $('#ricerca').submit(function (e) {
-            e.preventDefault();
-
-            var basepath = '@Url.Action("Index","Home")';
-            if (basepath.slice(-1) != "/") {
-                basepath = basepath + '/';
-            }
-            //var token = '@ViewBag.token';
-            var bandiera = '@language.Getkey("bandiera")';
-        var detailBaseUrl = '@Url.Action("Details", "Home")?id=';
-            //const apiurl = '@ViewBag.ApiUrl' + 'ricerca';
-           
-            //console.log("apiurl : " + apiurl);
-            const apiurl = 'api/orto/ricerca';
-          
-           
-            const data = {
-                specie: $('#specie').val(),
-                famiglia: $('#famiglia').val(),
-                regno: $('#regno').val(),
-                settore: $('#settore').val(),
-                collezione: $('#collezione').val(),
-                collezionedescr: $("#collezione option:selected").text(),
-                tiporicerca : $("input[name='tiporicerca']:checked").val(),
-                lingua: bandiera
-                
-            }
-            
-            $.ajax({
-                url: apiurl,
-               // headers: { 'Authorization': token },
-                data: data,
-
-                success: function (data) {
-                    
-                    console.log(data);
-                    
-                    var s = generatabella(data);
-
-                    $("#risultato").html('<div class="rescont mb-5">'+s+'</div>');
-                    jQuery(function () {
-                        jQuery('#ristabella').DataTable({
-                            'paging': true,
-                            'lengthChange': true,
-                            'searching': true,
-                            'ordering': false,
-                            'info': true,
-                            'autoWidth': true,
-                            'columns': [
-                                { "data": "Immagine" },
-                                { "data": "Dati" }
-                            ]
-                        });
-                    });
-
-                },
-                error: function (xhr, ajaxOptions, thrownError) {
-                    alert('Error during process: \n' + JSON.stringify(data));
-                },
-
-            });
-
-         
-            document.getElementById('specie').blur();
-        });
-
-
-
-        </script>
-
-        <script type="text/javascript">
-        $(document).ready(function () {
-            var basepath = '@Url.Action("Index","Home")';
-            var bandiera = '@language.Getkey("bandiera")';
-        var detailBaseUrl = '@Url.Action("Details", "Home")?id=';
-           // var token = '@ViewBag.token';
-       
-            $("input[type='radio']").click(function(){
-             document.getElementById("specie").value="";
-           
-              });
-            
-            if (basepath.slice(-1) != "/") {
-                basepath = basepath + '/';
-            }
-            
-            $("#specie").autocomplete({
-                source: function(request, response) {
-                    const apiurl = 'api/orto/cercaspecie';
-                 $.ajax({
-                        url: apiurl,
-                  dataType: "json",
-                 data: {
-                      term : request.term,
-                        lingua: bandiera,
-                         tipo: $("input[name='tiporicerca']:checked").val()
-                    },
-            success: function(data) {
-                response(data);
-                     }
-                });
-             },
-             minLength: 3,
-             position: { offset: '-30 0' },
-            delay :200
-            });
-            
-           
-
-            $.ajax({
-                  url: 'api/orto/ultimoinserito',
-               // url: '@ViewBag.ApiUrl' + 'ultimoinserito',
-              //  headers: { 'Authorization': token },
-                data: { lingua: bandiera },
-
-                success: function (data)
-                {
-                    var c = '';
-                    var numeroarrivi = 0;
-                    for (var i = 0; i < data.length; i++) {
-
-
-
-
-                    if (data[i].Immagine.length > 3) {
-                        var imm = data[i].Immagine;
-
-
-                        c += '<div class="col-12 col-md-4 col-lg-3 text-white rounded-5 ">';
-                        c += ' <a href ="@Url.Action("Details", "Home")?id=' + data[i].Individuo +'" class="text-decoration-none d-block mb-4">';
-                        c += '<div style="background-image: url(' + imm + '); background-size: cover;" class="square">';
-                        c += '<div class="text-white text-shadow-1 fw-bold">';
-                        c += '<h5 class="mb-3 fw-medium text-truncate"> ' + data[i].Indentitatassonomica + '</h5>';
-                        c += '<p></p>';
-                        c += '<ul class="d-flex list-unstyled mt-auto mb-0">';
-                        c += '    <li class="me-auto">';
-                            c += '       <img src="/bst-master/images/logo-footer-orto-e-museo-botanico.png" alt="Orto Botanico Pisa" width="32" height="32" class="rounded-circle border border-white">';
-                        c += ' </li>';
-                        c += '        <li class="d-flex align-items-center">';
-                        c += '          <small>'+ data[i].Settore+'</small>';
-                        c += '     </li>';
-                        c += '</ul>';
-                        c += '</div>';
-                        c += ' </div>';
-                        c += ' </a>';
-                        c += ' </div>';
-
-                        numeroarrivi = numeroarrivi + 1;
-                        }
-                        if (numeroarrivi > 3) {
-                            break;
-                        }
-                   }
-                    $("#ultimi").html(c);
-                },
-                error: function (xhr, ajaxOptions, thrownError) {
-                    alert('Error during process: \n' + xhr.responseText);
-                }
-
-            });
-
-
-        });
 
         </script>
         <script>
