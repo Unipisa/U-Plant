@@ -132,6 +132,22 @@
     </div>
 </div>
 
+<style>
+    .map-sector-marker-wrapper {
+        background: transparent;
+        border: 0;
+    }
+
+    .map-sector-pin {
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+        border-radius: 50% 50% 50% 0;
+        border: 2px solid #ffffff;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
+        transform: rotate(-45deg);
+    }
+</style>
 
     @section scripts {
 
@@ -226,60 +242,23 @@
 
                 for (var i = 0; i < data.length; i++) {
 
-                    var iconBase = '@ViewBag.GoogleMapIcons';
-                    var icons;
-                                   
-                    switch (data[i].Ordinamento) {
-                            case 0:
-                                    icons = iconBase + 'grey-pushpin.png';
-                                    break;
-                                case 1:
-                                    icons = iconBase + 'lily-pushpin.png';
-                                    break;
-                                case 2:
-                                    icons = iconBase + 'orange-pushpin.png';
-                                    break;
-                                case 3:
-                                    icons = iconBase + 'blue-pushpin.png';
-                                    break;
-                                case 4:
-                                    icons = iconBase + 'grn-pushpin.png';
-                                    break;
-                                case 5:
-                                    icons = iconBase + 'pink-pushpin.png';
-                                    break;
-                                case 6:
-                                    icons = iconBase + 'red-pushpin.png';
-                                    break;
-                                case 7:
-                                    icons = iconBase + 'ltblu-pushpin.png';
-                                    break;
-                                case 8:
-                                    icons = iconBase + 'orange-pushpin.png';
-                                    break;
-                                case 9:
-                                    icons = iconBase + 'ylw-pushpin.png';
-                                    break;
-                                case 10:
-                                    icons = iconBase + 'purple-pushpin.png';
-                                    break;
-                                default:
-                                icons = iconBase + 'grey-pushpin.png'
+                    var latitudine = data[i].Latitudine == "" ? "43.71944963861506" : data[i].Latitudine;
+                    var longitudine = data[i].Longitudine == "" ? "10.396344067111961" : data[i].Longitudine;
+
+                    var settoreColore = data[i].SettoreColore || '#2b7de9';
+                    if (settoreColore.indexOf('#') !== 0 && settoreColore.indexOf('rgb') !== 0) {
+                        settoreColore = '#' + settoreColore;
                     }
-                    if (data[i].Latitudine == "" || data[i].Longitudine == "") {
-                        var latitudine = "43.71944963861506";
-                        var longitudine = "10.396344067111961";
-                        var icona = iconBase + 'question.png';
-                    } else {
-                        var latitudine = data[i].Latitudine;
-                        var longitudine = data[i].Longitudine;
-                        var icona = icons;
-                    }
-                    var markerIcon = L.icon({
-                        iconUrl: icona,
-                        iconSize: [32, 32],
-                        iconAnchor: [16, 32]
+
+                    var markerHtml = '<span class="map-sector-pin" style="background-color:' + settoreColore + ';"></span>';
+                    var markerIcon = L.divIcon({
+                        className: 'map-sector-marker-wrapper',
+                        html: markerHtml,
+                        iconSize: [20, 20],
+                        iconAnchor: [10, 20],
+                        popupAnchor: [0, -20]
                     });
+
                     var marker = L.marker([latitudine, longitudine], { icon: markerIcon, title: data[i].Indentitatassonomica }).addTo(map);
                     bounds.extend(marker.getLatLng());
                     marker.on('click', (function (itemId) {
