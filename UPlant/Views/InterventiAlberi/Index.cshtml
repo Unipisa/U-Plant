@@ -462,7 +462,14 @@
                     bounds.push([item.lat, item.lng]);
                 });
 
-                map.fitBounds(bounds, { padding: [30, 30] });
+                if (bounds.length === 1) {
+                    map.setView(bounds[0], 16);
+                } else {
+                    map.fitBounds(bounds, {
+                        padding: [30, 30],
+                        maxZoom: 17
+                    });
+                }
             }
 
             initializeOpenInterventiMap();
