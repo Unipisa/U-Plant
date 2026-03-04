@@ -515,7 +515,13 @@
             var baseUrlRicerca = '@Url.Action("Ricerca", "InterventiAlberi")';
 
             $("#cerca").click(function () {
-                var prog = $('#nomescientifico').val();
+                var prog = ($('#nomescientifico').val() || '').trim();
+
+                if (prog.length < 3) {
+                    $("#risultato2Content").html('<div class="alert alert-info mb-0">Inserire almeno 3 caratteri per effettuare la ricerca.</div>');
+                    $("#risultato2").removeClass("d-none");
+                    return;
+                }
 
                 $.ajax({
                     type: "GET",
