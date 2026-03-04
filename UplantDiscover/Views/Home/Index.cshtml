@@ -197,6 +197,8 @@
         function generatabella(data) {
             if (data.length != 0) {
                 var pathimg = '';
+                document.getElementById('map').style.width = '100%';
+                document.getElementById('map').style.height = "600px";
                 var map = initialize();
                 if (map == null) {
                     return '@language.Getkey("risultato")';
@@ -301,13 +303,12 @@
                 }
                 s += '</tbody></table>';
                 if (numerorisultato > 0) {
-                    map.fitBounds(bounds);
+                    map.invalidateSize();
+                    map.fitBounds(bounds, { maxZoom: 18 });
                     if (numerorisultato == 1) {
                         map.setZoom(17);
                     }
                 }
-                document.getElementById('map').style.width = '100%';
-                document.getElementById('map').style.height = "600px";
             } else {
                 s = '@language.Getkey("risultato")';
                 document.getElementById('map').style.width = '0%';
