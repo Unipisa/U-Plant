@@ -159,17 +159,39 @@
             });
 
         </script>
-    <script src="@ViewBag.GoogleMapUrl@ViewBag.GoogleMapKey">
+        <script>
+            if (!document.querySelector('link[data-leaflet="true"]')) {
+                var leafletCss = document.createElement('link');
+                leafletCss.rel = 'stylesheet';
+                leafletCss.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
+                leafletCss.setAttribute('data-leaflet', 'true');
+                document.head.appendChild(leafletCss);
+            }
         </script>
+        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
         <script type="text/javascript">
 
             function initialize() {
-                var map = L.map('map').setView([43.71944963861506, 10.396344067111961], 13);
+                if (typeof L === 'undefined') {
+                    return null;
+                }
+
+                if (homeMap != null) {
+                    homeMap.remove();
+                    homeMap = null;
+                }
+
+                var mapContainer = document.getElementById('map');
+                if (mapContainer && mapContainer._leaflet_id) {
+                    mapContainer._leaflet_id = null;
+                }
+
+                homeMap = L.map('map').setView([43.71944963861506, 10.396344067111961], 13);
                 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                     maxZoom: 20,
                     attribution: '&copy; OpenStreetMap contributors'
-                }).addTo(map);
-                return map;
+                }).addTo(homeMap);
+                return homeMap;
 
             }
             //  google.maps.event.addDomListener(window, 'load', initialize);
@@ -181,12 +203,19 @@
         var nomecomune = '@language.Getkey("nomecomune")';
         var det = '@language.Getkey("dettaglio")';
         var bandiera = '@language.Getkey("bandiera")';
+        var detailBaseUrl = '@Url.Action("Details", "Home")?id=';
+        var homeMap = null;
 
         function generatabella(data) {
             if (data.length != 0) {
                 var pathimg = '';
+                document.getElementById('map').style.width = '100%';
+                document.getElementById('map').style.height = "600px";
                 var map = initialize();
-                var bounds = new google.maps.LatLngBounds();
+                if (map == null) {
+                    return '@language.Getkey("risultato")';
+                }
+                var bounds = L.latLngBounds();
                 var s = '';
                 var numerorisultato = 0;
 
@@ -246,7 +275,12 @@
                         var longitudine = data[i].Longitudine;
                         var icona = icons;
                     }
-                    var marker = L.marker([latitudine, longitudine], { icon: icona, title: data[i].Indentitatassonomica }).addTo(map);
+                    var markerIcon = L.icon({
+                        iconUrl: icona,
+                        iconSize: [32, 32],
+                        iconAnchor: [16, 32]
+                    });
+                    var marker = L.marker([latitudine, longitudine], { icon: markerIcon, title: data[i].Indentitatassonomica }).addTo(map);
                     bounds.extend(marker.getLatLng());
                     marker.on('click', (function (itemId) {
                         return function () { window.location.href = detailBaseUrl + itemId; };
@@ -280,26 +314,13 @@
 
                 }
                 s += '</tbody></table>';
-                marker.setMap(map);
-                bounds.extend(marker.getPosition());
-                map.setCenter(bounds.getCenter());
-
-                //map.setCenter(bounds.getCenter());
-                if (numerorisultato != 1) {
-                    map.fitBounds(bounds);
-                }
-                map.setZoom(17);
-                document.getElementById('map').style.width = '100%';
-                document.getElementById('map').style.height = "600px";
-                var noPoi = [
-                    {
-                        featureType: "poi.business",
-                        stylers: [
-                            { visibility: "off" }
-                        ]
+                if (numerorisultato > 0) {
+                    map.invalidateSize();
+                    map.fitBounds(bounds, { maxZoom: 18 });
+                    if (numerorisultato == 1) {
+                        map.setZoom(17);
                     }
-                ];
-                map.setOptions({ styles: noPoi });
+                }
             } else {
                 s = '@language.Getkey("risultato")';
                 document.getElementById('map').style.width = '0%';
@@ -313,9 +334,97 @@
 
         </script>
         <script>
+            $(function () {
+                function generaUltimiArrivi(data) {
+                    var html = '';
+                    var numeroarrivi = 0;
 
+                    for (var i = 0; i < data.length; i++) {
+                        if (!data[i].Immagine || data[i].Immagine.length <= 3) {
+                            continue;
+                        }
 
+                        html += '<div class="col-12 col-md-4 col-lg-3 text-white rounded-5">';
+                        html += '<a href="' + detailBaseUrl + data[i].Individuo + '" class="text-decoration-none d-block mb-4">';
+                        html += '<div style="background-image: url(' + data[i].Immagine + '); background-size: cover;" class="square">';
+                        html += '<div class="text-white text-shadow-1 fw-bold">';
+                        html += '<h5 class="mb-3 fw-medium text-truncate">' + data[i].Indentitatassonomica + '</h5>';
+                        html += '<p></p>';
+                        html += '<ul class="d-flex list-unstyled mt-auto mb-0">';
+                        html += '<li class="me-auto">';
+                        html += '<img src="@Context.Request.PathBase/bst-master/images/logo-footer-orto-e-museo-botanico.png" alt="Orto Botanico Pisa" width="32" height="32" class="rounded-circle border border-white">';
+                        html += '</li>';
+                        html += '<li class="d-flex align-items-center">';
+                        html += '<small>' + data[i].Settore + '</small>';
+                        html += '</li>';
+                        html += '</ul>';
+                        html += '</div>';
+                        html += '</div>';
+                        html += '</a>';
+                        html += '</div>';
 
+                        numeroarrivi = numeroarrivi + 1;
+                        if (numeroarrivi > 3) {
+                            break;
+                        }
+                    }
+
+                    return html;
+                }
+
+                function caricaUltimiArrivi() {
+                    $.ajax({
+                        url: '/api/orto/ultimoinserito',
+                        method: 'GET',
+                        dataType: 'json',
+                        data: {
+                            lingua: $('#lingua').val()
+                        },
+                        success: function (data) {
+                            $('#ultimi').html(generaUltimiArrivi(data || []));
+                        },
+                        error: function () {
+                            $('#ultimi').html('');
+                        }
+                    });
+                }
+
+                caricaUltimiArrivi();
+
+                $("#specie").autocomplete({
+                    minLength: 2,
+                    source: function (request, response) {
+                        $.ajax({
+                            url: '/api/orto/cercaspecie',
+                            method: 'GET',
+                            dataType: 'json',
+                            data: {
+                                term: request.term,
+                                lingua: $('#lingua').val(),
+                                tipo: $('input[name="tiporicerca"]:checked').val()
+                            },
+                            success: response,
+                            error: function () { response([]); }
+                        });
+                    }
+                });
+
+                $('#ricerca').on('submit', function (event) {
+                    event.preventDefault();
+                    $.ajax({
+                        url: '/api/orto/ricerca',
+                        method: 'GET',
+                        dataType: 'json',
+                        data: $(this).serialize(),
+                        success: function (data) {
+                            $('#risultato').html(generatabella(data));
+                        },
+                        error: function (xhr) {
+                            alert('Error during process: \n' + xhr.responseText);
+                        }
+                    });
+                });
+            });
         </script>
         <script>
         $('#settore').on("change", function () {
