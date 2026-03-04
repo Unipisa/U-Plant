@@ -175,8 +175,6 @@
 
             function initialize() {
                 var map = L.map('map').setView([43.71944963861506, 10.396344067111961], 13);
-                map.attributionControl.setPrefix(false);
-                map.attributionControl.setPosition('bottomleft');
                 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                     maxZoom: 20,
                     attribution: '&copy; OpenStreetMap contributors'
@@ -217,10 +215,11 @@
                         var longitudine = data[i].Longitudine;
                         var icona = createColoredIcon(data[i].SettoreColore);
                     }
-                    var itemId = data[i].Individuo;
                     var marker = L.marker([latitudine, longitudine], { icon: icona, title: data[i].Indentitatassonomica }).addTo(map);
                     bounds.extend(marker.getLatLng());
-                    marker.on('click', function () { window.location.href = detailBaseUrl + itemId; });
+                    marker.on('click', (function (itemId) {
+                        return function () { window.location.href = detailBaseUrl + itemId; };
+                    })(data[i].Individuo));
 
                     s += '<tr><td id ="immagine' + i + '" data-label="Immagine" >'
                         + '<input type="hidden" id="longitudine' + i + '" name="longitudine' + i + '" value="' + data[i].Longitudine + '">'
@@ -519,5 +518,4 @@
     });
     }
         </script>
-    }
     }
