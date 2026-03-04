@@ -323,6 +323,48 @@
         </script>
         <script>
             $(function () {
+                function generaUltimiArrivi(data) {
+                    var html = '';
+                    for (var i = 0; i < data.length; i++) {
+                        var img = data[i].Immagine && data[i].Immagine.length > 3
+                            ? data[i].Immagine
+                            : '@Context.Request.PathBase/bst-master/images/noimageb.jpg';
+                        var nomeComune = bandiera == "it" ? data[i].Nomecomune : data[i].Nomecomuneen;
+                        if (!nomeComune) {
+                            nomeComune = '';
+                        }
+
+                        html += '<div class="col-12 col-md-6 col-lg-4 mb-4">'
+                            + '<a href="' + detailBaseUrl + data[i].Individuo + '" class="text-decoration-none">'
+                            + '<div class="card h-100">'
+                            + '<img src="' + img + '" class="card-img-top preview-specie" alt="" loading="lazy">'
+                            + '<div class="card-body">'
+                            + '<h6 class="card-title text-success mb-2">' + data[i].Indentitatassonomica + '</h6>'
+                            + '<p class="card-text small text-dark mb-0">' + nomeComune + '</p>'
+                            + '</div></div></a></div>';
+                    }
+                    return html;
+                }
+
+                function caricaUltimiArrivi() {
+                    $.ajax({
+                        url: '/api/orto/ultimoinserito',
+                        method: 'GET',
+                        dataType: 'json',
+                        data: {
+                            lingua: $('#lingua').val()
+                        },
+                        success: function (data) {
+                            $('#ultimi').html(generaUltimiArrivi(data || []));
+                        },
+                        error: function () {
+                            $('#ultimi').html('');
+                        }
+                    });
+                }
+
+                caricaUltimiArrivi();
+
                 $("#specie").autocomplete({
                     minLength: 2,
                     source: function (request, response) {
