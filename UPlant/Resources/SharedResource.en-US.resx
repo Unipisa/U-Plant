@@ -565,7 +565,7 @@
     <value>Main Data</value>
   </data>
   <data name="Accession_Create_Details_1" xml:space="preserve">
-    <value>Sampling Data</value>
+    <value>Source Locality Data</value>
   </data>
   <data name="Accession_Details_4" xml:space="preserve">
     <value>Identity</value>
