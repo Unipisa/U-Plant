@@ -905,18 +905,33 @@ namespace UPlant.Controllers
       
         public JsonResult Ricerca(string nome_scientifico)
         {
-            
-            return Json(_context.Individui.Include(x => x.accessioneNavigation).ThenInclude(x => x.specieNavigation).Where(x => x.accessioneNavigation.specieNavigation.nome_scientifico.ToLower().Contains(nome_scientifico.ToLower())).Select(x => new
+            if (string.IsNullOrWhiteSpace(nome_scientifico))
             {
-                idindividuo = x.id,
-                progressivo = x.progressivo,
-                vecchioprogressivo = x.vecchioprogressivo,
-                nomescientifico = x.accessioneNavigation.specieNavigation.nome_scientifico,
-                settore = x.settoreNavigation.settore,
-                collezione = x.collezioneNavigation.collezione,
-                cartellino = x.cartellinoNavigation.descrizione,
-                immagini = x.ImmaginiIndividuo.Count
-            }).ToList(), new System.Text.Json.JsonSerializerOptions());
+                return Json(new List<object>(), new System.Text.Json.JsonSerializerOptions());
+            }
+
+            var filtro = nome_scientifico.Trim().ToLower();
+
+            var risultati = _context.Individui
+                .Include(x => x.accessioneNavigation)
+                    .ThenInclude(x => x.specieNavigation)
+                .Where(x => (x.accessioneNavigation.specieNavigation.nome_scientifico ?? string.Empty)
+                    .ToLower()
+                    .Contains(filtro))
+                .Select(x => new
+                {
+                    idindividuo = x.id,
+                    progressivo = x.progressivo,
+                    vecchioprogressivo = x.vecchioprogressivo,
+                    nomescientifico = x.accessioneNavigation.specieNavigation.nome_scientifico,
+                    settore = x.settoreNavigation.settore,
+                    collezione = x.collezioneNavigation.collezione,
+                    cartellino = x.cartellinoNavigation.descrizione,
+                    immagini = x.ImmaginiIndividuo.Count
+                })
+                .ToList();
+
+            return Json(risultati, new System.Text.Json.JsonSerializerOptions());
 
 
         }
