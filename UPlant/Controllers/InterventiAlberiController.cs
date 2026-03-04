@@ -905,7 +905,7 @@ namespace UPlant.Controllers
       
         public JsonResult Ricerca(string nome_scientifico)
         {
-            if (string.IsNullOrWhiteSpace(nome_scientifico))
+            if (string.IsNullOrWhiteSpace(nome_scientifico) || nome_scientifico.Trim().Length < 3)
             {
                 return Json(new List<object>(), new System.Text.Json.JsonSerializerOptions());
             }
