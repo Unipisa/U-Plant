@@ -164,18 +164,11 @@
         <script type="text/javascript">
 
             function initialize() {
-                var geocoder = new google.maps.Geocoder();
-                var infowindow = new google.maps.InfoWindow();
-                var myLatlng = new google.maps.LatLng(43.71944963861506, 10.396344067111961);
-                var mapOptions = {
-                    zoom: 13,
-                    center: myLatlng,
-                    mapTypeId: google.maps.MapTypeId.ROADMAP
-                };
-                var map = new google.maps.Map(document.getElementById("map"), mapOptions);
-                 // Add controls to the map, allowing users to hide/show features.
-               
-
+                var map = L.map('map').setView([43.71944963861506, 10.396344067111961], 13);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 20,
+                    attribution: '&copy; OpenStreetMap contributors'
+                }).addTo(map);
                 return map;
 
             }
@@ -253,21 +246,11 @@
                         var longitudine = data[i].Longitudine;
                         var icona = icons;
                     }
-                    var marker = new google.maps.Marker({
-                        position: new google.maps.LatLng(latitudine, longitudine),
-                        title: data[i].Indentitatassonomica,
-                        icon: icona
-                    });
-
-                    marker.setMap(map);
-
-
-                    bounds.extend(marker.getPosition());
-                    google.maps.event.addListener(marker, 'click', (function (marker, i) {
-                            return function () {
-                                window.location.href = "@Url.Action("Details", "Home")?id=" + data[i].Individuo;
-                            }
-                    })(marker, i));
+                    var marker = L.marker([latitudine, longitudine], { icon: icona, title: data[i].Indentitatassonomica }).addTo(map);
+                    bounds.extend(marker.getLatLng());
+                    marker.on('click', (function (itemId) {
+                        return function () { window.location.href = detailBaseUrl + itemId; };
+                    })(data[i].Individuo));
 
                     s += '<tr><td id ="immagine' + i + '" data-label="Immagine" >'
                         + '<input type="hidden" id="longitudine' + i + '" name="longitudine' + i + '" value="' + data[i].Longitudine + '">'
