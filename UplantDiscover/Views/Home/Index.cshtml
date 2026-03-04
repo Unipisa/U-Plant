@@ -159,11 +159,22 @@
             });
 
         </script>
-    <script src="@ViewBag.GoogleMapUrl@ViewBag.GoogleMapKey">
+        <script>
+            if (!document.querySelector('link[data-leaflet="true"]')) {
+                var leafletCss = document.createElement('link');
+                leafletCss.rel = 'stylesheet';
+                leafletCss.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
+                leafletCss.setAttribute('data-leaflet', 'true');
+                document.head.appendChild(leafletCss);
+            }
         </script>
+        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
         <script type="text/javascript">
 
             function initialize() {
+                if (typeof L === 'undefined') {
+                    return null;
+                }
                 var map = L.map('map').setView([43.71944963861506, 10.396344067111961], 13);
                 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                     maxZoom: 20,
@@ -187,6 +198,9 @@
             if (data.length != 0) {
                 var pathimg = '';
                 var map = initialize();
+                if (map == null) {
+                    return '@language.Getkey("risultato")';
+                }
                 var bounds = L.latLngBounds();
                 var s = '';
                 var numerorisultato = 0;
