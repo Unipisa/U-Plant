@@ -911,10 +911,19 @@ namespace UPlant.Controllers
             }
 
             var filtro = nome_scientifico.Trim().ToLower();
+            var statoMortoId = _context.StatoIndividuo
+                .Where(x => (x.stato ?? string.Empty).ToLower() == "morto")
+                .Select(x => x.id)
+                .FirstOrDefault();
 
             var risultati = _context.Individui
                 .Include(x => x.accessioneNavigation)
                     .ThenInclude(x => x.specieNavigation)
+                .Where(x => _context.StoricoIndividuo
+                    .Where(s => s.individuo == x.id)
+                    .OrderByDescending(s => s.dataInserimento)
+                    .Select(s => s.statoIndividuo)
+                    .FirstOrDefault() != statoMortoId)
                 .Where(x => (x.accessioneNavigation.specieNavigation.nome_scientifico ?? string.Empty)
                     .ToLower()
                     .Contains(filtro))
