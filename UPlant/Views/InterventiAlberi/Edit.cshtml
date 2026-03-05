@@ -55,7 +55,7 @@
                     </div>
                     <div class="form-group col">
                         <label asp-for="fornitore" class="control-label">@language.Getkey("Global_Donor_Supplier")</label>
-                        <select asp-for="fornitore" class="form-control select2" asp-items="ViewBag.fornitore"></select>
+                        <select asp-for="fornitore" class="form-control" asp-items="ViewBag.fornitore"></select>
                         <span asp-validation-for="fornitore" class="text-danger"></span>
                     </div>
                 </div>
@@ -112,44 +112,19 @@
     </p>
 </div>
 
-@section Styles {
-    <link href="~/css/select2.min.css" rel="stylesheet" />
-    <style>
-        #fornitore + .select2-container--bootstrap4 .select2-selection {
-            border: 2px solid #6c757d;
-            border-radius: 0.25rem;
-            background-color: #fff;
-        }
-
-        #fornitore + .select2-container--bootstrap4.select2-container--focus .select2-selection,
-        #fornitore + .select2-container--bootstrap4.select2-container--open .select2-selection {
-            border-color: #007bff;
-            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-        }
-    </style>
-}
-
 @section Scripts {
-    <script src="~/js/select2.min.js"></script>
     <script src="~/js/jquery.validation.min.js"></script>
 }
 
 @section CustomScripts {
     <script>
         $(function () {
-            if ($.fn.select2) {
-                $('.select2').select2({
-                    width: '100%',
-                    theme: 'bootstrap4'
-                });
-            }
-
             var isClosed = String($('#statoIntervento').val()).toLowerCase() === 'true';
 
             function updateStatoCondizioneEditable() {
                 var closed = String($('#statoIntervento').val()).toLowerCase() === 'true';
-                $('#statoIndividuo').prop('disabled', !closed).trigger('change.select2');
-                $('#condizione').prop('disabled', !closed).trigger('change.select2');
+                $('#statoIndividuo').prop('disabled', !closed).trigger('change');
+                $('#condizione').prop('disabled', !closed).trigger('change');
                 $('#esitointervento').prop('required', closed);
             }
 
