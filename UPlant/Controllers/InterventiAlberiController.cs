@@ -936,7 +936,11 @@ namespace UPlant.Controllers
                     settore = x.settoreNavigation.settore,
                     collezione = x.collezioneNavigation.collezione,
                     cartellino = x.cartellinoNavigation.descrizione,
-                    immagini = x.ImmaginiIndividuo.Count
+                    statoindividuo = _context.StoricoIndividuo
+                        .Where(s => s.individuo == x.id)
+                        .OrderByDescending(s => s.dataInserimento)
+                        .Select(s => s.statoIndividuoNavigation.stato)
+                        .FirstOrDefault()
                 })
                 .ToList();
 

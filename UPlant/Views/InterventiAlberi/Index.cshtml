@@ -549,7 +549,7 @@
                         var sector = "@language.Getkey("Global_Sector")";
                         var coll = "@language.Getkey("Global_Collection")";
                         var lab = "@language.Getkey("Global_Label")";
-                        var imgs = "@language.Getkey("Global_Images")";
+                        var individualStatus = "@language.Getkey("Global_Individual_Status")";
                         var add = "@language.Getkey("Global_Add")";
                         var ind = "@language.Getkey("Global_Individual")";
 
@@ -563,7 +563,7 @@
                         s += '<th>' + sector + '</th>';
                         s += '<th>' + coll + '</th>';
                         s += '<th>' + lab + '</th>';
-                        s += '<th>' + imgs + '</th>';
+                        s += '<th>' + individualStatus + '</th>';
                         s += '</tr></thead><tbody>';
 
                         for (var i = 0; i < data.length; i++) {
@@ -583,7 +583,7 @@
                             s += '<td>' + (data[i].settore ?? '') + '</td>';
                             s += '<td>' + (data[i].collezione ?? '') + '</td>';
                             s += '<td>' + (data[i].cartellino ?? '') + '</td>';
-                            s += '<td>' + (data[i].immagini ?? '') + '</td>';
+                            s += '<td>' + (data[i].statoindividuo ?? '') + '</td>';
                             s += '</tr>';
                         }
 
