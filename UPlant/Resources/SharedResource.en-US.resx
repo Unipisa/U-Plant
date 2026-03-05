@@ -777,4 +777,7 @@
   <data name="Global_Label_Type" xml:space="preserve">
     <value>Label type</value>
   </data>
+  <data name="Global_Intervention" xml:space="preserve">
+    <value>Intervention</value>
+  </data>
 </root>

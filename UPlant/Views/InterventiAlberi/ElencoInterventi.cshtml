@@ -17,7 +17,7 @@
         @if (User.IsInRole("Administrator") ||  User.IsInRole("TreeManager"))
         {
             <a asp-action="Create" asp-controller="InterventiAlberi" asp-route-idindividuo="@ViewBag.idindividuo">
-                <span class="btn btn-success" title="@language.Getkey("Global_Add") @language.Getkey("Global_Tree_Interventions")">
+                <span class="btn btn-success" title="@language.Getkey("Global_Add") @language.Getkey("Global_Intervention")">
             @language.Getkey("Global_Add") @language.Getkey("Global_Tree_Interventions")
         </span>
     </a>
