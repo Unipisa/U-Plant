@@ -177,9 +177,10 @@
                          }
                             <th>Progressivo</th>
                         <th>Nome scientifico</th>
-                        <th>Destinazione</th>
+                       
                         <th>@language.Getkey("Global_Sector")</th>
                         <th>@language.Getkey("Global_Collection")</th>
+                         <th>Destinazione</th>
                         <th>Stato</th>
                         <th>@language.Getkey("Global_Tree_Priority")</th>
                         <th>Tipo intervento</th>
@@ -203,9 +204,10 @@
                              }
                             <td>@item.individuoNavigation?.progressivo</td>
                             <td>@item.individuoNavigation?.accessioneNavigation?.specieNavigation?.nome_scientifico</td>
-                            <td>@item.individuoNavigation?.destinazioni</td>
+                            
                             <td>@item.individuoNavigation?.collezioneNavigation?.settoreNavigation?.settore</td>
                             <td>@item.individuoNavigation?.collezioneNavigation?.collezione</td>
+                            <td>@item.individuoNavigation?.destinazioni</td>
                             <td>@(item.statoIntervento ? language.Getkey("Global_Close") : language.Getkey("Global_Open"))</td>
                             <td>
                                 <span class="priority-chip" style="background-color:@(item.statoIntervento ? "#c2c1bd" : (item.prioritaNavigation?.colore ?? "#2b7de9"))">
