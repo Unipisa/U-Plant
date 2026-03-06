@@ -377,7 +377,10 @@
                                                                     {
                                                                         <a asp-action="Details" asp-controller="InterventiAlberi" asp-route-id="@interventoCorrelatoId">
                                                                             <span class="btn btn-info btn-xs" title="Vai al dettaglio intervento (sola lettura)">
-                                                                                <i class="fa-solid fa-magnifying-glass"></i>
+                                                                                <span class="fa-stack" style="font-size:0.8em; line-height:1;">
+                                                                                    <i class="fa-solid fa-magnifying-glass fa-stack-2x"></i>
+                                                                                    <i class="fa-solid fa-tree fa-stack-1x" style="color:#198754; transform: translateY(1px);"></i>
+                                                                                </span>
                                                                             </span>
                                                                         </a>
                                                                     }
