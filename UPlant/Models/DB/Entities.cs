@@ -541,6 +541,7 @@ public partial class Entities : DbContext
             entity.Property(e => e.motivo)
                 .IsRequired()
                 .IsUnicode(false);
+            entity.Property(e => e.storicoIndividuoId).HasColumnName("storicoIndividuoId");
 
             entity.HasOne(d => d.condizioneNavigation).WithMany(p => p.InterventiAlberi)
                 .HasForeignKey(d => d.condizione)
@@ -571,6 +572,11 @@ public partial class Entities : DbContext
                 .HasForeignKey(d => d.statoIndividuo)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_InterventiAlberi_StatoIndividuo");
+
+            entity.HasOne(d => d.storicoIndividuoNavigation).WithMany(p => p.InterventiAlberi)
+                .HasForeignKey(d => d.storicoIndividuoId)
+                .OnDelete(DeleteBehavior.SetNull)
+                .HasConstraintName("FK_InterventiAlberi_StoricoIndividuo");
 
             entity.HasOne(d => d.utenteaperturaNavigation).WithMany(p => p.InterventiAlberiutenteaperturaNavigation)
                 .HasForeignKey(d => d.utenteapertura)

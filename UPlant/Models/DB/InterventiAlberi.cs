@@ -33,6 +33,8 @@ public partial class InterventiAlberi
 
     public Guid condizione { get; set; }
 
+    public Guid? storicoIndividuoId { get; set; }
+
     public virtual Condizioni condizioneNavigation { get; set; }
 
     public virtual Fornitori fornitoreNavigation { get; set; }
@@ -44,6 +46,8 @@ public partial class InterventiAlberi
     public virtual TipoPrioritaAlberi prioritaNavigation { get; set; }
 
     public virtual StatoIndividuo statoIndividuoNavigation { get; set; }
+
+    public virtual StoricoIndividuo storicoIndividuoNavigation { get; set; }
 
     public virtual Users utenteaperturaNavigation { get; set; }
 
