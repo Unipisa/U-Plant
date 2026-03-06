@@ -97,12 +97,20 @@
                           @{
                             @if (User.IsInRole("Administrator") || User.IsInRole("TreeManager"))
                             {
-                        
-                            <td class="text-center">
-                            <a asp-action="Edit" asp-route-id="@item.id" class="btn btn-warning btn-sm" title="@language.Getkey("Global_Edit")">
-                                <i class="fa-solid fa-pencil" style="color: #fafafa;"></i>
-                            </a>
-                            </td>
+                                <td class="text-center">
+                                    @if (item.statoIntervento)
+                                    {
+                                        <a asp-action="Details" asp-route-id="@item.id" class="btn btn-info btn-sm" title="@language.Getkey("Global_Details")">
+                                            <i class="fa-solid fa-magnifying-glass"></i>
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <a asp-action="Edit" asp-route-id="@item.id" class="btn btn-warning btn-sm" title="@language.Getkey("Global_Edit")">
+                                            <i class="fa-solid fa-pencil" style="color: #fafafa;"></i>
+                                        </a>
+                                    }
+                                </td>
                             }
                           }
                     </tr>

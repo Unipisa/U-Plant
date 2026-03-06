@@ -253,13 +253,21 @@
                         @{
                                     if (User.IsInRole("Administrator") || User.IsInRole("Operator") || User.IsInRole("TreeKeeper") || User.IsInRole("Discover") || User.IsInRole("Seminum") || User.IsInRole("Utility"))
                                     {
-                                    <div class="float-right">
-                                    <a asp-action="Create" asp-controller="StoricoIndividuo" asp-route-idindividuo="@ViewBag.idindividuo" asp-route-tipo="@ViewBag.tipo">
-                                                <span class="btn btn btn-success" title="crea storico">
-                                            @language.Getkey("Global_Add")
+                                    <div class="float-right d-flex align-items-center" style="gap:8px;">
+                                        @if (ViewBag.hasInterventi == true)
+                                        {
+                                            <a asp-action="ElencoInterventi" asp-controller="InterventiAlberi" asp-route-id="@ViewBag.idindividuo">
+                                                <span class="btn btn-info" title="Vai all'elenco interventi dell'individuo">
+                                                    <i class="fa-solid fa-tree"></i>
                                                 </span>
                                             </a>
-                                        </div>
+                                        }
+                                        <a asp-action="Create" asp-controller="StoricoIndividuo" asp-route-idindividuo="@ViewBag.idindividuo" asp-route-tipo="@ViewBag.tipo">
+                                            <span class="btn btn-success" title="crea storico">
+                                                @language.Getkey("Global_Add")
+                                            </span>
+                                        </a>
+                                    </div>
                                         
                                         
                                         
@@ -305,8 +313,9 @@
 
                                                     @foreach (var item in Model.StoricoIndividuo)
                                                     {
-                                                        var storicoDaInterventoIds = ViewBag.storicoDaInterventoIds as System.Collections.Generic.HashSet<System.Guid>;
-                                                        var storicoDaIntervento = storicoDaInterventoIds != null && storicoDaInterventoIds.Contains(item.id);
+                                                        var storicoDaInterventoMap = ViewBag.storicoDaInterventoMap as System.Collections.Generic.Dictionary<System.Guid, System.Guid>;
+                                                        var hasInterventoCorrelato = storicoDaInterventoMap != null && storicoDaInterventoMap.ContainsKey(item.id);
+                                                        var interventoCorrelatoId = hasInterventoCorrelato ? storicoDaInterventoMap[item.id] : System.Guid.Empty;
 
                                                         <tr>
 
@@ -340,16 +349,13 @@
                                                                 @{
                                                                     if (User.IsInRole("Administrator") || User.IsInRole("Operator") || User.IsInRole("TreeKeeper") || User.IsInRole("Discover") || User.IsInRole("Seminum") || User.IsInRole("Utility"))
                                                                     {
-                                                                        if (rowNo == 0)
+                                                                        if (rowNo == 0 && !hasInterventoCorrelato)
                                                                         {
-                                                                        <a asp-action="Edit" asp-controller="StoricoIndividuo" asp-route-id="@item.id" asp-route-individuo="@item.individuo" asp-route-tipo="@ViewBag.tipo">
-                                                                        <span class="btn btn-warning btn-xs" title="@language.Getkey("Global_Edit") storico">
-                                                                            <i class="fa-solid fa-pencil" style="color: #fafafa;"></i>
+                                                                            <a asp-action="Edit" asp-controller="StoricoIndividuo" asp-route-id="@item.id" asp-route-individuo="@item.individuo" asp-route-tipo="@ViewBag.tipo">
+                                                                                <span class="btn btn-warning btn-xs" title="@language.Getkey("Global_Edit") storico">
+                                                                                    <i class="fa-solid fa-pencil" style="color: #fafafa;"></i>
                                                                                 </span>
                                                                             </a>
-                                                                      
-
-
                                                                         }
                                                                     }
                                                                     if (Model.StoricoIndividuo.Count() > 1 && User.IsInRole("Administrator") && rowNo == 0)
@@ -367,11 +373,11 @@
 
                                                                     }
 
-                                                                    if (storicoDaIntervento && User.IsInRole("Administrator") || User.IsInRole("TreeKeeper"))
+                                                                    if (hasInterventoCorrelato && (User.IsInRole("Administrator") || User.IsInRole("TreeKeeper") || User.IsInRole("Operator") || User.IsInRole("Discover") || User.IsInRole("Seminum") || User.IsInRole("Utility")))
                                                                     {
-                                                                        <a asp-action="ElencoInterventi" asp-controller="InterventiAlberi" asp-route-id="@item.individuo">
-                                                                            <span class="btn btn-info btn-xs" title="Vai agli interventi dell'individuo">
-                                                                                <i class="fa-solid fa-tree"></i>
+                                                                        <a asp-action="Details" asp-controller="InterventiAlberi" asp-route-id="@interventoCorrelatoId">
+                                                                            <span class="btn btn-info btn-xs" title="Vai al dettaglio intervento (sola lettura)">
+                                                                                <i class="fa-solid fa-magnifying-glass"></i>
                                                                             </span>
                                                                         </a>
                                                                     }

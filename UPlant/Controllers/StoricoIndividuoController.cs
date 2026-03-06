@@ -263,6 +263,12 @@ namespace UPlant.Controllers
             {
                 return NotFound();
             }
+
+            ViewBag.interventoCollegato = await _context.InterventiAlberi
+                .Where(x => x.storicoIndividuoId == storicoIndividuo.id)
+                .OrderByDescending(x => x.dataultimamodifica ?? x.dataapertura)
+                .FirstOrDefaultAsync();
+
             ViewBag.tipo = tipo;
             return View(storicoIndividuo);
         }
@@ -279,6 +285,18 @@ namespace UPlant.Controllers
             var storicoIndividuo = await _context.StoricoIndividuo.FindAsync(id);
             if (storicoIndividuo != null)
             {
+                var interventoCollegato = await _context.InterventiAlberi
+                    .Where(x => x.storicoIndividuoId == storicoIndividuo.id)
+                    .OrderByDescending(x => x.dataultimamodifica ?? x.dataapertura)
+                    .FirstOrDefaultAsync();
+
+                if (interventoCollegato != null)
+                {
+                    interventoCollegato.statoIntervento = false;
+                    interventoCollegato.storicoIndividuoId = null;
+                    interventoCollegato.dataultimamodifica = DateTime.Now;
+                }
+
                 _context.StoricoIndividuo.Remove(storicoIndividuo);
             }
             

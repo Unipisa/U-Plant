@@ -10,6 +10,13 @@
 <div>
     <h4>@language.Getkey("Global_Individual_Record_History") </h4>
     <hr />
+
+    @if (ViewBag.interventoCollegato != null)
+    {
+        <div class="alert alert-warning">
+            Questo storico è collegato a un intervento alberi chiuso. Eliminando questa riga lo stato dell'intervento verrà riaperto automaticamente.
+        </div>
+    }
     <dl class="row">
         <dt class = "col-sm-2">
             @language.Getkey("Global_Horticultural_Operations")

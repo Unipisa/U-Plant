@@ -517,9 +517,11 @@ namespace UPlant.Controllers
 
             var alberi = await _context.InterventiAlberi
                 .Include(a => a.fornitoreNavigation)
+                .Include(a => a.statoIndividuoNavigation)
+                .Include(a => a.condizioneNavigation)
                 .Include(a => a.individuoNavigation).ThenInclude(i => i.StoricoIndividuo).ThenInclude(s => s.statoIndividuoNavigation)
                 .Include(a => a.individuoNavigation).ThenInclude(i => i.StoricoIndividuo).ThenInclude(s => s.condizioneNavigation)
-                .Include(a => a.individuoNavigation)
+                .Include(a => a.individuoNavigation).ThenInclude(i => i.accessioneNavigation).ThenInclude(a => a.specieNavigation)
                 .Include(a => a.interventoNavigation)
                 .Include(a => a.prioritaNavigation)
                 .Include(a => a.utenteaperturaNavigation)
@@ -529,6 +531,9 @@ namespace UPlant.Controllers
             {
                 return NotFound();
             }
+
+            ViewData["progressivo"] = alberi.individuoNavigation?.progressivo;
+            ViewData["nomescientifico"] = alberi.individuoNavigation?.accessioneNavigation?.specieNavigation?.nome_scientifico;
 
             return View(alberi);
         }
@@ -739,6 +744,7 @@ namespace UPlant.Controllers
 
                     var utenteCorrente = GetCurrentUserId();
                     var chiusuraIntervento = existingIntervento.statoIntervento == false && interventiAlberi.statoIntervento == true;
+                    var riaperturaIntervento = existingIntervento.statoIntervento == true && interventiAlberi.statoIntervento == false;
 
                     existingIntervento.priorita = interventiAlberi.priorita;
                     existingIntervento.intervento = interventiAlberi.intervento;
@@ -752,17 +758,20 @@ namespace UPlant.Controllers
                         existingIntervento.utenteultimamodifica = utenteCorrente;
                     }
 
-                    if (chiusuraIntervento)
+                    if (chiusuraIntervento || existingIntervento.statoIntervento)
                     {
                         existingIntervento.statoIndividuo = interventiAlberi.statoIndividuo;
                         existingIntervento.condizione = interventiAlberi.condizione;
+                    }
 
-                        var utenteIdStorico = utenteCorrente != Guid.Empty
-                            ? utenteCorrente
-                            : (existingIntervento.utenteultimamodifica != Guid.Empty
-                                ? existingIntervento.utenteultimamodifica
-                                : existingIntervento.utenteapertura);
+                    var utenteIdStorico = utenteCorrente != Guid.Empty
+                        ? utenteCorrente
+                        : (existingIntervento.utenteultimamodifica != Guid.Empty
+                            ? existingIntervento.utenteultimamodifica
+                            : existingIntervento.utenteapertura);
 
+                    if (chiusuraIntervento)
+                    {
                         var storico = new StoricoIndividuo
                         {
                             id = Guid.NewGuid(),
@@ -775,6 +784,26 @@ namespace UPlant.Controllers
                         };
 
                         _context.StoricoIndividuo.Add(storico);
+                        existingIntervento.storicoIndividuoId = storico.id;
+                    }
+                    else if (existingIntervento.statoIntervento && existingIntervento.storicoIndividuoId.HasValue)
+                    {
+                        var storico = await _context.StoricoIndividuo
+                            .FirstOrDefaultAsync(x => x.id == existingIntervento.storicoIndividuoId.Value);
+
+                        if (storico != null)
+                        {
+                            storico.statoIndividuo = existingIntervento.statoIndividuo;
+                            storico.condizione = existingIntervento.condizione;
+                            storico.operazioniColturali = existingIntervento.esitointervento;
+                            storico.utente = utenteIdStorico;
+                            storico.dataInserimento = DateTime.Now;
+                        }
+                    }
+
+                    if (riaperturaIntervento)
+                    {
+                        existingIntervento.storicoIndividuoId = null;
                     }
 
                     await _context.SaveChangesAsync();
@@ -843,7 +872,7 @@ namespace UPlant.Controllers
 
             var interventiAlberi = await _context.InterventiAlberi
                 .Include(a => a.fornitoreNavigation)
-                .Include(a => a.individuoNavigation)
+                .Include(a => a.individuoNavigation).ThenInclude(i => i.accessioneNavigation).ThenInclude(a => a.specieNavigation)
                 .Include(a => a.interventoNavigation)
                 .Include(a => a.prioritaNavigation)
                 .Include(a => a.utenteaperturaNavigation)
@@ -972,7 +1001,7 @@ namespace UPlant.Controllers
 
             var interventiAlberi = await _context.InterventiAlberi
                 .Include(a => a.fornitoreNavigation)
-                .Include(a => a.individuoNavigation)
+                .Include(a => a.individuoNavigation).ThenInclude(i => i.accessioneNavigation).ThenInclude(a => a.specieNavigation)
                 .Include(a => a.interventoNavigation)
                 .Include(a => a.prioritaNavigation)
                 .Include(a => a.statoIndividuoNavigation)
