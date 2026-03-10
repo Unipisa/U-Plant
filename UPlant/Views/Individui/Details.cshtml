@@ -445,6 +445,7 @@
                                                     <td>@doc.dataInserimento</td>
                                                     <td>@doc.utenteAcquisizioneNavigation?.NomeCognome</td>
                                                     <td>
+                                                        <a class="btn btn-info btn-xs" href="@Url.Action("ViewDoc", "Individui", new { id = doc.id, individuo = ViewBag.idindividuo })" target="_blank" rel="noopener noreferrer" title="Apri in una nuova scheda"><i class="fa-solid fa-up-right-from-square"></i></a>
                                                         <button type="button" class="btn btn-primary btn-xs" onclick="window.location.href='@Url.Action("DownloadDoc", "Individui", new { id = doc.id, individuo = ViewBag.idindividuo })'"><i class="fa-solid fa-download"></i></button>
                                                         @if (User.IsInRole("Administrator") || User.IsInRole("Operator") || User.IsInRole("TreeKeeper") || User.IsInRole("Discover") || User.IsInRole("Seminum") || User.IsInRole("Utility"))
                                                         {
