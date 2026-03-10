@@ -19,6 +19,8 @@ public partial class StoricoIndividuo
 
     public Guid utente { get; set; }
 
+    public virtual ICollection<InterventiAlberi> InterventiAlberi { get; set; } = new List<InterventiAlberi>();
+
     public virtual Condizioni condizioneNavigation { get; set; }
 
     public virtual Individui individuoNavigation { get; set; }
