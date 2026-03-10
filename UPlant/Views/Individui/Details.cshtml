@@ -425,7 +425,6 @@
                                         <table class="table table-bordered table-striped dataTable">
                                             <thead>
                                             <tr>
-                                                <th>Anteprima</th>
                                                 <th>Nome file</th>
                                                 <th>Formato</th>
                                                 <th>Dimensione</th>
@@ -439,14 +438,6 @@
                                             @foreach (var doc in ViewBag.listDocs)
                                             {
                                                 <tr>
-                                                    <td>
-                                                        @if (doc.mimeType != null && doc.mimeType.StartsWith("image/"))
-                                                        {
-                                                            <a href="@Url.Action("ViewDoc", "Individui", new { id = doc.id, individuo = ViewBag.idindividuo })" target="_blank" rel="noopener noreferrer">
-                                                                <img src="@Url.Action("ViewDoc", "Individui", new { id = doc.id, individuo = ViewBag.idindividuo })" alt="Anteprima @doc.nomefile" style="max-height:40px; max-width:40px;" />
-                                                            </a>
-                                                        }
-                                                    </td>
                                                     <td>@doc.nomefile</td>
                                                     <td>@doc.estensione</td>
                                                     <td>@Math.Round(((double)doc.dimensioneBytes / 1024), 2) KB</td>
