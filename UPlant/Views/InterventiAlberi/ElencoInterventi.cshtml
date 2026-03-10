@@ -5,6 +5,9 @@
     ViewBag.Title = language.Getkey("Global_Tree_Interventions");
     ViewBag.lang = language.GetCurrentCulture();
     var currentCulture = language.GetCurrentCulture();
+    var isAdministrator = User.IsInRole("Administrator");
+    var canManageOpenInterventions = isAdministrator || User.IsInRole("TreeManager");
+    var canSeeActionColumn = canManageOpenInterventions || User.IsInRole("Operator");
 }
 
 <p>
@@ -14,7 +17,7 @@
         </span>
     </a>
     @{
-        @if (User.IsInRole("Administrator") ||  User.IsInRole("TreeManager"))
+        @if (canManageOpenInterventions)
         {
             <a asp-action="Create" asp-controller="InterventiAlberi" asp-route-idindividuo="@ViewBag.idindividuo">
                 <span class="btn btn-success" title="@language.Getkey("Global_Add") @language.Getkey("Global_Intervention")">
@@ -58,7 +61,7 @@
                     <th>@language.Getkey("Global_Last_Modified_Date")</th>
                     <th>@language.Getkey("Global_Intervention_Status")</th>
                     @{
-                        @if (User.IsInRole("Administrator") ||  User.IsInRole("TreeManager"))
+                        @if (canSeeActionColumn)
                         {
                             <th style="width:60px;"></th>
                         }
@@ -95,20 +98,41 @@
                         <td class="text-center">@(item.dataultimamodifica?.ToString("dd/MM/yyyy HH:mm") ?? "-")</td>
                         <td class="text-center">@(item.statoIntervento == false ? language.Getkey("Global_Open") : language.Getkey("Global_Close"))</td>
                           @{
-                            @if (User.IsInRole("Administrator") || User.IsInRole("TreeManager"))
+                            @if (canSeeActionColumn)
                             {
                                 <td class="text-center">
                                     @if (item.statoIntervento)
                                     {
-                                        <a asp-action="Details" asp-route-id="@item.id" class="btn btn-info btn-sm" title="@language.Getkey("Global_Details")">
-                                            <i class="fa-solid fa-magnifying-glass"></i>
-                                        </a>
+                                        @if (isAdministrator)
+                                        {
+                                            <a asp-action="Edit" asp-route-id="@item.id" class="btn btn-warning btn-sm" title="@language.Getkey("Global_Edit")">
+                                                <i class="fa-solid fa-pencil" style="color: #fafafa;"></i>
+                                            </a>
+                                            <a asp-action="Delete" asp-route-id="@item.id" class="btn btn-danger btn-sm" title="@language.Getkey("Global_Delete")">
+                                                <i class="fa-solid fa-trash"></i>
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <a asp-action="Details" asp-route-id="@item.id" class="btn btn-info btn-sm" title="@language.Getkey("Global_Details")">
+                                                <i class="fa-solid fa-magnifying-glass"></i>
+                                            </a>
+                                        }
                                     }
                                     else
                                     {
-                                        <a asp-action="Edit" asp-route-id="@item.id" class="btn btn-warning btn-sm" title="@language.Getkey("Global_Edit")">
-                                            <i class="fa-solid fa-pencil" style="color: #fafafa;"></i>
-                                        </a>
+                                        @if (canManageOpenInterventions)
+                                        {
+                                            <a asp-action="Edit" asp-route-id="@item.id" class="btn btn-warning btn-sm" title="@language.Getkey("Global_Edit")">
+                                                <i class="fa-solid fa-pencil" style="color: #fafafa;"></i>
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <a asp-action="Details" asp-route-id="@item.id" class="btn btn-info btn-sm" title="@language.Getkey("Global_Details")">
+                                                <i class="fa-solid fa-magnifying-glass"></i>
+                                            </a>
+                                        }
                                     }
                                 </td>
                             }

@@ -2,9 +2,12 @@
 @inject LanguageService language
 @using System.Text.Json
 
-@{
+@{ 
     ViewBag.Title = "Ricerca Interventi Alberi";
     ViewBag.lang = language.GetCurrentCulture();
+    var isAdministrator = User.IsInRole("Administrator");
+    var canManageOpenInterventions = isAdministrator || User.IsInRole("TreeManager");
+    var canSeeActionColumn = canManageOpenInterventions || User.IsInRole("Operator");
 
     var mapData = Model
         .Where(item => item.individuoNavigation != null)
@@ -18,7 +21,7 @@
             priorita = item.prioritaNavigation?.descrizione,
             prioritaColore = item.prioritaNavigation?.colore,
             isClosed = item.statoIntervento,
-            detailUrl = Url.Action("Edit", "InterventiAlberi", new { id = item.id })
+            detailUrl = Url.Action(item.statoIntervento && !isAdministrator ? "Details" : "Edit", "InterventiAlberi", new { id = item.id })
         })
         .ToList();
 }
@@ -170,7 +173,7 @@
                 <thead>
                     <tr>
                         @{
-                            @if (User.IsInRole("Administrator") ||  User.IsInRole("TreeManager"))
+                            @if (canSeeActionColumn)
                             {
                                 <th></th>
                             }
@@ -193,12 +196,21 @@
                     {
                         <tr class="@(item.statoIntervento ? "intervento-chiuso" : string.Empty)">
                             @{
-                                @if (User.IsInRole("Administrator") ||  User.IsInRole("TreeManager"))
+                                @if (canSeeActionColumn)
                                 {
                                     <td>
-                                        <a asp-action="Edit" asp-controller="InterventiAlberi" asp-route-id="@item.id" target="_blank" rel="noopener noreferrer" class="btn btn-info btn-sm">
-                                            <i class="fa-solid fa-search"></i>
-                                        </a>
+                                        @if (item.statoIntervento && !isAdministrator)
+                                        {
+                                            <a asp-action="Details" asp-controller="InterventiAlberi" asp-route-id="@item.id" target="_blank" rel="noopener noreferrer" class="btn btn-info btn-sm">
+                                                <i class="fa-solid fa-search"></i>
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <a asp-action="Edit" asp-controller="InterventiAlberi" asp-route-id="@item.id" target="_blank" rel="noopener noreferrer" class="btn btn-info btn-sm">
+                                                <i class="fa-solid fa-search"></i>
+                                            </a>
+                                        }
                                     </td>
                                 }
                              }
