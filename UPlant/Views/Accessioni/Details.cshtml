@@ -316,6 +316,7 @@
                         <table class="table table-bordered table-striped dataTable">
                             <thead>
                             <tr>
+                                <th>Anteprima</th>
                                 <th>Nome file</th>
                                 <th>Formato</th>
                                 <th>Dimensione</th>
@@ -329,6 +330,14 @@
                             @foreach (var doc in ViewBag.listDocs)
                             {
                                 <tr>
+                                    <td>
+                                        @if (doc.mimeType != null && doc.mimeType.StartsWith("image/"))
+                                        {
+                                            <a href="@Url.Action("ViewDoc", "Accessioni", new { id = doc.id, accessione = ViewBag.idaccessione })" target="_blank" rel="noopener noreferrer">
+                                                <img src="@Url.Action("ViewDoc", "Accessioni", new { id = doc.id, accessione = ViewBag.idaccessione })" alt="Anteprima @doc.nomefile" style="max-height:40px; max-width:40px;" />
+                                            </a>
+                                        }
+                                    </td>
                                     <td>@doc.nomefile</td>
                                     <td>@doc.estensione</td>
                                     <td>@Math.Round(((double)doc.dimensioneBytes / 1024), 2) KB</td>
@@ -336,6 +345,7 @@
                                     <td>@doc.dataInserimento</td>
                                     <td>@doc.utenteAcquisizioneNavigation?.NomeCognome</td>
                                     <td>
+                                        <a class="btn btn-info btn-xs" href="@Url.Action("ViewDoc", "Accessioni", new { id = doc.id, accessione = ViewBag.idaccessione })" target="_blank" rel="noopener noreferrer" title="Apri in una nuova scheda"><i class="fa-solid fa-up-right-from-square"></i></a>
                                         <button type="button" class="btn btn-primary btn-xs" onclick="window.location.href='@Url.Action("DownloadDoc", "Accessioni", new { id = doc.id, accessione = ViewBag.idaccessione })'"><i class="fa-solid fa-download"></i></button>
                                         @if (User.IsInRole("Administrator") || User.IsInRole("Operator") || User.IsInRole("TreeKeeper") || User.IsInRole("Discover") || User.IsInRole("Seminum") || User.IsInRole("Utility"))
                                         {

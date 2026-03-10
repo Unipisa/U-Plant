@@ -107,10 +107,7 @@ namespace UPlant.Controllers
             ViewBag.maxuploadDoc = string.IsNullOrWhiteSpace(_opt.Value.Pathfile.DocumentsMaxUploadBytes)
                 ? _opt.Value.Pathfile.ImagesMaxUploadBytes
                 : _opt.Value.Pathfile.DocumentsMaxUploadBytes;
-            ViewBag.allowedDocExtensions = (_opt.Value.Pathfile.AllowedDocExtensions ?? Array.Empty<string>())
-                .Select(x => x.StartsWith(".") ? x.ToLowerInvariant() : "." + x.ToLowerInvariant())
-                .Distinct()
-                .ToArray();
+            ViewBag.allowedDocExtensions = GetAllowedDocExtensions().ToArray();
             ViewBag.listDocs = await _context.Documenti
                 .Where(x => x.tipoEntita == "Accessione" && x.AccessioneId == id)
                 .Include(x => x.utenteAcquisizioneNavigation)
@@ -195,9 +192,7 @@ namespace UPlant.Controllers
                 }
 
                 string extension = Path.GetExtension(file.FileName).ToLowerInvariant();
-                var allowedDocExtensions = (_opt.Value.Pathfile.AllowedDocExtensions ?? Array.Empty<string>())
-                    .Select(x => x.StartsWith(".") ? x.ToLowerInvariant() : "." + x.ToLowerInvariant())
-                    .ToHashSet();
+                var allowedDocExtensions = GetAllowedDocExtensions();
 
                 if (!allowedDocExtensions.Contains(extension))
                 {
@@ -253,6 +248,32 @@ namespace UPlant.Controllers
 
             var fs = System.IO.File.OpenRead(path);
             return File(fs, string.IsNullOrWhiteSpace(documento.mimeType) ? "application/octet-stream" : documento.mimeType, documento.nomefile);
+        }
+
+        public async Task<IActionResult> ViewDoc(Guid id, Guid accessione)
+        {
+            var documento = await _context.Documenti.FirstOrDefaultAsync(x => x.id == id && x.tipoEntita == "Accessione" && x.AccessioneId == accessione);
+            if (documento == null)
+            {
+                return NotFound();
+            }
+
+            string path = Path.Combine(_opt.Value.Pathfile.DocumentsBasePath, _opt.Value.Pathfile.EntityDocsRootFolder, _opt.Value.Pathfile.AccessionDocsFolder, accessione.ToString(), documento.nomefileFisico);
+            if (!System.IO.File.Exists(path))
+            {
+                return NotFound();
+            }
+
+            var fs = System.IO.File.OpenRead(path);
+            return File(fs, string.IsNullOrWhiteSpace(documento.mimeType) ? "application/octet-stream" : documento.mimeType);
+        }
+
+        private HashSet<string> GetAllowedDocExtensions()
+        {
+            var extensions = (_opt.Value.Pathfile.AllowedDocExtensions ?? Array.Empty<string>())
+                .Select(x => x.StartsWith(".") ? x.ToLowerInvariant() : "." + x.ToLowerInvariant())
+                .ToHashSet();
+            return extensions;
         }
 
         public ActionResult DeleteDoc(Guid? id, Guid accessione, string tipo)
