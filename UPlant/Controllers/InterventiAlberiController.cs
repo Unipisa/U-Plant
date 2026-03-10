@@ -32,6 +32,11 @@ namespace UPlant.Controllers
             return User.IsInRole("Administrator") || User.IsInRole("TreeManager");
         }
 
+        private bool CanManageClosedTreeInterventions()
+        {
+            return User.IsInRole("Administrator");
+        }
+
         // GET: Alberi
         public async Task<IActionResult> Index()
         {
@@ -682,6 +687,11 @@ namespace UPlant.Controllers
                 return NotFound();
             }
 
+            if (interventiAlberi.statoIntervento && !CanManageClosedTreeInterventions())
+            {
+                return Forbid();
+            }
+
             ViewData["progressivo"] = interventiAlberi.individuoNavigation?.progressivo;
             ViewData["nomescientifico"] = interventiAlberi.individuoNavigation?.accessioneNavigation?.specieNavigation?.nome_scientifico;
 
@@ -803,6 +813,17 @@ namespace UPlant.Controllers
 
                     if (riaperturaIntervento)
                     {
+                        if (existingIntervento.storicoIndividuoId.HasValue)
+                        {
+                            var storico = await _context.StoricoIndividuo
+                                .FirstOrDefaultAsync(x => x.id == existingIntervento.storicoIndividuoId.Value);
+
+                            if (storico != null)
+                            {
+                                _context.StoricoIndividuo.Remove(storico);
+                            }
+                        }
+
                         existingIntervento.storicoIndividuoId = null;
                     }
 
@@ -894,6 +915,17 @@ namespace UPlant.Controllers
             var interventiAlberi = await _context.InterventiAlberi.FindAsync(id);
             if (interventiAlberi != null)
             {
+                if (interventiAlberi.storicoIndividuoId.HasValue)
+                {
+                    var storico = await _context.StoricoIndividuo
+                        .FirstOrDefaultAsync(x => x.id == interventiAlberi.storicoIndividuoId.Value);
+
+                    if (storico != null)
+                    {
+                        _context.StoricoIndividuo.Remove(storico);
+                    }
+                }
+
                 _context.InterventiAlberi.Remove(interventiAlberi);
             }
 
