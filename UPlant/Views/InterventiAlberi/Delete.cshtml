@@ -1,87 +1,89 @@
 ﻿@model UPlant.Models.DB.InterventiAlberi
+@inject LanguageService language
 
 @{
     ViewData["Title"] = "Delete";
 }
 
-<h1>Delete</h1>
+<div class="row">
+    <div class="col-xs-12">
+        <div class="card card-outline card-danger">
+            <div class="card-header with-border">
+                <h3 class="card-title text-red">
+                    @language.Getkey("Global_Delete") @language.Getkey("Global_Tree_Interventions") - @language.Getkey("Global_Question_Delete")?
+                </h3>
+            </div>
 
-<h3>Are you sure you want to delete this?</h3>
-<div>
-    <h4>Alberi</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.dataapertura)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.dataapertura)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.motivo)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.motivo)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.esitointervento)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.esitointervento)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.statoIntervento)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.statoIntervento)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.dataultimamodifica)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.dataultimamodifica)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.fornitoreNavigation)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.fornitoreNavigation.descrizione)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.individuoNavigation)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.individuoNavigation.progressivo)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.interventoNavigation)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.interventoNavigation.descrizione)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.prioritaNavigation)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.prioritaNavigation.descrizione)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.utenteaperturaNavigation)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.utenteaperturaNavigation.CF)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.utenteultimamodificaNavigation)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.utenteultimamodificaNavigation.CF)
-        </dd>
-    </dl>
+            <div class="card-body">
+                @if (Model.storicoIndividuoId.HasValue)
+                {
+                    <div class="alert alert-warning">
+                        Questo intervento è collegato a una riga di storico individuo. Eliminando l'intervento verrà eliminata anche la riga di storico collegata.
+                    </div>
+                }
 
-    <form asp-action="Delete">
-        <input type="hidden" asp-for="id" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
-    </form>
+                <table class="table table-striped table-bordered">
+                    <tbody>
+                        <tr>
+                            <th style="width: 25%;">@language.Getkey("Global_Progressive")</th>
+                            <td>@Html.DisplayFor(model => model.individuoNavigation.progressivo)</td>
+                        </tr>
+                        <tr>
+                            <th>@language.Getkey("Global_Scientific_Name")</th>
+                            <td>@Html.DisplayFor(model => model.individuoNavigation.accessioneNavigation.specieNavigation.nome_scientifico)</td>
+                        </tr>
+                        <tr>
+                            <th>@Html.DisplayNameFor(model => model.dataapertura)</th>
+                            <td>@Html.DisplayFor(model => model.dataapertura)</td>
+                        </tr>
+                        <tr>
+                            <th>@language.Getkey("Global_Horticultural_Operations")</th>
+                            <td>@Html.DisplayFor(model => model.interventoNavigation.descrizione)</td>
+                        </tr>
+                        <tr>
+                            <th>@language.Getkey("Global_Tree_Priority")</th>
+                            <td>@Html.DisplayFor(model => model.prioritaNavigation.descrizione)</td>
+                        </tr>
+                        <tr>
+                            <th>@Html.DisplayNameFor(model => model.fornitoreNavigation)</th>
+                            <td>@Html.DisplayFor(model => model.fornitoreNavigation.descrizione)</td>
+                        </tr>
+                        <tr>
+                            <th>@language.Getkey("Global_Reason")</th>
+                            <td>@Html.DisplayFor(model => model.motivo)</td>
+                        </tr>
+                        <tr>
+                            <th>@language.Getkey("Global_Outcome")</th>
+                            <td>@Html.DisplayFor(model => model.esitointervento)</td>
+                        </tr>
+                        <tr>
+                            <th>@language.Getkey("Global_Intervention_Status")</th>
+                            <td>
+                                @if (Model.statoIntervento)
+                                {
+                                    @language.Getkey("Global_Close")
+                                }
+                                else
+                                {
+                                    @language.Getkey("Global_Open")
+                                }
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>@language.Getkey("Global_Last_Modified_Date")</th>
+                            <td>@Html.DisplayFor(model => model.dataultimamodifica)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="card-footer">
+                <form asp-action="Delete">
+                    <input type="hidden" asp-for="id" />
+                    <input type="submit" value="@language.Getkey("Global_Delete")" class="btn btn-danger" />
+                    <a asp-action="Index" class="btn btn-default">@language.Getkey("Global_Go_Back")</a>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
