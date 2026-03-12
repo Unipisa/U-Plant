@@ -513,7 +513,7 @@ namespace UPlant.Controllers
         }
 
         // GET: Alberi/Details/5
-        public async Task<IActionResult> Details(Guid? id)
+        public async Task<IActionResult> Details(Guid? id, string source = null)
         {
             if (id == null)
             {
@@ -539,7 +539,8 @@ namespace UPlant.Controllers
 
             ViewData["progressivo"] = alberi.individuoNavigation?.progressivo;
             ViewData["nomescientifico"] = alberi.individuoNavigation?.accessioneNavigation?.specieNavigation?.nome_scientifico;
-
+            ViewBag.source = source;
+            ViewBag.idindividuo = alberi.individuo;
             return View(alberi);
         }
         [Authorize(Roles = "Administrator,Operator")]
@@ -664,7 +665,7 @@ namespace UPlant.Controllers
         }
         [Authorize(Roles = "Administrator,Operator")]
         // GET: Alberi/Edit/5
-        public async Task<IActionResult> Edit(Guid? id)
+        public async Task<IActionResult> Edit(Guid? id, string source = null)
         {
             if (!CanManageTreeInterventions())
             {
@@ -694,7 +695,7 @@ namespace UPlant.Controllers
 
             ViewData["progressivo"] = interventiAlberi.individuoNavigation?.progressivo;
             ViewData["nomescientifico"] = interventiAlberi.individuoNavigation?.accessioneNavigation?.specieNavigation?.nome_scientifico;
-
+            ViewBag.source = source;
             ViewData["fornitore"] = new SelectList(_context.Fornitori.OrderBy(a => a.descrizione).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.descrizione : a.descrizione_en }), "id", "Desc", interventiAlberi.fornitore);
 
 
@@ -722,7 +723,7 @@ namespace UPlant.Controllers
         [Authorize(Roles = "Administrator,Operator")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("id,individuo,dataapertura,priorita,intervento,fornitore,motivo,esitointervento,statoIntervento,dataultimamodifica,utenteapertura,utenteultimamodifica,statoIndividuo,condizione")] InterventiAlberi interventiAlberi)
+        public async Task<IActionResult> Edit(Guid id, [Bind("id,individuo,dataapertura,priorita,intervento,fornitore,motivo,esitointervento,statoIntervento,dataultimamodifica,utenteapertura,utenteultimamodifica,statoIndividuo,condizione")] InterventiAlberi interventiAlberi, string source = null)
         {
             if (!CanManageTreeInterventions())
             {
@@ -840,8 +841,13 @@ namespace UPlant.Controllers
                         throw;
                     }
                 }
+                if (string.Equals(source, "ricerca", StringComparison.OrdinalIgnoreCase))
+                {
+                    return RedirectToAction(nameof(RicercaTabella));
+                }
                 return RedirectToAction(nameof(ElencoInterventi), new { id = interventiAlberi.individuo });
             }
+            ViewBag.source = source;
             ViewData["fornitore"] = new SelectList(_context.Fornitori.OrderBy(a => a.descrizione).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.descrizione : a.descrizione_en }), "id", "Desc", interventiAlberi.fornitore);
 
 
