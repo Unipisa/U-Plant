@@ -6,8 +6,7 @@
     ViewBag.Title = "Ricerca Interventi Alberi";
     ViewBag.lang = language.GetCurrentCulture();
     var isAdministrator = User.IsInRole("Administrator");
-    var canManageOpenInterventions = isAdministrator || User.IsInRole("TreeManager");
-    var canSeeActionColumn = canManageOpenInterventions || User.IsInRole("Operator");
+   var canManageOpenInterventions = isAdministrator || (User.IsInRole("Operator") && User.IsInRole("TreeManager"));
 
     var mapData = Model
         .Where(item => item.individuoNavigation != null)
@@ -21,7 +20,7 @@
             priorita = item.prioritaNavigation?.descrizione,
             prioritaColore = item.prioritaNavigation?.colore,
             isClosed = item.statoIntervento,
-            detailUrl = Url.Action(item.statoIntervento && !isAdministrator ? "Details" : "Edit", "InterventiAlberi", new { id = item.id })
+             detailUrl = Url.Action("Details", "InterventiAlberi", new { id = item.id })
         })
         .ToList();
 }
@@ -172,13 +171,8 @@
             <table id="tableRicercaInterventi" class="table table-bordered table-striped table-sm">
                 <thead>
                     <tr>
-                        @{
-                            @if (canSeeActionColumn)
-                            {
-                                <th></th>
-                            }
-                         }
-                            <th>Progressivo</th>
+                       <th style="width:60px;"></th>
+                        <th>Progressivo</th>
                         <th>Nome scientifico</th>
                        
                         <th>@language.Getkey("Global_Sector")</th>
@@ -189,31 +183,21 @@
                         <th>Tipo intervento</th>
                         <th>Fornitore</th>
                         <th>@language.Getkey("Global_Last_Modified_Date")</th>
+                         @if (canManageOpenInterventions)
+                        {
+                            <th style="width:60px;"></th>
+                        }
                     </tr>
                 </thead>
                 <tbody>
                     @foreach (var item in Model)
                     {
                         <tr class="@(item.statoIntervento ? "intervento-chiuso" : string.Empty)">
-                            @{
-                                @if (canSeeActionColumn)
-                                {
-                                    <td>
-                                        @if (item.statoIntervento && !isAdministrator)
-                                        {
-                                            <a asp-action="Details" asp-controller="InterventiAlberi" asp-route-id="@item.id" target="_blank" rel="noopener noreferrer" class="btn btn-info btn-sm">
-                                                <i class="fa-solid fa-search"></i>
-                                            </a>
-                                        }
-                                        else
-                                        {
-                                            <a asp-action="Edit" asp-controller="InterventiAlberi" asp-route-id="@item.id" target="_blank" rel="noopener noreferrer" class="btn btn-info btn-sm">
-                                                <i class="fa-solid fa-search"></i>
-                                            </a>
-                                        }
-                                    </td>
-                                }
-                             }
+                            <td class="text-center">
+                                <a asp-action="Details" asp-controller="InterventiAlberi" asp-route-id="@item.id" target="_blank" rel="noopener noreferrer" class="btn btn-info btn-sm" title="@language.Getkey("Global_Details")">
+                                    <i class="fa-solid fa-search"></i>
+                                </a>
+                            </td>
                             <td>@item.individuoNavigation?.progressivo</td>
                             <td>@item.individuoNavigation?.accessioneNavigation?.specieNavigation?.nome_scientifico</td>
                             
@@ -229,6 +213,17 @@
                             <td>@item.interventoNavigation?.descrizione</td>
                             <td>@item.fornitoreNavigation?.descrizione</td>
                             <td>@((item.dataultimamodifica ?? item.dataapertura).ToString("dd/MM/yyyy"))</td>
+                             @if (canManageOpenInterventions)
+                            {
+                                <td class="text-center">
+                                    @if (!item.statoIntervento || isAdministrator)
+                                    {
+                                        <a asp-action="Edit" asp-controller="InterventiAlberi" asp-route-id="@item.id" target="_blank" rel="noopener noreferrer" class="btn btn-warning btn-sm" title="@language.Getkey("Global_Edit")">
+                                            <i class="fa-solid fa-pencil"></i>
+                                        </a>
+                                    }
+                                </td>
+                            }
                         </tr>
                     }
                 </tbody>
