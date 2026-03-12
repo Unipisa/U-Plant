@@ -5,11 +5,22 @@
 }
 
 <p>
-    <a asp-action="ElencoInterventi" asp-controller="InterventiAlberi" asp-route-id="@Model.individuo">
+     @if (string.Equals(ViewBag.source as string, "ricerca", System.StringComparison.OrdinalIgnoreCase))
+    {
+        <a asp-action="RicercaTabella" asp-controller="InterventiAlberi">
+            <span class="btn btn btn-info " title="@language.Getkey("Global_Go_Back")">
+                @language.Getkey("Global_Go_Back")
+            </span>
+        </a>
+    }
+    else
+    {
+        <a asp-action="ElencoInterventi" asp-controller="InterventiAlberi" asp-route-id="@Model.individuo">
         <span class="btn btn btn-info " title="@language.Getkey("Global_Go_Back")">
             @language.Getkey("Global_Go_Back")
         </span>
     </a>
+    }
 </p>
 
 <div class="col-lg-12">
