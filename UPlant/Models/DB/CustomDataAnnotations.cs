@@ -40,6 +40,8 @@ namespace UPlant.Models.DB
         public string countimg { get; set; }
 
         public string nomeetichetta { get; set; }
+        public string latitudine { get; set; }
+        public string longitudine { get; set; }
     }
     public partial class RisultatoRicercaAcc
     {

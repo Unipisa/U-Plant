@@ -209,6 +209,7 @@ namespace UPlant.Controllers
             ViewData["statoindividuo"] = "";
             ViewData["condizione"] = "";
             ViewData["cartellino"] = "";
+            ViewBag.hasSearched = false;
           
 
             return View();
@@ -337,9 +338,10 @@ namespace UPlant.Controllers
                 ViewBag.listacondizioni = new SelectList(_context.Condizioni.OrderBy(a => a.condizione), "id", "condizione").ToList();
                 ViewBag.listacartellini = new SelectList(_context.Cartellini.OrderBy(a => a.descrizione), "id", "descrizione").ToList();
             }
-
-
-
+            var coordinateById = _context.Individui
+                .Where(i => listaind.Select(x => x.id).Contains(i.id))
+                .Select(i => new { i.id, i.latitudine, i.longitudine })
+                .ToDictionary(x => x.id, x => new { x.latitudine, x.longitudine });
 
             IEnumerable<RisultatoRicercaInd> listarisultatoricerca = listaind.Select(r => new RisultatoRicercaInd
             {
@@ -362,11 +364,14 @@ namespace UPlant.Controllers
                 datainserimento = string.Format(Convert.ToDateTime(r.datainserimento).ToString(), "{0:yyyy-MM-dd HH:mm:ss}", "yyyy"),
                 countimg = r.numero_immagini.ToString(), //_context.ImmaginiIndividuo.Where(a => a.individuo == r.id).Count().ToString(),
                 //nomeetichetta = StaticUtils.CleanInput(r.nome_scientifico).Replace("  "," ")
-                nomeetichetta = StaticUtils.CleanInput(r.genere).Replace("  ", " ") + " " + StaticUtils.CleanInput(r.nome).Replace("  ", " ")
+                nomeetichetta = StaticUtils.CleanInput(r.genere).Replace("  ", " ") + " " + StaticUtils.CleanInput(r.nome).Replace("  ", " "),
+                latitudine = coordinateById.ContainsKey(r.id) ? coordinateById[r.id].latitudine : null,
+                longitudine = coordinateById.ContainsKey(r.id) ? coordinateById[r.id].longitudine : null
             }).ToList();
             ViewData["filename"] = CreaExcelRicerca(null,listaind, "individuo"); 
             
             ViewData["famiglia"] = famiglia;
+            ViewBag.hasSearched = true;
             
 
             return View(listarisultatoricerca);
