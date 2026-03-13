@@ -2,7 +2,7 @@
 @inject LanguageService language
 
 @{
-    ViewBag.Title = language.Getkey("Global_Tree_Interventions");
+    ViewBag.Title = language.Getkey("Global_Intervetion_Type");
     ViewBag.lang = language.GetCurrentCulture();
     var currentCulture = language.GetCurrentCulture();
     var isAdministrator = User.IsInRole("Administrator");
@@ -20,7 +20,7 @@
         {
             <a asp-action="Create" asp-controller="InterventiAlberi" asp-route-idindividuo="@ViewBag.idindividuo">
                 <span class="btn btn-success" title="@language.Getkey("Global_Add") @language.Getkey("Global_Intervention")">
-            @language.Getkey("Global_Add") @language.Getkey("Global_Tree_Interventions")
+                    @language.Getkey("Global_Add") @language.Getkey("Global_Intervention")
         </span>
     </a>
     }
@@ -56,7 +56,7 @@
                 <tr>
                     <th style="width:60px;"></th>
                     <th>@language.Getkey("Global_Tree_Priority")</th>
-                    <th>@language.Getkey("Global_Tree_Interventions")</th>
+                    <th>@language.Getkey("Global_Intervetion_Type")</th>
                     <th>@language.Getkey("Global_Reason")</th>
                     <th>@language.Getkey("Global_Last_Modified_Date")</th>
                     <th>@language.Getkey("Global_Intervention_Status")</th>

@@ -127,7 +127,7 @@
     <value>New Accession</value>
   </data>
   <data name="Home_Index_3" xml:space="preserve">
-    <value>Accessions Extraction</value>
+    <value>Accession Export</value>
   </data>
   <data name="Home_Index_4" xml:space="preserve">
     <value>Sorry but you do not have a role to access U-Plant services</value>
@@ -136,13 +136,13 @@
     <value>Search Accessions</value>
   </data>
   <data name="Home_Index_6" xml:space="preserve">
-    <value>Individuals Extraction</value>
+    <value>Individual Export</value>
   </data>
   <data name="Home_Index_7" xml:space="preserve">
     <value>Search Individuals</value>
   </data>
   <data name="Home_Index_8" xml:space="preserve">
-    <value>Species Extraction</value>
+    <value>Species Export</value>
   </data>
   <data name="Home_Index_9" xml:space="preserve">
     <value>Orto Botanico di Pisa Data</value>
@@ -166,7 +166,7 @@
     <value>Number of species available in the Index Seminum</value>
   </data>
   <data name="Home_Index_16" xml:space="preserve">
-    <value>Data Extraction</value>
+    <value>Data Export</value>
   </data>
   <data name="Global_Scientific_Name" xml:space="preserve">
     <value>Scientific Name</value>
@@ -649,7 +649,7 @@
     <value>Last Updated Date</value>
   </data>
   <data name="Global_Destinations" xml:space="preserve">
-    <value>Destinations</value>
+    <value>Destination</value>
   </data>
   <data name="Message_2" xml:space="preserve">
     <value>Individual already exists in this location</value>
@@ -738,11 +738,11 @@
   <data name="Shared_Comp_Sb_Tree_Tables" xml:space="preserve">
     <value>Trees Tables</value>
   </data>
-  <data name="Global_Tree_Interventions" xml:space="preserve">
-    <value>Tree Interventions</value>
+  <data name="Global_Intervetion_Type" xml:space="preserve">
+    <value>Intervetion Type</value>
   </data>
   <data name="Global_Tree_Priority" xml:space="preserve">
-    <value>Tree Priority</value>
+    <value>Priority</value>
   </data>
   <data name="Global_Level" xml:space="preserve">
     <value>Level</value>
@@ -779,5 +779,17 @@
   </data>
   <data name="Global_Intervention" xml:space="preserve">
     <value>Intervention</value>
+  </data>
+  <data name="Global_Intervention_Export" xml:space="preserve">
+    <value>Intervention Export</value>
+  </data>
+  <data name="Global_Intervetions_Map" xml:space="preserve">
+    <value>Intervetions Map</value>
+  </data>
+  <data name="Global_Service_Provider" xml:space="preserve">
+    <value>Service Provider</value>
+  </data>
+  <data name="Global_Coordinates_Not_Available" xml:space="preserve">
+    <value>Coordinates Not Available</value>
   </data>
 </root>

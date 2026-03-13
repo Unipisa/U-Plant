@@ -649,7 +649,7 @@
     <value>Data Ultimo Aggiornamento</value>
   </data>
   <data name="Global_Destinations" xml:space="preserve">
-    <value>Destinazioni</value>
+    <value>Destinazione</value>
   </data>
   <data name="Message_2" xml:space="preserve">
     <value>Individuo già presente nel percorso</value>
@@ -738,11 +738,11 @@
   <data name="Shared_Comp_Sb_Tree_Tables" xml:space="preserve">
     <value>Tabelle Alberi</value>
   </data>
-  <data name="Global_Tree_Interventions" xml:space="preserve">
-    <value>Tipo Interventi Alberi</value>
+  <data name="Global_Intervetion_Type" xml:space="preserve">
+    <value>Tipo Intervento</value>
   </data>
   <data name="Global_Tree_Priority" xml:space="preserve">
-    <value>Tipo Priorità Alberi</value>
+    <value>Priorità</value>
   </data>
   <data name="Global_Level" xml:space="preserve">
     <value>Livello</value>
@@ -779,5 +779,17 @@
   </data>
   <data name="Global_Intervention" xml:space="preserve">
     <value>Intervento</value>
+  </data>
+  <data name="Global_Intervention_Export" xml:space="preserve">
+    <value>Estrazione Interventi</value>
+  </data>
+  <data name="Global_Intervetions_Map" xml:space="preserve">
+    <value>Mappa Interventi</value>
+  </data>
+  <data name="Global_Service_Provider" xml:space="preserve">
+    <value>Esecutore</value>
+  </data>
+  <data name="Global_Coordinates_Not_Available" xml:space="preserve">
+    <value>Coordinate Non Disponibili</value>
   </data>
 </root>

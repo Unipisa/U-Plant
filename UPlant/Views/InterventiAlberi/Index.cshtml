@@ -41,7 +41,7 @@
             data-target="#addIndividuoCollapse"
             aria-expanded="false"
             aria-controls="addIndividuoCollapse">
-        <i class="fa-solid fa-plus"></i> Aggiungi
+                <i class="fa-solid fa-plus"></i> @language.Getkey("Global_Add")
         </button>
         }
 
@@ -52,7 +52,7 @@
        asp-controller="InterventiAlberi"
        class="btn btn-success btn-sm"
        title="Estrazione totale interventi alberi">
-        <i class="fa-solid fa-file-excel"></i> Estrazione totale interventi
+        <i class="fa-solid fa-file-excel"></i>@language.Getkey("Global_Intervention_Export")
     </a>
 </div>
 
@@ -118,7 +118,7 @@
                     <th>@language.Getkey("Global_Collection")</th>
                     <th>@language.Getkey("Global_Tree_Priority")</th>
                     <th>@language.Getkey("Global_Last_Modified_Date")</th>
-                    <th>Stato</th>
+                    <th>@language.Getkey("Global_Intervention_Status")</th>
                     @{
                         @if (canManageTreeInterventions)
                         {
@@ -215,7 +215,7 @@
 
 <div class="card card-primary mt-3">
     <div class="card-header with-border">
-        <h3 class="card-title mb-0 font-weight-bold">Mappa interventi aperti</h3>
+        <h3 class="card-title mb-0 font-weight-bold">@language.Getkey("Global_Intervetions_Map")</h3>
     </div>
     <div class="card-body">
         <div id="openInterventiMap" class="open-interventi-map"></div>

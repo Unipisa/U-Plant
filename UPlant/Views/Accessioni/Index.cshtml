@@ -5,6 +5,7 @@
 
     ViewBag.Title = "Index";
     ViewBag.lang = language.GetCurrentCulture();
+    var currentCulture = language.GetCurrentCulture();
 }
 @if (TempData["MsgErr"] != null)
 {
@@ -123,7 +124,23 @@
                                                 @Convert.ToDateTime(item.dataAcquisizione).ToString("yyyyMMdd")
                                             </td>
                                             <td>
-                                                @Html.DisplayFor(modelItem => item.tipoMaterialeNavigation.descrizione)
+                                @{
+                                    if(currentCulture == "en-US")
+                                    {
+                                        @if (string.IsNullOrEmpty(item.tipoMaterialeNavigation.descrizione_en))
+                                        {
+                                            @Html.DisplayFor(modelItem => item.tipoMaterialeNavigation.descrizione)
+                                        }
+                                        else
+                                        {
+
+                                            @Html.DisplayFor(modelItem => item.tipoMaterialeNavigation.descrizione_en)
+                                        }
+                                    }else {
+                                        @Html.DisplayFor(modelItem => item.tipoMaterialeNavigation.descrizione)
+                                    }
+                                }
+                                                
                                             </td>
                                             <td>
                                                 @* @item.Individui.Count(i => i.validazione == true)*@
