@@ -7,7 +7,7 @@
     ViewBag.lang = language.GetCurrentCulture();
     var isAdministrator = User.IsInRole("Administrator");
    var canManageOpenInterventions = isAdministrator || (User.IsInRole("Operator") && User.IsInRole("TreeManager"));
-
+    
     var mapData = Model
         .Where(item => item.individuoNavigation != null)
         .Select(item => new
