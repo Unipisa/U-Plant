@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json.Serialization;
 using UPlant.Models.DB;
 
 namespace UPlant.Controllers
@@ -12,6 +13,7 @@ namespace UPlant.Controllers
     public class SpecieController : BaseController
     {
         private readonly Entities _context;
+        private const int MaxPageSize = 100;
 
         public SpecieController(Entities context)
         {
@@ -19,10 +21,117 @@ namespace UPlant.Controllers
         }
 
         // GET: Specie
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            var entities = _context.Specie.Include(s => s.arealeNavigation).Include(s => s.citesNavigation).Include(s => s.genereNavigation).Include(s => s.iucn_globaleNavigation).Include(s => s.iucn_italiaNavigation).Include(s => s.regnoNavigation).Include(s => s.genereNavigation.famigliaNavigation).Include(s => s.Accessioni).OrderBy(x => x.nome_scientifico);
-            return View(await entities.ToListAsync());
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> IndexData()
+        {
+            var draw = ParseInt(Request.Query["draw"], 1);
+            var start = Math.Max(ParseInt(Request.Query["start"], 0), 0);
+            var length = ParseInt(Request.Query["length"], 25);
+            if (length <= 0)
+            {
+                length = 25;
+            }
+            length = Math.Min(length, MaxPageSize);
+
+            var search = Request.Query["search[value]"].FirstOrDefault()?.Trim();
+            var orderColumn = ParseInt(Request.Query["order[0][column]"], 0);
+            var orderDirection = Request.Query["order[0][dir]"].FirstOrDefault();
+            var descending = string.Equals(orderDirection, "desc", StringComparison.OrdinalIgnoreCase);
+            var isAdministrator = User.IsInRole("Administrator");
+
+            var query = _context.Specie
+                .AsNoTracking()
+                .Select(s => new SpecieIndexRow
+                {
+                    Id = s.id,
+                    ScientificName = s.nome_scientifico ?? string.Empty,
+                    CommonName = s.nome_comune ?? string.Empty,
+                    EnglishCommonName = s.nome_comune_en ?? string.Empty,
+                    Family = s.genereNavigation != null && s.genereNavigation.famigliaNavigation != null
+                        ? s.genereNavigation.famigliaNavigation.descrizione ?? string.Empty
+                        : string.Empty,
+                    Genus = s.genereNavigation != null
+                        ? s.genereNavigation.descrizione ?? string.Empty
+                        : string.Empty,
+                    Kingdom = s.regnoNavigation != null
+                        ? s.regnoNavigation.descrizione ?? string.Empty
+                        : string.Empty,
+                    Range = s.arealeNavigation != null
+                        ? s.arealeNavigation.descrizione ?? string.Empty
+                        : string.Empty,
+                    Cites = s.citesNavigation != null
+                        ? s.citesNavigation.codice ?? string.Empty
+                        : string.Empty,
+                    IucnGlobal = s.iucn_globaleNavigation != null
+                        ? s.iucn_globaleNavigation.codice ?? string.Empty
+                        : string.Empty,
+                    IucnLocal = s.iucn_italiaNavigation != null
+                        ? s.iucn_italiaNavigation.codice ?? string.Empty
+                        : string.Empty,
+                    Note = s.note ?? string.Empty,
+                    HasAccessioni = s.Accessioni.Any()
+                });
+
+            var recordsTotal = await query.CountAsync();
+
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                query = query.Where(s =>
+                    s.ScientificName.Contains(search) ||
+                    s.CommonName.Contains(search) ||
+                    s.EnglishCommonName.Contains(search) ||
+                    s.Family.Contains(search) ||
+                    s.Genus.Contains(search) ||
+                    s.Kingdom.Contains(search) ||
+                    s.Range.Contains(search) ||
+                    s.Cites.Contains(search) ||
+                    s.IucnGlobal.Contains(search) ||
+                    s.IucnLocal.Contains(search) ||
+                    s.Note.Contains(search));
+            }
+
+            var recordsFiltered = await query.CountAsync();
+
+            query = ApplyOrdering(query, orderColumn, descending);
+
+            var page = await query
+                .Skip(start)
+                .Take(length)
+                .ToListAsync();
+
+            var result = new
+            {
+                draw,
+                recordsTotal,
+                recordsFiltered,
+                data = page.Select(item => new
+                {
+                    id = item.Id,
+                    scientificName = item.ScientificName,
+                    commonName = item.CommonName,
+                    englishCommonName = item.EnglishCommonName,
+                    family = item.Family,
+                    genus = item.Genus,
+                    kingdom = item.Kingdom,
+                    range = item.Range,
+                    cites = item.Cites,
+                    iucnGlobal = item.IucnGlobal,
+                    iucnLocal = item.IucnLocal,
+                    notePreview = TruncateNote(item.Note),
+                    canDelete = !item.HasAccessioni,
+                    showActions = isAdministrator
+                })
+            };
+
+            return new JsonResult(result, new System.Text.Json.JsonSerializerOptions
+            {
+                ReferenceHandler = ReferenceHandler.IgnoreCycles
+            });
         }
 
         // GET: Specie/Details/5
@@ -193,6 +302,58 @@ namespace UPlant.Controllers
         private bool SpecieExists(Guid id)
         {
           return _context.Specie.Any(e => e.id == id);
+        }
+
+        private static int ParseInt(string value, int fallback)
+        {
+            return int.TryParse(value, out var parsed) ? parsed : fallback;
+        }
+
+        private static string TruncateNote(string note)
+        {
+            if (string.IsNullOrWhiteSpace(note))
+            {
+                return string.Empty;
+            }
+
+            return note.Length > 100
+                ? $"{note.Substring(0, 100)} [...]"
+                : note;
+        }
+
+        private static IQueryable<SpecieIndexRow> ApplyOrdering(IQueryable<SpecieIndexRow> query, int columnIndex, bool descending)
+        {
+            return columnIndex switch
+            {
+                1 => descending ? query.OrderByDescending(x => x.CommonName) : query.OrderBy(x => x.CommonName),
+                2 => descending ? query.OrderByDescending(x => x.EnglishCommonName) : query.OrderBy(x => x.EnglishCommonName),
+                3 => descending ? query.OrderByDescending(x => x.Family) : query.OrderBy(x => x.Family),
+                4 => descending ? query.OrderByDescending(x => x.Genus) : query.OrderBy(x => x.Genus),
+                5 => descending ? query.OrderByDescending(x => x.Kingdom) : query.OrderBy(x => x.Kingdom),
+                6 => descending ? query.OrderByDescending(x => x.Range) : query.OrderBy(x => x.Range),
+                7 => descending ? query.OrderByDescending(x => x.Cites) : query.OrderBy(x => x.Cites),
+                8 => descending ? query.OrderByDescending(x => x.IucnGlobal) : query.OrderBy(x => x.IucnGlobal),
+                9 => descending ? query.OrderByDescending(x => x.IucnLocal) : query.OrderBy(x => x.IucnLocal),
+                10 => descending ? query.OrderByDescending(x => x.Note) : query.OrderBy(x => x.Note),
+                _ => descending ? query.OrderByDescending(x => x.ScientificName) : query.OrderBy(x => x.ScientificName)
+            };
+        }
+
+        private sealed class SpecieIndexRow
+        {
+            public Guid Id { get; set; }
+            public string ScientificName { get; set; }
+            public string CommonName { get; set; }
+            public string EnglishCommonName { get; set; }
+            public string Family { get; set; }
+            public string Genus { get; set; }
+            public string Kingdom { get; set; }
+            public string Range { get; set; }
+            public string Cites { get; set; }
+            public string IucnGlobal { get; set; }
+            public string IucnLocal { get; set; }
+            public string Note { get; set; }
+            public bool HasAccessioni { get; set; }
         }
     }
 }

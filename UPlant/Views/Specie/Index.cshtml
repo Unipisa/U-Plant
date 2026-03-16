@@ -1,17 +1,12 @@
-﻿@model IEnumerable<UPlant.Models.DB.Specie>
 @inject LanguageService language
 @{
     ViewData["Title"] = "Index";
-    // Local helpers
-    string Trunc(string s, int max) =>
-        string.IsNullOrEmpty(s) ? "" : (s.Length > max ? s.Substring(0, max) : s);
 }
 
 <div class="card card-outline card-primary">
     <div class="card-header with-border">
         <h1 class="card-title">Elenco</h1>
         @{
-
             if (User.IsInRole("Administrator"))
             {
                 <div class="float-right success ">
@@ -20,8 +15,6 @@
                             @language.Getkey("Global_Add") @language.Getkey("Global_Species")
                         </span>
                     </a>
-
-
                 </div>
             }
         }
@@ -29,120 +22,33 @@
     <div class="card-body">
         <div class="table-responsive">
             <table id="table1" class="table table-bordered table-striped dataTable">
-                                <thead>
-                                    <tr>
-                                        <th>
-                                        @language.Getkey("Global_Scientific_Name")
-                                        </th>
-                                        <th>
-                                        @language.Getkey("Global_Common_Name")
-                                        </th>
-                                        <th>
-                                        @language.Getkey("Global_English_Common_Name")
-                                        </th>
-                                        <th>
-                                        @language.Getkey("Global_Family")
-                                        </th>
-                                        <th>
-                                        @language.Getkey("Global_Genus")
-                                        </th>
-                                        <th>
-                                        @language.Getkey("Global_Floristic_Kingdom")
-                                        </th>
-                                        <th>
-                                        @language.Getkey("Global_Range")
-                                        </th>
-                                        <th>
-                            @language.Getkey("Global_Cites")
-                                        </th>
-                                        <th>
-                            @language.Getkey("Global_Iucn") @language.Getkey("Global_Global")
-                                        </th>
-                                        <th>
-                            @language.Getkey("Global_Iucn") @language.Getkey("Global_Local")
-                                        </th>
-                        <th>
-                            @language.Getkey("Global_Notes") 
-                        </th>
-                                        <th style="width:25%"></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
+                <thead>
+                    <tr>
+                        <th>@language.Getkey("Global_Scientific_Name")</th>
+                        <th>@language.Getkey("Global_Common_Name")</th>
+                        <th>@language.Getkey("Global_English_Common_Name")</th>
+                        <th>@language.Getkey("Global_Family")</th>
+                        <th>@language.Getkey("Global_Genus")</th>
+                        <th>@language.Getkey("Global_Floristic_Kingdom")</th>
+                        <th>@language.Getkey("Global_Range")</th>
+                        <th>@language.Getkey("Global_Cites")</th>
+                        <th>@language.Getkey("Global_Iucn") @language.Getkey("Global_Global")</th>
+                        <th>@language.Getkey("Global_Iucn") @language.Getkey("Global_Local")</th>
+                        <th>@language.Getkey("Global_Notes")</th>
+                        <th style="width:25%"></th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+</div>
 
-                                    @foreach (var item in Model)
-                                    {
-                                    <tr>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.nome_scientifico)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.nome_comune)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.nome_comune_en)
-                                        </td>
-                                        <td>
-                                @Html.DisplayFor(modelItem => item.genereNavigation.famigliaNavigation.descrizione)
-                                        </td>
-
-                                        <td>
-                                @Html.DisplayFor(modelItem => item.genereNavigation.descrizione)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.regnoNavigation.descrizione)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.arealeNavigation.descrizione)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.citesNavigation.codice)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.iucn_globaleNavigation.codice)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.iucn_italiaNavigation.codice)
-                                        </td>
-                            <td>
-                                @($"{Trunc(item.note ?? "", 100)}{(string.IsNullOrEmpty(item.note) ? "" : " [...]")}")
-                                                            </td>
-                                        <td>
-                                @if (User.IsInRole("Administrator"))
-                                {
-
-                                    <a asp-action="Edit" asp-route-id="@item.id">
-                                        <span class="btn btn-warning btn-xs" title="@language.Getkey("Global_Edit") @language.Getkey("Global_Species") ">
-                                            <i class="fa-solid fa-pencil" style="color: #fafafa;"></i>
-                                        </span>
-                                    </a>
-                                      if (@item.Accessioni.Count() == 0)
-                                                {
-                                    <a asp-action="Delete" asp-route-id="@item.id">
-                                            <span class="btn btn-danger btn-xs" title="@language.Getkey("Global_Delete") @language.Getkey("Global_Spicies")">
-                                            <i class="fa-solid fa-trash"></i>
-                                        </span>
-                                    </a>
-                                        }
-                                }
-
-                                        
-                                        </td>
-                                    </tr>
-                                    }
-
-                            </table>
-                        </div>
-                    </div>
-
-
-                </div>
 @section Styles {
     <link href="~/css/select2.min.css" rel="stylesheet" />
     <link href="~/css/accessioni.min.css" rel="stylesheet" />
     <link href="~/css/datatables.min.css" rel="stylesheet" />
 }
-
-
 
 @section Scripts {
     @{
@@ -152,18 +58,74 @@
     <script src="~/js/datatables.min.js"></script>
 }
 
-
 @section CustomScripts {
     <script>
         jQuery(function () {
+            const isAdministrator = @User.IsInRole("Administrator").ToString().ToLowerInvariant();
+            const editUrlTemplate = '@Url.Action("Edit", "Specie", new { id = "__id__" })';
+            const deleteUrlTemplate = '@Url.Action("Delete", "Specie", new { id = "__id__" })';
+
             jQuery('#table1').DataTable({
+                'processing': true,
+                'serverSide': true,
+                'deferRender': true,
                 'paging': true,
                 'lengthChange': true,
                 'searching': true,
                 'ordering': true,
                 'info': true,
-                'autoWidth': false
-            })
+                'autoWidth': false,
+                'pageLength': 25,
+                'lengthMenu': [25, 50, 100],
+                'searchDelay': 400,
+                'ajax': {
+                    'url': '@Url.Action("IndexData", "Specie")',
+                    'type': 'GET',
+                    'dataSrc': function (json) {
+                        if (json && json.data && Array.isArray(json.data.$values)) {
+                            return json.data.$values;
+                        }
+
+                        return json && json.data ? json.data : [];
+                    },
+                    'error': function (xhr) {
+                        console.error('Specie IndexData error', xhr);
+                    }
+                },
+                'columns': [
+                    { 'data': 'scientificName' },
+                    { 'data': 'commonName' },
+                    { 'data': 'englishCommonName' },
+                    { 'data': 'family' },
+                    { 'data': 'genus' },
+                    { 'data': 'kingdom' },
+                    { 'data': 'range' },
+                    { 'data': 'cites' },
+                    { 'data': 'iucnGlobal' },
+                    { 'data': 'iucnLocal' },
+                    { 'data': 'notePreview' },
+                    {
+                        'data': null,
+                        'orderable': false,
+                        'searchable': false,
+                        'render': function (data, type, row) {
+                            if (!isAdministrator || !row.showActions) {
+                                return '';
+                            }
+
+                            const editUrl = editUrlTemplate.replace('__id__', row.id);
+                            let actions = '<a href="' + editUrl + '"><span class="btn btn-warning btn-xs"><i class="fa-solid fa-pencil" style="color: #fafafa;"></i></span></a>';
+
+                            if (row.canDelete) {
+                                const deleteUrl = deleteUrlTemplate.replace('__id__', row.id);
+                                actions += ' <a href="' + deleteUrl + '"><span class="btn btn-danger btn-xs"><i class="fa-solid fa-trash"></i></span></a>';
+                            }
+
+                            return actions;
+                        }
+                    }
+                ]
+            });
         })
     </script>
-}          
+}
