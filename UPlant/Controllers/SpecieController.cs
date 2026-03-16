@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using UPlant.Models.DB;
 
@@ -24,6 +25,84 @@ namespace UPlant.Controllers
         public IActionResult Index()
         {
             return View();
+        }
+
+        [HttpGet]
+        [HttpPost]
+        public async Task<IActionResult> IndexAllData()
+        {
+            try
+            {
+                var isAdministrator = User.IsInRole("Administrator");
+
+                var data = await _context.Specie
+                    .AsNoTracking()
+                    .Select(s => new SpecieIndexRow
+                    {
+                        Id = s.id,
+                        ScientificName = s.nome_scientifico ?? string.Empty,
+                        CommonName = s.nome_comune ?? string.Empty,
+                        EnglishCommonName = s.nome_comune_en ?? string.Empty,
+                        Family = s.genereNavigation != null && s.genereNavigation.famigliaNavigation != null
+                            ? s.genereNavigation.famigliaNavigation.descrizione ?? string.Empty
+                            : string.Empty,
+                        Genus = s.genereNavigation != null
+                            ? s.genereNavigation.descrizione ?? string.Empty
+                            : string.Empty,
+                        Kingdom = s.regnoNavigation != null
+                            ? s.regnoNavigation.descrizione ?? string.Empty
+                            : string.Empty,
+                        Range = s.arealeNavigation != null
+                            ? s.arealeNavigation.descrizione ?? string.Empty
+                            : string.Empty,
+                        Cites = s.citesNavigation != null
+                            ? s.citesNavigation.codice ?? string.Empty
+                            : string.Empty,
+                        IucnGlobal = s.iucn_globaleNavigation != null
+                            ? s.iucn_globaleNavigation.codice ?? string.Empty
+                            : string.Empty,
+                        IucnLocal = s.iucn_italiaNavigation != null
+                            ? s.iucn_italiaNavigation.codice ?? string.Empty
+                            : string.Empty,
+                        Note = s.note ?? string.Empty,
+                        HasAccessioni = s.Accessioni.Any()
+                    })
+                    .OrderBy(x => x.ScientificName)
+                    .ToListAsync();
+
+                var result = new
+                {
+                    data = data.Select(item => new
+                    {
+                        id = item.Id,
+                        scientificName = item.ScientificName,
+                        commonName = item.CommonName,
+                        englishCommonName = item.EnglishCommonName,
+                        family = item.Family,
+                        genus = item.Genus,
+                        kingdom = item.Kingdom,
+                        range = item.Range,
+                        cites = item.Cites,
+                        iucnGlobal = item.IucnGlobal,
+                        iucnLocal = item.IucnLocal,
+                        notePreview = TruncateNote(item.Note),
+                        canDelete = !item.HasAccessioni,
+                        showActions = isAdministrator
+                    }).ToList()
+                };
+
+                return Content(JsonSerializer.Serialize(result), "application/json");
+            }
+            catch (Exception ex)
+            {
+                var errorResult = new
+                {
+                    data = new List<object>(),
+                    error = ex.Message
+                };
+
+                return StatusCode(500, Content(JsonSerializer.Serialize(errorResult), "application/json").Content);
+            }
         }
 
         [HttpGet]
