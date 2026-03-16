@@ -27,6 +27,7 @@ namespace UPlant.Controllers
         }
 
         [HttpGet]
+        [HttpPost]
         public async Task<IActionResult> IndexData()
         {
             var draw = ParseInt(Request.Query["draw"], 1);

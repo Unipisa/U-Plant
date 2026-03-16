@@ -80,7 +80,7 @@
                 'searchDelay': 400,
                 'ajax': {
                     'url': '@Url.Action("IndexData", "Specie")',
-                    'type': 'GET',
+                    'type': 'POST',
                     'dataSrc': function (json) {
                         if (json && json.data && Array.isArray(json.data.$values)) {
                             return json.data.$values;
