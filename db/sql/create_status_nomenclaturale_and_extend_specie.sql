@@ -20,6 +20,12 @@ BEGIN
 END;
 
 IF COL_LENGTH('dbo.Specie', 'data_inserimento') IS NULL
+   AND COL_LENGTH('dbo.Specie', 'data') IS NOT NULL
+BEGIN
+    EXEC sp_rename 'dbo.Specie.data', 'data_inserimento', 'COLUMN';
+END;
+
+IF COL_LENGTH('dbo.Specie', 'data_inserimento') IS NULL
 BEGIN
     ALTER TABLE dbo.Specie ADD data_inserimento DATETIME NULL;
 END;
@@ -57,10 +63,12 @@ WHERE NOT EXISTS (
       AND s.descrizione = seed.descrizione
 );
 
+EXEC(N'
 UPDATE sp
 SET sp.data_inserimento = ISNULL(sp.data_inserimento, GETDATE())
 FROM dbo.Specie sp
 WHERE sp.data_inserimento IS NULL;
+');
 
 UPDATE sp
 SET sp.status_nomenclaturale = s.id
@@ -88,7 +96,7 @@ IF EXISTS (
       AND is_nullable = 1
 )
 BEGIN
-    ALTER TABLE dbo.Specie ALTER COLUMN data_inserimento DATETIME NOT NULL;
+    EXEC(N'ALTER TABLE dbo.Specie ALTER COLUMN data_inserimento DATETIME NOT NULL;');
 END;
 
 IF EXISTS (
