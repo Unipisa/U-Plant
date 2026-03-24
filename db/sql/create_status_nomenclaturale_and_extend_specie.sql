@@ -19,9 +19,9 @@ BEGIN
     ALTER TABLE dbo.Specie ADD status_nomenclaturale UNIQUEIDENTIFIER NULL;
 END;
 
-IF COL_LENGTH('dbo.Specie', 'data') IS NULL
+IF COL_LENGTH('dbo.Specie', 'data_inserimento') IS NULL
 BEGIN
-    ALTER TABLE dbo.Specie ADD data DATETIME NULL;
+    ALTER TABLE dbo.Specie ADD data_inserimento DATETIME NULL;
 END;
 
 IF COL_LENGTH('dbo.Specie', 'lsid') IS NULL
@@ -58,9 +58,9 @@ WHERE NOT EXISTS (
 );
 
 UPDATE sp
-SET sp.data = ISNULL(sp.data, GETDATE())
+SET sp.data_inserimento = ISNULL(sp.data_inserimento, GETDATE())
 FROM dbo.Specie sp
-WHERE sp.data IS NULL;
+WHERE sp.data_inserimento IS NULL;
 
 UPDATE sp
 SET sp.status_nomenclaturale = s.id
@@ -84,11 +84,11 @@ IF EXISTS (
     SELECT 1
     FROM sys.columns
     WHERE object_id = OBJECT_ID('dbo.Specie')
-      AND name = 'data'
+      AND name = 'data_inserimento'
       AND is_nullable = 1
 )
 BEGIN
-    ALTER TABLE dbo.Specie ALTER COLUMN data DATETIME NOT NULL;
+    ALTER TABLE dbo.Specie ALTER COLUMN data_inserimento DATETIME NOT NULL;
 END;
 
 IF EXISTS (

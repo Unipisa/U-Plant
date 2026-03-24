@@ -15,7 +15,7 @@ public partial class Specie
 
     public string nome_scientifico { get; set; }
 
-    public DateTime data { get; set; }
+    public DateTime data_inserimento { get; set; }
 
     public string lsid { get; set; }
 

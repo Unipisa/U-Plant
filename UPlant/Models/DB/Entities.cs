@@ -923,7 +923,9 @@ public partial class Entities : DbContext
             entity.Property(e => e.cult)
                 .HasMaxLength(100)
                 .IsUnicode(false);
-            entity.Property(e => e.data).HasColumnType("datetime");
+            entity.Property(e => e.data_inserimento)
+                .HasColumnName("data_inserimento")
+                .HasColumnType("datetime");
             entity.Property(e => e.lsid)
                 .HasMaxLength(255)
                 .IsUnicode(false);

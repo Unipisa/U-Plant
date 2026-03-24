@@ -68,14 +68,14 @@ namespace UPlant.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("id,genere,status_nomenclaturale,nome,nome_scientifico,data,lsid,autori,regno,areale,subspecie,autorisub,varieta,autorivar,cult,autoricult,note,nome_comune,nome_comune_en,iucn_globale,iucn_italia,cites")] Specie specie)
+        public async Task<IActionResult> Create([Bind("id,genere,status_nomenclaturale,nome,nome_scientifico,data_inserimento,lsid,autori,regno,areale,subspecie,autorisub,varieta,autorivar,cult,autoricult,note,nome_comune,nome_comune_en,iucn_globale,iucn_italia,cites")] Specie specie)
         {
             if (ModelState.IsValid)
             {
                 specie.id = Guid.NewGuid();
                 specie.status_nomenclaturale = await EnsureDefaultStatusAsync("Non definito");
                 specie.nome_scientifico = await ComposeScientificNameAsync(specie.genere, specie);
-                specie.data = DateTime.Now;
+                specie.data_inserimento = DateTime.Now;
                 _context.Add(specie);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -104,7 +104,7 @@ namespace UPlant.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("id,genere,status_nomenclaturale,nome,nome_scientifico,data,lsid,autori,regno,areale,subspecie,autorisub,varieta,autorivar,cult,autoricult,note,nome_comune,nome_comune_en,iucn_globale,iucn_italia,cites")] Specie specie)
+        public async Task<IActionResult> Edit(Guid id, [Bind("id,genere,status_nomenclaturale,nome,nome_scientifico,data_inserimento,lsid,autori,regno,areale,subspecie,autorisub,varieta,autorivar,cult,autoricult,note,nome_comune,nome_comune_en,iucn_globale,iucn_italia,cites")] Specie specie)
         {
             if (id != specie.id)
             {
@@ -140,7 +140,7 @@ namespace UPlant.Controllers
                 existing.lsid = specie.lsid;
                 existing.status_nomenclaturale = await EnsureDefaultStatusAsync("Modificato");
                 existing.nome_scientifico = await ComposeScientificNameAsync(specie.genere, specie);
-                existing.data = DateTime.Now;
+                existing.data_inserimento = DateTime.Now;
 
                 try
                 {
@@ -365,7 +365,7 @@ namespace UPlant.Controllers
                     autoricult = finalParsed.AutoriCult,
                     nome_scientifico = normalizedName,
                     lsid = wfoResult.Match?.Lsid,
-                    data = DateTime.Now,
+                    data_inserimento = DateTime.Now,
                     status_nomenclaturale = wfoStatusId
                 };
 
@@ -398,7 +398,7 @@ namespace UPlant.Controllers
             }
 
             specie.status_nomenclaturale = await EnsureDefaultStatusAsync("WFO");
-            specie.data = DateTime.Now;
+            specie.data_inserimento = DateTime.Now;
 
             if (string.Equals(input.ActionType, "keep_current", StringComparison.OrdinalIgnoreCase))
             {
