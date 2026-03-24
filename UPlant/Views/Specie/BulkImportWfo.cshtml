@@ -1,0 +1,49 @@
+@model UPlant.Models.ViewModels.SpecieBulkImportWfoViewModel
+
+<div class="card card-outline card-primary">
+    <div class="card-header with-border">
+        <h3 class="card-title">Import massivo da World Flora Online</h3>
+    </div>
+    <div class="card-body">
+        <p>Incolla un nome scientifico per riga. L'import usa WFO per verificare il nome e importa il nome accettato quando disponibile.</p>
+        <p>Nota: il genere deve essere gia presente nell'archivio locale.</p>
+
+        <form asp-action="BulkImportWfo" method="post">
+            @Html.AntiForgeryToken()
+            <div class="form-group">
+                <label asp-for="NamesText">Elenco nomi</label>
+                <textarea asp-for="NamesText" class="form-control" rows="12"></textarea>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Avvia import</button>
+                <a asp-action="Index" class="btn btn-info">Indietro</a>
+            </div>
+        </form>
+
+        @if (Model.Results.Any())
+        {
+            <hr />
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>Input</th>
+                        <th>Nome finale</th>
+                        <th>Esito</th>
+                        <th>Dettagli</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var row in Model.Results)
+                    {
+                        <tr>
+                            <td>@row.InputName</td>
+                            <td>@(string.IsNullOrWhiteSpace(row.FinalName) ? "-" : row.FinalName)</td>
+                            <td>@row.Outcome</td>
+                            <td>@row.Details</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+</div>

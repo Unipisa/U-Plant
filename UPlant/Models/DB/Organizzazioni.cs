@@ -37,6 +37,8 @@ public partial class Organizzazioni
 
     public virtual ICollection<Settori> Settori { get; set; } = new List<Settori>();
 
+    public virtual ICollection<StatusNomenclaturale> StatusNomenclaturale { get; set; } = new List<StatusNomenclaturale>();
+
     public virtual ICollection<StatoIndividuo> StatoIndividuo { get; set; } = new List<StatoIndividuo>();
 
     public virtual ICollection<StatoMateriale> StatoMateriale { get; set; } = new List<StatoMateriale>();

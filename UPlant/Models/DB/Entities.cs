@@ -85,6 +85,8 @@ public partial class Entities : DbContext
 
     public virtual DbSet<Specie> Specie { get; set; }
 
+    public virtual DbSet<StatusNomenclaturale> StatusNomenclaturale { get; set; }
+
     public virtual DbSet<StatoIndividuo> StatoIndividuo { get; set; }
 
     public virtual DbSet<StatoMateriale> StatoMateriale { get; set; }
@@ -921,6 +923,12 @@ public partial class Entities : DbContext
             entity.Property(e => e.cult)
                 .HasMaxLength(100)
                 .IsUnicode(false);
+            entity.Property(e => e.data_inserimento)
+                .HasColumnName("data_inserimento")
+                .HasColumnType("datetime");
+            entity.Property(e => e.lsid)
+                .HasMaxLength(255)
+                .IsUnicode(false);
             entity.Property(e => e.nome)
                 .IsRequired()
                 .HasMaxLength(100)
@@ -968,6 +976,27 @@ public partial class Entities : DbContext
             entity.HasOne(d => d.regnoNavigation).WithMany(p => p.Specie)
                 .HasForeignKey(d => d.regno)
                 .HasConstraintName("FK_Specie_Regno");
+
+            entity.HasOne(d => d.status_nomenclaturaleNavigation).WithMany(p => p.Specie)
+                .HasForeignKey(d => d.status_nomenclaturale)
+                .HasConstraintName("FK_Specie_StatusNomenclaturale");
+        });
+
+        modelBuilder.Entity<StatusNomenclaturale>(entity =>
+        {
+            entity.Property(e => e.id).HasDefaultValueSql("(newid())");
+            entity.Property(e => e.descrizione)
+                .IsRequired()
+                .HasMaxLength(100)
+                .IsUnicode(false);
+            entity.Property(e => e.descrizione_en)
+                .HasMaxLength(100)
+                .IsUnicode(false);
+
+            entity.HasOne(d => d.organizzazioneNavigation).WithMany(p => p.StatusNomenclaturale)
+                .HasForeignKey(d => d.organizzazione)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_StatusNomenclaturale_Organizzazioni");
         });
 
         modelBuilder.Entity<StatoIndividuo>(entity =>
