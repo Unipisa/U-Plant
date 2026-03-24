@@ -1,17 +1,12 @@
-﻿@model IEnumerable<UPlant.Models.DB.Specie>
 @inject LanguageService language
 @{
     ViewData["Title"] = "Index";
-    // Local helpers
-    string Trunc(string s, int max) =>
-        string.IsNullOrEmpty(s) ? "" : (s.Length > max ? s.Substring(0, max) : s);
 }
 
 <div class="card card-outline card-primary">
     <div class="card-header with-border">
         <h1 class="card-title">Elenco</h1>
         @{
-
             if (User.IsInRole("Administrator"))
             {
                 <div class="float-right success ">
@@ -25,8 +20,6 @@
                             @language.Getkey("Global_Add") @language.Getkey("Global_Species")
                         </span>
                     </a>
-
-
                 </div>
             }
         }
@@ -217,8 +210,6 @@
     <link href="~/css/datatables.min.css" rel="stylesheet" />
 }
 
-
-
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
@@ -227,18 +218,74 @@
     <script src="~/js/datatables.min.js"></script>
 }
 
-
 @section CustomScripts {
     <script>
         jQuery(function () {
+            const isAdministrator = @User.IsInRole("Administrator").ToString().ToLowerInvariant();
+            const editUrlTemplate = '@Url.Action("Edit", "Specie", new { id = "__id__" })';
+            const deleteUrlTemplate = '@Url.Action("Delete", "Specie", new { id = "__id__" })';
+
             jQuery('#table1').DataTable({
+                'processing': true,
+                'deferRender': true,
                 'paging': true,
                 'lengthChange': true,
                 'searching': true,
                 'ordering': true,
                 'info': true,
-                'autoWidth': false
-            })
+                'autoWidth': false,
+                'pageLength': 25,
+                'lengthMenu': [25, 50, 100],
+                'searchDelay': 400,
+                'ajax': {
+                    'url': '@Url.Action("IndexAllData", "Specie")',
+                    'type': 'POST',
+                    'dataSrc': function (json) {
+                        if (json && json.data && Array.isArray(json.data.$values)) {
+                            return json.data.$values;
+                        }
+
+                        return json && json.data ? json.data : [];
+                    },
+                    'error': function (xhr) {
+                        console.error('Specie IndexData error', xhr);
+                    }
+                },
+                'order': [[0, 'asc']],
+                'columns': [
+                    { 'data': 'scientificName' },
+                    { 'data': 'commonName' },
+                    { 'data': 'englishCommonName' },
+                    { 'data': 'family' },
+                    { 'data': 'genus' },
+                    { 'data': 'kingdom' },
+                    { 'data': 'range' },
+                    { 'data': 'cites' },
+                    { 'data': 'iucnGlobal' },
+                    { 'data': 'iucnLocal' },
+                    { 'data': 'notePreview' },
+                    {
+                        'data': null,
+                        'orderable': false,
+                        'searchable': false,
+                        'render': function (data, type, row) {
+                            if (!isAdministrator || !row.showActions) {
+                                return '';
+                            }
+
+                            const editUrl = editUrlTemplate.replace('__id__', row.id);
+                            let actions = '<a href="' + editUrl + '"><span class="btn btn-warning btn-xs"><i class="fa-solid fa-pencil" style="color: #fafafa;"></i></span></a>';
+
+                            if (row.canDelete) {
+                                const deleteUrl = deleteUrlTemplate.replace('__id__', row.id);
+                                actions += ' <a href="' + deleteUrl + '"><span class="btn btn-danger btn-xs"><i class="fa-solid fa-trash"></i></span></a>';
+                            }
+
+                            return actions;
+                        }
+                    }
+                ]
+            });
         })
     </script>
     <script>

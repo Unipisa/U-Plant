@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using UPlant.Models.DB;
 using UPlant.Models.ViewModels;
 using UPlant.Services;
@@ -540,6 +542,58 @@ namespace UPlant.Controllers
             specie.lsid = string.IsNullOrWhiteSpace(lsid) ? specie.lsid : lsid.Trim();
             specie.nome_scientifico = SpecieScientificNameHelper.Compose(parsed.Genus, parsed.Nome, parsed.Autori, parsed.Subspecie, parsed.AutoriSub, parsed.Varieta, parsed.AutoriVar, parsed.Cult, parsed.AutoriCult);
             return true;
+        }
+
+        private static int ParseInt(string value, int fallback)
+        {
+            return int.TryParse(value, out var parsed) ? parsed : fallback;
+        }
+
+        private static string TruncateNote(string note)
+        {
+            if (string.IsNullOrWhiteSpace(note))
+            {
+                return string.Empty;
+            }
+
+            return note.Length > 100
+                ? $"{note.Substring(0, 100)} [...]"
+                : note;
+        }
+
+        private static IQueryable<SpecieIndexRow> ApplyOrdering(IQueryable<SpecieIndexRow> query, int columnIndex, bool descending)
+        {
+            return columnIndex switch
+            {
+                1 => descending ? query.OrderByDescending(x => x.CommonName) : query.OrderBy(x => x.CommonName),
+                2 => descending ? query.OrderByDescending(x => x.EnglishCommonName) : query.OrderBy(x => x.EnglishCommonName),
+                3 => descending ? query.OrderByDescending(x => x.Family) : query.OrderBy(x => x.Family),
+                4 => descending ? query.OrderByDescending(x => x.Genus) : query.OrderBy(x => x.Genus),
+                5 => descending ? query.OrderByDescending(x => x.Kingdom) : query.OrderBy(x => x.Kingdom),
+                6 => descending ? query.OrderByDescending(x => x.Range) : query.OrderBy(x => x.Range),
+                7 => descending ? query.OrderByDescending(x => x.Cites) : query.OrderBy(x => x.Cites),
+                8 => descending ? query.OrderByDescending(x => x.IucnGlobal) : query.OrderBy(x => x.IucnGlobal),
+                9 => descending ? query.OrderByDescending(x => x.IucnLocal) : query.OrderBy(x => x.IucnLocal),
+                10 => descending ? query.OrderByDescending(x => x.Note) : query.OrderBy(x => x.Note),
+                _ => descending ? query.OrderByDescending(x => x.ScientificName) : query.OrderBy(x => x.ScientificName)
+            };
+        }
+
+        private sealed class SpecieIndexRow
+        {
+            public Guid Id { get; set; }
+            public string ScientificName { get; set; }
+            public string CommonName { get; set; }
+            public string EnglishCommonName { get; set; }
+            public string Family { get; set; }
+            public string Genus { get; set; }
+            public string Kingdom { get; set; }
+            public string Range { get; set; }
+            public string Cites { get; set; }
+            public string IucnGlobal { get; set; }
+            public string IucnLocal { get; set; }
+            public string Note { get; set; }
+            public bool HasAccessioni { get; set; }
         }
     }
 }
