@@ -15,6 +15,11 @@
             if (User.IsInRole("Administrator"))
             {
                 <div class="float-right success ">
+                    <a asp-action="BulkImportWfo" class="mr-2">
+                        <span class="btn btn-info" title="Import massivo da WFO">
+                            Import WFO
+                        </span>
+                    </a>
                     <a asp-action="Create">
                         <span class="btn btn-success" title="@language.Getkey("Global_Add") @language.Getkey("Global_Species")">
                             @language.Getkey("Global_Add") @language.Getkey("Global_Species")
@@ -31,8 +36,20 @@
             <table id="table1" class="table table-bordered table-striped dataTable">
                                 <thead>
                                     <tr>
+                                        <th style="width: 110px;">
+                                            WFO
+                                        </th>
                                         <th>
                                         @language.Getkey("Global_Scientific_Name")
+                                        </th>
+                                        <th>
+                                            Status nomenclaturale
+                                        </th>
+                                        <th>
+                                            Data
+                                        </th>
+                                        <th>
+                                            LSID
                                         </th>
                                         <th>
                                         @language.Getkey("Global_Common_Name")
@@ -72,8 +89,39 @@
                                     @foreach (var item in Model)
                                     {
                                     <tr>
+                                        <td class="text-center">
+                                            @if (User.IsInRole("Administrator"))
+                                            {
+                                                <button type="button"
+                                                        class="btn btn-info btn-xs js-wfo-check"
+                                                        data-id="@item.id"
+                                                        data-name="@item.nome_scientifico"
+                                                        title="Verifica World Flora Online">
+                                                    <i class="fa-solid fa-globe"></i>
+                                                </button>
+                                            }
+                                        </td>
                                         <td>
                                             @Html.DisplayFor(modelItem => item.nome_scientifico)
+                                        </td>
+                                        <td>
+                                            @if (!string.IsNullOrWhiteSpace(item.status_nomenclaturaleNavigation?.descrizione) &&
+                                           item.status_nomenclaturaleNavigation.descrizione.Equals("WFO", StringComparison.OrdinalIgnoreCase))
+                                            {
+                                                <span class="text-success" title="Revisione confermata con WFO">
+                                                    <i class="fa-solid fa-circle-check"></i> @item.status_nomenclaturaleNavigation.descrizione
+                                                </span>
+                                            }
+                                            else
+                                            {
+                                                @Html.DisplayFor(modelItem => item.status_nomenclaturaleNavigation.descrizione)
+                                            }
+                                        </td>
+                                        <td>
+                                            @item.data.ToString("dd/MM/yyyy HH:mm")
+                                        </td>
+                                        <td>
+                                            @($"{Trunc(item.lsid ?? "", 40)}{(string.IsNullOrEmpty(item.lsid) ? "" : "...")}")
                                         </td>
                                         <td>
                                             @Html.DisplayFor(modelItem => item.nome_comune)
@@ -136,6 +184,33 @@
 
 
                 </div>
+
+<div class="modal fade" id="wfoModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Verifica World Flora Online</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Chiudi">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="wfoModalBody">Controllo in corso...</div>
+                <form id="wfoDecisionForm" asp-action="ApplyWfoDecision" method="post">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="SpecieId" id="wfoSpecieId" />
+                    <input type="hidden" name="ActionType" id="wfoActionType" />
+                    <input type="hidden" name="SelectedWfoId" id="wfoSelectedWfoId" />
+                    <input type="hidden" name="AcceptedFullName" id="wfoAcceptedFullName" />
+                    <input type="hidden" name="Lsid" id="wfoLsid" />
+                </form>
+            </div>
+            <div class="modal-footer" id="wfoModalFooter">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Chiudi</button>
+            </div>
+        </div>
+    </div>
+</div>
 @section Styles {
     <link href="~/css/select2.min.css" rel="stylesheet" />
     <link href="~/css/accessioni.min.css" rel="stylesheet" />
@@ -165,5 +240,68 @@
                 'autoWidth': false
             })
         })
+    </script>
+    <script>
+        function submitWfoDecision(actionType, specieId, wfoId, acceptedFullName, lsid) {
+            $('#wfoSpecieId').val(specieId || '');
+            $('#wfoActionType').val(actionType || '');
+            $('#wfoSelectedWfoId').val(wfoId || '');
+            $('#wfoAcceptedFullName').val(acceptedFullName || '');
+            $('#wfoLsid').val(lsid || '');
+            $('#wfoDecisionForm').submit();
+        }
+
+        $(function () {
+            $('.js-wfo-check').on('click', function () {
+                var specieId = $(this).data('id');
+                var scientificName = $(this).data('name');
+                var modal = $('#wfoModal');
+                $('#wfoModalBody').html('<p>Controllo WFO in corso per <strong>' + scientificName + '</strong>...</p>');
+                $('#wfoModalFooter').html('<button type="button" class="btn btn-secondary" data-dismiss="modal">Chiudi</button>');
+                modal.modal('show');
+
+                $.get('@Url.Action("CheckWfo", "Specie")', { id: specieId })
+                    .done(function (data) {
+                        if (data.status === 'accepted' && data.match) {
+                            $('#wfoModalBody').html(
+                                '<p><strong>' + data.match.fullName + '</strong> risulta un nome accettato in World Flora Online.</p>' +
+                                '<p>Vuoi confermare la revisione e impostare lo status nomenclaturale a WFO?</p>'
+                            );
+                            $('#wfoModalFooter').html(
+                                '<button type="button" class="btn btn-secondary" data-dismiss="modal">Annulla</button>' +
+                                '<button type="button" class="btn btn-success" onclick="submitWfoDecision(\'accept_suggested\', \'' + specieId + '\', \'' + data.match.wfoId + '\', \'' + (data.match.fullName || '').replace(/'/g, '&#39;') + '\', \'' + (data.match.lsid || '') + '\')">Conferma revisione</button>'
+                            );
+                            return;
+                        }
+
+                        if (data.status === 'synonym' && data.match) {
+                            $('#wfoModalBody').html(
+                                '<p><strong>' + data.match.fullName + '</strong> risulta un sinonimo.</p>' +
+                                '<p>Nome accettato proposto da WFO: <strong>' + data.match.acceptedName + '</strong></p>'
+                            );
+                            $('#wfoModalFooter').html(
+                                '<button type="button" class="btn btn-secondary" data-dismiss="modal">Annulla</button>' +
+                                '<button type="button" class="btn btn-warning" onclick="submitWfoDecision(\'keep_current\', \'' + specieId + '\', \'' + data.match.wfoId + '\', \'' + (data.match.fullName || '').replace(/'/g, '&#39;') + '\', \'' + (data.match.lsid || '') + '\')">Lascia il nome attuale</button>' +
+                                '<button type="button" class="btn btn-success" onclick="submitWfoDecision(\'accept_suggested\', \'' + specieId + '\', \'' + data.match.wfoId + '\', \'' + (data.match.acceptedName || '').replace(/'/g, '&#39;') + '\', \'' + (data.match.lsid || '') + '\')">Usa il nome accettato</button>'
+                            );
+                            return;
+                        }
+
+                        var body = '<p>Il check WFO non ha trovato un match univoco.</p>';
+                        if (data.candidates && data.candidates.length > 0) {
+                            body += '<p>Sono stati trovati ' + data.candidates.length + ' candidati possibili.</p>';
+                        }
+                        body += '<p>Ti apro la pagina di revisione per gestire il caso manualmente.</p>';
+                        $('#wfoModalBody').html(body);
+                        $('#wfoModalFooter').html(
+                            '<button type="button" class="btn btn-secondary" data-dismiss="modal">Chiudi</button>' +
+                            '<a class="btn btn-primary" href="' + data.reviewUrl + '">Apri revisione</a>'
+                        );
+                    })
+                    .fail(function () {
+                        $('#wfoModalBody').html('<p>Non sono riuscito a contattare il servizio WFO in questo momento.</p>');
+                    });
+            });
+        });
     </script>
 }          

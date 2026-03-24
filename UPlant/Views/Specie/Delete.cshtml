@@ -28,6 +28,24 @@
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.nome_scientifico)
         </dd>
+        <dt class = "col-sm-2">
+            Status nomenclaturale
+        </dt>
+        <dd class = "col-sm-10">
+            @(Model.status_nomenclaturaleNavigation?.descrizione ?? "-")
+        </dd>
+        <dt class = "col-sm-2">
+            Data ultimo aggiornamento
+        </dt>
+        <dd class = "col-sm-10">
+            @Model.data.ToString("dd/MM/yyyy HH:mm")
+        </dd>
+        <dt class = "col-sm-2">
+            LSID
+        </dt>
+        <dd class = "col-sm-10">
+            @(string.IsNullOrWhiteSpace(Model.lsid) ? "-" : Model.lsid)
+        </dd>
        
         <dt class = "col-sm-2">
             Autori

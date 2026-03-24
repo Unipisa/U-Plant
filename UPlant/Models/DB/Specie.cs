@@ -9,9 +9,15 @@ public partial class Specie
 
     public Guid genere { get; set; }
 
+    public Guid status_nomenclaturale { get; set; }
+
     public string nome { get; set; }
 
     public string nome_scientifico { get; set; }
+
+    public DateTime data { get; set; }
+
+    public string lsid { get; set; }
 
     public string note { get; set; }
 
@@ -56,4 +62,6 @@ public partial class Specie
     public virtual Iucn iucn_italiaNavigation { get; set; }
 
     public virtual Regni regnoNavigation { get; set; }
+
+    public virtual StatusNomenclaturale status_nomenclaturaleNavigation { get; set; }
 }

@@ -1,0 +1,15 @@
+@model UPlant.Models.DB.StatusNomenclaturale
+
+<div class="card card-outline card-primary">
+    <div class="card-header with-border">
+        <h3 class="card-title">Elimina status nomenclaturale</h3>
+    </div>
+    <div class="card-body">
+        <p>Confermi l'eliminazione di <strong>@Model.descrizione</strong>?</p>
+        <form asp-action="Delete">
+            <input type="hidden" asp-for="id" />
+            <input type="submit" value="Elimina" class="btn btn-danger" />
+            <a asp-action="Index" class="btn btn-info">Indietro</a>
+        </form>
+    </div>
+</div>

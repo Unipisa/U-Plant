@@ -1,0 +1,114 @@
+@model UPlant.Models.ViewModels.SpecieWfoReviewViewModel
+@inject LanguageService language
+
+@{
+    ViewData["Title"] = "ReviewWfo";
+}
+
+<div class="card card-outline card-primary">
+    <div class="card-header with-border">
+        <h3 class="card-title">Revisione nomenclaturale WFO</h3>
+    </div>
+    <div class="card-body">
+        @if (TempData["WfoError"] != null)
+        {
+            <div class="alert alert-warning">@TempData["WfoError"]</div>
+        }
+
+        <p><strong>Specie corrente:</strong> @Model.Specie.nome_scientifico</p>
+
+        @if (Model.CheckResult.TriedQueries.Any())
+        {
+            <p><strong>Query provate:</strong> @string.Join(" | ", Model.CheckResult.TriedQueries)</p>
+        }
+
+        @if (Model.CheckResult.Status == UPlant.Services.WfoMatchStatus.Accepted && Model.CheckResult.Match != null)
+        {
+            <div class="alert alert-success">
+                <strong>@Model.CheckResult.Match.FullName</strong> risulta nome accettato.
+            </div>
+            <form asp-action="ApplyWfoDecision" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="SpecieId" value="@Model.Specie.id" />
+                <input type="hidden" name="ActionType" value="accept_suggested" />
+                <input type="hidden" name="SelectedWfoId" value="@Model.CheckResult.Match.WfoId" />
+                <input type="hidden" name="AcceptedFullName" value="@Model.CheckResult.Match.FullName" />
+                <input type="hidden" name="Lsid" value="@Model.CheckResult.Match.Lsid" />
+                <button type="submit" class="btn btn-success">Conferma revisione WFO</button>
+            </form>
+        }
+        else if (Model.CheckResult.Status == UPlant.Services.WfoMatchStatus.Synonym && Model.CheckResult.Match != null)
+        {
+            <div class="alert alert-warning">
+                <p><strong>@Model.CheckResult.Match.FullName</strong> risulta un sinonimo.</p>
+                <p>Nome accettato suggerito: <strong>@Model.CheckResult.Match.SuggestedAcceptedName</strong></p>
+            </div>
+            <div class="d-flex" style="gap: 10px; flex-wrap: wrap;">
+                <form asp-action="ApplyWfoDecision" method="post">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="SpecieId" value="@Model.Specie.id" />
+                    <input type="hidden" name="ActionType" value="keep_current" />
+                    <input type="hidden" name="SelectedWfoId" value="@Model.CheckResult.Match.WfoId" />
+                    <input type="hidden" name="AcceptedFullName" value="@Model.CheckResult.Match.FullName" />
+                    <input type="hidden" name="Lsid" value="@Model.CheckResult.Match.Lsid" />
+                    <button type="submit" class="btn btn-warning">Lascia il nome attuale</button>
+                </form>
+                <form asp-action="ApplyWfoDecision" method="post">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="SpecieId" value="@Model.Specie.id" />
+                    <input type="hidden" name="ActionType" value="accept_suggested" />
+                    <input type="hidden" name="SelectedWfoId" value="@Model.CheckResult.Match.WfoId" />
+                    <input type="hidden" name="AcceptedFullName" value="@Model.CheckResult.Match.SuggestedAcceptedName" />
+                    <input type="hidden" name="Lsid" value="@Model.CheckResult.Match.Lsid" />
+                    <button type="submit" class="btn btn-success">Usa il nome accettato</button>
+                </form>
+            </div>
+        }
+        else if (Model.CheckResult.Candidates.Any())
+        {
+            <div class="alert alert-info">
+                Sono stati trovati più candidati. Seleziona il nome da applicare oppure torna in modifica manuale.
+            </div>
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>Nome WFO</th>
+                        <th>Placement</th>
+                        <th style="width: 180px;">Azione</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var candidate in Model.CheckResult.Candidates)
+                    {
+                        <tr>
+                            <td>@candidate.FullName</td>
+                            <td>@candidate.Placement</td>
+                            <td>
+                                <form asp-action="ApplyWfoDecision" method="post">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="SpecieId" value="@Model.Specie.id" />
+                                    <input type="hidden" name="ActionType" value="accept_selected" />
+                                    <input type="hidden" name="SelectedWfoId" value="@candidate.WfoId" />
+                                    <input type="hidden" name="AcceptedFullName" value="@candidate.FullName" />
+                                    <input type="hidden" name="Lsid" value="@candidate.Lsid" />
+                                    <button type="submit" class="btn btn-primary btn-sm">Applica</button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <div class="alert alert-secondary">
+                Non risultano occorrenze WFO nelle tre casistiche provate. Ti conviene correggere manualmente i campi della specie.
+            </div>
+        }
+    </div>
+</div>
+
+<div class="mt-3">
+    <a asp-action="Edit" asp-route-id="@Model.Specie.id" class="btn btn-warning">@language.Getkey("Global_Edit")</a>
+    <a asp-action="Index" class="btn btn-info">@language.Getkey("Global_Go_Back")</a>
+</div>

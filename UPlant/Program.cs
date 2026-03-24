@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authentication.Cookies;
+ï»¿using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OAuth;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -50,6 +50,7 @@ using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using NuGet.Protocol.Core.Types;
 using System.Reflection;
 using Microsoft.Extensions.Options;
+using UPlant.Services;
 
 #region Services container
 
@@ -67,6 +68,7 @@ builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSet
 //builder.Services.Configure<PathFile>(configuration.GetSection("Pathfiles"));
 
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddHttpClient<IWorldFloraOnlineService, WorldFloraOnlineService>();
 
 
 //builder.Services.AddControllersWithViews();
@@ -186,7 +188,7 @@ if (typeauth == "AZURE")
       onTokenValidated?.Invoke(context);
       var db = context.HttpContext.RequestServices.GetRequiredService<Entities>();
 
-      var Utente = db.Users.Where(x => x.UnipiUserName == context.Principal.Identity.Name.Substring(0, context.Principal.Identity.Name.IndexOf("@"))); // unipiusername deve essere valorizzato solo con la parte iniziale dell'utente quindi es.a038858#unipi.it nel db è solo a038858 quindi devo fare la sub dell'identity.name
+      var Utente = db.Users.Where(x => x.UnipiUserName == context.Principal.Identity.Name.Substring(0, context.Principal.Identity.Name.IndexOf("@"))); // unipiusername deve essere valorizzato solo con la parte iniziale dell'utente quindi es.a038858#unipi.it nel db Ã¨ solo a038858 quindi devo fare la sub dell'identity.name
                                                                                                                                                        // Recupero tutti gli eventuali ruoli dell'utente
 
 
@@ -243,7 +245,7 @@ if (typeauth == "AZURE")
 
 
 
-//qui metterò la configurazione WOS2
+//qui metterÃ² la configurazione WOS2
 
 if (typeauth == "WSO2") { 
 builder.Services.AddAuthentication(
@@ -326,7 +328,7 @@ builder.Services.AddAuthentication(
         };
     });
 }
-//qui metterò la configurazione SAML2
+//qui metterÃ² la configurazione SAML2
 if (typeauth == "SAML2")
 {
 
@@ -503,3 +505,5 @@ app.MapControllerRoute(
 
 app.Run();
 #endregion
+
+
