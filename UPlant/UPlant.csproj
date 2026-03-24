@@ -122,6 +122,9 @@
 	  <Content Update="wwwroot\img\uplant.png">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </Content>
+	  <Content Update="wwwroot\img\wfo.png">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
 	  <Content Update="wwwroot\js\dymo.connect.framework.full.js">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </Content>

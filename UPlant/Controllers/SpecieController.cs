@@ -11,6 +11,7 @@ namespace UPlant.Controllers
 {
     public class SpecieController : BaseController
     {
+        private const int MaxPageSize = 100;
         private readonly Entities _context;
         private readonly IWorldFloraOnlineService _worldFloraOnlineService;
 
@@ -20,21 +21,211 @@ namespace UPlant.Controllers
             _worldFloraOnlineService = worldFloraOnlineService;
         }
 
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            var entities = _context.Specie
-                .Include(s => s.arealeNavigation)
-                .Include(s => s.citesNavigation)
-                .Include(s => s.genereNavigation)
-                .Include(s => s.genereNavigation.famigliaNavigation)
-                .Include(s => s.iucn_globaleNavigation)
-                .Include(s => s.iucn_italiaNavigation)
-                .Include(s => s.regnoNavigation)
-                .Include(s => s.status_nomenclaturaleNavigation)
-                .Include(s => s.Accessioni)
-                .OrderBy(x => x.nome_scientifico);
+            return View();
+        }
 
-            return View(await entities.ToListAsync());
+        [HttpGet]
+        [HttpPost]
+        public async Task<IActionResult> IndexAllData()
+        {
+            try
+            {
+                var isAdministrator = User.IsInRole("Administrator");
+
+                var data = await _context.Specie
+                    .AsNoTracking()
+                    .Select(s => new SpecieIndexRow
+                    {
+                        Id = s.id,
+                        ScientificName = s.nome_scientifico ?? string.Empty,
+                        ValidationStatus = s.validazione_tassonomicaNavigation != null
+                            ? s.validazione_tassonomicaNavigation.descrizione ?? string.Empty
+                            : string.Empty,
+                        InsertedAt = s.data_inserimento,
+                        Lsid = s.lsid ?? string.Empty,
+                        CommonName = s.nome_comune ?? string.Empty,
+                        EnglishCommonName = s.nome_comune_en ?? string.Empty,
+                        Family = s.genereNavigation != null && s.genereNavigation.famigliaNavigation != null
+                            ? s.genereNavigation.famigliaNavigation.descrizione ?? string.Empty
+                            : string.Empty,
+                        Genus = s.genereNavigation != null
+                            ? s.genereNavigation.descrizione ?? string.Empty
+                            : string.Empty,
+                        Kingdom = s.regnoNavigation != null
+                            ? s.regnoNavigation.descrizione ?? string.Empty
+                            : string.Empty,
+                        Range = s.arealeNavigation != null
+                            ? s.arealeNavigation.descrizione ?? string.Empty
+                            : string.Empty,
+                        Cites = s.citesNavigation != null
+                            ? s.citesNavigation.codice ?? string.Empty
+                            : string.Empty,
+                        IucnGlobal = s.iucn_globaleNavigation != null
+                            ? s.iucn_globaleNavigation.codice ?? string.Empty
+                            : string.Empty,
+                        IucnLocal = s.iucn_italiaNavigation != null
+                            ? s.iucn_italiaNavigation.codice ?? string.Empty
+                            : string.Empty,
+                        Note = s.note ?? string.Empty,
+                        HasAccessioni = s.Accessioni.Any()
+                    })
+                    .OrderBy(x => x.ScientificName)
+                    .ToListAsync();
+
+                var result = new
+                {
+                    data = data.Select(item => new
+                    {
+                        id = item.Id,
+                        scientificName = item.ScientificName,
+                        validationStatus = item.ValidationStatus,
+                        insertedAt = item.InsertedAt.ToString("dd/MM/yyyy HH:mm"),
+                        lsid = item.Lsid,
+                        commonName = item.CommonName,
+                        englishCommonName = item.EnglishCommonName,
+                        family = item.Family,
+                        genus = item.Genus,
+                        kingdom = item.Kingdom,
+                        range = item.Range,
+                        cites = item.Cites,
+                        iucnGlobal = item.IucnGlobal,
+                        iucnLocal = item.IucnLocal,
+                        notePreview = TruncateNote(item.Note),
+                        canDelete = !item.HasAccessioni,
+                        showActions = isAdministrator
+                    }).ToList()
+                };
+
+                return Content(JsonSerializer.Serialize(result), "application/json");
+            }
+            catch (Exception ex)
+            {
+                var errorResult = new
+                {
+                    data = new List<object>(),
+                    error = ex.Message
+                };
+
+                return StatusCode(500, Content(JsonSerializer.Serialize(errorResult), "application/json").Content);
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> IndexData()
+        {
+            var draw = ParseInt(Request.Query["draw"], 1);
+            var start = Math.Max(ParseInt(Request.Query["start"], 0), 0);
+            var length = ParseInt(Request.Query["length"], 25);
+            if (length <= 0)
+            {
+                length = 25;
+            }
+
+            length = Math.Min(length, MaxPageSize);
+
+            var search = Request.Query["search[value]"].FirstOrDefault()?.Trim();
+            var orderColumn = ParseInt(Request.Query["order[0][column]"], 1);
+            var orderDirection = Request.Query["order[0][dir]"].FirstOrDefault();
+            var descending = string.Equals(orderDirection, "desc", StringComparison.OrdinalIgnoreCase);
+            var isAdministrator = User.IsInRole("Administrator");
+
+            var query = _context.Specie
+                .AsNoTracking()
+                .Select(s => new SpecieIndexRow
+                {
+                    Id = s.id,
+                    ScientificName = s.nome_scientifico ?? string.Empty,
+                    ValidationStatus = s.validazione_tassonomicaNavigation != null
+                        ? s.validazione_tassonomicaNavigation.descrizione ?? string.Empty
+                        : string.Empty,
+                    InsertedAt = s.data_inserimento,
+                    Lsid = s.lsid ?? string.Empty,
+                    CommonName = s.nome_comune ?? string.Empty,
+                    EnglishCommonName = s.nome_comune_en ?? string.Empty,
+                    Family = s.genereNavigation != null && s.genereNavigation.famigliaNavigation != null
+                        ? s.genereNavigation.famigliaNavigation.descrizione ?? string.Empty
+                        : string.Empty,
+                    Genus = s.genereNavigation != null
+                        ? s.genereNavigation.descrizione ?? string.Empty
+                        : string.Empty,
+                    Kingdom = s.regnoNavigation != null
+                        ? s.regnoNavigation.descrizione ?? string.Empty
+                        : string.Empty,
+                    Range = s.arealeNavigation != null
+                        ? s.arealeNavigation.descrizione ?? string.Empty
+                        : string.Empty,
+                    Cites = s.citesNavigation != null
+                        ? s.citesNavigation.codice ?? string.Empty
+                        : string.Empty,
+                    IucnGlobal = s.iucn_globaleNavigation != null
+                        ? s.iucn_globaleNavigation.codice ?? string.Empty
+                        : string.Empty,
+                    IucnLocal = s.iucn_italiaNavigation != null
+                        ? s.iucn_italiaNavigation.codice ?? string.Empty
+                        : string.Empty,
+                    Note = s.note ?? string.Empty,
+                    HasAccessioni = s.Accessioni.Any()
+                });
+
+            var recordsTotal = await query.CountAsync();
+
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                query = query.Where(s =>
+                    s.ScientificName.Contains(search) ||
+                    s.ValidationStatus.Contains(search) ||
+                    s.Lsid.Contains(search) ||
+                    s.CommonName.Contains(search) ||
+                    s.EnglishCommonName.Contains(search) ||
+                    s.Family.Contains(search) ||
+                    s.Genus.Contains(search) ||
+                    s.Kingdom.Contains(search) ||
+                    s.Range.Contains(search) ||
+                    s.Cites.Contains(search) ||
+                    s.IucnGlobal.Contains(search) ||
+                    s.IucnLocal.Contains(search) ||
+                    s.Note.Contains(search));
+            }
+
+            var recordsFiltered = await query.CountAsync();
+
+            query = ApplyOrdering(query, orderColumn, descending);
+
+            var page = await query
+                .Skip(start)
+                .Take(length)
+                .ToListAsync();
+
+            var result = new
+            {
+                draw,
+                recordsTotal,
+                recordsFiltered,
+                data = page.Select(item => new
+                {
+                    id = item.Id,
+                    scientificName = item.ScientificName,
+                    validationStatus = item.ValidationStatus,
+                    insertedAt = item.InsertedAt.ToString("dd/MM/yyyy HH:mm"),
+                    lsid = item.Lsid,
+                    commonName = item.CommonName,
+                    englishCommonName = item.EnglishCommonName,
+                    family = item.Family,
+                    genus = item.Genus,
+                    kingdom = item.Kingdom,
+                    range = item.Range,
+                    cites = item.Cites,
+                    iucnGlobal = item.IucnGlobal,
+                    iucnLocal = item.IucnLocal,
+                    notePreview = TruncateNote(item.Note),
+                    canDelete = !item.HasAccessioni,
+                    showActions = isAdministrator
+                }).ToList()
+            };
+
+            return Json(result);
         }
 
         public async Task<IActionResult> Details(Guid? id)
@@ -51,7 +242,7 @@ namespace UPlant.Controllers
                 .Include(s => s.iucn_globaleNavigation)
                 .Include(s => s.iucn_italiaNavigation)
                 .Include(s => s.regnoNavigation)
-                .Include(s => s.status_nomenclaturaleNavigation)
+                .Include(s => s.validazione_tassonomicaNavigation)
                 .FirstOrDefaultAsync(m => m.id == id);
 
             if (specie == null)
@@ -70,12 +261,12 @@ namespace UPlant.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("id,genere,status_nomenclaturale,nome,nome_scientifico,data_inserimento,lsid,autori,regno,areale,subspecie,autorisub,varieta,autorivar,cult,autoricult,note,nome_comune,nome_comune_en,iucn_globale,iucn_italia,cites")] Specie specie)
+        public async Task<IActionResult> Create([Bind("id,genere,validazione_tassonomica,nome,nome_scientifico,data_inserimento,lsid,autori,regno,areale,subspecie,autorisub,varieta,autorivar,cult,autoricult,note,nome_comune,nome_comune_en,iucn_globale,iucn_italia,cites")] Specie specie)
         {
             if (ModelState.IsValid)
             {
                 specie.id = Guid.NewGuid();
-                specie.status_nomenclaturale = await EnsureDefaultStatusAsync("Non definito");
+                specie.validazione_tassonomica = await EnsureDefaultValidazioneTassonomicaAsync("N.D.");
                 specie.nome_scientifico = await ComposeScientificNameAsync(specie.genere, specie);
                 specie.data_inserimento = DateTime.Now;
                 _context.Add(specie);
@@ -106,7 +297,7 @@ namespace UPlant.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("id,genere,status_nomenclaturale,nome,nome_scientifico,data_inserimento,lsid,autori,regno,areale,subspecie,autorisub,varieta,autorivar,cult,autoricult,note,nome_comune,nome_comune_en,iucn_globale,iucn_italia,cites")] Specie specie)
+        public async Task<IActionResult> Edit(Guid id, [Bind("id,genere,validazione_tassonomica,nome,nome_scientifico,data_inserimento,lsid,autori,regno,areale,subspecie,autorisub,varieta,autorivar,cult,autoricult,note,nome_comune,nome_comune_en,iucn_globale,iucn_italia,cites")] Specie specie)
         {
             if (id != specie.id)
             {
@@ -122,7 +313,7 @@ namespace UPlant.Controllers
                 }
 
                 existing.genere = specie.genere;
-                existing.status_nomenclaturale = specie.status_nomenclaturale;
+                existing.validazione_tassonomica = specie.validazione_tassonomica;
                 existing.nome = specie.nome;
                 existing.autori = specie.autori;
                 existing.regno = specie.regno;
@@ -140,7 +331,7 @@ namespace UPlant.Controllers
                 existing.iucn_italia = specie.iucn_italia;
                 existing.cites = specie.cites;
                 existing.lsid = specie.lsid;
-                existing.status_nomenclaturale = await EnsureDefaultStatusAsync("Modificato");
+                existing.validazione_tassonomica = await EnsureDefaultValidazioneTassonomicaAsync("A.A.");
                 existing.nome_scientifico = await ComposeScientificNameAsync(specie.genere, specie);
                 existing.data_inserimento = DateTime.Now;
 
@@ -179,7 +370,7 @@ namespace UPlant.Controllers
                 .Include(s => s.iucn_globaleNavigation)
                 .Include(s => s.iucn_italiaNavigation)
                 .Include(s => s.regnoNavigation)
-                .Include(s => s.status_nomenclaturaleNavigation)
+                .Include(s => s.validazione_tassonomicaNavigation)
                 .FirstOrDefaultAsync(m => m.id == id);
 
             if (specie == null)
@@ -221,31 +412,104 @@ namespace UPlant.Controllers
                 return NotFound();
             }
 
-            var result = await _worldFloraOnlineService.CheckAsync(specie, specie.genereNavigation?.descrizione ?? string.Empty, cancellationToken);
-            var reviewUrl = Url.Action(nameof(ReviewWfo), new { id });
+            try
+            {
+                var result = await _worldFloraOnlineService.CheckAsync(specie, specie.genereNavigation?.descrizione ?? string.Empty, cancellationToken);
+                var reviewUrl = Url.Action(nameof(ReviewWfo), new { id });
 
+                return Json(new
+                {
+                    serviceAvailable = true,
+                    status = result.Status.ToString().ToLowerInvariant(),
+                    reviewUrl,
+                    currentScientificName = result.CurrentScientificName,
+                    triedQueries = result.TriedQueries,
+                    narrative = result.Narrative,
+                    match = result.Match == null ? null : new
+                    {
+                        wfoId = result.Match.WfoId,
+                        fullName = result.Match.FullName,
+                        acceptedName = result.Match.SuggestedAcceptedName,
+                        lsid = result.Match.Lsid,
+                        isAccepted = result.Match.IsAccepted
+                    },
+                    candidates = result.Candidates.Select(c => new
+                    {
+                        wfoId = c.WfoId,
+                        fullName = c.FullName,
+                        placement = c.Placement
+                    })
+                });
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status503ServiceUnavailable, new
+                {
+                    serviceAvailable = false,
+                    message = "Il servizio World Flora Online non risponde al momento."
+                });
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> WfoStatus(CancellationToken cancellationToken)
+        {
+            var isAvailable = await _worldFloraOnlineService.IsAvailableAsync(cancellationToken);
             return Json(new
             {
-                status = result.Status.ToString().ToLowerInvariant(),
-                reviewUrl,
-                currentScientificName = result.CurrentScientificName,
-                triedQueries = result.TriedQueries,
-                narrative = result.Narrative,
-                match = result.Match == null ? null : new
-                {
-                    wfoId = result.Match.WfoId,
-                    fullName = result.Match.FullName,
-                    acceptedName = result.Match.SuggestedAcceptedName,
-                    lsid = result.Match.Lsid,
-                    isAccepted = result.Match.IsAccepted
-                },
-                candidates = result.Candidates.Select(c => new
-                {
-                    wfoId = c.WfoId,
-                    fullName = c.FullName,
-                    placement = c.Placement
-                })
+                serviceAvailable = isAvailable,
+                message = isAvailable
+                    ? "Servizio World Flora Online disponibile."
+                    : "Servizio World Flora Online non disponibile."
             });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> OpenWfo(Guid id, CancellationToken cancellationToken)
+        {
+            var specie = await _context.Specie
+                .Include(s => s.genereNavigation)
+                .Include(s => s.validazione_tassonomicaNavigation)
+                .Include(s => s.iucn_globaleNavigation)
+                .FirstOrDefaultAsync(s => s.id == id, cancellationToken);
+
+            if (specie == null)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            var scientificName = SpecieScientificNameHelper.Compose(specie, specie.genereNavigation?.descrizione ?? string.Empty);
+            var validationName = specie.validazione_tassonomicaNavigation?.descrizione ?? string.Empty;
+
+            if (string.Equals(validationName, "WFO", StringComparison.OrdinalIgnoreCase))
+            {
+                try
+                {
+                    var result = await _worldFloraOnlineService.CheckAsync(specie, specie.genereNavigation?.descrizione ?? string.Empty, cancellationToken);
+                    var wfoId = result.Match?.WfoId;
+
+                    if (string.IsNullOrWhiteSpace(wfoId))
+                    {
+                        wfoId = result.Candidates
+                            .Where(x => x.IsAccepted)
+                            .OrderBy(x => string.Equals(x.FullName, scientificName, StringComparison.OrdinalIgnoreCase) ? 0 : 1)
+                            .ThenBy(x => x.FullName)
+                            .Select(x => x.WfoId)
+                            .FirstOrDefault();
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(wfoId))
+                    {
+                        return Redirect(BuildWfoStableUrl(wfoId));
+                    }
+                }
+                catch
+                {
+                    return Redirect(BuildWfoSearchUrl(scientificName));
+                }
+            }
+
+            return Redirect(BuildWfoSearchUrl(scientificName));
         }
 
         [HttpGet]
@@ -253,6 +517,7 @@ namespace UPlant.Controllers
         {
             var specie = await _context.Specie
                 .Include(s => s.genereNavigation)
+                .Include(s => s.validazione_tassonomicaNavigation)
                 .FirstOrDefaultAsync(s => s.id == id, cancellationToken);
 
             if (specie == null)
@@ -265,8 +530,129 @@ namespace UPlant.Controllers
             {
                 Specie = specie,
                 CurrentGenusName = specie.genereNavigation?.descrizione ?? string.Empty,
-                CheckResult = checkResult
+                CheckResult = checkResult,
+                Form = BuildFormInput(specie, specie.genereNavigation?.descrizione ?? string.Empty, specie.validazione_tassonomicaNavigation?.descrizione),
+                CurrentIucnGlobalCode = specie.iucn_globaleNavigation?.codice ?? string.Empty,
+                CurrentIucnGlobalDescription = specie.iucn_globaleNavigation?.descrizione ?? string.Empty
             };
+
+            if (TempData.TryGetValue("PendingWfoForm", out var pendingWfoFormJsonObj) &&
+                pendingWfoFormJsonObj is string pendingWfoFormJson &&
+                !string.IsNullOrWhiteSpace(pendingWfoFormJson))
+            {
+                try
+                {
+                    var pendingForm = JsonSerializer.Deserialize<ApplyWfoDecisionInput>(pendingWfoFormJson);
+                    if (pendingForm != null && pendingForm.SpecieId == specie.id)
+                    {
+                        model.Form = pendingForm;
+                    }
+                }
+                catch (JsonException)
+                {
+                    TempData.Remove("PendingWfoForm");
+                }
+            }
+
+            if (checkResult.Match != null)
+            {
+                model.MatchedOption = BuildOption(
+                    "Aggiorna il form con il match WFO",
+                    "Usa il nome trovato da WFO e valorizza anche LSID.",
+                    checkResult.Match.IsAccepted ? "WFO" : "A.A.",
+                    checkResult.Match.WfoId,
+                    checkResult.Match.FullName,
+                    checkResult.Match.Lsid,
+                    iucnGlobalCode: checkResult.Match.IucnGlobalCode,
+                    iucnGlobalLabel: checkResult.Match.IucnGlobalLabel);
+
+                if (!string.IsNullOrWhiteSpace(checkResult.Match.SuggestedAcceptedName))
+                {
+                    model.AcceptedOption = BuildOption(
+                        "Applica il nome accettato WFO",
+                        "Carica nel form il nome accettato suggerito da WFO senza salvare subito.",
+                        "WFO",
+                        checkResult.Match.WfoId,
+                        checkResult.Match.SuggestedAcceptedName,
+                        checkResult.Match.Lsid,
+                        iucnGlobalCode: checkResult.Match.IucnGlobalCode,
+                        iucnGlobalLabel: checkResult.Match.IucnGlobalLabel);
+                }
+                else
+                {
+                    model.AcceptedOption = model.MatchedOption;
+                }
+            }
+
+            model.CandidateOptions = checkResult.Candidates
+                .Select(candidate => BuildOption(
+                    "Carica nel form",
+                    string.IsNullOrWhiteSpace(candidate.Placement) ? candidate.FullName : $"{candidate.FullName} ({candidate.Placement})",
+                    candidate.IsAccepted ? "WFO" : "A.A.",
+                    candidate.WfoId,
+                    candidate.FullName,
+                    candidate.Lsid,
+                    candidate.IsAccepted,
+                    candidate.SuggestedAcceptedName,
+                    candidate.Rank,
+                    candidate.FamilyName,
+                    candidate.IucnGlobalCode,
+                    candidate.IucnGlobalLabel))
+                .ToList();
+
+            model.AcceptedCandidateOptions = model.CandidateOptions
+                .Where(x => x.IsAccepted)
+                .ToList();
+
+            var normalizedCurrentScientificName = SpecieScientificNameHelper.NormalizeSpacing(specie.nome_scientifico);
+            var hasExactAcceptedCandidate = model.AcceptedCandidateOptions.Any(x =>
+                string.Equals(
+                    SpecieScientificNameHelper.NormalizeSpacing(x.FullName),
+                    normalizedCurrentScientificName,
+                    StringComparison.OrdinalIgnoreCase));
+
+            var derivedAcceptedOptions = model.CandidateOptions
+                .Where(x => !x.IsAccepted && !string.IsNullOrWhiteSpace(x.AcceptedName))
+                .GroupBy(x => x.AcceptedName, StringComparer.OrdinalIgnoreCase)
+                .Select(group =>
+                {
+                    var source = group.First();
+                    return BuildOption(
+                        "Carica nel form",
+                        "Nome accettato derivato dal sinonimo trovato in WFO.",
+                        "WFO",
+                        source.WfoId,
+                        source.AcceptedName,
+                        source.Lsid,
+                        true,
+                        source.AcceptedName,
+                        source.Rank,
+                        source.FamilyName,
+                        source.IucnGlobalCode,
+                        source.IucnGlobalLabel);
+                })
+                .ToList();
+
+            if (!hasExactAcceptedCandidate)
+            {
+                foreach (var acceptedOption in derivedAcceptedOptions)
+                {
+                    if (model.AcceptedCandidateOptions.All(x => !string.Equals(x.FullName, acceptedOption.FullName, StringComparison.OrdinalIgnoreCase)))
+                    {
+                        model.AcceptedCandidateOptions.Add(acceptedOption);
+                    }
+                }
+            }
+
+            model.AcceptedCandidateOptions = model.AcceptedCandidateOptions
+                .OrderBy(x => x.FullName)
+                .ToList();
+
+            model.SynonymCandidateOptions = model.CandidateOptions
+                .Where(x => !x.IsAccepted)
+                .ToList();
+
+            await PopulateMissingGenusSuggestionAsync(model, cancellationToken);
 
             return View(model);
         }
@@ -288,7 +674,7 @@ namespace UPlant.Controllers
                 .Distinct(StringComparer.OrdinalIgnoreCase)
                 .ToList();
 
-            var wfoStatusId = await EnsureDefaultStatusAsync("WFO");
+            var wfoStatusId = await EnsureDefaultValidazioneTassonomicaAsync("WFO");
 
             foreach (var inputName in inputNames)
             {
@@ -368,7 +754,7 @@ namespace UPlant.Controllers
                     nome_scientifico = normalizedName,
                     lsid = wfoResult.Match?.Lsid,
                     data_inserimento = DateTime.Now,
-                    status_nomenclaturale = wfoStatusId
+                    validazione_tassonomica = wfoStatusId
                 };
 
                 _context.Specie.Add(newSpecie);
@@ -386,7 +772,7 @@ namespace UPlant.Controllers
             return View(model);
         }
 
-        [HttpPost]
+        [HttpPost("/Specie/ApplyWfoDecision")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ApplyWfoDecision(ApplyWfoDecisionInput input)
         {
@@ -399,29 +785,120 @@ namespace UPlant.Controllers
                 return NotFound();
             }
 
-            specie.status_nomenclaturale = await EnsureDefaultStatusAsync("WFO");
+            specie.validazione_tassonomica = await EnsureDefaultValidazioneTassonomicaAsync(ResolveValidationStatusName(input));
             specie.data_inserimento = DateTime.Now;
 
-            if (string.Equals(input.ActionType, "keep_current", StringComparison.OrdinalIgnoreCase))
+            if (string.IsNullOrWhiteSpace(input.GenusName))
             {
-                if (!string.IsNullOrWhiteSpace(input.Lsid))
+                var acceptedFullName = SpecieScientificNameHelper.NormalizeSpacing(input.AcceptedFullName);
+                var currentScientificName = SpecieScientificNameHelper.NormalizeSpacing(specie.nome_scientifico);
+
+                if (!string.IsNullOrWhiteSpace(acceptedFullName) &&
+                    string.Equals(acceptedFullName, currentScientificName, StringComparison.OrdinalIgnoreCase))
                 {
-                    specie.lsid = input.Lsid.Trim();
+                    specie.lsid = SpecieScientificNameHelper.NormalizeSpacing(input.Lsid);
+                    specie.nome_scientifico = await ComposeScientificNameAsync(specie.genere, specie);
+
+                    if (input.ApplySuggestedIucnGlobal)
+                    {
+                        specie.iucn_globale = await ResolveIucnIdByCodeAsync(input.SuggestedIucnGlobalCode);
+                    }
+
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
                 }
 
-                specie.nome_scientifico = await ComposeScientificNameAsync(specie.genere, specie);
+                if (string.Equals(input.ActionType, "keep_current", StringComparison.OrdinalIgnoreCase))
+                {
+                    specie.lsid = SpecieScientificNameHelper.NormalizeSpacing(input.Lsid);
+                    specie.nome_scientifico = await ComposeScientificNameAsync(specie.genere, specie);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+
+                if (!await ApplyAcceptedNameAsync(specie, input.AcceptedFullName, input.Lsid))
+                {
+                    TempData["PendingWfoForm"] = JsonSerializer.Serialize(input);
+                    TempData["WfoError"] = "Il nome proposto da WFO usa un genere non presente in archivio. Inserisci prima il genere oppure correggi manualmente la specie.";
+                    return RedirectToAction(nameof(ReviewWfo), new { id = specie.id });
+                }
+
                 await _context.SaveChangesAsync();
+                input.ValidationStatusName = "A.A.";
                 return RedirectToAction(nameof(Index));
             }
 
-            if (!await ApplyAcceptedNameAsync(specie, input.AcceptedFullName, input.Lsid))
+            if (!await ApplyReviewFormAsync(specie, input))
             {
-                TempData["WfoError"] = "Il nome proposto da WFO usa un genere non presente in archivio. Inserisci prima il genere oppure correggi manualmente la specie.";
+                TempData["PendingWfoForm"] = JsonSerializer.Serialize(input);
+                TempData["WfoError"] = "Il genere indicato non esiste in archivio. Correggi il campo Genere oppure inserisci prima il genere mancante.";
                 return RedirectToAction(nameof(ReviewWfo), new { id = specie.id });
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+        [HttpGet("/Specie/ApplyWfoDecision")]
+        public IActionResult ApplyWfoDecision()
+        {
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost("/Specie/CreateMissingGenusFromWfo")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateMissingGenusFromWfo(CreateMissingGenusInput input, CancellationToken cancellationToken)
+        {
+            if (input.SpecieId == Guid.Empty)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            var genusName = SpecieScientificNameHelper.NormalizeSpacing(input.GenusName);
+            var familyName = SpecieScientificNameHelper.NormalizeSpacing(input.FamilyName);
+
+            if (string.IsNullOrWhiteSpace(genusName) || string.IsNullOrWhiteSpace(familyName))
+            {
+                TempData["WfoError"] = "Non ho abbastanza dati WFO per creare automaticamente il genere.";
+                TempData["PendingWfoForm"] = input.PendingFormJson ?? string.Empty;
+                return RedirectToAction(nameof(ReviewWfo), new { id = input.SpecieId });
+            }
+
+            var existingGenusId = await _context.Generi
+                .Where(g => g.descrizione == genusName)
+                .Select(g => (Guid?)g.id)
+                .FirstOrDefaultAsync(cancellationToken);
+
+            if (existingGenusId.HasValue)
+            {
+                TempData["WfoError"] = $"Il genere {genusName} esiste gia in archivio.";
+                TempData["PendingWfoForm"] = input.PendingFormJson ?? string.Empty;
+                return RedirectToAction(nameof(ReviewWfo), new { id = input.SpecieId });
+            }
+
+            var familyId = await _context.Famiglie
+                .Where(f => f.descrizione == familyName)
+                .Select(f => (Guid?)f.id)
+                .FirstOrDefaultAsync(cancellationToken);
+
+            if (!familyId.HasValue)
+            {
+                TempData["WfoError"] = $"La famiglia {familyName} non esiste in archivio, quindi non posso creare automaticamente il genere {genusName}.";
+                TempData["PendingWfoForm"] = input.PendingFormJson ?? string.Empty;
+                return RedirectToAction(nameof(ReviewWfo), new { id = input.SpecieId });
+            }
+
+            _context.Generi.Add(new Generi
+            {
+                id = Guid.NewGuid(),
+                descrizione = genusName,
+                famiglia = familyId.Value
+            });
+
+            await _context.SaveChangesAsync(cancellationToken);
+            TempData["PendingWfoForm"] = input.PendingFormJson ?? string.Empty;
+            TempData["WfoSuccess"] = $"Ho inserito il genere {genusName} collegato alla famiglia {familyName}.";
+            return RedirectToAction(nameof(ReviewWfo), new { id = input.SpecieId });
         }
 
         private bool SpecieExists(Guid id)
@@ -432,13 +909,13 @@ namespace UPlant.Controllers
         private async Task PopulateSelectionsAsync(Specie specie = null)
         {
             var organizationId = await GetCurrentUserOrganizationAsync();
-            var statusQuery = _context.StatusNomenclaturale
+            var validazioneQuery = _context.ValidazioneTassonomica
                 .Include(x => x.organizzazioneNavigation)
                 .AsQueryable();
 
             if (organizationId.HasValue)
             {
-                statusQuery = statusQuery.Where(x => x.organizzazione == organizationId.Value);
+                validazioneQuery = validazioneQuery.Where(x => x.organizzazione == organizationId.Value);
             }
 
             ViewData["areale"] = new SelectList(_context.Areali.OrderBy(x => x.descrizione), "id", "descrizione", specie?.areale);
@@ -447,7 +924,7 @@ namespace UPlant.Controllers
             ViewData["iucn_globale"] = new SelectList(_context.Iucn.OrderBy(x => x.ordinamento), "id", "codice", specie?.iucn_globale);
             ViewData["iucn_italia"] = new SelectList(_context.Iucn.OrderBy(x => x.ordinamento), "id", "codice", specie?.iucn_italia);
             ViewData["regno"] = new SelectList(_context.Regni.OrderBy(x => x.ordinamento), "id", "descrizione", specie?.regno);
-            ViewData["status_nomenclaturale"] = new SelectList(await statusQuery.OrderBy(x => x.ordinamento).ToListAsync(), "id", "descrizione", specie?.status_nomenclaturale);
+            ViewData["validazione_tassonomica"] = new SelectList(await validazioneQuery.OrderBy(x => x.ordinamento).ToListAsync(), "id", "descrizione", specie?.validazione_tassonomica);
         }
 
         private async Task<string> ComposeScientificNameAsync(Guid genereId, Specie specie)
@@ -475,7 +952,7 @@ namespace UPlant.Controllers
                 .FirstOrDefaultAsync();
         }
 
-        private async Task<Guid> EnsureDefaultStatusAsync(string statusName)
+        private async Task<Guid> EnsureDefaultValidazioneTassonomicaAsync(string statusName)
         {
             var organizationId = await GetCurrentUserOrganizationAsync();
             if (!organizationId.HasValue)
@@ -483,7 +960,7 @@ namespace UPlant.Controllers
                 return Guid.Empty;
             }
 
-            var existingId = await _context.StatusNomenclaturale
+            var existingId = await _context.ValidazioneTassonomica
                 .Where(x => x.organizzazione == organizationId.Value &&
                             (x.descrizione == statusName || x.descrizione_en == statusName))
                 .Select(x => x.id)
@@ -494,11 +971,11 @@ namespace UPlant.Controllers
                 return existingId;
             }
 
-            var nextOrder = (await _context.StatusNomenclaturale
+            var nextOrder = (await _context.ValidazioneTassonomica
                 .Where(x => x.organizzazione == organizationId.Value)
                 .MaxAsync(x => (int?)x.ordinamento) ?? 0) + 1;
 
-            var status = new StatusNomenclaturale
+            var status = new ValidazioneTassonomica
             {
                 id = Guid.NewGuid(),
                 descrizione = statusName,
@@ -507,7 +984,7 @@ namespace UPlant.Controllers
                 organizzazione = organizationId.Value
             };
 
-            _context.StatusNomenclaturale.Add(status);
+            _context.ValidazioneTassonomica.Add(status);
             await _context.SaveChangesAsync();
             return status.id;
         }
@@ -544,9 +1021,186 @@ namespace UPlant.Controllers
             return true;
         }
 
+        private ApplyWfoDecisionInput BuildFormInput(Specie specie, string genusName, string currentValidationStatusName)
+        {
+            return new ApplyWfoDecisionInput
+            {
+                SpecieId = specie.id,
+                ActionType = "save_review",
+                ValidationStatusName = currentValidationStatusName ?? string.Empty,
+                AcceptedFullName = specie.nome_scientifico ?? string.Empty,
+                Lsid = specie.lsid ?? string.Empty,
+                GenusName = genusName,
+                Nome = specie.nome ?? string.Empty,
+                Autori = specie.autori ?? string.Empty,
+                Subspecie = specie.subspecie ?? string.Empty,
+                AutoriSub = specie.autorisub ?? string.Empty,
+                Varieta = specie.varieta ?? string.Empty,
+                AutoriVar = specie.autorivar ?? string.Empty,
+                Cult = specie.cult ?? string.Empty,
+                AutoriCult = specie.autoricult ?? string.Empty,
+                SuggestedIucnGlobalCode = specie.iucn_globaleNavigation?.codice ?? string.Empty,
+                SuggestedIucnGlobalLabel = specie.iucn_globaleNavigation?.descrizione ?? string.Empty
+            };
+        }
+
+        private static WfoApplicationOption BuildOption(string buttonLabel, string description, string validationStatusName, string wfoId, string fullName, string lsid, bool isAccepted = false, string acceptedName = "", string rank = "", string familyName = "", string iucnGlobalCode = "", string iucnGlobalLabel = "")
+        {
+            var parsed = SpecieScientificNameHelper.ParseWfoName(fullName);
+            return new WfoApplicationOption
+            {
+                ButtonLabel = buttonLabel,
+                Description = description,
+                ValidationStatusName = validationStatusName ?? string.Empty,
+                IsAccepted = isAccepted,
+                AcceptedName = acceptedName ?? string.Empty,
+                Rank = rank ?? string.Empty,
+                FamilyName = familyName ?? string.Empty,
+                WfoId = wfoId ?? string.Empty,
+                FullName = fullName ?? string.Empty,
+                Lsid = lsid ?? string.Empty,
+                GenusName = parsed.Genus ?? string.Empty,
+                Nome = parsed.Nome ?? string.Empty,
+                Autori = parsed.Autori ?? string.Empty,
+                Subspecie = parsed.Subspecie ?? string.Empty,
+                AutoriSub = parsed.AutoriSub ?? string.Empty,
+                Varieta = parsed.Varieta ?? string.Empty,
+                AutoriVar = parsed.AutoriVar ?? string.Empty,
+                Cult = parsed.Cult ?? string.Empty,
+                AutoriCult = parsed.AutoriCult ?? string.Empty,
+                IucnGlobalCode = iucnGlobalCode ?? string.Empty,
+                IucnGlobalLabel = iucnGlobalLabel ?? string.Empty
+            };
+        }
+
+        private async Task<bool> ApplyReviewFormAsync(Specie specie, ApplyWfoDecisionInput input)
+        {
+            var genusName = SpecieScientificNameHelper.NormalizeSpacing(input.GenusName);
+            if (string.IsNullOrWhiteSpace(genusName))
+            {
+                return false;
+            }
+
+            var genusId = await _context.Generi
+                .Where(g => g.descrizione == genusName)
+                .Select(g => (Guid?)g.id)
+                .FirstOrDefaultAsync();
+
+            if (!genusId.HasValue)
+            {
+                return false;
+            }
+
+            specie.genere = genusId.Value;
+            specie.nome = SpecieScientificNameHelper.NormalizeSpacing(input.Nome);
+            specie.autori = SpecieScientificNameHelper.NormalizeSpacing(input.Autori);
+            specie.subspecie = SpecieScientificNameHelper.NormalizeSpacing(input.Subspecie);
+            specie.autorisub = SpecieScientificNameHelper.NormalizeSpacing(input.AutoriSub);
+            specie.varieta = SpecieScientificNameHelper.NormalizeSpacing(input.Varieta);
+            specie.autorivar = SpecieScientificNameHelper.NormalizeSpacing(input.AutoriVar);
+            specie.cult = SpecieScientificNameHelper.NormalizeSpacing(input.Cult);
+            specie.autoricult = SpecieScientificNameHelper.NormalizeSpacing(input.AutoriCult);
+            specie.lsid = SpecieScientificNameHelper.NormalizeSpacing(input.Lsid);
+
+            if (input.ApplySuggestedIucnGlobal)
+            {
+                specie.iucn_globale = await ResolveIucnIdByCodeAsync(input.SuggestedIucnGlobalCode);
+            }
+
+            specie.nome_scientifico = SpecieScientificNameHelper.Compose(
+                genusName,
+                specie.nome,
+                specie.autori,
+                specie.subspecie,
+                specie.autorisub,
+                specie.varieta,
+                specie.autorivar,
+                specie.cult,
+                specie.autoricult);
+
+            return true;
+        }
+
+        private async Task<Guid?> ResolveIucnIdByCodeAsync(string iucnCode)
+        {
+            var normalizedCode = SpecieScientificNameHelper.NormalizeSpacing(iucnCode);
+            if (string.IsNullOrWhiteSpace(normalizedCode))
+            {
+                return null;
+            }
+
+            return await _context.Iucn
+                .Where(x => x.codice == normalizedCode)
+                .Select(x => (Guid?)x.id)
+                .FirstOrDefaultAsync();
+        }
+
+        private static string ResolveValidationStatusName(ApplyWfoDecisionInput input)
+        {
+            var requestedStatus = SpecieScientificNameHelper.NormalizeSpacing(input.ValidationStatusName);
+            if (!string.IsNullOrWhiteSpace(requestedStatus))
+            {
+                return requestedStatus;
+            }
+
+            return string.Equals(input.ActionType, "accept_suggested", StringComparison.OrdinalIgnoreCase) ||
+                   string.Equals(input.ActionType, "keep_current", StringComparison.OrdinalIgnoreCase)
+                ? "WFO"
+                : "A.A.";
+        }
+
+        private async Task PopulateMissingGenusSuggestionAsync(SpecieWfoReviewViewModel model, CancellationToken cancellationToken)
+        {
+            var genusName = SpecieScientificNameHelper.NormalizeSpacing(model.Form.GenusName);
+            if (string.IsNullOrWhiteSpace(genusName))
+            {
+                return;
+            }
+
+            var genusExists = await _context.Generi.AnyAsync(g => g.descrizione == genusName, cancellationToken);
+            if (genusExists)
+            {
+                return;
+            }
+
+            var familyName = model.SynonymCandidateOptions
+                .Where(x => string.Equals(x.GenusName, genusName, StringComparison.OrdinalIgnoreCase))
+                .Select(x => x.FamilyName)
+                .FirstOrDefault(x => !string.IsNullOrWhiteSpace(x));
+
+            if (string.IsNullOrWhiteSpace(familyName))
+            {
+                familyName = model.AcceptedCandidateOptions
+                    .Where(x => string.Equals(x.GenusName, genusName, StringComparison.OrdinalIgnoreCase))
+                    .Select(x => x.FamilyName)
+                    .FirstOrDefault(x => !string.IsNullOrWhiteSpace(x));
+            }
+
+            if (string.IsNullOrWhiteSpace(familyName))
+            {
+                familyName = model.AcceptedCandidateOptions
+                    .Select(x => x.FamilyName)
+                    .FirstOrDefault(x => !string.IsNullOrWhiteSpace(x));
+            }
+
+            model.SuggestedMissingGenusName = genusName;
+            model.SuggestedMissingFamilyName = familyName ?? string.Empty;
+            model.CanCreateSuggestedGenus = !string.IsNullOrWhiteSpace(model.SuggestedMissingFamilyName);
+        }
+
         private static int ParseInt(string value, int fallback)
         {
             return int.TryParse(value, out var parsed) ? parsed : fallback;
+        }
+
+        private static string BuildWfoStableUrl(string wfoId)
+        {
+            return $"https://list.worldfloraonline.org/{Uri.EscapeDataString(wfoId.Trim())}";
+        }
+
+        private static string BuildWfoSearchUrl(string scientificName)
+        {
+            return $"https://www.worldfloraonline.org/search?query={Uri.EscapeDataString(scientificName)}";
         }
 
         private static string TruncateNote(string note)
@@ -565,16 +1219,19 @@ namespace UPlant.Controllers
         {
             return columnIndex switch
             {
-                1 => descending ? query.OrderByDescending(x => x.CommonName) : query.OrderBy(x => x.CommonName),
-                2 => descending ? query.OrderByDescending(x => x.EnglishCommonName) : query.OrderBy(x => x.EnglishCommonName),
-                3 => descending ? query.OrderByDescending(x => x.Family) : query.OrderBy(x => x.Family),
-                4 => descending ? query.OrderByDescending(x => x.Genus) : query.OrderBy(x => x.Genus),
-                5 => descending ? query.OrderByDescending(x => x.Kingdom) : query.OrderBy(x => x.Kingdom),
-                6 => descending ? query.OrderByDescending(x => x.Range) : query.OrderBy(x => x.Range),
-                7 => descending ? query.OrderByDescending(x => x.Cites) : query.OrderBy(x => x.Cites),
-                8 => descending ? query.OrderByDescending(x => x.IucnGlobal) : query.OrderBy(x => x.IucnGlobal),
-                9 => descending ? query.OrderByDescending(x => x.IucnLocal) : query.OrderBy(x => x.IucnLocal),
-                10 => descending ? query.OrderByDescending(x => x.Note) : query.OrderBy(x => x.Note),
+                2 => descending ? query.OrderByDescending(x => x.ValidationStatus) : query.OrderBy(x => x.ValidationStatus),
+                3 => descending ? query.OrderByDescending(x => x.InsertedAt) : query.OrderBy(x => x.InsertedAt),
+                4 => descending ? query.OrderByDescending(x => x.Lsid) : query.OrderBy(x => x.Lsid),
+                5 => descending ? query.OrderByDescending(x => x.CommonName) : query.OrderBy(x => x.CommonName),
+                6 => descending ? query.OrderByDescending(x => x.EnglishCommonName) : query.OrderBy(x => x.EnglishCommonName),
+                7 => descending ? query.OrderByDescending(x => x.Family) : query.OrderBy(x => x.Family),
+                8 => descending ? query.OrderByDescending(x => x.Genus) : query.OrderBy(x => x.Genus),
+                9 => descending ? query.OrderByDescending(x => x.Kingdom) : query.OrderBy(x => x.Kingdom),
+                10 => descending ? query.OrderByDescending(x => x.Range) : query.OrderBy(x => x.Range),
+                11 => descending ? query.OrderByDescending(x => x.Cites) : query.OrderBy(x => x.Cites),
+                12 => descending ? query.OrderByDescending(x => x.IucnGlobal) : query.OrderBy(x => x.IucnGlobal),
+                13 => descending ? query.OrderByDescending(x => x.IucnLocal) : query.OrderBy(x => x.IucnLocal),
+                14 => descending ? query.OrderByDescending(x => x.Note) : query.OrderBy(x => x.Note),
                 _ => descending ? query.OrderByDescending(x => x.ScientificName) : query.OrderBy(x => x.ScientificName)
             };
         }
@@ -583,6 +1240,9 @@ namespace UPlant.Controllers
         {
             public Guid Id { get; set; }
             public string ScientificName { get; set; }
+            public string ValidationStatus { get; set; }
+            public DateTime InsertedAt { get; set; }
+            public string Lsid { get; set; }
             public string CommonName { get; set; }
             public string EnglishCommonName { get; set; }
             public string Family { get; set; }
@@ -597,3 +1257,5 @@ namespace UPlant.Controllers
         }
     }
 }
+
+

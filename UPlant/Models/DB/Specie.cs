@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace UPlant.Models.DB;
@@ -9,7 +9,7 @@ public partial class Specie
 
     public Guid genere { get; set; }
 
-    public Guid status_nomenclaturale { get; set; }
+    public Guid validazione_tassonomica { get; set; }
 
     public string nome { get; set; }
 
@@ -63,5 +63,6 @@ public partial class Specie
 
     public virtual Regni regnoNavigation { get; set; }
 
-    public virtual StatusNomenclaturale status_nomenclaturaleNavigation { get; set; }
+    public virtual ValidazioneTassonomica validazione_tassonomicaNavigation { get; set; }
 }
+

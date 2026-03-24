@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace UPlant.Models.DB;
 
-public partial class StatusNomenclaturale
+public partial class ValidazioneTassonomica
 {
     public Guid id { get; set; }
 
@@ -19,3 +19,4 @@ public partial class StatusNomenclaturale
 
     public virtual ICollection<Specie> Specie { get; set; } = new List<Specie>();
 }
+

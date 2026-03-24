@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 
@@ -85,7 +85,7 @@ public partial class Entities : DbContext
 
     public virtual DbSet<Specie> Specie { get; set; }
 
-    public virtual DbSet<StatusNomenclaturale> StatusNomenclaturale { get; set; }
+    public virtual DbSet<ValidazioneTassonomica> ValidazioneTassonomica { get; set; }
 
     public virtual DbSet<StatoIndividuo> StatoIndividuo { get; set; }
 
@@ -977,12 +977,12 @@ public partial class Entities : DbContext
                 .HasForeignKey(d => d.regno)
                 .HasConstraintName("FK_Specie_Regno");
 
-            entity.HasOne(d => d.status_nomenclaturaleNavigation).WithMany(p => p.Specie)
-                .HasForeignKey(d => d.status_nomenclaturale)
-                .HasConstraintName("FK_Specie_StatusNomenclaturale");
+            entity.HasOne(d => d.validazione_tassonomicaNavigation).WithMany(p => p.Specie)
+                .HasForeignKey(d => d.validazione_tassonomica)
+                .HasConstraintName("FK_Specie_ValidazioneTassonomica");
         });
 
-        modelBuilder.Entity<StatusNomenclaturale>(entity =>
+        modelBuilder.Entity<ValidazioneTassonomica>(entity =>
         {
             entity.Property(e => e.id).HasDefaultValueSql("(newid())");
             entity.Property(e => e.descrizione)
@@ -993,10 +993,10 @@ public partial class Entities : DbContext
                 .HasMaxLength(100)
                 .IsUnicode(false);
 
-            entity.HasOne(d => d.organizzazioneNavigation).WithMany(p => p.StatusNomenclaturale)
+            entity.HasOne(d => d.organizzazioneNavigation).WithMany(p => p.ValidazioneTassonomica)
                 .HasForeignKey(d => d.organizzazione)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_StatusNomenclaturale_Organizzazioni");
+                .HasConstraintName("FK_ValidazioneTassonomica_Organizzazioni");
         });
 
         modelBuilder.Entity<StatoIndividuo>(entity =>
@@ -1232,3 +1232,4 @@ public partial class Entities : DbContext
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 }
+

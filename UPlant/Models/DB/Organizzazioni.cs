@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace UPlant.Models.DB;
@@ -37,7 +37,7 @@ public partial class Organizzazioni
 
     public virtual ICollection<Settori> Settori { get; set; } = new List<Settori>();
 
-    public virtual ICollection<StatusNomenclaturale> StatusNomenclaturale { get; set; } = new List<StatusNomenclaturale>();
+    public virtual ICollection<ValidazioneTassonomica> ValidazioneTassonomica { get; set; } = new List<ValidazioneTassonomica>();
 
     public virtual ICollection<StatoIndividuo> StatoIndividuo { get; set; } = new List<StatoIndividuo>();
 
@@ -57,3 +57,4 @@ public partial class Organizzazioni
 
     public virtual ICollection<Users> Users { get; set; } = new List<Users>();
 }
+

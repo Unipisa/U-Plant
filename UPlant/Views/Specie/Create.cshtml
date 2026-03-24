@@ -1,4 +1,4 @@
-﻿@model UPlant.Models.DB.Specie
+@model UPlant.Models.DB.Specie
 @inject LanguageService language
 @{
     ViewData["Title"] = "Create";
@@ -15,8 +15,8 @@
                 <select asp-for="genere" class ="form-control" asp-items="ViewBag.genere"></select>
             </div>
             <div class="form-group">
-                <label asp-for="status_nomenclaturale" class="control-label">Status nomenclaturale</label>
-                <input class="form-control" value="Non definito (automatico)" readonly />
+                <label asp-for="validazione_tassonomica" class="control-label">Validazione tassonomica</label>
+                <input class="form-control" value="N.D. (automatico)" readonly />
             </div>
             
             <div class="form-group">
@@ -184,3 +184,5 @@
         });
     </script>
 }
+
+

@@ -1,4 +1,4 @@
-﻿@model UPlant.Models.DB.Specie
+@model UPlant.Models.DB.Specie
 @inject LanguageService language
 @{
     ViewData["Title"] = "Edit";
@@ -17,9 +17,9 @@
                 <span asp-validation-for="genere" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="status_nomenclaturale" class="control-label">Status nomenclaturale</label>
-                <input class="form-control" value="Modificato (automatico sul salvataggio manuale)" readonly />
-                <span asp-validation-for="status_nomenclaturale" class="text-danger"></span>
+                <label asp-for="validazione_tassonomica" class="control-label">Validazione tassonomica</label>
+                <input class="form-control" value="A.A. (automatico sul salvataggio manuale)" readonly />
+                <span asp-validation-for="validazione_tassonomica" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="nome" class="control-label">@language.Getkey("Global_Specific_Name")</label>
@@ -182,3 +182,5 @@
         });
     </script>
 }
+
+

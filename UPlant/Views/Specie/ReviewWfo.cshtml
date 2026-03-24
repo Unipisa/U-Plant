@@ -1,8 +1,22 @@
+@using System.Text.Encodings.Web
 @model UPlant.Models.ViewModels.SpecieWfoReviewViewModel
 @inject LanguageService language
 
 @{
+    var wfoErrorMessage = TempData["WfoError"] as string;
+    var wfoSuccessMessage = TempData["WfoSuccess"] as string;
     ViewData["Title"] = "ReviewWfo";
+    var fallbackMissingGenusName = !string.IsNullOrWhiteSpace(Model.SuggestedMissingGenusName)
+        ? Model.SuggestedMissingGenusName
+        : Model.Form.GenusName;
+    var fallbackMissingFamilyName = !string.IsNullOrWhiteSpace(Model.SuggestedMissingFamilyName)
+        ? Model.SuggestedMissingFamilyName
+        : (Model.SynonymCandidateOptions.Select(x => x.FamilyName).FirstOrDefault(x => !string.IsNullOrWhiteSpace(x))
+            ?? Model.AcceptedCandidateOptions.Select(x => x.FamilyName).FirstOrDefault(x => !string.IsNullOrWhiteSpace(x))
+            ?? string.Empty);
+    var showCreateGenusHelper = !string.IsNullOrWhiteSpace(fallbackMissingGenusName) &&
+                                !string.IsNullOrWhiteSpace(fallbackMissingFamilyName) &&
+                                !string.IsNullOrWhiteSpace(wfoErrorMessage);
 }
 
 <div class="card card-outline card-primary">
@@ -10,105 +24,596 @@
         <h3 class="card-title">Revisione nomenclaturale WFO</h3>
     </div>
     <div class="card-body">
-        @if (TempData["WfoError"] != null)
+        @if (!string.IsNullOrWhiteSpace(wfoSuccessMessage))
         {
-            <div class="alert alert-warning">@TempData["WfoError"]</div>
+            <div class="alert alert-success">@wfoSuccessMessage</div>
         }
 
-        <p><strong>Specie corrente:</strong> @Model.Specie.nome_scientifico</p>
-
-        @if (Model.CheckResult.TriedQueries.Any())
+        @if (!string.IsNullOrWhiteSpace(wfoErrorMessage))
         {
-            <p><strong>Query provate:</strong> @string.Join(" | ", Model.CheckResult.TriedQueries)</p>
+            <div class="alert alert-warning">@wfoErrorMessage</div>
         }
 
-        @if (Model.CheckResult.Status == UPlant.Services.WfoMatchStatus.Accepted && Model.CheckResult.Match != null)
+        @if (!string.IsNullOrWhiteSpace(Model.SuggestedMissingGenusName) || showCreateGenusHelper)
         {
-            <div class="alert alert-success">
-                <strong>@Model.CheckResult.Match.FullName</strong> risulta nome accettato.
-            </div>
-            <form asp-action="ApplyWfoDecision" method="post">
-                @Html.AntiForgeryToken()
-                <input type="hidden" name="SpecieId" value="@Model.Specie.id" />
-                <input type="hidden" name="ActionType" value="accept_suggested" />
-                <input type="hidden" name="SelectedWfoId" value="@Model.CheckResult.Match.WfoId" />
-                <input type="hidden" name="AcceptedFullName" value="@Model.CheckResult.Match.FullName" />
-                <input type="hidden" name="Lsid" value="@Model.CheckResult.Match.Lsid" />
-                <button type="submit" class="btn btn-success">Conferma revisione WFO</button>
-            </form>
-        }
-        else if (Model.CheckResult.Status == UPlant.Services.WfoMatchStatus.Synonym && Model.CheckResult.Match != null)
-        {
-            <div class="alert alert-warning">
-                <p><strong>@Model.CheckResult.Match.FullName</strong> risulta un sinonimo.</p>
-                <p>Nome accettato suggerito: <strong>@Model.CheckResult.Match.SuggestedAcceptedName</strong></p>
-            </div>
-            <div class="d-flex" style="gap: 10px; flex-wrap: wrap;">
-                <form asp-action="ApplyWfoDecision" method="post">
-                    @Html.AntiForgeryToken()
-                    <input type="hidden" name="SpecieId" value="@Model.Specie.id" />
-                    <input type="hidden" name="ActionType" value="keep_current" />
-                    <input type="hidden" name="SelectedWfoId" value="@Model.CheckResult.Match.WfoId" />
-                    <input type="hidden" name="AcceptedFullName" value="@Model.CheckResult.Match.FullName" />
-                    <input type="hidden" name="Lsid" value="@Model.CheckResult.Match.Lsid" />
-                    <button type="submit" class="btn btn-warning">Lascia il nome attuale</button>
-                </form>
-                <form asp-action="ApplyWfoDecision" method="post">
-                    @Html.AntiForgeryToken()
-                    <input type="hidden" name="SpecieId" value="@Model.Specie.id" />
-                    <input type="hidden" name="ActionType" value="accept_suggested" />
-                    <input type="hidden" name="SelectedWfoId" value="@Model.CheckResult.Match.WfoId" />
-                    <input type="hidden" name="AcceptedFullName" value="@Model.CheckResult.Match.SuggestedAcceptedName" />
-                    <input type="hidden" name="Lsid" value="@Model.CheckResult.Match.Lsid" />
-                    <button type="submit" class="btn btn-success">Usa il nome accettato</button>
-                </form>
+            <div class="border border-primary rounded p-3 mb-3 bg-white">
+                <div>
+                    <strong>Proposta WFO:</strong>
+                    posso inserire il genere <strong>@fallbackMissingGenusName</strong>
+                    collegato alla famiglia <strong>@fallbackMissingFamilyName</strong>.
+                </div>
+                <div class="mt-2">
+                    <button type="button"
+                            class="btn btn-outline-primary btn-sm"
+                            data-toggle="modal"
+                            data-target="#createGenusModal">
+                        Inserisci il genere @fallbackMissingGenusName
+                    </button>
+                </div>
             </div>
         }
-        else if (Model.CheckResult.Candidates.Any())
-        {
-            <div class="alert alert-info">
-                Sono stati trovati più candidati. Seleziona il nome da applicare oppure torna in modifica manuale.
+
+        <form asp-controller="Specie" asp-action="ApplyWfoDecision" method="post" id="wfo-review-form">
+            @Html.AntiForgeryToken()
+            <input asp-for="Form.SpecieId" type="hidden" />
+            <input asp-for="Form.ActionType" type="hidden" />
+            <input asp-for="Form.ValidationStatusName" type="hidden" />
+            <input asp-for="Form.SelectedWfoId" type="hidden" />
+            <input asp-for="Form.AcceptedFullName" type="hidden" />
+            <input asp-for="Form.SuggestedIucnGlobalCode" type="hidden" />
+            <input asp-for="Form.SuggestedIucnGlobalLabel" type="hidden" />
+
+            <div class="alert alert-light border">
+                <div><strong>Nome scientifico corrente:</strong> @Model.Specie.nome_scientifico</div>
+                <div class="mt-2"><strong>Nome scientifico da salvare:</strong> <span id="scientific-name-preview">@Model.Specie.nome_scientifico</span></div>
+                <div class="mt-2"><strong>LSID da salvare:</strong> <span id="lsid-preview">@(string.IsNullOrWhiteSpace(Model.Form.Lsid) ? "non restituito da WFO" : Model.Form.Lsid)</span></div>
+                @if (Model.CheckResult.TriedQueries.Any())
+                {
+                    <div class="mt-2"><strong>Query provate:</strong> @string.Join(" | ", Model.CheckResult.TriedQueries)</div>
+                }
             </div>
-            <table class="table table-bordered table-striped">
-                <thead>
-                    <tr>
-                        <th>Nome WFO</th>
-                        <th>Placement</th>
-                        <th style="width: 180px;">Azione</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var candidate in Model.CheckResult.Candidates)
-                    {
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="Form.GenusName">Genere</label>
+                        <input asp-for="Form.GenusName" class="form-control scientific-field" />
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="Form.Lsid">LSID</label>
+                        <input asp-for="Form.Lsid" class="form-control" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="Form.Nome">@language.Getkey("Global_Specific_Name")</label>
+                        <input asp-for="Form.Nome" class="form-control scientific-field" />
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="Form.Autori">@language.Getkey("Global_Species_Authors")</label>
+                        <input asp-for="Form.Autori" class="form-control scientific-field" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="Form.Subspecie">@language.Getkey("Global_Subspecies")</label>
+                        <input asp-for="Form.Subspecie" class="form-control scientific-field" />
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="Form.AutoriSub">@language.Getkey("Global_Subspecies_Authors")</label>
+                        <input asp-for="Form.AutoriSub" class="form-control scientific-field" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="Form.Varieta">@language.Getkey("Global_Variety")</label>
+                        <input asp-for="Form.Varieta" class="form-control scientific-field" />
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="Form.AutoriVar">@language.Getkey("Global_Variety_Authors")</label>
+                        <input asp-for="Form.AutoriVar" class="form-control scientific-field" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="Form.Cult">@language.Getkey("Global_Cultivar")</label>
+                        <input asp-for="Form.Cult" class="form-control scientific-field" />
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="Form.AutoriCult">@language.Getkey("Global_Cultivar_Authors")</label>
+                        <input asp-for="Form.AutoriCult" class="form-control scientific-field" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="border rounded p-3 mb-3 bg-light">
+                <div><strong>IUCN globale attuale:</strong> @(string.IsNullOrWhiteSpace(Model.CurrentIucnGlobalCode) ? "non valorizzato" : $"{Model.CurrentIucnGlobalCode} - {Model.CurrentIucnGlobalDescription}")</div>
+                <div class="mt-2"><strong>IUCN globale suggerito da WFO:</strong> <span id="iucn-global-preview">@(string.IsNullOrWhiteSpace(Model.Form.SuggestedIucnGlobalCode) ? "non restituito da WFO" : $"{Model.Form.SuggestedIucnGlobalCode} - {Model.Form.SuggestedIucnGlobalLabel}")</span></div>
+                <div class="form-check mt-2">
+                    <input asp-for="Form.ApplySuggestedIucnGlobal" class="form-check-input" />
+                    <label asp-for="Form.ApplySuggestedIucnGlobal" class="form-check-label">Applica anche IUCN globale suggerito da WFO</label>
+                </div>
+            </div>
+
+            <hr />
+
+            @if (Model.CheckResult.Status == UPlant.Services.WfoMatchStatus.Accepted && Model.AcceptedOption != null)
+            {
+                <div class="alert alert-success">
+                    <strong>@Model.CheckResult.Match?.FullName</strong> risulta nome accettato in WFO.
+                </div>
+                <div class="mb-3">
+                    <button type="button" class="btn btn-success js-apply-wfo-option"
+                            data-button-label="@Model.AcceptedOption.ButtonLabel"
+                            data-validation-status="@Model.AcceptedOption.ValidationStatusName"
+                            data-wfo-id="@Model.AcceptedOption.WfoId"
+                            data-full-name="@Model.AcceptedOption.FullName"
+                            data-lsid="@Model.AcceptedOption.Lsid"
+                            data-genus="@Model.AcceptedOption.GenusName"
+                            data-nome="@Model.AcceptedOption.Nome"
+                            data-autori="@Model.AcceptedOption.Autori"
+                            data-subspecie="@Model.AcceptedOption.Subspecie"
+                            data-autorisub="@Model.AcceptedOption.AutoriSub"
+                            data-varieta="@Model.AcceptedOption.Varieta"
+                            data-autorivar="@Model.AcceptedOption.AutoriVar"
+                            data-cult="@Model.AcceptedOption.Cult"
+                            data-autoricult="@Model.AcceptedOption.AutoriCult"
+                            data-iucn-code="@Model.AcceptedOption.IucnGlobalCode"
+                            data-iucn-label="@Model.AcceptedOption.IucnGlobalLabel">
+                        @Model.AcceptedOption.ButtonLabel
+                    </button>
+                </div>
+            }
+            else if (Model.CheckResult.Status == UPlant.Services.WfoMatchStatus.Synonym)
+            {
+                <div class="alert alert-warning">
+                    <p><strong>@Model.CheckResult.Match?.FullName</strong> risulta un sinonimo.</p>
+                    <p>Nome accettato suggerito: <strong>@Model.CheckResult.Match?.SuggestedAcceptedName</strong></p>
+                </div>
+                <table class="table table-bordered table-striped mb-3">
+                    <thead>
                         <tr>
-                            <td>@candidate.FullName</td>
-                            <td>@candidate.Placement</td>
-                            <td>
-                                <form asp-action="ApplyWfoDecision" method="post">
-                                    @Html.AntiForgeryToken()
-                                    <input type="hidden" name="SpecieId" value="@Model.Specie.id" />
-                                    <input type="hidden" name="ActionType" value="accept_selected" />
-                                    <input type="hidden" name="SelectedWfoId" value="@candidate.WfoId" />
-                                    <input type="hidden" name="AcceptedFullName" value="@candidate.FullName" />
-                                    <input type="hidden" name="Lsid" value="@candidate.Lsid" />
-                                    <button type="submit" class="btn btn-primary btn-sm">Applica</button>
-                                </form>
-                            </td>
+                            <th style="width: 50px;">Tipo</th>
+                            <th>Nome WFO</th>
+                            <th>Stato da salvare</th>
+                            <th style="width: 180px;">Azione</th>
                         </tr>
-                    }
-                </tbody>
-            </table>
-        }
-        else
-        {
-            <div class="alert alert-secondary">
-                Non risultano occorrenze WFO nelle tre casistiche provate. Ti conviene correggere manualmente i campi della specie.
+                    </thead>
+                    <tbody>
+                        @if (Model.AcceptedOption != null)
+                        {
+                            <tr class="table-success">
+                                <td class="text-center"><i class="fa-solid fa-circle-check text-success"></i></td>
+                                <td>
+                                    <strong>@Model.AcceptedOption.FullName</strong>
+                                    <div class="small text-muted">Nome accettato collegato al record controllato</div>
+                                </td>
+                                <td>@Model.AcceptedOption.ValidationStatusName</td>
+                                <td>
+                                    <button type="button" class="btn btn-success btn-sm js-apply-wfo-option"
+                                            data-button-label="@Model.AcceptedOption.ButtonLabel"
+                                            data-validation-status="@Model.AcceptedOption.ValidationStatusName"
+                                            data-wfo-id="@Model.AcceptedOption.WfoId"
+                                            data-full-name="@Model.AcceptedOption.FullName"
+                                            data-lsid="@Model.AcceptedOption.Lsid"
+                                            data-genus="@Model.AcceptedOption.GenusName"
+                                            data-nome="@Model.AcceptedOption.Nome"
+                                            data-autori="@Model.AcceptedOption.Autori"
+                                            data-subspecie="@Model.AcceptedOption.Subspecie"
+                                            data-autorisub="@Model.AcceptedOption.AutoriSub"
+                                            data-varieta="@Model.AcceptedOption.Varieta"
+                                            data-autorivar="@Model.AcceptedOption.AutoriVar"
+                                            data-cult="@Model.AcceptedOption.Cult"
+                                            data-autoricult="@Model.AcceptedOption.AutoriCult"
+                                            data-iucn-code="@Model.AcceptedOption.IucnGlobalCode"
+                                            data-iucn-label="@Model.AcceptedOption.IucnGlobalLabel">
+                                        Carica form
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                        @if (Model.MatchedOption != null)
+                        {
+                            <tr class="table-warning">
+                                <td class="text-center"><i class="fa-solid fa-circle text-warning"></i></td>
+                                <td>
+                                    <strong>@Model.MatchedOption.FullName</strong>
+                                    <div class="small text-muted">Sinonimo trovato per il nome controllato</div>
+                                </td>
+                                <td>@Model.MatchedOption.ValidationStatusName</td>
+                                <td>
+                                    <button type="button" class="btn btn-warning btn-sm js-apply-wfo-option"
+                                            data-button-label="@Model.MatchedOption.ButtonLabel"
+                                            data-validation-status="@Model.MatchedOption.ValidationStatusName"
+                                            data-wfo-id="@Model.MatchedOption.WfoId"
+                                            data-full-name="@Model.MatchedOption.FullName"
+                                            data-lsid="@Model.MatchedOption.Lsid"
+                                            data-genus="@Model.MatchedOption.GenusName"
+                                            data-nome="@Model.MatchedOption.Nome"
+                                            data-autori="@Model.MatchedOption.Autori"
+                                            data-subspecie="@Model.MatchedOption.Subspecie"
+                                            data-autorisub="@Model.MatchedOption.AutoriSub"
+                                            data-varieta="@Model.MatchedOption.Varieta"
+                                            data-autorivar="@Model.MatchedOption.AutoriVar"
+                                            data-cult="@Model.MatchedOption.Cult"
+                                            data-autoricult="@Model.MatchedOption.AutoriCult"
+                                            data-iucn-code="@Model.MatchedOption.IucnGlobalCode"
+                                            data-iucn-label="@Model.MatchedOption.IucnGlobalLabel">
+                                        Carica form
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <div class="mb-3">
+                    <button type="button" class="btn btn-outline-secondary js-use-current-values">Mantieni i campi attuali</button>
+                </div>
+            }
+            else if (Model.CandidateOptions.Any())
+            {
+                <div class="alert alert-info">
+                    WFO ha trovato piu candidati. Ti mostro prima i nomi accettati e sotto gli eventuali sinonimi collegati.
+                </div>
+                @if (Model.AcceptedCandidateOptions.Any())
+                {
+                    <table class="table table-bordered table-striped mb-3">
+                        <thead>
+                            <tr>
+                                <th style="width: 50px;">Tipo</th>
+                                <th>Nome accettato</th>
+                                <th>Rank</th>
+                                <th style="width: 140px;">Stato</th>
+                                <th style="width: 180px;">Azione</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var candidate in Model.AcceptedCandidateOptions)
+                            {
+                                <tr class="table-success">
+                                    <td class="text-center"><i class="fa-solid fa-circle-check text-success"></i></td>
+                                    <td>
+                                        <strong>@candidate.FullName</strong>
+                                        <div class="small text-muted">@candidate.Description</div>
+                                    </td>
+                                    <td>@(string.IsNullOrWhiteSpace(candidate.Rank) ? "-" : candidate.Rank)</td>
+                                    <td>@candidate.ValidationStatusName</td>
+                                    <td>
+                                        <button type="button" class="btn btn-success btn-sm js-apply-wfo-option"
+                                                data-button-label="@candidate.ButtonLabel"
+                                                data-validation-status="@candidate.ValidationStatusName"
+                                                data-wfo-id="@candidate.WfoId"
+                                                data-full-name="@candidate.FullName"
+                                                data-lsid="@candidate.Lsid"
+                                                data-genus="@candidate.GenusName"
+                                                data-nome="@candidate.Nome"
+                                                data-autori="@candidate.Autori"
+                                                data-subspecie="@candidate.Subspecie"
+                                                data-autorisub="@candidate.AutoriSub"
+                                                data-varieta="@candidate.Varieta"
+                                                data-autorivar="@candidate.AutoriVar"
+                                                data-cult="@candidate.Cult"
+                                                data-autoricult="@candidate.AutoriCult"
+                                                data-iucn-code="@candidate.IucnGlobalCode"
+                                                data-iucn-label="@candidate.IucnGlobalLabel">
+                                            Carica form
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+
+                @if (Model.SynonymCandidateOptions.Any())
+                {
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th style="width: 50px;">Tipo</th>
+                                <th>Sinonimo</th>
+                                <th>Nome accettato collegato</th>
+                                <th>Rank</th>
+                                <th style="width: 140px;">Stato</th>
+                                <th style="width: 180px;">Azione</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var candidate in Model.SynonymCandidateOptions)
+                            {
+                                <tr class="table-warning">
+                                    <td class="text-center"><i class="fa-solid fa-circle text-warning"></i></td>
+                                    <td>
+                                        <strong>@candidate.FullName</strong>
+                                        <div class="small text-muted">@candidate.Description</div>
+                                    </td>
+                                    <td>@(string.IsNullOrWhiteSpace(candidate.AcceptedName) ? "-" : candidate.AcceptedName)</td>
+                                    <td>@(string.IsNullOrWhiteSpace(candidate.Rank) ? "-" : candidate.Rank)</td>
+                                    <td>@candidate.ValidationStatusName</td>
+                                    <td>
+                                        <button type="button" class="btn btn-warning btn-sm js-apply-wfo-option"
+                                                data-button-label="@candidate.ButtonLabel"
+                                                data-validation-status="@candidate.ValidationStatusName"
+                                                data-wfo-id="@candidate.WfoId"
+                                                data-full-name="@candidate.FullName"
+                                                data-lsid="@candidate.Lsid"
+                                                data-genus="@candidate.GenusName"
+                                                data-nome="@candidate.Nome"
+                                                data-autori="@candidate.Autori"
+                                                data-subspecie="@candidate.Subspecie"
+                                                data-autorisub="@candidate.AutoriSub"
+                                                data-varieta="@candidate.Varieta"
+                                                data-autorivar="@candidate.AutoriVar"
+                                                data-cult="@candidate.Cult"
+                                                data-autoricult="@candidate.AutoriCult"
+                                                data-iucn-code="@candidate.IucnGlobalCode"
+                                                data-iucn-label="@candidate.IucnGlobalLabel">
+                                            Carica form
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+            }
+            else
+            {
+                <div class="alert alert-secondary">
+                    WFO non ha restituito un suggerimento strutturato. Puoi comunque correggere manualmente il form e salvare.
+                </div>
+            }
+
+            <div class="mt-3">
+                <button type="button" id="wfo-save-button" class="btn btn-primary">@language.Getkey("Global_Save")</button>
+                <a asp-action="Index" class="btn btn-info">@language.Getkey("Global_Go_Back")</a>
             </div>
-        }
+        </form>
     </div>
 </div>
 
-<div class="mt-3">
-    <a asp-action="Edit" asp-route-id="@Model.Specie.id" class="btn btn-warning">@language.Getkey("Global_Edit")</a>
-    <a asp-action="Index" class="btn btn-info">@language.Getkey("Global_Go_Back")</a>
-</div>
+@if (Model.CanCreateSuggestedGenus || showCreateGenusHelper)
+{
+    <div class="modal fade" id="createGenusModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Inserisci genere da WFO</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Chiudi">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Inserisco questo genere: <strong>@fallbackMissingGenusName</strong>, collegato alla famiglia <strong>@fallbackMissingFamilyName</strong>?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Annulla</button>
+                    <form asp-controller="Specie" asp-action="CreateMissingGenusFromWfo" method="post" class="m-0">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="SpecieId" value="@Model.Specie.id" />
+                        <input type="hidden" name="GenusName" value="@fallbackMissingGenusName" />
+                        <input type="hidden" name="FamilyName" value="@fallbackMissingFamilyName" />
+                        <input type="hidden" name="PendingFormJson" id="create-genus-pending-form-json" value="" />
+                        <button type="submit" class="btn btn-primary">Inserisci il genere</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section CustomScripts {
+    <script>
+        jQuery(function () {
+            const currentValues = {
+                validationStatusName: '@Html.Raw(JavaScriptEncoder.Default.Encode(Model.Form.ValidationStatusName ?? string.Empty))',
+                selectedWfoId: '',
+                acceptedFullName: '@Html.Raw(JavaScriptEncoder.Default.Encode(Model.Specie.nome_scientifico ?? string.Empty))',
+                lsid: '@Html.Raw(JavaScriptEncoder.Default.Encode(Model.Specie.lsid ?? string.Empty))',
+                genus: '@Html.Raw(JavaScriptEncoder.Default.Encode(Model.Form.GenusName ?? string.Empty))',
+                nome: '@Html.Raw(JavaScriptEncoder.Default.Encode(Model.Form.Nome ?? string.Empty))',
+                autori: '@Html.Raw(JavaScriptEncoder.Default.Encode(Model.Form.Autori ?? string.Empty))',
+                subspecie: '@Html.Raw(JavaScriptEncoder.Default.Encode(Model.Form.Subspecie ?? string.Empty))',
+                autorisub: '@Html.Raw(JavaScriptEncoder.Default.Encode(Model.Form.AutoriSub ?? string.Empty))',
+                varieta: '@Html.Raw(JavaScriptEncoder.Default.Encode(Model.Form.Varieta ?? string.Empty))',
+                autorivar: '@Html.Raw(JavaScriptEncoder.Default.Encode(Model.Form.AutoriVar ?? string.Empty))',
+                cult: '@Html.Raw(JavaScriptEncoder.Default.Encode(Model.Form.Cult ?? string.Empty))',
+                autoricult: '@Html.Raw(JavaScriptEncoder.Default.Encode(Model.Form.AutoriCult ?? string.Empty))',
+                suggestedIucnCode: '@Html.Raw(JavaScriptEncoder.Default.Encode(Model.Form.SuggestedIucnGlobalCode ?? string.Empty))',
+                suggestedIucnLabel: '@Html.Raw(JavaScriptEncoder.Default.Encode(Model.Form.SuggestedIucnGlobalLabel ?? string.Empty))',
+                applySuggestedIucnGlobal: @Model.Form.ApplySuggestedIucnGlobal.ToString().ToLowerInvariant()
+            };
+            let isApplyingOption = false;
+
+            function setFormValues(values) {
+                $('#Form_ValidationStatusName').val(values.validationStatusName || '');
+                $('#Form_SelectedWfoId').val(values.selectedWfoId || '');
+                $('#Form_AcceptedFullName').val(values.acceptedFullName || '');
+                $('#Form_Lsid').val(values.lsid || '');
+                $('#Form_GenusName').val(values.genus || '');
+                $('#Form_Nome').val(values.nome || '');
+                $('#Form_Autori').val(values.autori || '');
+                $('#Form_Subspecie').val(values.subspecie || '');
+                $('#Form_AutoriSub').val(values.autorisub || '');
+                $('#Form_Varieta').val(values.varieta || '');
+                $('#Form_AutoriVar').val(values.autorivar || '');
+                $('#Form_Cult').val(values.cult || '');
+                $('#Form_AutoriCult').val(values.autoricult || '');
+                $('#Form_SuggestedIucnGlobalCode').val(values.suggestedIucnCode || '');
+                $('#Form_SuggestedIucnGlobalLabel').val(values.suggestedIucnLabel || '');
+                $('#Form_ApplySuggestedIucnGlobal').prop('checked', !!values.applySuggestedIucnGlobal);
+                updateScientificNamePreview();
+                updateIucnPreview();
+            }
+
+            function updateScientificNamePreview() {
+                const genus = ($('#Form_GenusName').val() || '').trim();
+                const nome = ($('#Form_Nome').val() || '').trim();
+                const autori = ($('#Form_Autori').val() || '').trim();
+                const subspecie = ($('#Form_Subspecie').val() || '').trim();
+                const autorisub = ($('#Form_AutoriSub').val() || '').trim();
+                const varieta = ($('#Form_Varieta').val() || '').trim();
+                const autorivar = ($('#Form_AutoriVar').val() || '').trim();
+                const cult = ($('#Form_Cult').val() || '').trim();
+                const autoricult = ($('#Form_AutoriCult').val() || '').trim();
+                const parts = [];
+
+                if (genus) parts.push(genus);
+                if (nome) parts.push(nome);
+                if (autori) parts.push(autori);
+                if (subspecie) {
+                    parts.push('subsp. ' + subspecie);
+                    if (autorisub) parts.push(autorisub);
+                }
+                if (varieta) {
+                    parts.push('var. ' + varieta);
+                    if (autorivar) parts.push(autorivar);
+                }
+                if (cult) {
+                    parts.push("'" + cult + "'");
+                    if (autoricult) parts.push(autoricult);
+                }
+
+                const preview = parts.join(' ').replace(/\s+/g, ' ').trim();
+                $('#scientific-name-preview').text(preview || '-');
+                $('#lsid-preview').text(($('#Form_Lsid').val() || '').trim() || 'non restituito da WFO');
+            }
+
+            function updateIucnPreview() {
+                const iucnCode = ($('#Form_SuggestedIucnGlobalCode').val() || '').trim();
+                const iucnLabel = ($('#Form_SuggestedIucnGlobalLabel').val() || '').trim();
+                $('#iucn-global-preview').text(iucnCode ? (iucnCode + (iucnLabel ? ' - ' + iucnLabel : '')) : 'non restituito da WFO');
+            }
+
+            $('.scientific-field').on('input', updateScientificNamePreview);
+            $('#Form_Lsid').on('input', updateScientificNamePreview);
+            $('.scientific-field, #Form_Lsid').on('input', function () {
+                if (!isApplyingOption) {
+                    $('#Form_ValidationStatusName').val('A.A.');
+                }
+            });
+
+            $('.js-apply-wfo-option').on('click', function () {
+                const button = $(this);
+                isApplyingOption = true;
+                setFormValues({
+                    validationStatusName: button.data('validation-status'),
+                    selectedWfoId: button.data('wfo-id'),
+                    acceptedFullName: button.data('full-name'),
+                    lsid: button.data('lsid'),
+                    genus: button.data('genus'),
+                    nome: button.data('nome'),
+                    autori: button.data('autori'),
+                    subspecie: button.data('subspecie'),
+                    autorisub: button.data('autorisub'),
+                    varieta: button.data('varieta'),
+                    autorivar: button.data('autorivar'),
+                    cult: button.data('cult'),
+                    autoricult: button.data('autoricult'),
+                    suggestedIucnCode: button.data('iucn-code'),
+                    suggestedIucnLabel: button.data('iucn-label'),
+                    applySuggestedIucnGlobal: !!button.data('iucn-code')
+                });
+                isApplyingOption = false;
+            });
+
+            $('.js-use-current-values').on('click', function () {
+                isApplyingOption = true;
+                setFormValues(currentValues);
+                $('#Form_ValidationStatusName').val('A.A.');
+                isApplyingOption = false;
+            });
+
+            $('#wfo-save-button').on('click', function () {
+                const postForm = $('<form>', {
+                    method: 'post',
+                    action: '@Url.Action("ApplyWfoDecision", "Specie")'
+                });
+
+                const antiForgeryToken = $('#wfo-review-form input[name="__RequestVerificationToken"]').val();
+                const fields = [
+                    { name: '__RequestVerificationToken', value: antiForgeryToken },
+                    { name: 'SpecieId', value: $('#Form_SpecieId').val() },
+                    { name: 'ActionType', value: $('#Form_ActionType').val() },
+                    { name: 'ValidationStatusName', value: $('#Form_ValidationStatusName').val() },
+                    { name: 'SelectedWfoId', value: $('#Form_SelectedWfoId').val() },
+                    { name: 'AcceptedFullName', value: $('#Form_AcceptedFullName').val() },
+                    { name: 'Lsid', value: $('#Form_Lsid').val() },
+                    { name: 'GenusName', value: $('#Form_GenusName').val() },
+                    { name: 'Nome', value: $('#Form_Nome').val() },
+                    { name: 'Autori', value: $('#Form_Autori').val() },
+                    { name: 'Subspecie', value: $('#Form_Subspecie').val() },
+                    { name: 'AutoriSub', value: $('#Form_AutoriSub').val() },
+                    { name: 'Varieta', value: $('#Form_Varieta').val() },
+                    { name: 'AutoriVar', value: $('#Form_AutoriVar').val() },
+                    { name: 'Cult', value: $('#Form_Cult').val() },
+                    { name: 'AutoriCult', value: $('#Form_AutoriCult').val() },
+                    { name: 'ApplySuggestedIucnGlobal', value: $('#Form_ApplySuggestedIucnGlobal').is(':checked') },
+                    { name: 'SuggestedIucnGlobalCode', value: $('#Form_SuggestedIucnGlobalCode').val() },
+                    { name: 'SuggestedIucnGlobalLabel', value: $('#Form_SuggestedIucnGlobalLabel').val() }
+                ];
+
+                fields.forEach(function (field) {
+                    postForm.append($('<input>', {
+                        type: 'hidden',
+                        name: field.name,
+                        value: field.value || ''
+                    }));
+                });
+
+                $('body').append(postForm);
+                postForm.trigger('submit');
+            });
+
+            updateScientificNamePreview();
+            updateIucnPreview();
+
+            $('#createGenusModal form').on('submit', function () {
+                const pendingForm = {
+                    SpecieId: $('#Form_SpecieId').val() || '',
+                    ActionType: $('#Form_ActionType').val() || '',
+                    ValidationStatusName: $('#Form_ValidationStatusName').val() || '',
+                    SelectedWfoId: $('#Form_SelectedWfoId').val() || '',
+                    AcceptedFullName: $('#Form_AcceptedFullName').val() || '',
+                    Lsid: $('#Form_Lsid').val() || '',
+                    GenusName: $('#Form_GenusName').val() || '',
+                    Nome: $('#Form_Nome').val() || '',
+                    Autori: $('#Form_Autori').val() || '',
+                    Subspecie: $('#Form_Subspecie').val() || '',
+                    AutoriSub: $('#Form_AutoriSub').val() || '',
+                    Varieta: $('#Form_Varieta').val() || '',
+                    AutoriVar: $('#Form_AutoriVar').val() || '',
+                    Cult: $('#Form_Cult').val() || '',
+                    AutoriCult: $('#Form_AutoriCult').val() || '',
+                    ApplySuggestedIucnGlobal: $('#Form_ApplySuggestedIucnGlobal').is(':checked'),
+                    SuggestedIucnGlobalCode: $('#Form_SuggestedIucnGlobalCode').val() || '',
+                    SuggestedIucnGlobalLabel: $('#Form_SuggestedIucnGlobalLabel').val() || ''
+                };
+
+                $('#create-genus-pending-form-json').val(JSON.stringify(pendingForm));
+            });
+        });
+    </script>
+}

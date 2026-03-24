@@ -27,156 +27,31 @@
     <div class="card-body">
         <div class="table-responsive">
             <table id="table1" class="table table-bordered table-striped dataTable">
-                                <thead>
-                                    <tr>
-                                        <th style="width: 110px;">
-                                            WFO
-                                        </th>
-                                        <th>
-                                        @language.Getkey("Global_Scientific_Name")
-                                        </th>
-                                        <th>
-                                            Status nomenclaturale
-                                        </th>
-                                        <th>
-                                            Data
-                                        </th>
-                                        <th>
-                                            LSID
-                                        </th>
-                                        <th>
-                                        @language.Getkey("Global_Common_Name")
-                                        </th>
-                                        <th>
-                                        @language.Getkey("Global_English_Common_Name")
-                                        </th>
-                                        <th>
-                                        @language.Getkey("Global_Family")
-                                        </th>
-                                        <th>
-                                        @language.Getkey("Global_Genus")
-                                        </th>
-                                        <th>
-                                        @language.Getkey("Global_Floristic_Kingdom")
-                                        </th>
-                                        <th>
-                                        @language.Getkey("Global_Range")
-                                        </th>
-                                        <th>
-                            @language.Getkey("Global_Cites")
-                                        </th>
-                                        <th>
-                            @language.Getkey("Global_Iucn") @language.Getkey("Global_Global")
-                                        </th>
-                                        <th>
-                            @language.Getkey("Global_Iucn") @language.Getkey("Global_Local")
-                                        </th>
-                        <th>
-                            @language.Getkey("Global_Notes") 
-                        </th>
-                                        <th style="width:25%"></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-
-                                    @foreach (var item in Model)
-                                    {
-                                    <tr>
-                                        <td class="text-center">
-                                            @if (User.IsInRole("Administrator"))
-                                            {
-                                                <button type="button"
-                                                        class="btn btn-info btn-xs js-wfo-check"
-                                                        data-id="@item.id"
-                                                        data-name="@item.nome_scientifico"
-                                                        title="Verifica World Flora Online">
-                                                    <i class="fa-solid fa-globe"></i>
-                                                </button>
-                                            }
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.nome_scientifico)
-                                        </td>
-                                        <td>
-                                            @if (!string.IsNullOrWhiteSpace(item.status_nomenclaturaleNavigation?.descrizione) &&
-                                           item.status_nomenclaturaleNavigation.descrizione.Equals("WFO", StringComparison.OrdinalIgnoreCase))
-                                            {
-                                                <span class="text-success" title="Revisione confermata con WFO">
-                                                    <i class="fa-solid fa-circle-check"></i> @item.status_nomenclaturaleNavigation.descrizione
-                                                </span>
-                                            }
-                                            else
-                                            {
-                                                @Html.DisplayFor(modelItem => item.status_nomenclaturaleNavigation.descrizione)
-                                            }
-                                        </td>
-                                        <td>
-                                            @item.data_inserimento.ToString("dd/MM/yyyy HH:mm")
-                                        </td>
-                                        <td>
-                                            @($"{Trunc(item.lsid ?? "", 40)}{(string.IsNullOrEmpty(item.lsid) ? "" : "...")}")
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.nome_comune)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.nome_comune_en)
-                                        </td>
-                                        <td>
-                                @Html.DisplayFor(modelItem => item.genereNavigation.famigliaNavigation.descrizione)
-                                        </td>
-
-                                        <td>
-                                @Html.DisplayFor(modelItem => item.genereNavigation.descrizione)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.regnoNavigation.descrizione)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.arealeNavigation.descrizione)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.citesNavigation.codice)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.iucn_globaleNavigation.codice)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.iucn_italiaNavigation.codice)
-                                        </td>
-                            <td>
-                                @($"{Trunc(item.note ?? "", 100)}{(string.IsNullOrEmpty(item.note) ? "" : " [...]")}")
-                                                            </td>
-                                        <td>
-                                @if (User.IsInRole("Administrator"))
-                                {
-
-                                    <a asp-action="Edit" asp-route-id="@item.id">
-                                        <span class="btn btn-warning btn-xs" title="@language.Getkey("Global_Edit") @language.Getkey("Global_Species") ">
-                                            <i class="fa-solid fa-pencil" style="color: #fafafa;"></i>
-                                        </span>
-                                    </a>
-                                      if (@item.Accessioni.Count() == 0)
-                                                {
-                                    <a asp-action="Delete" asp-route-id="@item.id">
-                                            <span class="btn btn-danger btn-xs" title="@language.Getkey("Global_Delete") @language.Getkey("Global_Spicies")">
-                                            <i class="fa-solid fa-trash"></i>
-                                        </span>
-                                    </a>
-                                        }
-                                }
-
-                                        
-                                        </td>
-                                    </tr>
-                                    }
-
-                            </table>
-                        </div>
-                    </div>
-
-
-                </div>
+                <thead>
+                    <tr>
+                        <th style="width: 110px;">WFO</th>
+                        <th>@language.Getkey("Global_Scientific_Name")</th>
+                        <th>Validazione tassonomica</th>
+                        <th>Data Inserimento</th>
+                        <th>Link</th>
+                        <th>@language.Getkey("Global_Common_Name")</th>
+                        <th>@language.Getkey("Global_English_Common_Name")</th>
+                        <th>@language.Getkey("Global_Family")</th>
+                        <th>@language.Getkey("Global_Genus")</th>
+                        <th>@language.Getkey("Global_Floristic_Kingdom")</th>
+                        <th>@language.Getkey("Global_Range")</th>
+                        <th>@language.Getkey("Global_Cites")</th>
+                        <th>@language.Getkey("Global_Iucn") @language.Getkey("Global_Global")</th>
+                        <th>@language.Getkey("Global_Iucn") @language.Getkey("Global_Local")</th>
+                        <th>@language.Getkey("Global_Notes")</th>
+                        <th style="width:25%"></th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+</div>
 
 <div class="modal fade" id="wfoModal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
@@ -204,6 +79,7 @@
         </div>
     </div>
 </div>
+
 @section Styles {
     <link href="~/css/select2.min.css" rel="stylesheet" />
     <link href="~/css/accessioni.min.css" rel="stylesheet" />
@@ -224,8 +100,53 @@
             const isAdministrator = @User.IsInRole("Administrator").ToString().ToLowerInvariant();
             const editUrlTemplate = '@Url.Action("Edit", "Specie", new { id = "__id__" })';
             const deleteUrlTemplate = '@Url.Action("Delete", "Specie", new { id = "__id__" })';
+            const openWfoUrlTemplate = '@Url.Action("OpenWfo", "Specie", new { id = "__id__" })';
+            const wfoIconUrl = '@Url.Content("~/img/wfo.png")';
 
-            jQuery('#table1').DataTable({
+            function renderValidationStatus(value) {
+                const normalized = (value || '').toUpperCase();
+                if (normalized === 'WFO') {
+                    return '<span class="text-success" title="Revisione confermata con WFO"><img src="' + wfoIconUrl + '" alt="WFO" style="width:16px;height:16px;vertical-align:text-bottom;margin-right:4px;" /> ' + value + '</span>';
+                }
+
+                if (normalized === 'A.A.') {
+                    return '<span class="text-warning" title="Revisione manuale o sinonimo mantenuto"><i class="fa fa-light fa-user-secret"></i> ' + value + '</span>';
+                }
+
+                return value || '';
+            }
+
+            function renderLinks(row) {
+                const openWfoUrl = openWfoUrlTemplate.replace('__id__', row.id);
+                let html = '<div class="small"><a href="' + openWfoUrl + '" target="_blank" rel="noopener noreferrer">WFO</a>';
+
+                if (row.lsid) {
+                    const encodedLsid = encodeURIComponent(row.lsid.trim());
+                    html += ' | <a href="https://www.ipni.org/n/' + encodedLsid + '" target="_blank" rel="noopener noreferrer">IPNI</a>';
+                    html += ' | <a href="https://powo.science.kew.org/taxon/' + encodedLsid + '" target="_blank" rel="noopener noreferrer">POWO</a>';
+                }
+
+                html += '</div>';
+                return html;
+            }
+
+            function renderActions(row) {
+                if (!isAdministrator || !row.showActions) {
+                    return '';
+                }
+
+                const editUrl = editUrlTemplate.replace('__id__', row.id);
+                let actions = '<a href="' + editUrl + '"><span class="btn btn-warning btn-xs"><i class="fa-solid fa-pencil" style="color: #fafafa;"></i></span></a>';
+
+                if (row.canDelete) {
+                    const deleteUrl = deleteUrlTemplate.replace('__id__', row.id);
+                    actions += ' <a href="' + deleteUrl + '"><span class="btn btn-danger btn-xs"><i class="fa-solid fa-trash"></i></span></a>';
+                }
+
+                return actions;
+            }
+
+            const table = jQuery('#table1').DataTable({
                 'processing': true,
                 'deferRender': true,
                 'paging': true,
@@ -241,19 +162,41 @@
                     'url': '@Url.Action("IndexAllData", "Specie")',
                     'type': 'POST',
                     'dataSrc': function (json) {
-                        if (json && json.data && Array.isArray(json.data.$values)) {
-                            return json.data.$values;
-                        }
-
                         return json && json.data ? json.data : [];
                     },
                     'error': function (xhr) {
-                        console.error('Specie IndexData error', xhr);
+                        console.error('Specie IndexAllData error', xhr);
                     }
                 },
-                'order': [[0, 'asc']],
+                'order': [[1, 'asc']],
                 'columns': [
+                    {
+                        'data': null,
+                        'orderable': false,
+                        'searchable': false,
+                        'render': function (data, type, row) {
+                            if (!isAdministrator) {
+                                return '';
+                            }
+
+                            const scientificName = $('<div>').text(row.scientificName || '').html();
+                            return '<button type="button" class="btn btn-info btn-xs js-wfo-check" data-id="' + row.id + '" data-name="' + scientificName + '" title="Verifica World Flora Online"><i class="fa-solid fa-globe"></i></button>';
+                        }
+                    },
                     { 'data': 'scientificName' },
+                    {
+                        'data': 'validationStatus',
+                        'render': function (data) {
+                            return renderValidationStatus(data);
+                        }
+                    },
+                    { 'data': 'insertedAt' },
+                    {
+                        'data': null,
+                        'render': function (data, type, row) {
+                            return renderLinks(row);
+                        }
+                    },
                     { 'data': 'commonName' },
                     { 'data': 'englishCommonName' },
                     { 'data': 'family' },
@@ -269,67 +212,135 @@
                         'orderable': false,
                         'searchable': false,
                         'render': function (data, type, row) {
-                            if (!isAdministrator || !row.showActions) {
-                                return '';
-                            }
-
-                            const editUrl = editUrlTemplate.replace('__id__', row.id);
-                            let actions = '<a href="' + editUrl + '"><span class="btn btn-warning btn-xs"><i class="fa-solid fa-pencil" style="color: #fafafa;"></i></span></a>';
-
-                            if (row.canDelete) {
-                                const deleteUrl = deleteUrlTemplate.replace('__id__', row.id);
-                                actions += ' <a href="' + deleteUrl + '"><span class="btn btn-danger btn-xs"><i class="fa-solid fa-trash"></i></span></a>';
-                            }
-
-                            return actions;
+                            return renderActions(row);
                         }
                     }
                 ]
             });
-        })
-    </script>
-    <script>
-        function submitWfoDecision(actionType, specieId, wfoId, acceptedFullName, lsid) {
-            $('#wfoSpecieId').val(specieId || '');
-            $('#wfoActionType').val(actionType || '');
-            $('#wfoSelectedWfoId').val(wfoId || '');
-            $('#wfoAcceptedFullName').val(acceptedFullName || '');
-            $('#wfoLsid').val(lsid || '');
-            $('#wfoDecisionForm').submit();
-        }
 
-        $(function () {
-            $('.js-wfo-check').on('click', function () {
+            let wfoServiceAvailable = true;
+
+            function setWfoButtonsAvailability(isAvailable, message) {
+                wfoServiceAvailable = isAvailable;
+                const buttons = jQuery('.js-wfo-check');
+                buttons.removeClass('btn-info btn-danger btn-secondary');
+                buttons.addClass(isAvailable ? 'btn-info' : 'btn-danger');
+                buttons.attr('title', isAvailable ? 'Verifica World Flora Online' : (message || 'Servizio WFO non disponibile'));
+                buttons.attr('data-wfo-available', isAvailable ? 'true' : 'false');
+            }
+
+            function showWfoUnavailableMessage(message) {
+                const modal = $('#wfoModal');
+                $('#wfoModalBody').html('<p>' + (message || 'Il servizio World Flora Online non risponde al momento.') + '</p>');
+                $('#wfoModalFooter').html('<button type="button" class="btn btn-secondary" data-dismiss="modal">Chiudi</button>');
+                modal.modal('show');
+            }
+
+            function submitWfoDecision(actionType, specieId, wfoId, acceptedFullName, lsid) {
+                $('#wfoSpecieId').val(specieId || '');
+                $('#wfoActionType').val(actionType || '');
+                $('#wfoSelectedWfoId').val(wfoId || '');
+                $('#wfoAcceptedFullName').val(acceptedFullName || '');
+                $('#wfoLsid').val(lsid || '');
+                $('#wfoDecisionForm').trigger('submit');
+            }
+
+            function normalizeScientificName(value) {
+                return (value || '').replace(/\s+/g, ' ').trim().toLowerCase();
+            }
+
+            function checkWfoStatus() {
+                $.get('@Url.Action("WfoStatus", "Specie")')
+                    .done(function (data) {
+                        setWfoButtonsAvailability(!!data.serviceAvailable, data.message);
+                    })
+                    .fail(function () {
+                        setWfoButtonsAvailability(false, 'Servizio WFO non disponibile');
+                    });
+            }
+
+            checkWfoStatus();
+            table.on('draw', function () {
+                setWfoButtonsAvailability(wfoServiceAvailable, wfoServiceAvailable ? 'Verifica World Flora Online' : 'Servizio WFO non disponibile');
+            });
+
+            jQuery('#table1 tbody').on('click', '.js-wfo-check', function () {
                 var specieId = $(this).data('id');
                 var scientificName = $(this).data('name');
                 var modal = $('#wfoModal');
+
+                if (!wfoServiceAvailable) {
+                    showWfoUnavailableMessage('Il servizio World Flora Online non risulta disponibile in questo momento.');
+                    return;
+                }
+
                 $('#wfoModalBody').html('<p>Controllo WFO in corso per <strong>' + scientificName + '</strong>...</p>');
                 $('#wfoModalFooter').html('<button type="button" class="btn btn-secondary" data-dismiss="modal">Chiudi</button>');
                 modal.modal('show');
 
                 $.get('@Url.Action("CheckWfo", "Specie")', { id: specieId })
                     .done(function (data) {
+                        if (data.serviceAvailable === false) {
+                            setWfoButtonsAvailability(false, data.message);
+                            showWfoUnavailableMessage(data.message);
+                            return;
+                        }
+
                         if (data.status === 'accepted' && data.match) {
+                            if (normalizeScientificName(data.currentScientificName) === normalizeScientificName(data.match.fullName)) {
+                                $('#wfoModalBody').html(
+                                    '<p><strong>' + data.match.fullName + '</strong> coincide con il nome gia presente.</p>' +
+                                    '<p>Posso salvarlo subito come accettato WFO e valorizzare l\'LSID.</p>' +
+                                    '<p><strong>LSID WFO:</strong> ' + (data.match.lsid || 'non restituito da WFO') + '</p>'
+                                );
+                                $('#wfoModalFooter').html(
+                                    '<button type="button" class="btn btn-secondary" data-dismiss="modal">Chiudi</button>' +
+                                    '<button type="button" class="btn btn-success js-save-direct-wfo">Salva come accettato</button>'
+                                );
+                                $('.js-save-direct-wfo').on('click', function () {
+                                    submitWfoDecision('accept_suggested', specieId, data.match.wfoId, data.match.fullName, data.match.lsid);
+                                });
+                                return;
+                            }
+
                             $('#wfoModalBody').html(
                                 '<p><strong>' + data.match.fullName + '</strong> risulta un nome accettato in World Flora Online.</p>' +
-                                '<p>Vuoi confermare la revisione e impostare lo status nomenclaturale a WFO?</p>'
+                                '<p>Puoi aprire la revisione per vedere e modificare i campi prima del salvataggio.</p>' +
+                                '<p><strong>LSID WFO:</strong> ' + (data.match.lsid || 'non restituito da WFO') + '</p>'
                             );
                             $('#wfoModalFooter').html(
-                                '<button type="button" class="btn btn-secondary" data-dismiss="modal">Annulla</button>' +
-                                '<button type="button" class="btn btn-success" onclick="submitWfoDecision(\'accept_suggested\', \'' + specieId + '\', \'' + data.match.wfoId + '\', \'' + (data.match.fullName || '').replace(/'/g, '&#39;') + '\', \'' + (data.match.lsid || '') + '\')">Conferma revisione</button>'
+                                '<button type="button" class="btn btn-secondary" data-dismiss="modal">Chiudi</button>' +
+                                '<a class="btn btn-success" href="' + data.reviewUrl + '">Apri revisione WFO</a>'
                             );
                             return;
                         }
 
                         if (data.status === 'synonym' && data.match) {
+                            if (normalizeScientificName(data.currentScientificName) === normalizeScientificName(data.match.acceptedName)) {
+                                $('#wfoModalBody').html(
+                                    '<p>Il nome accettato proposto da WFO coincide con quello gia presente.</p>' +
+                                    '<p>Posso salvare subito stato WFO e LSID.</p>' +
+                                    '<p><strong>LSID WFO:</strong> ' + (data.match.lsid || 'non restituito da WFO') + '</p>'
+                                );
+                                $('#wfoModalFooter').html(
+                                    '<button type="button" class="btn btn-secondary" data-dismiss="modal">Chiudi</button>' +
+                                    '<button type="button" class="btn btn-success js-save-direct-wfo">Salva come accettato</button>'
+                                );
+                                $('.js-save-direct-wfo').on('click', function () {
+                                    submitWfoDecision('keep_current', specieId, data.match.wfoId, data.match.acceptedName, data.match.lsid);
+                                });
+                                return;
+                            }
+
                             $('#wfoModalBody').html(
                                 '<p><strong>' + data.match.fullName + '</strong> risulta un sinonimo.</p>' +
-                                '<p>Nome accettato proposto da WFO: <strong>' + data.match.acceptedName + '</strong></p>'
+                                '<p>Nome accettato proposto da WFO: <strong>' + data.match.acceptedName + '</strong></p>' +
+                                '<p>Apri la revisione per scegliere quale proposta caricare nel form prima del salvataggio.</p>' +
+                                '<p><strong>LSID WFO:</strong> ' + (data.match.lsid || 'non restituito da WFO') + '</p>'
                             );
                             $('#wfoModalFooter').html(
-                                '<button type="button" class="btn btn-secondary" data-dismiss="modal">Annulla</button>' +
-                                '<button type="button" class="btn btn-warning" onclick="submitWfoDecision(\'keep_current\', \'' + specieId + '\', \'' + data.match.wfoId + '\', \'' + (data.match.fullName || '').replace(/'/g, '&#39;') + '\', \'' + (data.match.lsid || '') + '\')">Lascia il nome attuale</button>' +
-                                '<button type="button" class="btn btn-success" onclick="submitWfoDecision(\'accept_suggested\', \'' + specieId + '\', \'' + data.match.wfoId + '\', \'' + (data.match.acceptedName || '').replace(/'/g, '&#39;') + '\', \'' + (data.match.lsid || '') + '\')">Usa il nome accettato</button>'
+                                '<button type="button" class="btn btn-secondary" data-dismiss="modal">Chiudi</button>' +
+                                '<a class="btn btn-primary" href="' + data.reviewUrl + '">Apri revisione WFO</a>'
                             );
                             return;
                         }
@@ -345,10 +356,15 @@
                             '<a class="btn btn-primary" href="' + data.reviewUrl + '">Apri revisione</a>'
                         );
                     })
-                    .fail(function () {
-                        $('#wfoModalBody').html('<p>Non sono riuscito a contattare il servizio WFO in questo momento.</p>');
+                    .fail(function (xhr) {
+                        setWfoButtonsAvailability(false, 'Servizio WFO non disponibile');
+                        var message = 'Non sono riuscito a contattare il servizio WFO in questo momento.';
+                        if (xhr.responseJSON && xhr.responseJSON.message) {
+                            message = xhr.responseJSON.message;
+                        }
+                        showWfoUnavailableMessage(message);
                     });
             });
         });
     </script>
-}          
+}

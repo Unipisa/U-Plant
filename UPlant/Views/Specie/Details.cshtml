@@ -1,4 +1,4 @@
-﻿@model UPlant.Models.DB.Specie
+@model UPlant.Models.DB.Specie
 @inject LanguageService language
 @{
     ViewData["Title"] = "Details";
@@ -23,10 +23,10 @@
             @Html.DisplayFor(model => model.nome_scientifico)
         </dd>
         <dt class = "col-sm-2">
-            Status nomenclaturale
+            Validazione tassonomica
         </dt>
         <dd class = "col-sm-10">
-            @(Model.status_nomenclaturaleNavigation?.descrizione ?? "-")
+            @(Model.validazione_tassonomicaNavigation?.descrizione ?? "-")
         </dd>
         <dt class = "col-sm-2">
             Data ultimo aggiornamento
@@ -142,3 +142,5 @@
     <a asp-action="Edit" asp-route-id="@Model?.id">@language.Getkey("Global_Edit")</a> |
     <a asp-action="Index">Back to List</a>
 </div>
+
+

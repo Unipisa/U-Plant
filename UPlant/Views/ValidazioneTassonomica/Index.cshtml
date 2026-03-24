@@ -1,4 +1,4 @@
-@model IEnumerable<UPlant.Models.DB.StatusNomenclaturale>
+@model IEnumerable<UPlant.Models.DB.ValidazioneTassonomica>
 @inject LanguageService language
 @{
     ViewData["Title"] = "Index";
@@ -11,8 +11,8 @@
         {
             <div class="float-right success">
                 <a asp-action="Create">
-                    <span class="btn btn-success" title="Aggiungi status nomenclaturale">
-                        Aggiungi status nomenclaturale
+                    <span class="btn btn-success" title="Aggiungi Validazione tassonomica">
+                        Aggiungi Validazione tassonomica
                     </span>
                 </a>
             </div>
@@ -82,3 +82,5 @@
         })
     </script>
 }
+
+

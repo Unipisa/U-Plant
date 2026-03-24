@@ -1,4 +1,4 @@
-﻿@model IEnumerable<SidebarMenu>
+@model IEnumerable<SidebarMenu>
 @inject LanguageService language
 
 <aside class="main-sidebar sidebar-dark-primary elevation-4 customBorder">
@@ -242,9 +242,9 @@
                                                 </a>
                                             </li>
                                             <li class="nav-item">
-                                                <a asp-action="Index" asp-controller="StatusNomenclaturale" class="nav-link active">
+                                                <a asp-action="Index" asp-controller="ValidazioneTassonomica" class="nav-link active">
                                                     <span>
-                                                        <i class="far fa-circle nav-icon"></i> Status Nomenclaturale
+                                                        <i class="far fa-circle nav-icon"></i> Validazione tassonomica
                                                     </span>
                                                 </a>
                                             </li>
@@ -525,3 +525,4 @@
         }
     </aside>
 </aside>
+
