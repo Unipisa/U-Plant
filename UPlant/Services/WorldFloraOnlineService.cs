@@ -84,6 +84,20 @@ public sealed class WorldFloraOnlineService : IWorldFloraOnlineService
             .ThenBy(c => c.FullName)
             .ToList();
 
+        var exactAcceptedCandidate = result.Candidates.FirstOrDefault(candidate =>
+            candidate.IsAccepted &&
+            string.Equals(
+                SpecieScientificNameHelper.NormalizeSpacing(candidate.FullName),
+                SpecieScientificNameHelper.NormalizeSpacing(result.CurrentScientificName),
+                StringComparison.OrdinalIgnoreCase));
+
+        if (exactAcceptedCandidate != null)
+        {
+            result.Match = exactAcceptedCandidate;
+            result.Status = WfoMatchStatus.Accepted;
+            return result;
+        }
+
         result.Status = result.Candidates.Count > 0 ? WfoMatchStatus.Ambiguous : WfoMatchStatus.NotFound;
         return result;
     }
