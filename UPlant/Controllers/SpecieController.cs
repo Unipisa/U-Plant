@@ -821,17 +821,23 @@ namespace UPlant.Controllers
         [HttpGet]
         public async Task<IActionResult> WfoDatabaseAudit(CancellationToken cancellationToken)
         {
-            var totalSpeciesCount = await _context.Specie.CountAsync(cancellationToken);
+            var totalSpeciesCount = await CountPendingWfoAuditSpeciesAsync(_context, cancellationToken);
             var alreadyWfoId = await EnsureDefaultValidazioneTassonomicaAsync("WFO");
             var alreadyWfoCount = alreadyWfoId == Guid.Empty
                 ? 0
                 : await _context.Specie.CountAsync(x => x.validazione_tassonomica == alreadyWfoId, cancellationToken);
             var cachedAudit = await LoadWfoDatabaseAuditCacheAsync(cancellationToken);
+            cachedAudit = await FilterWfoDatabaseAuditSnapshotAsync(_context, cachedAudit, cancellationToken);
 
             return View(new SpecieWfoDatabaseAuditViewModel
             {
                 TotalSpeciesCount = totalSpeciesCount,
                 AlreadyWfoCount = alreadyWfoCount,
+                DefaultMaxSpeciesToProcess = Math.Min(20, Math.Max(1, totalSpeciesCount)),
+                DefaultIncludePerfectAccepted = true,
+                DefaultIncludePerfectSynonym = true,
+                DefaultIncludeAmbiguous = true,
+                DefaultIncludeNoMatch = true,
                 HasCachedAudit = cachedAudit != null,
                 CachedAuditUpdatedAtUtc = cachedAudit?.UpdatedAtUtc,
                 CachedAuditJson = cachedAudit == null ? string.Empty : JsonSerializer.Serialize(cachedAudit)
@@ -840,12 +846,22 @@ namespace UPlant.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> StartWfoDatabaseAudit(bool force = false, CancellationToken cancellationToken = default)
+        public async Task<IActionResult> StartWfoDatabaseAudit(StartWfoDatabaseAuditInput input, bool force = false, CancellationToken cancellationToken = default)
         {
+            input ??= new StartWfoDatabaseAuditInput();
+            NormalizeWfoAuditInput(input);
+
+            var totalPendingSpeciesCount = await CountPendingWfoAuditSpeciesAsync(_context, cancellationToken);
+            var totalSpeciesCount = Math.Min(totalPendingSpeciesCount, input.MaxSpeciesToProcess);
+
             if (!force)
             {
                 var cachedAudit = await LoadWfoDatabaseAuditCacheAsync(cancellationToken);
-                if (cachedAudit != null)
+                cachedAudit = await FilterWfoDatabaseAuditSnapshotAsync(_context, cachedAudit, cancellationToken);
+                if (cachedAudit != null &&
+                    SnapshotMatchesAuditInput(cachedAudit, input) &&
+                    cachedAudit.TotalSpecies == totalSpeciesCount &&
+                    GetWfoDatabaseAuditSnapshotCount(cachedAudit) >= totalSpeciesCount)
                 {
                     return Json(new
                     {
@@ -858,9 +874,8 @@ namespace UPlant.Controllers
 
             CleanupCompletedWfoAuditJobs();
 
-            var totalSpeciesCount = await _context.Specie.CountAsync(cancellationToken);
             var jobId = Guid.NewGuid().ToString("N");
-            var job = new WfoDatabaseAuditJobState(jobId, totalSpeciesCount);
+            var job = new WfoDatabaseAuditJobState(jobId, totalSpeciesCount, input);
             job.AddMessage($"Audit avviato su {totalSpeciesCount} specie.");
             _wfoAuditJobs[jobId] = job;
 
@@ -1777,49 +1792,77 @@ namespace UPlant.Controllers
                 var context = scope.ServiceProvider.GetRequiredService<Entities>();
                 var wfoService = scope.ServiceProvider.GetRequiredService<IWorldFloraOnlineService>();
 
-                var species = await context.Specie
-                    .AsNoTracking()
-                    .Include(x => x.genereNavigation)
-                    .Include(x => x.validazione_tassonomicaNavigation)
-                    .OrderBy(x => x.nome_scientifico)
-                    .Select(x => new WfoDatabaseAuditSourceRow
-                    {
-                        Id = x.id,
-                        ScientificName = x.nome_scientifico ?? string.Empty,
-                        Nome = x.nome ?? string.Empty,
-                        Autori = x.autori ?? string.Empty,
-                        Subspecie = x.subspecie ?? string.Empty,
-                        AutoriSub = x.autorisub ?? string.Empty,
-                        Varieta = x.varieta ?? string.Empty,
-                        AutoriVar = x.autorivar ?? string.Empty,
-                        Cult = x.cult ?? string.Empty,
-                        AutoriCult = x.autoricult ?? string.Empty,
-                        GenusName = x.genereNavigation != null ? x.genereNavigation.descrizione ?? string.Empty : string.Empty,
-                        CurrentValidationStatus = x.validazione_tassonomicaNavigation != null ? x.validazione_tassonomicaNavigation.descrizione ?? string.Empty : string.Empty
-                    })
-                    .ToListAsync();
+                const int batchSize = 20;
+                var processed = 0;
 
-                job.MarkRunning("Analisi nominativi");
+                job.MarkRunning("Lettura specie database");
 
-                foreach (var row in species)
+                while (processed < job.TotalSpecies)
                 {
-                    var fakeSpecie = new Specie
-                    {
-                        id = row.Id,
-                        nome = row.Nome,
-                        nome_scientifico = row.ScientificName,
-                        autori = row.Autori,
-                        subspecie = row.Subspecie,
-                        autorisub = row.AutoriSub,
-                        varieta = row.Varieta,
-                        autorivar = row.AutoriVar,
-                        cult = row.Cult,
-                        autoricult = row.AutoriCult
-                    };
+                    var remaining = job.TotalSpecies - processed;
+                    var speciesBatch = await context.Specie
+                        .AsNoTracking()
+                        .Where(x => x.validazione_tassonomicaNavigation != null && x.validazione_tassonomicaNavigation.descrizione == "N.D.")
+                        .OrderBy(x => x.nome_scientifico)
+                        .ThenBy(x => x.id)
+                        .Skip(processed)
+                        .Take(Math.Min(batchSize, remaining))
+                        .Select(x => new WfoDatabaseAuditSourceRow
+                        {
+                            Id = x.id,
+                            ScientificName = x.nome_scientifico ?? string.Empty,
+                            Nome = x.nome ?? string.Empty,
+                            Autori = x.autori ?? string.Empty,
+                            Subspecie = x.subspecie ?? string.Empty,
+                            AutoriSub = x.autorisub ?? string.Empty,
+                            Varieta = x.varieta ?? string.Empty,
+                            AutoriVar = x.autorivar ?? string.Empty,
+                            Cult = x.cult ?? string.Empty,
+                            AutoriCult = x.autoricult ?? string.Empty,
+                            GenusName = x.genereNavigation != null ? x.genereNavigation.descrizione ?? string.Empty : string.Empty,
+                            CurrentValidationStatus = x.validazione_tassonomicaNavigation != null ? x.validazione_tassonomicaNavigation.descrizione ?? string.Empty : string.Empty
+                        })
+                        .ToListAsync(CancellationToken.None);
 
-                    var checkResult = await wfoService.CheckAsync(fakeSpecie, row.GenusName, CancellationToken.None);
-                    var item = BuildWfoDatabaseAuditItem(row, checkResult);
-                    job.ReportItem(item);
+                    if (speciesBatch.Count == 0)
+                    {
+                        break;
+                    }
+
+                    job.MarkRunning($"Analisi nominativi ({Math.Min(processed + speciesBatch.Count, job.TotalSpecies)}/{job.TotalSpecies})");
+
+                    foreach (var row in speciesBatch)
+                    {
+                        try
+                        {
+                            var fakeSpecie = new Specie
+                            {
+                                id = row.Id,
+                                nome = row.Nome,
+                                nome_scientifico = row.ScientificName,
+                                autori = row.Autori,
+                                subspecie = row.Subspecie,
+                                autorisub = row.AutoriSub,
+                                varieta = row.Varieta,
+                                autorivar = row.AutoriVar,
+                                cult = row.Cult,
+                                autoricult = row.AutoriCult
+                            };
+
+                            using var timeoutCts = new CancellationTokenSource(TimeSpan.FromSeconds(20));
+                            var checkResult = await wfoService.CheckAsync(fakeSpecie, row.GenusName, timeoutCts.Token);
+                            var item = BuildWfoDatabaseAuditItem(row, checkResult);
+                            job.ReportItem(item, ShouldKeepWfoDatabaseAuditItem(item, job.Options));
+                        }
+                        catch (Exception ex)
+                        {
+                            var item = BuildWfoDatabaseAuditErrorItem(row, FormatWfoAuditExceptionMessage(ex));
+                            job.ReportItem(item, ShouldKeepWfoDatabaseAuditItem(item, job.Options));
+                        }
+                    }
+
+                    processed += speciesBatch.Count;
+                    await SaveWfoDatabaseAuditCacheAsync(job.CreateSnapshot(), CancellationToken.None);
                 }
 
                 job.Complete();
@@ -1829,6 +1872,7 @@ namespace UPlant.Controllers
             {
                 _logger.LogError(ex, "Errore durante l'audit globale WFO {JobId}", jobId);
                 job.Fail($"Audit interrotto: {ex.GetBaseException().Message}");
+                await SaveWfoDatabaseAuditCacheAsync(job.CreateSnapshot(), CancellationToken.None);
             }
         }
 
@@ -1900,7 +1944,7 @@ namespace UPlant.Controllers
                 SpecieId = row.Id,
                 ScientificName = row.ScientificName,
                 CurrentValidationStatus = row.CurrentValidationStatus,
-                Section = "noMatch",
+                Section = checkResult.Status == WfoMatchStatus.Ambiguous ? "ambiguous" : "noMatch",
                 AcceptedName = topCandidate?.SuggestedAcceptedName ?? topCandidate?.FullName ?? string.Empty,
                 Lsid = topCandidate?.Lsid ?? string.Empty,
                 Notes = checkResult.Status switch
@@ -1910,6 +1954,72 @@ namespace UPlant.Controllers
                     _ => "Il nome non rientra nei casi di match perfetto."
                 }
             };
+        }
+
+        private static WfoDatabaseAuditItem BuildWfoDatabaseAuditErrorItem(WfoDatabaseAuditSourceRow row, string errorMessage)
+        {
+            return new WfoDatabaseAuditItem
+            {
+                SpecieId = row.Id,
+                ScientificName = row.ScientificName,
+                CurrentValidationStatus = row.CurrentValidationStatus,
+                Section = "noMatch",
+                AcceptedName = string.Empty,
+                Lsid = string.Empty,
+                Notes = $"Verifica WFO non completata: {errorMessage}"
+            };
+        }
+
+        private static string FormatWfoAuditExceptionMessage(Exception exception)
+        {
+            if (exception is OperationCanceledException || exception is TaskCanceledException)
+            {
+                return "timeout WFO dopo 20 secondi, specie saltata";
+            }
+
+            var baseMessage = exception.GetBaseException().Message;
+            if (string.IsNullOrWhiteSpace(baseMessage))
+            {
+                return "errore non specificato, specie saltata";
+            }
+
+            return baseMessage;
+        }
+
+        private static void NormalizeWfoAuditInput(StartWfoDatabaseAuditInput input)
+        {
+            input.MaxSpeciesToProcess = Math.Min(500, Math.Max(1, input.MaxSpeciesToProcess));
+
+            if (!input.IncludePerfectAccepted &&
+                !input.IncludePerfectSynonym &&
+                !input.IncludeAmbiguous &&
+                !input.IncludeNoMatch)
+            {
+                input.IncludePerfectAccepted = true;
+                input.IncludePerfectSynonym = true;
+                input.IncludeAmbiguous = true;
+                input.IncludeNoMatch = true;
+            }
+        }
+
+        private static bool ShouldKeepWfoDatabaseAuditItem(WfoDatabaseAuditItem item, StartWfoDatabaseAuditInput options)
+        {
+            return item.Section switch
+            {
+                "perfectAccepted" => options.IncludePerfectAccepted,
+                "perfectSynonym" => options.IncludePerfectSynonym,
+                "ambiguous" => options.IncludeAmbiguous,
+                _ => options.IncludeNoMatch
+            };
+        }
+
+        private static bool SnapshotMatchesAuditInput(WfoDatabaseAuditJobSnapshot snapshot, StartWfoDatabaseAuditInput input)
+        {
+            return snapshot.MaxSpeciesToProcess == input.MaxSpeciesToProcess &&
+                snapshot.IncludePerfectAccepted == input.IncludePerfectAccepted &&
+                snapshot.IncludePerfectSynonym == input.IncludePerfectSynonym &&
+                snapshot.IncludeAmbiguous == input.IncludeAmbiguous &&
+                snapshot.IncludeNoMatch == input.IncludeNoMatch;
         }
 
         private static void CleanupCompletedWfoAuditJobs()
@@ -2701,6 +2811,23 @@ namespace UPlant.Controllers
             return Path.Combine(Path.GetTempPath(), "UPlant", "WfoAudit", "latest-audit.json");
         }
 
+        private static int GetWfoDatabaseAuditSnapshotCount(WfoDatabaseAuditJobSnapshot snapshot)
+        {
+            if (snapshot == null)
+            {
+                return 0;
+            }
+
+            return snapshot.PerfectAccepted.Count + snapshot.PerfectSynonym.Count + snapshot.Ambiguous.Count + snapshot.NoMatch.Count;
+        }
+
+        private static async Task<int> CountPendingWfoAuditSpeciesAsync(Entities context, CancellationToken cancellationToken)
+        {
+            return await context.Specie
+                .AsNoTracking()
+                .CountAsync(x => x.validazione_tassonomicaNavigation != null && x.validazione_tassonomicaNavigation.descrizione == "N.D.", cancellationToken);
+        }
+
         private static async Task SaveWfoDatabaseAuditCacheAsync(WfoDatabaseAuditJobSnapshot snapshot, CancellationToken cancellationToken)
         {
             var cachePath = GetWfoAuditCachePath();
@@ -2719,6 +2846,54 @@ namespace UPlant.Controllers
 
             await using var stream = System.IO.File.OpenRead(cachePath);
             return await JsonSerializer.DeserializeAsync<WfoDatabaseAuditJobSnapshot>(stream, cancellationToken: cancellationToken);
+        }
+
+        private static async Task<WfoDatabaseAuditJobSnapshot> FilterWfoDatabaseAuditSnapshotAsync(
+            Entities context,
+            WfoDatabaseAuditJobSnapshot snapshot,
+            CancellationToken cancellationToken)
+        {
+            if (snapshot == null)
+            {
+                return null;
+            }
+
+            var snapshotIds = snapshot.PerfectAccepted
+                .Select(x => x.SpecieId)
+                .Concat(snapshot.PerfectSynonym.Select(x => x.SpecieId))
+                .Concat(snapshot.Ambiguous.Select(x => x.SpecieId))
+                .Concat(snapshot.NoMatch.Select(x => x.SpecieId))
+                .Where(x => x != Guid.Empty)
+                .Distinct()
+                .ToList();
+
+            if (snapshotIds.Count == 0)
+            {
+                snapshot.TotalSpecies = 0;
+                snapshot.CheckedSpecies = 0;
+                snapshot.Percent = snapshot.Status == "completed" ? 100 : 0;
+                return snapshot;
+            }
+
+            var pendingIds = await context.Specie
+                .AsNoTracking()
+                .Where(x => snapshotIds.Contains(x.id) && x.validazione_tassonomicaNavigation != null && x.validazione_tassonomicaNavigation.descrizione == "N.D.")
+                .Select(x => x.id)
+                .ToListAsync(cancellationToken);
+
+            var pendingSet = pendingIds.ToHashSet();
+
+            snapshot.PerfectAccepted = snapshot.PerfectAccepted.Where(x => pendingSet.Contains(x.SpecieId)).ToList();
+            snapshot.PerfectSynonym = snapshot.PerfectSynonym.Where(x => pendingSet.Contains(x.SpecieId)).ToList();
+            snapshot.Ambiguous = snapshot.Ambiguous.Where(x => pendingSet.Contains(x.SpecieId)).ToList();
+            snapshot.NoMatch = snapshot.NoMatch.Where(x => pendingSet.Contains(x.SpecieId)).ToList();
+            snapshot.TotalSpecies = pendingSet.Count;
+            snapshot.CheckedSpecies = Math.Min(GetWfoDatabaseAuditSnapshotCount(snapshot), snapshot.TotalSpecies);
+            snapshot.Percent = snapshot.TotalSpecies <= 0
+                ? 100
+                : Math.Min(100, (int)Math.Round(GetWfoDatabaseAuditSnapshotCount(snapshot) * 100d / snapshot.TotalSpecies));
+
+            return snapshot;
         }
 
         private sealed class WfoNomenclatureImportRow
@@ -3635,12 +3810,21 @@ namespace UPlant.Controllers
             private readonly Queue<string> _recentMessages = new();
             private readonly List<WfoDatabaseAuditItem> _perfectAccepted = new();
             private readonly List<WfoDatabaseAuditItem> _perfectSynonym = new();
+            private readonly List<WfoDatabaseAuditItem> _ambiguous = new();
             private readonly List<WfoDatabaseAuditItem> _noMatch = new();
 
-            public WfoDatabaseAuditJobState(string jobId, int totalSpecies)
+            public WfoDatabaseAuditJobState(string jobId, int totalSpecies, StartWfoDatabaseAuditInput options)
             {
                 JobId = jobId;
                 TotalSpecies = totalSpecies;
+                Options = new StartWfoDatabaseAuditInput
+                {
+                    MaxSpeciesToProcess = options.MaxSpeciesToProcess,
+                    IncludePerfectAccepted = options.IncludePerfectAccepted,
+                    IncludePerfectSynonym = options.IncludePerfectSynonym,
+                    IncludeAmbiguous = options.IncludeAmbiguous,
+                    IncludeNoMatch = options.IncludeNoMatch
+                };
                 Status = "pending";
                 Stage = "In attesa";
                 UpdatedAtUtc = DateTime.UtcNow;
@@ -3648,6 +3832,7 @@ namespace UPlant.Controllers
 
             public string JobId { get; }
             public int TotalSpecies { get; }
+            public StartWfoDatabaseAuditInput Options { get; }
             public int CheckedSpecies { get; private set; }
             public string Status { get; private set; }
             public string Stage { get; private set; }
@@ -3684,24 +3869,30 @@ namespace UPlant.Controllers
                 }
             }
 
-            public void ReportItem(WfoDatabaseAuditItem item)
+            public void ReportItem(WfoDatabaseAuditItem item, bool includeInResults)
             {
                 lock (_sync)
                 {
                     CheckedSpecies++;
                     CurrentItem = item.ScientificName ?? string.Empty;
 
-                    switch (item.Section)
+                    if (includeInResults)
                     {
-                        case "perfectAccepted":
-                            _perfectAccepted.Add(item);
-                            break;
-                        case "perfectSynonym":
-                            _perfectSynonym.Add(item);
-                            break;
-                        default:
-                            _noMatch.Add(item);
-                            break;
+                        switch (item.Section)
+                        {
+                            case "perfectAccepted":
+                                _perfectAccepted.Add(item);
+                                break;
+                            case "perfectSynonym":
+                                _perfectSynonym.Add(item);
+                                break;
+                            case "ambiguous":
+                                _ambiguous.Add(item);
+                                break;
+                            default:
+                                _noMatch.Add(item);
+                                break;
+                        }
                     }
 
                     UpdatedAtUtc = DateTime.UtcNow;
@@ -3747,6 +3938,11 @@ namespace UPlant.Controllers
                         JobId = JobId,
                         TotalSpecies = TotalSpecies,
                         CheckedSpecies = CheckedSpecies,
+                        MaxSpeciesToProcess = Options.MaxSpeciesToProcess,
+                        IncludePerfectAccepted = Options.IncludePerfectAccepted,
+                        IncludePerfectSynonym = Options.IncludePerfectSynonym,
+                        IncludeAmbiguous = Options.IncludeAmbiguous,
+                        IncludeNoMatch = Options.IncludeNoMatch,
                         Status = Status,
                         Stage = Stage,
                         CurrentItem = CurrentItem,
@@ -3756,6 +3952,7 @@ namespace UPlant.Controllers
                         RecentMessages = _recentMessages.ToList(),
                         PerfectAccepted = _perfectAccepted.ToList(),
                         PerfectSynonym = _perfectSynonym.ToList(),
+                        Ambiguous = _ambiguous.ToList(),
                         NoMatch = _noMatch.ToList()
                     };
                 }
@@ -3767,6 +3964,11 @@ namespace UPlant.Controllers
             public string JobId { get; set; } = string.Empty;
             public int TotalSpecies { get; set; }
             public int CheckedSpecies { get; set; }
+            public int MaxSpeciesToProcess { get; set; }
+            public bool IncludePerfectAccepted { get; set; }
+            public bool IncludePerfectSynonym { get; set; }
+            public bool IncludeAmbiguous { get; set; }
+            public bool IncludeNoMatch { get; set; }
             public string Status { get; set; } = string.Empty;
             public string Stage { get; set; } = string.Empty;
             public string CurrentItem { get; set; } = string.Empty;
@@ -3776,6 +3978,7 @@ namespace UPlant.Controllers
             public List<string> RecentMessages { get; set; } = new();
             public List<WfoDatabaseAuditItem> PerfectAccepted { get; set; } = new();
             public List<WfoDatabaseAuditItem> PerfectSynonym { get; set; } = new();
+            public List<WfoDatabaseAuditItem> Ambiguous { get; set; } = new();
             public List<WfoDatabaseAuditItem> NoMatch { get; set; } = new();
         }
     }

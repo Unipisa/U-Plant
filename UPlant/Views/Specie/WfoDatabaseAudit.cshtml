@@ -5,8 +5,8 @@
         <h3 class="card-title">Verifica globale WFO</h3>
     </div>
     <div class="card-body">
-        <p>Questo controllo analizza tutta la tabella specie e divide i risultati in tre gruppi:</p>
-        <p>1. match perfetto e nome accettato WFO, 2. match ma sinonimo con conferme WFO, 3. nessun match perfetto.</p>
+        <p>Questo controllo analizza le specie ancora da validare e divide i risultati in gruppi utili alla revisione.</p>
+        <p>Puoi limitare quante righe elaborare in questo run e scegliere quali esiti vuoi raccogliere.</p>
 
         <div class="alert alert-info">
             <div><strong>Specie da controllare:</strong> @Model.TotalSpeciesCount</div>
@@ -19,6 +19,38 @@
 
         <form id="wfoAuditStartForm" asp-action="StartWfoDatabaseAudit" method="post">
             @Html.AntiForgeryToken()
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="MaxSpeciesToProcess">Righe da processare</label>
+                        <input id="MaxSpeciesToProcess" name="MaxSpeciesToProcess" type="number" min="1" max="500" value="@Model.DefaultMaxSpeciesToProcess" class="form-control" />
+                        <small class="form-text text-muted">Consigliato: 20 per volta.</small>
+                    </div>
+                </div>
+                <div class="col-md-9">
+                    <label class="d-block">Esiti da raccogliere</label>
+                    <div class="form-check form-check-inline">
+                        <input type="hidden" name="IncludePerfectAccepted" value="false" />
+                        <input class="form-check-input" type="checkbox" id="IncludePerfectAccepted" name="IncludePerfectAccepted" value="true" @(Model.DefaultIncludePerfectAccepted ? "checked" : null) />
+                        <label class="form-check-label" for="IncludePerfectAccepted">Coincidono</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input type="hidden" name="IncludePerfectSynonym" value="false" />
+                        <input class="form-check-input" type="checkbox" id="IncludePerfectSynonym" name="IncludePerfectSynonym" value="true" @(Model.DefaultIncludePerfectSynonym ? "checked" : null) />
+                        <label class="form-check-label" for="IncludePerfectSynonym">Sinonimi</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input type="hidden" name="IncludeAmbiguous" value="false" />
+                        <input class="form-check-input" type="checkbox" id="IncludeAmbiguous" name="IncludeAmbiguous" value="true" @(Model.DefaultIncludeAmbiguous ? "checked" : null) />
+                        <label class="form-check-label" for="IncludeAmbiguous">Piu opzioni</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input type="hidden" name="IncludeNoMatch" value="false" />
+                        <input class="form-check-input" type="checkbox" id="IncludeNoMatch" name="IncludeNoMatch" value="true" @(Model.DefaultIncludeNoMatch ? "checked" : null) />
+                        <label class="form-check-label" for="IncludeNoMatch">Nessun match</label>
+                    </div>
+                </div>
+            </div>
             <button type="submit" class="btn btn-primary" id="btnStartWfoAudit">Avvia verifica globale WFO</button>
             <a asp-action="Index" class="btn btn-info">Indietro</a>
         </form>
@@ -129,7 +161,9 @@
                     ? 'Nessuna specie trovata in questa sezione.'
                     : (key === 'perfectSynonym'
                         ? 'Nessun sinonimo confermato trovato.'
-                        : 'Nessuna specie senza match perfetto.');
+                        : (key === 'ambiguous'
+                            ? 'Nessuna specie con piu candidati WFO.'
+                            : 'Nessuna specie senza match perfetto.'));
 
                 let body = '';
                 if (!normalizedRows.length) {
@@ -168,11 +202,36 @@
                     '<div class="card-body">' + body + '</div></div>';
             }
 
+            function isSectionEnabled(status, camelName, pascalName) {
+                const camelValue = status ? status[camelName] : undefined;
+                if (typeof camelValue === 'boolean') {
+                    return camelValue;
+                }
+
+                const pascalValue = status ? status[pascalName] : undefined;
+                if (typeof pascalValue === 'boolean') {
+                    return pascalValue;
+                }
+
+                return true;
+            }
+
             function renderResults(status) {
-                resultsPanel.innerHTML =
-                    renderSection('1. Nomi che fanno il match perfetto su WFO e risultano accettati', 'perfectAccepted', status.perfectAccepted || status.PerfectAccepted) +
-                    renderSection('2. Nomi che fanno il match ma risultano sinonimi con piu conferme WFO', 'perfectSynonym', status.perfectSynonym || status.PerfectSynonym) +
-                    renderSection('3. Nomi che non fanno match', 'noMatch', status.noMatch || status.NoMatch);
+                let html = '';
+                if (isSectionEnabled(status, 'includePerfectAccepted', 'IncludePerfectAccepted')) {
+                    html += renderSection('1. Nomi che coincidono perfettamente con WFO e risultano accettati', 'perfectAccepted', status.perfectAccepted || status.PerfectAccepted);
+                }
+                if (isSectionEnabled(status, 'includePerfectSynonym', 'IncludePerfectSynonym')) {
+                    html += renderSection('2. Nomi che fanno match ma risultano sinonimi con conferme WFO', 'perfectSynonym', status.perfectSynonym || status.PerfectSynonym);
+                }
+                if (isSectionEnabled(status, 'includeAmbiguous', 'IncludeAmbiguous')) {
+                    html += renderSection('3. Nomi per cui WFO propone piu opzioni', 'ambiguous', status.ambiguous || status.Ambiguous);
+                }
+                if (isSectionEnabled(status, 'includeNoMatch', 'IncludeNoMatch')) {
+                    html += renderSection('4. Nomi che non fanno match', 'noMatch', status.noMatch || status.NoMatch);
+                }
+
+                resultsPanel.innerHTML = html || '<div class="alert alert-info">Nessun gruppo selezionato per la visualizzazione.</div>';
                 resultsPanel.style.display = '';
             }
 

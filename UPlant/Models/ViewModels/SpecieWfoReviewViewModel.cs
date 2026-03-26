@@ -224,6 +224,16 @@ public sealed class SpecieWfoDatabaseAuditViewModel
 
     public int AlreadyWfoCount { get; set; }
 
+    public int DefaultMaxSpeciesToProcess { get; set; } = 20;
+
+    public bool DefaultIncludePerfectAccepted { get; set; } = true;
+
+    public bool DefaultIncludePerfectSynonym { get; set; } = true;
+
+    public bool DefaultIncludeAmbiguous { get; set; } = true;
+
+    public bool DefaultIncludeNoMatch { get; set; } = true;
+
     public bool HasCachedAudit { get; set; }
 
     public DateTime? CachedAuditUpdatedAtUtc { get; set; }
@@ -236,4 +246,17 @@ public sealed class ApplyWfoAuditAcceptedInput
     public Guid SpecieId { get; set; }
 
     public string Lsid { get; set; } = string.Empty;
+}
+
+public sealed class StartWfoDatabaseAuditInput
+{
+    public int MaxSpeciesToProcess { get; set; } = 20;
+
+    public bool IncludePerfectAccepted { get; set; } = true;
+
+    public bool IncludePerfectSynonym { get; set; } = true;
+
+    public bool IncludeAmbiguous { get; set; } = true;
+
+    public bool IncludeNoMatch { get; set; } = true;
 }
