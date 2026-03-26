@@ -76,6 +76,7 @@
         </div>
 
         <div id="wfoAuditErrorPanel" class="mt-3" style="display:none;"></div>
+        <div id="wfoAuditServicePanel" class="mt-3" style="display:none;"></div>
         <div id="wfoAuditResultsPanel" class="mt-3" style="display:none;"></div>
 
         <form id="wfoAuditApplyForm" asp-action="ApplyWfoAcceptedFromAudit" method="post" style="display:none;">
@@ -102,6 +103,7 @@
             const recentPanel = document.getElementById('wfoAuditRecentPanel');
             const resultsPanel = document.getElementById('wfoAuditResultsPanel');
             const errorPanel = document.getElementById('wfoAuditErrorPanel');
+            const servicePanel = document.getElementById('wfoAuditServicePanel');
             const stageEl = document.getElementById('wfoAuditStage');
             const currentItemEl = document.getElementById('wfoAuditCurrentItem');
             const progressBarEl = document.getElementById('wfoAuditProgressBar');
@@ -110,6 +112,7 @@
             const antiForgeryToken = applyForm.querySelector('input[name="__RequestVerificationToken"]').value;
             const cachedAuditJson = @Html.Raw(string.IsNullOrWhiteSpace(Model.CachedAuditJson) ? "null" : Model.CachedAuditJson);
             let pollHandle = null;
+            let wfoServiceAvailable = true;
 
             function normalizeList(values) {
                 if (Array.isArray(values)) {
@@ -131,6 +134,27 @@
                 const value = Math.max(0, Math.min(100, percent || 0));
                 progressBarEl.style.width = value + '%';
                 progressBarEl.textContent = value + '%';
+            }
+
+            function setWfoAuditAvailability(isAvailable, message) {
+                wfoServiceAvailable = !!isAvailable;
+                startButton.disabled = !wfoServiceAvailable;
+                startButton.classList.remove('btn-primary', 'btn-danger');
+                startButton.classList.add(wfoServiceAvailable ? 'btn-primary' : 'btn-danger');
+                startButton.title = wfoServiceAvailable
+                    ? 'Avvia verifica globale WFO'
+                    : (message || 'Servizio WFO non disponibile');
+
+                if (wfoServiceAvailable) {
+                    servicePanel.style.display = 'none';
+                    servicePanel.innerHTML = '';
+                    return;
+                }
+
+                servicePanel.innerHTML = '<div class="alert alert-danger"><strong>' +
+                    escapeHtml(message || 'Il servizio World Flora Online non risulta disponibile in questo momento.') +
+                    '</strong></div>';
+                servicePanel.style.display = '';
             }
 
             function renderRecentMessages(messages) {
@@ -268,6 +292,11 @@
             }
 
             async function startAudit() {
+                if (!wfoServiceAvailable) {
+                    setWfoAuditAvailability(false, 'Il servizio World Flora Online non risulta disponibile in questo momento.');
+                    return;
+                }
+
                 startButton.disabled = true;
                 progressPanel.style.display = '';
                 recentPanel.style.display = '';
@@ -324,6 +353,20 @@
                 }
             }
 
+            async function checkWfoStatus() {
+                try {
+                    const response = await fetch('@Url.Action("WfoStatus", "Specie")', { headers: { 'Accept': 'application/json' } });
+                    if (!response.ok) {
+                        throw new Error();
+                    }
+
+                    const payload = await response.json();
+                    setWfoAuditAvailability(!!payload.serviceAvailable, payload.message);
+                } catch {
+                    setWfoAuditAvailability(false, 'Servizio WFO non disponibile.');
+                }
+            }
+
             startForm.addEventListener('submit', async function (event) {
                 event.preventDefault();
                 await startAudit();
@@ -377,6 +420,8 @@
                 renderRecentMessages(cachedAuditJson.recentMessages || cachedAuditJson.RecentMessages);
                 renderResults(cachedAuditJson);
             }
+
+            checkWfoStatus();
         })();
     </script>
 }

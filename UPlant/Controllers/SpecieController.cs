@@ -1793,7 +1793,9 @@ namespace UPlant.Controllers
                 var wfoService = scope.ServiceProvider.GetRequiredService<IWorldFloraOnlineService>();
 
                 const int batchSize = 20;
+                var interRequestDelay = TimeSpan.FromMilliseconds(500);
                 var processed = 0;
+                var consecutiveServiceFailures = 0;
 
                 job.MarkRunning("Lettura specie database");
 
@@ -1852,12 +1854,26 @@ namespace UPlant.Controllers
                             using var timeoutCts = new CancellationTokenSource(TimeSpan.FromSeconds(20));
                             var checkResult = await wfoService.CheckAsync(fakeSpecie, row.GenusName, timeoutCts.Token);
                             var item = BuildWfoDatabaseAuditItem(row, checkResult);
+                            consecutiveServiceFailures = 0;
                             job.ReportItem(item, ShouldKeepWfoDatabaseAuditItem(item, job.Options));
                         }
                         catch (Exception ex)
                         {
+                            consecutiveServiceFailures++;
+                            if (await ShouldAbortWfoAuditForServiceFailureAsync(wfoService, ex, consecutiveServiceFailures))
+                            {
+                                job.Fail($"Audit interrotto: {BuildWfoServiceUnavailableMessage(ex)}");
+                                await SaveWfoDatabaseAuditCacheAsync(job.CreateSnapshot(), CancellationToken.None);
+                                return;
+                            }
+
                             var item = BuildWfoDatabaseAuditErrorItem(row, FormatWfoAuditExceptionMessage(ex));
                             job.ReportItem(item, ShouldKeepWfoDatabaseAuditItem(item, job.Options));
+                        }
+
+                        if (job.CheckedSpecies < job.TotalSpecies)
+                        {
+                            await Task.Delay(interRequestDelay, CancellationToken.None);
                         }
                     }
 
@@ -1963,7 +1979,7 @@ namespace UPlant.Controllers
                 SpecieId = row.Id,
                 ScientificName = row.ScientificName,
                 CurrentValidationStatus = row.CurrentValidationStatus,
-                Section = "noMatch",
+                Section = "error",
                 AcceptedName = string.Empty,
                 Lsid = string.Empty,
                 Notes = $"Verifica WFO non completata: {errorMessage}"
@@ -1977,6 +1993,11 @@ namespace UPlant.Controllers
                 return "timeout WFO dopo 20 secondi, specie saltata";
             }
 
+            if (exception is HttpRequestException httpRequestException && httpRequestException.StatusCode.HasValue)
+            {
+                return $"WFO ha risposto {(int)httpRequestException.StatusCode.Value} {httpRequestException.StatusCode.Value}, specie saltata";
+            }
+
             var baseMessage = exception.GetBaseException().Message;
             if (string.IsNullOrWhiteSpace(baseMessage))
             {
@@ -1984,6 +2005,50 @@ namespace UPlant.Controllers
             }
 
             return baseMessage;
+        }
+
+        private static async Task<bool> ShouldAbortWfoAuditForServiceFailureAsync(
+            IWorldFloraOnlineService wfoService,
+            Exception exception,
+            int consecutiveServiceFailures)
+        {
+            if (exception is HttpRequestException httpRequestException && httpRequestException.StatusCode.HasValue)
+            {
+                var statusCode = (int)httpRequestException.StatusCode.Value;
+                if (statusCode == 429 || statusCode >= 500)
+                {
+                    return true;
+                }
+            }
+
+            if (consecutiveServiceFailures < 3)
+            {
+                return false;
+            }
+
+            try
+            {
+                return !await wfoService.IsAvailableAsync(CancellationToken.None);
+            }
+            catch
+            {
+                return true;
+            }
+        }
+
+        private static string BuildWfoServiceUnavailableMessage(Exception exception)
+        {
+            if (exception is HttpRequestException httpRequestException && httpRequestException.StatusCode.HasValue)
+            {
+                return $"servizio WFO offline o non disponibile ({(int)httpRequestException.StatusCode.Value} {httpRequestException.StatusCode.Value})";
+            }
+
+            if (exception is OperationCanceledException || exception is TaskCanceledException)
+            {
+                return "servizio WFO non raggiungibile o troppo lento in modo sistematico";
+            }
+
+            return "servizio WFO offline o non disponibile";
         }
 
         private static void NormalizeWfoAuditInput(StartWfoDatabaseAuditInput input)
@@ -2009,6 +2074,7 @@ namespace UPlant.Controllers
                 "perfectAccepted" => options.IncludePerfectAccepted,
                 "perfectSynonym" => options.IncludePerfectSynonym,
                 "ambiguous" => options.IncludeAmbiguous,
+                "error" => options.IncludeNoMatch,
                 _ => options.IncludeNoMatch
             };
         }
@@ -3889,6 +3955,9 @@ namespace UPlant.Controllers
                             case "ambiguous":
                                 _ambiguous.Add(item);
                                 break;
+                            case "error":
+                                _noMatch.Add(item);
+                                break;
                             default:
                                 _noMatch.Add(item);
                                 break;
@@ -3900,7 +3969,10 @@ namespace UPlant.Controllers
 
                 if (CheckedSpecies <= 10 || CheckedSpecies % 100 == 0)
                 {
-                    AddMessage($"{item.ScientificName} -> {item.Section}");
+                    var outcome = item.Section == "error"
+                        ? $"errore ({item.Notes})"
+                        : item.Section;
+                    AddMessage($"{item.ScientificName} -> {outcome}");
                 }
             }
 

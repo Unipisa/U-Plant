@@ -30,8 +30,8 @@
                             <i class="fa fa-triangle-exclamation text-warning" aria-hidden="true"></i>
                         }
                     </span>
-                    <a asp-action="WfoDatabaseAudit" class="mr-2">
-                        <span class="btn btn-primary" title="Verifica globale dello stato nomenclaturale rispetto a WFO">
+                    <a asp-action="WfoDatabaseAudit" class="mr-2 js-wfo-audit-link">
+                        <span class="btn btn-primary" id="btnWfoAuditTop" title="Verifica globale dello stato nomenclaturale rispetto a WFO">
                             Audit WFO DB
                         </span>
                     </a>
@@ -243,10 +243,18 @@
             function setWfoButtonsAvailability(isAvailable, message) {
                 wfoServiceAvailable = isAvailable;
                 const buttons = jQuery('.js-wfo-check');
+                const auditButton = jQuery('#btnWfoAuditTop');
+                const auditLink = jQuery('.js-wfo-audit-link');
                 buttons.removeClass('btn-info btn-danger btn-secondary');
                 buttons.addClass(isAvailable ? 'btn-info' : 'btn-danger');
                 buttons.attr('title', isAvailable ? 'Verifica World Flora Online' : (message || 'Servizio WFO non disponibile'));
                 buttons.attr('data-wfo-available', isAvailable ? 'true' : 'false');
+
+                auditButton.removeClass('btn-primary btn-danger');
+                auditButton.addClass(isAvailable ? 'btn-primary' : 'btn-danger');
+                auditButton.attr('title', isAvailable ? 'Verifica globale dello stato nomenclaturale rispetto a WFO' : (message || 'Servizio WFO non disponibile'));
+                auditButton.attr('data-wfo-available', isAvailable ? 'true' : 'false');
+                auditLink.attr('aria-disabled', isAvailable ? 'false' : 'true');
             }
 
             function showWfoUnavailableMessage(message) {
@@ -282,6 +290,15 @@
             checkWfoStatus();
             table.on('draw', function () {
                 setWfoButtonsAvailability(wfoServiceAvailable, wfoServiceAvailable ? 'Verifica World Flora Online' : 'Servizio WFO non disponibile');
+            });
+
+            jQuery('.js-wfo-audit-link').on('click', function (event) {
+                if (wfoServiceAvailable) {
+                    return;
+                }
+
+                event.preventDefault();
+                showWfoUnavailableMessage('Il servizio World Flora Online non risulta disponibile in questo momento.');
             });
 
             jQuery('#table1 tbody').on('click', '.js-wfo-check', function () {
