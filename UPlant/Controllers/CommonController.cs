@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -13,6 +14,7 @@ using System.Net;
 using System.Threading.Tasks;
 using UPlant.Models;
 using UPlant.Models.DB;
+using UPlant.Services;
 
 
 
@@ -23,10 +25,12 @@ namespace UPlant.Controllers
     {
         private readonly Entities _context;
         private readonly LanguageService _languageService;
-        public CommonController(Entities context, LanguageService languageService)
+        private readonly ILogger<CommonController> _logger;
+        public CommonController(Entities context, LanguageService languageService, ILogger<CommonController> logger)
         {
             _context = context;
             _languageService = languageService;
+            _logger = logger;
 
 
         }
@@ -148,6 +152,24 @@ namespace UPlant.Controllers
             public string specie_id { get; set; }
             public string specie_nome { get; set; }
         }
+
+        public class AddSpecieInput
+        {
+            public Guid genere { get; set; }
+            public string nome { get; set; }
+            public string nome_comune { get; set; }
+            public string nome_comune_en { get; set; }
+            public string autori { get; set; }
+            public Guid? regno { get; set; }
+            public Guid? areale { get; set; }
+            public string subspecie { get; set; }
+            public string autorisub { get; set; }
+            public string varieta { get; set; }
+            public string autorivar { get; set; }
+            public string cult { get; set; }
+            public string autoricult { get; set; }
+            public string note { get; set; }
+        }
         public JsonResult Cercaspecie(string term)
         {
 
@@ -208,42 +230,164 @@ namespace UPlant.Controllers
             return Json(names, new System.Text.Json.JsonSerializerOptions());//, JsonRequestBehavior.AllowGet deprecato
 
         }
-        public JsonResult AddSpecie(Specie addspecie)
+        [HttpPost]
+        public JsonResult AddSpecie([FromBody] AddSpecieInput input)
         {
-            var doppio = _context.Specie.Where(a => a.nome_scientifico.ToLower() == addspecie.nome_scientifico.ToLower()).ToList();
-
             esitoAddSpecie esito = new esitoAddSpecie();
+
+            _logger.LogInformation(
+                "AddSpecie request received. Genere={GenereId}, Nome={Nome}, NomeComune={NomeComune}, NomeComuneEn={NomeComuneEn}, Note={Note}, Subspecie={Subspecie}, Varieta={Varieta}, Cult={Cult}",
+                input?.genere,
+                input?.nome,
+                input?.nome_comune,
+                input?.nome_comune_en,
+                input?.note,
+                input?.subspecie,
+                input?.varieta,
+                input?.cult);
+
+            if (input == null || input.genere == Guid.Empty || string.IsNullOrWhiteSpace(input.nome))
+            {
+                _logger.LogWarning(
+                    "AddSpecie rejected for incomplete data. InputNull={InputNull}, Genere={GenereId}, Nome={Nome}",
+                    input == null,
+                    input?.genere,
+                    input?.nome);
+                esito.errore = true;
+                esito.message = "Dati specie incompleti.";
+                esito.specie = null;
+                return Json(esito, new System.Text.Json.JsonSerializerOptions());
+            }
+
+            var genusName = _context.Generi
+                .Where(g => g.id == input.genere)
+                .Select(g => g.descrizione)
+                .FirstOrDefault();
+
+            if (string.IsNullOrWhiteSpace(genusName))
+            {
+                _logger.LogWarning(
+                    "AddSpecie rejected because genus was not found. Genere={GenereId}, Nome={Nome}",
+                    input.genere,
+                    input.nome);
+                esito.errore = true;
+                esito.message = "Genere non valido.";
+                esito.specie = null;
+                return Json(esito, new System.Text.Json.JsonSerializerOptions());
+            }
+
+            var nomeScientifico = SpecieScientificNameHelper.Compose(
+                genusName,
+                input.nome,
+                input.autori,
+                input.subspecie,
+                input.autorisub,
+                input.varieta,
+                input.autorivar,
+                input.cult,
+                input.autoricult);
+
+            var doppio = _context.Specie
+                .Where(a => a.nome_scientifico.ToLower() == nomeScientifico.ToLower())
+                .ToList();
+
             if (doppio.Count() > 0)
             {
+                _logger.LogWarning(
+                    "AddSpecie rejected because species already exists. NomeScientifico={NomeScientifico}, ExistingCount={ExistingCount}",
+                    nomeScientifico,
+                    doppio.Count());
                 esito.errore = true;
                 esito.message = "Esiste già una specie definita così controlla";
                 esito.specie = null;
                 return Json(esito, new System.Text.Json.JsonSerializerOptions());//, JsonRequestBehavior.AllowGet deprecato
             }
 
+            if (!ModelState.IsValid)
+            {
+                var modelErrors = string.Join(" | ", ModelState
+                    .Where(x => x.Value?.Errors.Count > 0)
+                    .SelectMany(x => x.Value!.Errors.Select(err => $"{x.Key}: {err.ErrorMessage}")));
 
+                _logger.LogWarning(
+                    "AddSpecie ModelState invalid. NomeScientifico={NomeScientifico}, Errors={Errors}",
+                    nomeScientifico,
+                    modelErrors);
+            }
 
             if (ModelState.IsValid)
             {
-
                 var iucnNON = _context.Iucn.Where(a => a.descrizione.ToLower().Contains("definito")).Select(a => a.id).FirstOrDefault();
                 var citesNON = _context.Cites.Where(a => a.codice.ToLower().Contains("definito")).Select(a => a.id).FirstOrDefault();
-                addspecie.id = Guid.NewGuid();
-                addspecie.iucn_globale = iucnNON;
-                addspecie.iucn_italia = iucnNON;
-                addspecie.cites = citesNON;
-                if (String.IsNullOrEmpty(addspecie.nome_comune))
+                var validazioneNd = _context.ValidazioneTassonomica
+                    .Where(v => v.descrizione == "N.D." || v.descrizione == "Non Definito")
+                    .Select(v => v.id)
+                    .FirstOrDefault();
+
+                if (validazioneNd == Guid.Empty)
                 {
-                    addspecie.nome_comune = "";
+                    validazioneNd = _context.ValidazioneTassonomica
+                        .Where(v => v.descrizione.Contains("Definito"))
+                        .Select(v => v.id)
+                        .FirstOrDefault();
                 }
-                if (String.IsNullOrEmpty(addspecie.nome_comune_en))
+
+                var addspecie = new Specie
                 {
-                    addspecie.nome_comune_en = "";
+                    id = Guid.NewGuid(),
+                    genere = input.genere,
+                    validazione_tassonomica = validazioneNd,
+                    nome = SpecieScientificNameHelper.NormalizeSpacing(input.nome),
+                    nome_scientifico = nomeScientifico,
+                    data_inserimento = DateTime.Now,
+                    lsid = string.Empty,
+                    note = SpecieScientificNameHelper.NormalizeSpacing(input.note),
+                    autori = SpecieScientificNameHelper.NormalizeSpacing(input.autori),
+                    regno = input.regno,
+                    areale = input.areale,
+                    subspecie = SpecieScientificNameHelper.NormalizeSpacing(input.subspecie),
+                    autorisub = SpecieScientificNameHelper.NormalizeSpacing(input.autorisub),
+                    varieta = SpecieScientificNameHelper.NormalizeSpacing(input.varieta),
+                    autorivar = SpecieScientificNameHelper.NormalizeSpacing(input.autorivar),
+                    cult = SpecieScientificNameHelper.NormalizeSpacing(input.cult),
+                    autoricult = SpecieScientificNameHelper.NormalizeSpacing(input.autoricult),
+                    nome_comune = SpecieScientificNameHelper.NormalizeSpacing(input.nome_comune),
+                    nome_comune_en = SpecieScientificNameHelper.NormalizeSpacing(input.nome_comune_en),
+                    iucn_globale = iucnNON,
+                    iucn_italia = iucnNON,
+                    cites = citesNON
+                };
+
+                if (!string.IsNullOrWhiteSpace(addspecie.nome_comune) &&
+                    !string.IsNullOrWhiteSpace(addspecie.note) &&
+                    string.Equals(addspecie.nome_comune, addspecie.note, StringComparison.OrdinalIgnoreCase))
+                {
+                    _logger.LogWarning(
+                        "AddSpecie is saving a species where note matches nome_comune. NomeScientifico={NomeScientifico}, NomeComune={NomeComune}, Note={Note}",
+                        addspecie.nome_scientifico,
+                        addspecie.nome_comune,
+                        addspecie.note);
                 }
+
+                _logger.LogInformation(
+                    "AddSpecie prepared species. Id={SpecieId}, NomeScientifico={NomeScientifico}, Genere={GenereId}, NomeComune={NomeComune}, Note={Note}, Validazione={ValidazioneId}",
+                    addspecie.id,
+                    addspecie.nome_scientifico,
+                    addspecie.genere,
+                    addspecie.nome_comune,
+                    addspecie.note,
+                    addspecie.validazione_tassonomica);
+
                 _context.Specie.Add(addspecie);
                 try
                 {
                     _context.SaveChanges();
+                    _logger.LogInformation(
+                        "AddSpecie saved successfully. Id={SpecieId}, NomeScientifico={NomeScientifico}, NomeComune={NomeComune}, Note={Note}",
+                        addspecie.id,
+                        addspecie.nome_scientifico,
+                        addspecie.nome_comune,
+                        addspecie.note);
                     esito.specie = addspecie;
                     esito.specie_id = addspecie.id.ToString();
                     esito.specie_nome = addspecie.nome_scientifico;
@@ -252,6 +396,12 @@ namespace UPlant.Controllers
                 }
                 catch (Exception e)
                 {
+                    _logger.LogError(
+                        e,
+                        "AddSpecie save failed. NomeScientifico={NomeScientifico}, NomeComune={NomeComune}, Note={Note}",
+                        addspecie.nome_scientifico,
+                        addspecie.nome_comune,
+                        addspecie.note);
                     esito.errore = true;
                     esito.message = e.Message;
                     esito.specie = null;

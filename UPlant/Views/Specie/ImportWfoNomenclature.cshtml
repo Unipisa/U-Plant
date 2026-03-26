@@ -1,0 +1,418 @@
+@model UPlant.Models.ViewModels.SpecieWfoNomenclatureImportViewModel
+
+<div class="card card-outline card-primary">
+    <div class="card-header with-border">
+        <h3 class="card-title">Import nomenclatura WFO</h3>
+    </div>
+    <div class="card-body">
+        <p>Questo flusso serve a popolare da zero il database locale con uno snapshot della nomenclatura WFO.</p>
+        <p>L'import crea prima le famiglie, poi i generi collegati e infine le specie collegate ai generi.</p>
+
+        @if (!Model.CanImport)
+        {
+            <div class="alert alert-warning">
+                <strong>Import bloccato.</strong>
+                Nel database sono gia presenti:
+                <ul class="mb-0 mt-2">
+                    <li>@Model.ExistingFamiliesCount famiglie</li>
+                    <li>@Model.ExistingGeneraCount generi</li>
+                    <li>@Model.ExistingSpeciesCount specie</li>
+                    <li>@Model.ExistingAccessioniCount accessioni</li>
+                </ul>
+                @if (Model.HasAccessionRelations)
+                {
+                    <div class="mt-2">
+                        Sono presenti anche record che hanno relazioni con <strong>Accessioni</strong>, quindi il bootstrap della nomenclatura viene impedito.
+                    </div>
+                }
+                <div class="mt-3">
+                    <a asp-action="ImportWfoNomenclature" asp-route-forceImport="true" class="btn btn-primary">Rinforza il processo</a>
+                </div>
+            </div>
+        }
+        else
+        {
+            @if (Model.HasInterruptedImport)
+            {
+                <div class="alert alert-warning">
+                    <div><strong>Import interrotto rilevato.</strong></div>
+                    <div class="mt-1">@Model.InterruptedImportMessage</div>
+                    @if (Model.InterruptedImportUpdatedAtUtc.HasValue)
+                    {
+                        <div class="mt-1 small text-muted">Checkpoint aggiornato il @Model.InterruptedImportUpdatedAtUtc.Value.ToLocalTime().ToString("dd/MM/yyyy HH:mm:ss")</div>
+                    }
+                </div>
+            }
+            else if (Model.ForceImport && !Model.CanStartFreshImport)
+            {
+                <div class="alert alert-warning">
+                    <div><strong>Import forzato su database gia popolato.</strong></div>
+                    <div class="mt-1">Procedo in modalita incrementale: riuso famiglie e generi gia presenti, salto le specie duplicate e completo solo quello che manca.</div>
+                </div>
+            }
+
+            <div class="alert alert-info">
+                Primo step: scarico automaticamente il dataset ufficiale WFO. Secondo step: ti mostro il link del file scaricato e abilito il bottone di import o ripresa.
+            </div>
+
+            <div class="mb-3">
+                <div class="h5 mb-1"><strong>Sorgente automatica:</strong> dataset ufficiale WFO Plant List su Zenodo.</div>
+                <div class="mb-1" style="font-size:1.05rem;">
+                    Record:
+                    <a href="https://zenodo.org/records/18007552" target="_blank" rel="noopener noreferrer">World Flora Online Plant List @Model.OfficialDatasetLabel</a>
+                    @if (Model.IsLatestDatasetAvailable)
+                    {
+                        if (Model.CachedSnapshotIsCurrent)
+                        {
+                            <span class="badge badge-success ml-2">ultima versione</span>
+                        }
+                        else
+                        {
+                            <span class="badge badge-warning ml-2">riscarica</span>
+                        }
+                    }
+                </div>
+                <div class="small @(Model.CachedSnapshotIsCurrent ? "text-success" : "text-warning")">
+                    <strong>Versione locale:</strong> @Model.LocalDatasetLabel
+                    @if (!Model.CachedSnapshotIsCurrent && !string.IsNullOrWhiteSpace(Model.DownloadedFileToken))
+                    {
+                        <span> - disponibile una versione piu aggiornata, riscarica.</span>
+                    }
+                </div>
+                <div class="small text-muted">
+                    Se Zenodo rifiuta il download automatico, il sistema te lo segnala senza interrompere la pagina.
+                </div>
+                <div class="small text-muted">
+                    Fallback documentazione: <a href="https://list.worldfloraonline.org/index.php" target="_blank" rel="noopener noreferrer">WFO Plant List API</a> |
+                    <a href="https://list.worldfloraonline.org/gql_index.php" target="_blank" rel="noopener noreferrer">WFO GraphQL API</a>
+                </div>
+            </div>
+
+            @if (Model.CanStartFreshImport || Model.ForceImport)
+            {
+                <form asp-action="DownloadWfoNomenclatureSnapshot" method="post">
+                    @Html.AntiForgeryToken()
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input asp-for="SourceUrl" type="hidden" />
+                    <input asp-for="ForceImport" type="hidden" />
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary">Scarica ultimo dataset ufficiale WFO</button>
+                        <a asp-action="Index" class="btn btn-info">Indietro</a>
+                    </div>
+                </form>
+            }
+            else
+            {
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <a asp-action="Index" class="btn btn-info">Indietro</a>
+                </div>
+            }
+
+            @if (!string.IsNullOrWhiteSpace(Model.DownloadedFileToken))
+            {
+                <hr />
+                <div class="alert alert-success">
+                    <div><strong>File pronto:</strong> @Model.DownloadedFileName</div>
+                    @if (!string.IsNullOrWhiteSpace(Model.DownloadedFileMessage))
+                    {
+                        <div class="mt-1">@Model.DownloadedFileMessage</div>
+                    }
+                    <div class="mt-1">
+                        <a href="@Model.DownloadedFileUrl" target="_blank" rel="noopener noreferrer">Visualizza/scarica il file recuperato</a>
+                    </div>
+                </div>
+
+                <form asp-action="ImportWfoNomenclature" method="post" id="wfoImportForm">
+                    @Html.AntiForgeryToken()
+                    <input asp-for="SourceUrl" type="hidden" />
+                    <input asp-for="ForceImport" type="hidden" />
+                    <input asp-for="DownloadedFileToken" type="hidden" />
+                    <input asp-for="DownloadedFileName" type="hidden" />
+                    @if ((Model.CanStartFreshImport || Model.ForceImport) && !Model.HasInterruptedImport)
+                    {
+                        <button type="submit" class="btn btn-primary" id="btnStartWfoImport">Importa nomenclatura</button>
+                    }
+                    else
+                    {
+                        <button type="button" class="btn btn-primary" id="btnStartWfoImport" style="display:none;">Importa nomenclatura</button>
+                    }
+                    <button type="button" class="btn btn-warning" id="btnCancelWfoImport" style="display:none;">Interrompi import</button>
+                    <button type="button" class="btn btn-primary" id="btnResumeWfoImport" @(Model.HasInterruptedImport ? "" : "style=\"display:none;\"")>Riprendi import</button>
+                </form>
+
+                <div id="wfoImportProgressPanel" class="mt-3" style="display:none;">
+                    <div class="alert alert-info">
+                        <div><strong>Stato import:</strong> <span id="wfoImportStage">In attesa</span></div>
+                        <div class="mt-1"><strong>Elemento corrente:</strong> <span id="wfoImportCurrentItem">-</span></div>
+                        <div class="progress mt-3">
+                            <div id="wfoImportProgressBar" class="progress-bar progress-bar-striped active" role="progressbar" style="width:0%">0%</div>
+                        </div>
+                        <div class="mt-2 small" id="wfoImportCounters" style="color:#111;">Famiglie 0, Generi 0, Specie 0, Scartate 0</div>
+                    </div>
+
+                    <div class="card card-outline card-info">
+                        <div class="card-header with-border">
+                            <h3 class="card-title">Ultime righe processate</h3>
+                        </div>
+                        <div class="card-body">
+                            <ul id="wfoImportRecentMessages" class="mb-0 pl-3"></ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="wfoImportResultPanel" class="mt-3" style="display:none;"></div>
+            }
+        }
+
+        @if (Model.Summary.ImportedFamilies > 0 || Model.Summary.ImportedGenera > 0 || Model.Summary.ImportedSpecies > 0 || Model.Summary.SkippedRows > 0)
+        {
+            <hr />
+            <div class="alert alert-success">
+                <div><strong>Famiglie importate:</strong> @Model.Summary.ImportedFamilies</div>
+                <div><strong>Generi importati:</strong> @Model.Summary.ImportedGenera</div>
+                <div><strong>Specie importate:</strong> @Model.Summary.ImportedSpecies</div>
+                <div><strong>Righe scartate:</strong> @Model.Summary.SkippedRows</div>
+                @if (Model.Summary.Messages.Any())
+                {
+                    <ul class="mt-2 mb-0">
+                        @foreach (var message in Model.Summary.Messages)
+                        {
+                            <li>@message</li>
+                        }
+                    </ul>
+                }
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        (function () {
+            const importForm = document.getElementById('wfoImportForm');
+            if (!importForm || !window.fetch) {
+                return;
+            }
+
+            const importButton = document.getElementById('btnStartWfoImport');
+            const progressPanel = document.getElementById('wfoImportProgressPanel');
+            const resultPanel = document.getElementById('wfoImportResultPanel');
+            const stageEl = document.getElementById('wfoImportStage');
+            const currentItemEl = document.getElementById('wfoImportCurrentItem');
+            const progressBarEl = document.getElementById('wfoImportProgressBar');
+            const countersEl = document.getElementById('wfoImportCounters');
+            const recentMessagesEl = document.getElementById('wfoImportRecentMessages');
+            const cancelButton = document.getElementById('btnCancelWfoImport');
+            const resumeButton = document.getElementById('btnResumeWfoImport');
+            let pollHandle = null;
+            let currentJobId = null;
+
+            function setProgress(percent) {
+                const value = Math.max(0, Math.min(100, percent || 0));
+                progressBarEl.style.width = value + '%';
+                progressBarEl.textContent = value + '%';
+                progressBarEl.setAttribute('aria-valuenow', value);
+            }
+
+            function renderRecentMessages(messages) {
+                recentMessagesEl.innerHTML = '';
+                let normalizedMessages = [];
+
+                if (Array.isArray(messages)) {
+                    normalizedMessages = messages;
+                } else if (messages && typeof messages === 'object' && Array.isArray(messages.$values)) {
+                    normalizedMessages = messages.$values;
+                } else if (messages && typeof messages === 'object') {
+                    normalizedMessages = Object.values(messages).filter(function (value) {
+                        return typeof value === 'string';
+                    });
+                } else if (messages) {
+                    normalizedMessages = [messages];
+                }
+
+                normalizedMessages.forEach(function (message) {
+                    const li = document.createElement('li');
+                    li.textContent = message;
+                    recentMessagesEl.appendChild(li);
+                });
+            }
+
+            function showResult(status) {
+                const isCompleted = status.status === 'completed';
+                const isPaused = status.status === 'paused';
+                const cssClass = isCompleted ? 'alert alert-success' : (isPaused ? 'alert alert-warning' : 'alert alert-danger');
+                const text = isCompleted
+                    ? 'Import completato.'
+                    : (isPaused
+                        ? 'Import in pausa.'
+                        : (status.errorMessage || 'Import interrotto.'));
+                const failedItems = Array.isArray(status.failedItems)
+                    ? status.failedItems
+                    : (status.failedItems && Array.isArray(status.failedItems.$values)
+                        ? status.failedItems.$values
+                        : (status.failedItems && typeof status.failedItems === 'object'
+                            ? Object.values(status.failedItems).filter(function (value) {
+                                return typeof value === 'string';
+                            })
+                            : []));
+                const failedItemsHtml = failedItems.length
+                    ? '<div class="mt-3"><strong>Import esclusi:</strong><ul class="mt-2 mb-0 pl-3">' +
+                      failedItems.map(function (item) {
+                          return '<li>' + item + '</li>';
+                      }).join('') +
+                      '</ul></div>'
+                    : '';
+
+                resultPanel.innerHTML =
+                    '<div class="' + cssClass + '">' +
+                    '<div><strong>' + text + '</strong></div>' +
+                    '<div class="mt-2">Famiglie importate: ' + (status.importedFamilies || 0) + '</div>' +
+                    '<div>Generi importati: ' + (status.importedGenera || 0) + '</div>' +
+                    '<div>Specie importate: ' + (status.importedSpecies || 0) + '</div>' +
+                    '<div>Righe scartate: ' + (status.skippedRows || 0) + '</div>' +
+                    failedItemsHtml +
+                    '</div>';
+                resultPanel.style.display = '';
+            }
+
+            async function postSimple(url, formData) {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Accept': 'application/json'
+                    }
+                });
+
+                const payload = await response.json();
+                if (!response.ok) {
+                    throw new Error(payload.message || 'Operazione non riuscita.');
+                }
+
+                return payload;
+            }
+
+            async function pollStatus(statusUrl) {
+                try {
+                    const response = await fetch(statusUrl, {
+                        headers: {
+                            'Accept': 'application/json'
+                        }
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('Non riesco a leggere lo stato dell\'import.');
+                    }
+
+                    const status = await response.json();
+                    progressPanel.style.display = '';
+                    resultPanel.style.display = 'none';
+                    stageEl.textContent = status.stage || 'In esecuzione';
+                    currentItemEl.textContent = status.currentItem || '-';
+                    countersEl.textContent =
+                        'Famiglie ' + (status.importedFamilies || 0) +
+                        ', Generi ' + (status.importedGenera || 0) +
+                        ', Specie ' + (status.importedSpecies || 0) +
+                        ', Scartate ' + (status.skippedRows || 0);
+                    setProgress(status.percent || 0);
+                    renderRecentMessages(status.recentMessages);
+
+                    if (status.status === 'running' || status.status === 'cancellationRequested') {
+                        cancelButton.style.display = '';
+                        resumeButton.style.display = 'none';
+                    }
+
+                    if (status.status === 'paused') {
+                        clearInterval(pollHandle);
+                        pollHandle = null;
+                        importButton.disabled = false;
+                        cancelButton.style.display = 'none';
+                        resumeButton.style.display = '';
+                        showResult(status);
+                    } else if (status.status === 'completed' || status.status === 'failed') {
+                        clearInterval(pollHandle);
+                        pollHandle = null;
+                        importButton.disabled = false;
+                        cancelButton.style.display = 'none';
+                        resumeButton.style.display = 'none';
+                        showResult(status);
+                    }
+                } catch (error) {
+                    clearInterval(pollHandle);
+                    pollHandle = null;
+                    importButton.disabled = false;
+                    cancelButton.style.display = 'none';
+                    resultPanel.innerHTML = '<div class="alert alert-danger"><strong>' + error.message + '</strong></div>';
+                    resultPanel.style.display = '';
+                }
+            }
+
+            async function startOrResumeImport(actionUrl) {
+                importButton.disabled = true;
+                resumeButton.style.display = 'none';
+                cancelButton.style.display = '';
+                progressPanel.style.display = '';
+                resultPanel.style.display = 'none';
+                stageEl.textContent = 'Avvio import';
+                currentItemEl.textContent = '-';
+                countersEl.textContent = 'Famiglie 0, Generi 0, Specie 0, Scartate 0';
+                setProgress(0);
+                renderRecentMessages(['Preparazione job di import...']);
+
+                try {
+                    const payload = await postSimple(actionUrl, new FormData(importForm));
+                    currentJobId = payload.jobId;
+
+                    if (pollHandle) {
+                        clearInterval(pollHandle);
+                    }
+
+                    await pollStatus(payload.statusUrl);
+                    pollHandle = setInterval(function () {
+                        pollStatus(payload.statusUrl);
+                    }, 1500);
+                } catch (error) {
+                    importButton.disabled = false;
+                    cancelButton.style.display = 'none';
+                    resultPanel.innerHTML = '<div class="alert alert-danger"><strong>' + error.message + '</strong></div>';
+                    resultPanel.style.display = '';
+                }
+            }
+
+            importForm.addEventListener('submit', async function (event) {
+                event.preventDefault();
+                await startOrResumeImport(importForm.action);
+            });
+
+            cancelButton.addEventListener('click', async function () {
+                if (!currentJobId) {
+                    return;
+                }
+
+                cancelButton.disabled = true;
+
+                try {
+                    const formData = new FormData();
+                    formData.append('__RequestVerificationToken', importForm.querySelector('input[name="__RequestVerificationToken"]').value);
+                    formData.append('jobId', currentJobId);
+                    await postSimple('@Url.Action("CancelWfoNomenclatureImport", "Specie")', formData);
+                } catch (error) {
+                    resultPanel.innerHTML = '<div class="alert alert-danger"><strong>' + error.message + '</strong></div>';
+                    resultPanel.style.display = '';
+                } finally {
+                    cancelButton.disabled = false;
+                }
+            });
+
+            resumeButton.addEventListener('click', async function () {
+                await startOrResumeImport('@Url.Action("ResumeWfoNomenclatureImport", "Specie")');
+            });
+        })();
+    </script>
+}

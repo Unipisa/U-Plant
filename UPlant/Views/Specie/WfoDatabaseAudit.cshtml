@@ -1,0 +1,323 @@
+@model UPlant.Models.ViewModels.SpecieWfoDatabaseAuditViewModel
+
+<div class="card card-outline card-primary">
+    <div class="card-header with-border">
+        <h3 class="card-title">Verifica globale WFO</h3>
+    </div>
+    <div class="card-body">
+        <p>Questo controllo analizza tutta la tabella specie e divide i risultati in tre gruppi:</p>
+        <p>1. match perfetto e nome accettato WFO, 2. match ma sinonimo con conferme WFO, 3. nessun match perfetto.</p>
+
+        <div class="alert alert-info">
+            <div><strong>Specie da controllare:</strong> @Model.TotalSpeciesCount</div>
+            <div><strong>Gia marcate WFO:</strong> @Model.AlreadyWfoCount</div>
+            @if (Model.HasCachedAudit && Model.CachedAuditUpdatedAtUtc.HasValue)
+            {
+                <div><strong>Ultimo audit salvato:</strong> @Model.CachedAuditUpdatedAtUtc.Value.ToLocalTime().ToString("dd/MM/yyyy HH:mm:ss")</div>
+            }
+        </div>
+
+        <form id="wfoAuditStartForm" asp-action="StartWfoDatabaseAudit" method="post">
+            @Html.AntiForgeryToken()
+            <button type="submit" class="btn btn-primary" id="btnStartWfoAudit">Avvia verifica globale WFO</button>
+            <a asp-action="Index" class="btn btn-info">Indietro</a>
+        </form>
+
+        <div id="wfoAuditProgressPanel" class="mt-3" style="display:none;">
+            <div class="alert alert-info">
+                <div><strong>Stato audit:</strong> <span id="wfoAuditStage">In attesa</span></div>
+                <div class="mt-1"><strong>Elemento corrente:</strong> <span id="wfoAuditCurrentItem">-</span></div>
+                <div class="progress mt-3">
+                    <div id="wfoAuditProgressBar" class="progress-bar progress-bar-striped active" role="progressbar" style="width:0%">0%</div>
+                </div>
+                <div class="mt-2 small" id="wfoAuditCounters" style="color:#111;">Controllate 0 di @Model.TotalSpeciesCount specie</div>
+            </div>
+        </div>
+
+        <div class="card card-outline card-info mt-3" id="wfoAuditRecentPanel" style="display:none;">
+            <div class="card-header with-border">
+                <h3 class="card-title">Ultime verifiche</h3>
+            </div>
+            <div class="card-body">
+                <ul id="wfoAuditRecentMessages" class="mb-0 pl-3"></ul>
+            </div>
+        </div>
+
+        <div id="wfoAuditErrorPanel" class="mt-3" style="display:none;"></div>
+        <div id="wfoAuditResultsPanel" class="mt-3" style="display:none;"></div>
+
+        <form id="wfoAuditApplyForm" asp-action="ApplyWfoAcceptedFromAudit" method="post" style="display:none;">
+            @Html.AntiForgeryToken()
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        (function () {
+            const startForm = document.getElementById('wfoAuditStartForm');
+            const applyForm = document.getElementById('wfoAuditApplyForm');
+            if (!startForm || !window.fetch) {
+                return;
+            }
+
+            const startButton = document.getElementById('btnStartWfoAudit');
+            const progressPanel = document.getElementById('wfoAuditProgressPanel');
+            const recentPanel = document.getElementById('wfoAuditRecentPanel');
+            const resultsPanel = document.getElementById('wfoAuditResultsPanel');
+            const errorPanel = document.getElementById('wfoAuditErrorPanel');
+            const stageEl = document.getElementById('wfoAuditStage');
+            const currentItemEl = document.getElementById('wfoAuditCurrentItem');
+            const progressBarEl = document.getElementById('wfoAuditProgressBar');
+            const countersEl = document.getElementById('wfoAuditCounters');
+            const recentMessagesEl = document.getElementById('wfoAuditRecentMessages');
+            const antiForgeryToken = applyForm.querySelector('input[name="__RequestVerificationToken"]').value;
+            const cachedAuditJson = @Html.Raw(string.IsNullOrWhiteSpace(Model.CachedAuditJson) ? "null" : Model.CachedAuditJson);
+            let pollHandle = null;
+
+            function normalizeList(values) {
+                if (Array.isArray(values)) {
+                    return values;
+                }
+
+                if (values && Array.isArray(values.$values)) {
+                    return values.$values;
+                }
+
+                if (values && typeof values === 'object') {
+                    return Object.values(values);
+                }
+
+                return [];
+            }
+
+            function setProgress(percent) {
+                const value = Math.max(0, Math.min(100, percent || 0));
+                progressBarEl.style.width = value + '%';
+                progressBarEl.textContent = value + '%';
+            }
+
+            function renderRecentMessages(messages) {
+                recentMessagesEl.innerHTML = '';
+                normalizeList(messages).forEach(function (message) {
+                    if (typeof message !== 'string') {
+                        return;
+                    }
+
+                    const li = document.createElement('li');
+                    li.textContent = message;
+                    recentMessagesEl.appendChild(li);
+                });
+            }
+
+            function escapeHtml(value) {
+                return (value || '')
+                    .replaceAll('&', '&amp;')
+                    .replaceAll('<', '&lt;')
+                    .replaceAll('>', '&gt;')
+                    .replaceAll('"', '&quot;')
+                    .replaceAll("'", '&#39;');
+            }
+
+            function renderSection(title, key, rows) {
+                const normalizedRows = normalizeList(rows);
+                const emptyText = key === 'perfectAccepted'
+                    ? 'Nessuna specie trovata in questa sezione.'
+                    : (key === 'perfectSynonym'
+                        ? 'Nessun sinonimo confermato trovato.'
+                        : 'Nessuna specie senza match perfetto.');
+
+                let body = '';
+                if (!normalizedRows.length) {
+                    body = '<div class="text-muted">' + emptyText + '</div>';
+                } else {
+                    body = '<div class="table-responsive"><table class="table table-bordered table-striped">' +
+                        '<thead><tr><th>Nome specie</th><th>Esito WFO</th><th>Validazione attuale</th><th style="width:150px;">Azione</th></tr></thead><tbody>';
+
+                    normalizedRows.forEach(function (row) {
+                        const scientificName = escapeHtml(row.scientificName || row.ScientificName);
+                        const acceptedName = escapeHtml(row.acceptedName || row.AcceptedName);
+                        const notes = escapeHtml(row.notes || row.Notes);
+                        const validation = escapeHtml(row.currentValidationStatus || row.CurrentValidationStatus || '-');
+                        const specieId = row.specieId || row.SpecieId;
+                        const lsid = escapeHtml(row.lsid || row.Lsid || '');
+                        const alreadyWfo = validation === 'WFO';
+                        const actionHtml = key === 'perfectAccepted'
+                            ? (alreadyWfo
+                                ? '<span class="badge badge-success">Gia WFO</span>'
+                                : '<button type="button" class="btn btn-success btn-sm js-audit-apply" data-specie-id="' + specieId + '" data-lsid="' + lsid + '">OK</button>')
+                            : '<a class="btn btn-info btn-sm" href="@Url.Action("ReviewWfo", "Specie")/' + specieId + '">Rivedi</a>';
+
+                        body += '<tr>' +
+                            '<td><strong>' + scientificName + '</strong></td>' +
+                            '<td>' + (acceptedName ? '<div><strong>' + acceptedName + '</strong></div>' : '') + '<div class="small text-muted">' + notes + '</div></td>' +
+                            '<td>' + validation + '</td>' +
+                            '<td>' + actionHtml + '</td>' +
+                            '</tr>';
+                    });
+
+                    body += '</tbody></table></div>';
+                }
+
+                return '<div class="card card-outline card-primary mt-3">' +
+                    '<div class="card-header with-border"><h3 class="card-title">' + title + '</h3></div>' +
+                    '<div class="card-body">' + body + '</div></div>';
+            }
+
+            function renderResults(status) {
+                resultsPanel.innerHTML =
+                    renderSection('1. Nomi che fanno il match perfetto su WFO e risultano accettati', 'perfectAccepted', status.perfectAccepted || status.PerfectAccepted) +
+                    renderSection('2. Nomi che fanno il match ma risultano sinonimi con piu conferme WFO', 'perfectSynonym', status.perfectSynonym || status.PerfectSynonym) +
+                    renderSection('3. Nomi che non fanno match', 'noMatch', status.noMatch || status.NoMatch);
+                resultsPanel.style.display = '';
+            }
+
+            async function pollStatus(statusUrl) {
+                const response = await fetch(statusUrl, { headers: { 'Accept': 'application/json' } });
+                if (!response.ok) {
+                    throw new Error('Non riesco a leggere lo stato dell\'audit.');
+                }
+
+                const status = await response.json();
+                progressPanel.style.display = '';
+                recentPanel.style.display = '';
+                stageEl.textContent = status.stage || status.Stage || 'In esecuzione';
+                currentItemEl.textContent = status.currentItem || status.CurrentItem || '-';
+                countersEl.textContent = 'Controllate ' + (status.checkedSpecies || status.CheckedSpecies || 0) + ' di ' + (status.totalSpecies || status.TotalSpecies || 0) + ' specie';
+                setProgress(status.percent || status.Percent || 0);
+                renderRecentMessages(status.recentMessages || status.RecentMessages);
+
+                if ((status.status || status.Status) === 'completed') {
+                    clearInterval(pollHandle);
+                    pollHandle = null;
+                    startButton.disabled = false;
+                    renderResults(status);
+                    return;
+                }
+
+                if ((status.status || status.Status) === 'failed') {
+                    clearInterval(pollHandle);
+                    pollHandle = null;
+                    startButton.disabled = false;
+                    errorPanel.innerHTML = '<div class="alert alert-danger"><strong>' + escapeHtml(status.errorMessage || status.ErrorMessage || 'Audit interrotto.') + '</strong></div>';
+                    errorPanel.style.display = '';
+                }
+            }
+
+            async function startAudit() {
+                startButton.disabled = true;
+                progressPanel.style.display = '';
+                recentPanel.style.display = '';
+                resultsPanel.style.display = 'none';
+                errorPanel.style.display = 'none';
+                stageEl.textContent = 'Avvio audit';
+                currentItemEl.textContent = '-';
+                countersEl.textContent = 'Controllate 0 di @Model.TotalSpeciesCount specie';
+                setProgress(0);
+                renderRecentMessages(['Preparazione audit globale WFO...']);
+
+                try {
+                    const response = await fetch(startForm.action, {
+                        method: 'POST',
+                        body: new FormData(startForm),
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'Accept': 'application/json'
+                        }
+                    });
+
+                    const payload = await response.json();
+                    if (!response.ok) {
+                        throw new Error(payload.message || 'Non sono riuscito ad avviare l\'audit.');
+                    }
+
+                    if (payload.cached && payload.snapshot) {
+                        progressPanel.style.display = '';
+                        recentPanel.style.display = '';
+                        stageEl.textContent = payload.snapshot.stage || payload.snapshot.Stage || 'Audit completato';
+                        currentItemEl.textContent = payload.snapshot.currentItem || payload.snapshot.CurrentItem || '-';
+                        countersEl.textContent = 'Controllate ' + (payload.snapshot.checkedSpecies || payload.snapshot.CheckedSpecies || 0) + ' di ' + (payload.snapshot.totalSpecies || payload.snapshot.TotalSpecies || 0) + ' specie';
+                        setProgress(payload.snapshot.percent || payload.snapshot.Percent || 100);
+                        renderRecentMessages(payload.snapshot.recentMessages || payload.snapshot.RecentMessages);
+                        renderResults(payload.snapshot);
+                        startButton.disabled = false;
+                        return;
+                    }
+
+                    await pollStatus(payload.statusUrl);
+                    pollHandle = setInterval(function () {
+                        pollStatus(payload.statusUrl).catch(function (error) {
+                            clearInterval(pollHandle);
+                            pollHandle = null;
+                            startButton.disabled = false;
+                            errorPanel.innerHTML = '<div class="alert alert-danger"><strong>' + escapeHtml(error.message) + '</strong></div>';
+                            errorPanel.style.display = '';
+                        });
+                    }, 1800);
+                } catch (error) {
+                    startButton.disabled = false;
+                    errorPanel.innerHTML = '<div class="alert alert-danger"><strong>' + escapeHtml(error.message) + '</strong></div>';
+                    errorPanel.style.display = '';
+                }
+            }
+
+            startForm.addEventListener('submit', async function (event) {
+                event.preventDefault();
+                await startAudit();
+            });
+
+            resultsPanel.addEventListener('click', async function (event) {
+                const button = event.target.closest('.js-audit-apply');
+                if (!button) {
+                    return;
+                }
+
+                button.disabled = true;
+
+                try {
+                    const formData = new FormData();
+                    formData.append('__RequestVerificationToken', antiForgeryToken);
+                    formData.append('SpecieId', button.dataset.specieId);
+                    formData.append('Lsid', button.dataset.lsid || '');
+
+                    const response = await fetch(applyForm.action, {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'Accept': 'application/json'
+                        }
+                    });
+
+                    const payload = await response.json();
+                    if (!response.ok) {
+                        throw new Error(payload.message || 'Non sono riuscito a salvare il match WFO.');
+                    }
+
+                    const row = button.closest('tr');
+                    if (row) {
+                        row.remove();
+                    }
+                } catch (error) {
+                    button.disabled = false;
+                    alert(error.message);
+                }
+            });
+
+            if (cachedAuditJson) {
+                progressPanel.style.display = '';
+                recentPanel.style.display = '';
+                stageEl.textContent = cachedAuditJson.stage || cachedAuditJson.Stage || 'Audit completato';
+                currentItemEl.textContent = cachedAuditJson.currentItem || cachedAuditJson.CurrentItem || '-';
+                countersEl.textContent = 'Controllate ' + (cachedAuditJson.checkedSpecies || cachedAuditJson.CheckedSpecies || 0) + ' di ' + (cachedAuditJson.totalSpecies || cachedAuditJson.TotalSpecies || 0) + ' specie';
+                setProgress(cachedAuditJson.percent || cachedAuditJson.Percent || 100);
+                renderRecentMessages(cachedAuditJson.recentMessages || cachedAuditJson.RecentMessages);
+                renderResults(cachedAuditJson);
+            }
+        })();
+    </script>
+}

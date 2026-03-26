@@ -11,8 +11,28 @@
             {
                 <div class="float-right success ">
                     <a asp-action="BulkImportWfo" class="mr-2">
-                        <span class="btn btn-info" title="Import massivo da WFO">
-                            Import WFO
+                        <span class="btn btn-info" title="Import assistito di un elenco nomi">
+                            Import manuale
+                        </span>
+                    </a>
+                    <a asp-action="ImportWfoNomenclature" class="mr-2">
+                        <span class="btn btn-primary" title="Import di bootstrap della nomenclatura WFO">
+                            Import nomenclatura WFO
+                        </span>
+                    </a>
+                    <span class="mr-2" title="@ViewBag.WfoDatasetMessage">
+                        @if (ViewBag.WfoDatasetIsLatest == true)
+                        {
+                            <i class="fa fa-bell text-success" aria-hidden="true"></i>
+                        }
+                        else
+                        {
+                            <i class="fa fa-triangle-exclamation text-warning" aria-hidden="true"></i>
+                        }
+                    </span>
+                    <a asp-action="WfoDatabaseAudit" class="mr-2">
+                        <span class="btn btn-primary" title="Verifica globale dello stato nomenclaturale rispetto a WFO">
+                            Audit WFO DB
                         </span>
                     </a>
                     <a asp-action="Create">

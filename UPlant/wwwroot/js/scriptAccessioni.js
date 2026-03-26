@@ -339,28 +339,26 @@ $('#insSpecie').click(function () {
             nomecomuneen = '';
         }
         $.ajax({
-            type: "GET",
+            type: "POST",
             url: baseUrlAddSpecie,
             dataType: 'json',
-
-            data: {
-                'genere': $('#genere :selected').val(),
-                'nome': $('#specieNavigation_nome').val().trim(),
-                'nome_scientifico': $('#genere :selected').text() + " " + $('#specieNavigation_nome').val().trim() + " " + $('#specieNavigation_autori').val().trim() + val4 + val6 + val8,//devo metterci la descrizione e non id devo correggere     
-                'nome_comune': nomecomune,
-                'nome_comune_en': nomecomuneen,
-                'autori': $('#specieNavigation_autori').val().trim(),
-                'subspecie': $('#specieNavigation_subspecie').val().trim(),
-                'autorisub': $('#specieNavigation_autorisub').val().trim(),
-                'varieta': $('#specieNavigation_varieta').val().trim(),
-                'autorivar': $('#specieNavigation_autorivar').val().trim(),
-                'cult': $('#specieNavigation_cult').val().trim(),
-                'autoricult': $('#specieNavigation_autoricult').val().trim(),
-                'note': $('#specieNavigation_note').val(),
-                'regno': $('#regno').val(),
-                'areale': $('#areale').val()
-
-            },
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify({
+                genere: $('#genere :selected').val(),
+                nome: $('#specieNavigation_nome').val().trim(),
+                nome_comune: nomecomune,
+                nome_comune_en: nomecomuneen,
+                autori: $('#specieNavigation_autori').val().trim(),
+                subspecie: $('#specieNavigation_subspecie').val().trim(),
+                autorisub: $('#specieNavigation_autorisub').val().trim(),
+                varieta: $('#specieNavigation_varieta').val().trim(),
+                autorivar: $('#specieNavigation_autorivar').val().trim(),
+                cult: $('#specieNavigation_cult').val().trim(),
+                autoricult: $('#specieNavigation_autoricult').val().trim(),
+                note: $('#specieNavigation_note').val(),
+                regno: $('#regno').val() || null,
+                areale: $('#areale').val() || null
+            }),
 
             success: function (data) {
 

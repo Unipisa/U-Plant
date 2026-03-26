@@ -159,3 +159,81 @@ public sealed class SpecieBulkImportResultRow
 
     public string Details { get; set; } = string.Empty;
 }
+
+public sealed class SpecieWfoNomenclatureImportViewModel
+{
+    public string SourceUrl { get; set; } = string.Empty;
+
+    public bool ForceImport { get; set; }
+
+    public string DownloadedFileToken { get; set; } = string.Empty;
+
+    public string DownloadedFileName { get; set; } = string.Empty;
+
+    public string DownloadedFileUrl { get; set; } = string.Empty;
+
+    public string DownloadedFileMessage { get; set; } = string.Empty;
+
+    public string OfficialDatasetLabel { get; set; } = string.Empty;
+
+    public bool IsLatestDatasetAvailable { get; set; }
+
+    public bool CachedSnapshotIsCurrent { get; set; }
+
+    public string LocalDatasetLabel { get; set; } = string.Empty;
+
+    public bool CanImport { get; set; }
+
+    public bool CanStartFreshImport { get; set; }
+
+    public bool HasInterruptedImport { get; set; }
+
+    public string InterruptedImportMessage { get; set; } = string.Empty;
+
+    public DateTime? InterruptedImportUpdatedAtUtc { get; set; }
+
+    public int ExistingFamiliesCount { get; set; }
+
+    public int ExistingGeneraCount { get; set; }
+
+    public int ExistingSpeciesCount { get; set; }
+
+    public int ExistingAccessioniCount { get; set; }
+
+    public bool HasAccessionRelations { get; set; }
+
+    public SpecieWfoNomenclatureImportSummary Summary { get; set; } = new();
+}
+
+public sealed class SpecieWfoNomenclatureImportSummary
+{
+    public int ImportedFamilies { get; set; }
+
+    public int ImportedGenera { get; set; }
+
+    public int ImportedSpecies { get; set; }
+
+    public int SkippedRows { get; set; }
+
+    public List<string> Messages { get; set; } = new();
+}
+
+public sealed class SpecieWfoDatabaseAuditViewModel
+{
+    public int TotalSpeciesCount { get; set; }
+
+    public int AlreadyWfoCount { get; set; }
+
+    public bool HasCachedAudit { get; set; }
+
+    public DateTime? CachedAuditUpdatedAtUtc { get; set; }
+
+    public string CachedAuditJson { get; set; } = string.Empty;
+}
+
+public sealed class ApplyWfoAuditAcceptedInput
+{
+    public Guid SpecieId { get; set; }
+
+    public string Lsid { get; set; } = string.Empty;
+}
