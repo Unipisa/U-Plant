@@ -23,6 +23,8 @@ public sealed class SpecieWfoReviewViewModel
 
     public List<WfoApplicationOption> SynonymCandidateOptions { get; set; } = new();
 
+    public List<WfoAcceptedCandidateGroup> AcceptedCandidateGroups { get; set; } = new();
+
     public string SuggestedMissingGenusName { get; set; } = string.Empty;
 
     public string SuggestedMissingFamilyName { get; set; } = string.Empty;
@@ -127,6 +129,17 @@ public sealed class CreateMissingGenusInput
     public string FamilyName { get; set; } = string.Empty;
 
     public string PendingFormJson { get; set; } = string.Empty;
+}
+
+public sealed class WfoAcceptedCandidateGroup
+{
+    public WfoApplicationOption AcceptedOption { get; set; }
+
+    public List<WfoApplicationOption> SupportingSynonyms { get; set; } = new();
+
+    public int MatchScore { get; set; }
+
+    public bool HasExactAcceptedMatch { get; set; }
 }
 
 public sealed class SpecieBulkImportWfoViewModel

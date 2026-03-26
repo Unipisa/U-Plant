@@ -652,6 +652,11 @@ namespace UPlant.Controllers
                 .Where(x => !x.IsAccepted)
                 .ToList();
 
+            model.AcceptedCandidateGroups = BuildAcceptedCandidateGroups(
+                specie,
+                model.AcceptedCandidateOptions,
+                model.SynonymCandidateOptions);
+
             await PopulateMissingGenusSuggestionAsync(model, cancellationToken);
 
             return View(model);
@@ -1191,6 +1196,120 @@ namespace UPlant.Controllers
         private static int ParseInt(string value, int fallback)
         {
             return int.TryParse(value, out var parsed) ? parsed : fallback;
+        }
+
+        private static List<WfoAcceptedCandidateGroup> BuildAcceptedCandidateGroups(
+            Specie specie,
+            IEnumerable<WfoApplicationOption> acceptedOptions,
+            IEnumerable<WfoApplicationOption> synonymOptions)
+        {
+            var currentName = SpecieScientificNameHelper.Compose(
+                specie.genereNavigation?.descrizione ?? string.Empty,
+                specie.nome,
+                specie.autori,
+                specie.subspecie,
+                specie.autorisub,
+                specie.varieta,
+                specie.autorivar,
+                specie.cult,
+                specie.autoricult);
+
+            var acceptedByName = acceptedOptions
+                .Where(x => !string.IsNullOrWhiteSpace(x.FullName))
+                .GroupBy(x => SpecieScientificNameHelper.NormalizeSpacing(x.FullName), StringComparer.OrdinalIgnoreCase)
+                .ToDictionary(g => g.Key, g => g.First(), StringComparer.OrdinalIgnoreCase);
+
+            var groups = new Dictionary<string, WfoAcceptedCandidateGroup>(StringComparer.OrdinalIgnoreCase);
+
+            foreach (var acceptedOption in acceptedByName.Values)
+            {
+                var normalizedAcceptedName = SpecieScientificNameHelper.NormalizeSpacing(acceptedOption.FullName);
+                groups[normalizedAcceptedName] = new WfoAcceptedCandidateGroup
+                {
+                    AcceptedOption = acceptedOption,
+                    MatchScore = CalculateWfoOptionMatchScore(specie, acceptedOption),
+                    HasExactAcceptedMatch = string.Equals(
+                        normalizedAcceptedName,
+                        SpecieScientificNameHelper.NormalizeSpacing(currentName),
+                        StringComparison.OrdinalIgnoreCase)
+                };
+            }
+
+            foreach (var synonymOption in synonymOptions.Where(x => !string.IsNullOrWhiteSpace(x.AcceptedName)))
+            {
+                var normalizedAcceptedName = SpecieScientificNameHelper.NormalizeSpacing(synonymOption.AcceptedName);
+                if (!groups.TryGetValue(normalizedAcceptedName, out var group))
+                {
+                    group = new WfoAcceptedCandidateGroup
+                    {
+                        AcceptedOption = BuildOption(
+                            "Carica nel form",
+                            "Nome accettato derivato dai sinonimi trovati in WFO.",
+                            "WFO",
+                            synonymOption.WfoId,
+                            synonymOption.AcceptedName,
+                            synonymOption.Lsid,
+                            true,
+                            synonymOption.AcceptedName,
+                            synonymOption.Rank,
+                            synonymOption.FamilyName,
+                            synonymOption.IucnGlobalCode,
+                            synonymOption.IucnGlobalLabel)
+                    };
+                    groups[normalizedAcceptedName] = group;
+                }
+
+                group.SupportingSynonyms.Add(synonymOption);
+                group.MatchScore = Math.Max(group.MatchScore, CalculateWfoOptionMatchScore(specie, synonymOption));
+            }
+
+            foreach (var group in groups.Values)
+            {
+                group.SupportingSynonyms = group.SupportingSynonyms
+                    .OrderByDescending(x => CalculateWfoOptionMatchScore(specie, x))
+                    .ThenByDescending(x => !string.IsNullOrWhiteSpace(x.Subspecie))
+                    .ThenBy(x => x.FullName)
+                    .ToList();
+            }
+
+            return groups.Values
+                .OrderByDescending(x => x.HasExactAcceptedMatch)
+                .ThenByDescending(x => x.MatchScore)
+                .ThenByDescending(x => x.SupportingSynonyms.Count)
+                .ThenBy(x => x.AcceptedOption?.FullName)
+                .ToList();
+        }
+
+        private static int CalculateWfoOptionMatchScore(Specie specie, WfoApplicationOption option)
+        {
+            var score = 0;
+
+            score += ScoreToken(specie.genereNavigation?.descrizione, option.GenusName, 4);
+            score += ScoreToken(specie.nome, option.Nome, 6);
+            score += ScoreToken(specie.autori, option.Autori, 2);
+            score += ScoreToken(specie.subspecie, option.Subspecie, 5);
+            score += ScoreToken(specie.autorisub, option.AutoriSub, 3);
+            score += ScoreToken(specie.varieta, option.Varieta, 4);
+            score += ScoreToken(specie.autorivar, option.AutoriVar, 2);
+            score += ScoreToken(specie.cult, option.Cult, 4);
+            score += ScoreToken(specie.autoricult, option.AutoriCult, 2);
+
+            return score;
+        }
+
+        private static int ScoreToken(string currentValue, string candidateValue, int weight)
+        {
+            var normalizedCurrent = SpecieScientificNameHelper.NormalizeSpacing(currentValue);
+            var normalizedCandidate = SpecieScientificNameHelper.NormalizeSpacing(candidateValue);
+
+            if (string.IsNullOrWhiteSpace(normalizedCurrent) || string.IsNullOrWhiteSpace(normalizedCandidate))
+            {
+                return 0;
+            }
+
+            return string.Equals(normalizedCurrent, normalizedCandidate, StringComparison.OrdinalIgnoreCase)
+                ? weight
+                : 0;
         }
 
         private static string BuildWfoStableUrl(string wfoId)

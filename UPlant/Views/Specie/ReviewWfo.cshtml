@@ -275,31 +275,38 @@
             else if (Model.CandidateOptions.Any())
             {
                 <div class="alert alert-info">
-                    WFO ha trovato piu candidati. Ti mostro prima i nomi accettati e sotto gli eventuali sinonimi collegati.
+                    WFO ha trovato piu candidati. Raggruppo prima i nomi accettati piu credibili e sotto, per ciascuno, i sinonimi che li supportano.
                 </div>
-                @if (Model.AcceptedCandidateOptions.Any())
+                @if (Model.AcceptedCandidateGroups.Any())
                 {
                     <table class="table table-bordered table-striped mb-3">
                         <thead>
                             <tr>
                                 <th style="width: 50px;">Tipo</th>
-                                <th>Nome accettato</th>
-                                <th>Rank</th>
-                                <th style="width: 140px;">Stato</th>
+                                <th>Nome accettato proposto</th>
                                 <th style="width: 180px;">Azione</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var candidate in Model.AcceptedCandidateOptions)
+                            @for (var groupIndex = 0; groupIndex < Model.AcceptedCandidateGroups.Count; groupIndex++)
                             {
+                                var group = Model.AcceptedCandidateGroups[groupIndex];
+                                var candidate = group.AcceptedOption;
                                 <tr class="table-success">
                                     <td class="text-center"><i class="fa-solid fa-circle-check text-success"></i></td>
                                     <td>
                                         <strong>@candidate.FullName</strong>
-                                        <div class="small text-muted">@candidate.Description</div>
+                                        <div class="small text-muted">
+                                            @if (group.HasExactAcceptedMatch)
+                                            {
+                                                <span>Coincide gia con il nome scientifico corrente.</span>
+                                            }
+                                            else
+                                            {
+                                                <span>Proposta ordinata in alto per numero di campi coincidenti con il nome inserito.</span>
+                                            }
+                                        </div>
                                     </td>
-                                    <td>@(string.IsNullOrWhiteSpace(candidate.Rank) ? "-" : candidate.Rank)</td>
-                                    <td>@candidate.ValidationStatusName</td>
                                     <td>
                                         <button type="button" class="btn btn-success btn-sm js-apply-wfo-option"
                                                 data-button-label="@candidate.ButtonLabel"
@@ -322,58 +329,44 @@
                                         </button>
                                     </td>
                                 </tr>
-                            }
-                        </tbody>
-                    </table>
-                }
+                                @foreach (var synonym in group.SupportingSynonyms)
+                                {
+                                    <tr class="table-warning">
+                                        <td class="text-center"><i class="fa-solid fa-circle text-warning"></i></td>
+                                        <td>
+                                            <div><span class="text-warning mr-1">--&gt;</span><strong>@synonym.FullName</strong></div>
+                                            <div class="small text-muted">@synonym.Description</div>
+                                        </td>
+                                        <td>
+                                            <button type="button" class="btn btn-warning btn-sm js-apply-wfo-option"
+                                                    data-button-label="@synonym.ButtonLabel"
+                                                    data-validation-status="@synonym.ValidationStatusName"
+                                                    data-wfo-id="@synonym.WfoId"
+                                                    data-full-name="@synonym.FullName"
+                                                    data-lsid="@synonym.Lsid"
+                                                    data-genus="@synonym.GenusName"
+                                                    data-nome="@synonym.Nome"
+                                                    data-autori="@synonym.Autori"
+                                                    data-subspecie="@synonym.Subspecie"
+                                                    data-autorisub="@synonym.AutoriSub"
+                                                    data-varieta="@synonym.Varieta"
+                                                    data-autorivar="@synonym.AutoriVar"
+                                                    data-cult="@synonym.Cult"
+                                                    data-autoricult="@synonym.AutoriCult"
+                                                    data-iucn-code="@synonym.IucnGlobalCode"
+                                                    data-iucn-label="@synonym.IucnGlobalLabel">
+                                                Carica form
+                                            </button>
+                                        </td>
+                                    </tr>
+                                }
 
-                @if (Model.SynonymCandidateOptions.Any())
-                {
-                    <table class="table table-bordered table-striped">
-                        <thead>
-                            <tr>
-                                <th style="width: 50px;">Tipo</th>
-                                <th>Sinonimo</th>
-                                <th>Nome accettato collegato</th>
-                                <th>Rank</th>
-                                <th style="width: 140px;">Stato</th>
-                                <th style="width: 180px;">Azione</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var candidate in Model.SynonymCandidateOptions)
-                            {
-                                <tr class="table-warning">
-                                    <td class="text-center"><i class="fa-solid fa-circle text-warning"></i></td>
-                                    <td>
-                                        <strong>@candidate.FullName</strong>
-                                        <div class="small text-muted">@candidate.Description</div>
-                                    </td>
-                                    <td>@(string.IsNullOrWhiteSpace(candidate.AcceptedName) ? "-" : candidate.AcceptedName)</td>
-                                    <td>@(string.IsNullOrWhiteSpace(candidate.Rank) ? "-" : candidate.Rank)</td>
-                                    <td>@candidate.ValidationStatusName</td>
-                                    <td>
-                                        <button type="button" class="btn btn-warning btn-sm js-apply-wfo-option"
-                                                data-button-label="@candidate.ButtonLabel"
-                                                data-validation-status="@candidate.ValidationStatusName"
-                                                data-wfo-id="@candidate.WfoId"
-                                                data-full-name="@candidate.FullName"
-                                                data-lsid="@candidate.Lsid"
-                                                data-genus="@candidate.GenusName"
-                                                data-nome="@candidate.Nome"
-                                                data-autori="@candidate.Autori"
-                                                data-subspecie="@candidate.Subspecie"
-                                                data-autorisub="@candidate.AutoriSub"
-                                                data-varieta="@candidate.Varieta"
-                                                data-autorivar="@candidate.AutoriVar"
-                                                data-cult="@candidate.Cult"
-                                                data-autoricult="@candidate.AutoriCult"
-                                                data-iucn-code="@candidate.IucnGlobalCode"
-                                                data-iucn-label="@candidate.IucnGlobalLabel">
-                                            Carica form
-                                        </button>
-                                    </td>
-                                </tr>
+                                @if (groupIndex < Model.AcceptedCandidateGroups.Count - 1)
+                                {
+                                    <tr>
+                                        <td colspan="3" style="background-color:#ffffff;height:14px;border-top:3px solid #d9e6ea;border-bottom:3px solid #d9e6ea;"></td>
+                                    </tr>
+                                }
                             }
                         </tbody>
                     </table>
