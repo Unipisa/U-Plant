@@ -11,12 +11,12 @@
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="genere" class="control-label">@language.Getkey("Global_Genus")</label>
-                <select asp-for="genere" class ="form-control" asp-items="ViewBag.genere"></select>
-            </div>
-            <div class="form-group">
                 <label asp-for="validazione_tassonomica" class="control-label">Validazione tassonomica</label>
                 <input class="form-control" value="N.D. (automatico)" readonly />
+            </div>
+            <div class="form-group">
+                <label asp-for="genere" class="control-label">@language.Getkey("Global_Genus")</label>
+                <select asp-for="genere" class ="form-control" asp-items="ViewBag.genere"></select>
             </div>
             
             <div class="form-group">
@@ -85,16 +85,16 @@
                 <select asp-for="areale" class ="form-control" asp-items="ViewBag.areale"></select>
             </div>
             <div class="form-group">
-                <label asp-for="cites" class="control-label">@language.Getkey("Global_Cites")</label>
-                <select asp-for="cites" class="form-control" asp-items="ViewBag.cites"></select>
-            </div>
-            <div class="form-group">
                 <label asp-for="iucn_globale" class="control-label">@language.Getkey("Global_Iucn") @language.Getkey("Global_Global")</label>
                 <select asp-for="iucn_globale" class ="form-control" asp-items="ViewBag.iucn_globale"></select>
             </div>
             <div class="form-group">
                 <label asp-for="iucn_italia" class="control-label">@language.Getkey("Global_Iucn") @language.Getkey("Global_Local")</label>
                 <select asp-for="iucn_italia" class ="form-control" asp-items="ViewBag.iucn_italia"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="cites" class="control-label">@language.Getkey("Global_Cites")</label>
+                <select asp-for="cites" class="form-control" asp-items="ViewBag.cites"></select>
             </div>
            
             <div class="form-group">
@@ -184,5 +184,4 @@
         });
     </script>
 }
-
 
