@@ -1,13 +1,15 @@
 @inject LanguageService language
 @{
     ViewData["Title"] = "Index";
+    var cognome = User.Identities.FirstOrDefault()?.Claims?.Where(c => c.Type == "family_name").FirstOrDefault()?.Value;
+    var canSeeWfoImportActions = User.IsInRole("Administrator") && string.Equals(cognome, "Picconi", StringComparison.OrdinalIgnoreCase);
 }
 
 <div class="card card-outline card-primary">
     <div class="card-header with-border">
         <h1 class="card-title">Elenco</h1>
         @{
-            if (User.IsInRole("Administrator"))
+            if (canSeeWfoImportActions)
             {
                 <div class="float-right success ">
                     <a asp-action="BulkImportWfo" class="mr-2">
