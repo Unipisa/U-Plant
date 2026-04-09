@@ -932,6 +932,7 @@ namespace UPlant.Controllers
                             requiresGenusCreation = true,
                             genusName,
                             familyName,
+                            reviewUrl = Url.Action(nameof(ReviewWfo), new { id = specie.id }),
                             message = $"Manca il genere {genusName} (famiglia {familyName}). Vuoi che lo inserisca automaticamente prima di applicare il nome accettato?"
                         });
                     }
@@ -1445,11 +1446,22 @@ namespace UPlant.Controllers
             var genusName = SpecieScientificNameHelper.NormalizeSpacing(input.GenusName);
             var familyName = SpecieScientificNameHelper.NormalizeSpacing(input.FamilyName);
 
-            if (string.IsNullOrWhiteSpace(genusName) || string.IsNullOrWhiteSpace(familyName))
+            if (string.IsNullOrWhiteSpace(genusName))
             {
                 TempData["WfoError"] = "Non ho abbastanza dati WFO per creare automaticamente il genere.";
                 TempData["PendingWfoForm"] = input.PendingFormJson ?? string.Empty;
                 return RedirectToAction(nameof(ReviewWfo), new { id = input.SpecieId });
+            }
+
+            if (string.IsNullOrWhiteSpace(familyName))
+            {
+                familyName = await TryResolveFamilyNameFromWfoAsync(input.SpecieId, genusName, cancellationToken);
+                if (string.IsNullOrWhiteSpace(familyName))
+                {
+                    TempData["WfoError"] = $"Mancano sia il genere sia la famiglia in archivio e non riesco a ricavare la famiglia per {genusName} da WFO. Inserisci prima la famiglia e riprova.";
+                    TempData["PendingWfoForm"] = input.PendingFormJson ?? string.Empty;
+                    return RedirectToAction(nameof(ReviewWfo), new { id = input.SpecieId });
+                }
             }
 
             var existingGenusId = await _context.Generi
@@ -1496,6 +1508,59 @@ namespace UPlant.Controllers
                 ? $"Ho inserito la famiglia {familyName} e il genere {genusName}."
                 : $"Ho inserito il genere {genusName} collegato alla famiglia {familyName}.";
             return RedirectToAction(nameof(ReviewWfo), new { id = input.SpecieId });
+        }
+
+        private async Task<string> TryResolveFamilyNameFromWfoAsync(Guid specieId, string genusName, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var specie = await _context.Specie
+                    .Include(s => s.genereNavigation)
+                    .FirstOrDefaultAsync(s => s.id == specieId, cancellationToken);
+
+                if (specie == null)
+                {
+                    return string.Empty;
+                }
+
+                var baseGenus = SpecieScientificNameHelper.NormalizeSpacing(specie.genereNavigation?.descrizione);
+                var checkResult = await _worldFloraOnlineService.CheckAsync(
+                    specie,
+                    string.IsNullOrWhiteSpace(baseGenus) ? genusName : baseGenus,
+                    cancellationToken);
+
+                var expectedGenus = SpecieScientificNameHelper.NormalizeSpacing(genusName);
+                var allCandidates = new List<WfoCandidate>();
+                if (checkResult.Match != null)
+                {
+                    allCandidates.Add(checkResult.Match);
+                }
+
+                allCandidates.AddRange(checkResult.Candidates);
+
+                var exactFamily = allCandidates
+                    .Where(c => !string.IsNullOrWhiteSpace(c.FamilyName))
+                    .FirstOrDefault(c => string.Equals(
+                        SpecieScientificNameHelper.NormalizeSpacing(SpecieScientificNameHelper.ParseWfoName(c.FullName).Genus),
+                        expectedGenus,
+                        StringComparison.OrdinalIgnoreCase))
+                    ?.FamilyName;
+
+                if (!string.IsNullOrWhiteSpace(exactFamily))
+                {
+                    return SpecieScientificNameHelper.NormalizeSpacing(exactFamily);
+                }
+
+                var fallbackFamily = allCandidates
+                    .Select(c => SpecieScientificNameHelper.NormalizeSpacing(c.FamilyName))
+                    .FirstOrDefault(x => !string.IsNullOrWhiteSpace(x));
+
+                return fallbackFamily ?? string.Empty;
+            }
+            catch
+            {
+                return string.Empty;
+            }
         }
 
         private async Task<SpecieWfoNomenclatureImportViewModel> BuildWfoNomenclatureImportViewModelAsync(bool forceImport, CancellationToken cancellationToken)

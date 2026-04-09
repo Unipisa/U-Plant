@@ -14,8 +14,8 @@
         : (Model.SynonymCandidateOptions.Select(x => x.FamilyName).FirstOrDefault(x => !string.IsNullOrWhiteSpace(x))
             ?? Model.AcceptedCandidateOptions.Select(x => x.FamilyName).FirstOrDefault(x => !string.IsNullOrWhiteSpace(x))
             ?? string.Empty);
+    var familyMissingInSuggestion = string.IsNullOrWhiteSpace(fallbackMissingFamilyName);
     var showCreateGenusHelper = !string.IsNullOrWhiteSpace(fallbackMissingGenusName) &&
-                                !string.IsNullOrWhiteSpace(fallbackMissingFamilyName) &&
                                 !string.IsNullOrWhiteSpace(wfoErrorMessage);
 }
 
@@ -40,8 +40,15 @@
                 <div>
                     <strong>Proposta WFO:</strong>
                     posso inserire il genere <strong>@fallbackMissingGenusName</strong>
-                    collegato alla famiglia <strong>@fallbackMissingFamilyName</strong>.
-                    Se la famiglia non esiste ancora in archivio, la creo automaticamente.
+                    @if (!familyMissingInSuggestion)
+                    {
+                        <text>collegato alla famiglia <strong>@fallbackMissingFamilyName</strong>.</text>
+                    }
+                    else
+                    {
+                        <text>ma al momento non ho il nome della famiglia associata.</text>
+                    }
+                    Se la famiglia non esiste ancora in archivio (oppure non è valorizzata), provo a recuperarla da WFO e poi la creo automaticamente.
                 </div>
                 <div class="mt-2">
                     <button type="button"
@@ -400,8 +407,15 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    Inserisco questo genere: <strong>@fallbackMissingGenusName</strong>, collegato alla famiglia <strong>@fallbackMissingFamilyName</strong>?<br />
-                    Se la famiglia non esiste ancora, la creo automaticamente.
+                    Inserisco questo genere: <strong>@fallbackMissingGenusName</strong>
+                    @if (!familyMissingInSuggestion)
+                    {
+                        <text>, collegato alla famiglia <strong>@fallbackMissingFamilyName</strong>?</text>
+                    }
+                    else
+                    {
+                        <text>. La famiglia non è valorizzata: provo a recuperarla da WFO e, se necessario, la inserisco automaticamente.</text>
+                    }
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Annulla</button>

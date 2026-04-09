@@ -408,6 +408,10 @@
                                 await applyAuditAccepted(button, true);
                                 return;
                             }
+                            if (payload.reviewUrl) {
+                                window.location.href = payload.reviewUrl;
+                                return;
+                            }
                             button.disabled = false;
                             return;
                         }
