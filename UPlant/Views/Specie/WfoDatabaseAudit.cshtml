@@ -194,7 +194,7 @@
                     body = '<div class="text-muted">' + emptyText + '</div>';
                 } else {
                     body = '<div class="table-responsive"><table class="table table-bordered table-striped">' +
-                        '<thead><tr><th>Nome specie</th><th>Esito WFO</th><th>Validazione attuale</th><th style="width:150px;">Azione</th></tr></thead><tbody>';
+                        '<thead><tr><th>Nome specie</th><th>Esito WFO</th><th>Validazione attuale</th><th style="width:220px;">Azione</th></tr></thead><tbody>';
 
                     normalizedRows.forEach(function (row) {
                         const scientificName = escapeHtml(row.scientificName || row.ScientificName);
@@ -208,7 +208,14 @@
                             ? (alreadyWfo
                                 ? '<span class="badge badge-success">Gia WFO</span>'
                                 : '<button type="button" class="btn btn-success btn-sm js-audit-apply" data-specie-id="' + specieId + '" data-lsid="' + lsid + '">OK</button>')
-                            : '<a class="btn btn-info btn-sm" href="@Url.Action("ReviewWfo", "Specie")/' + specieId + '">Rivedi</a>';
+                            : (key === 'perfectSynonym'
+                                ? (alreadyWfo
+                                    ? '<span class="badge badge-success">Gia WFO</span>'
+                                    : '<div class="btn-group" role="group">' +
+                                        '<button type="button" class="btn btn-success btn-sm js-audit-apply" data-specie-id="' + specieId + '" data-lsid="' + lsid + '" data-accepted-full-name="' + acceptedName + '">OK</button>' +
+                                        '<a class="btn btn-info btn-sm" href="@Url.Action("ReviewWfo", "Specie")/' + specieId + '">Rivedi</a>' +
+                                      '</div>')
+                                : '<a class="btn btn-info btn-sm" href="@Url.Action("ReviewWfo", "Specie")/' + specieId + '">Rivedi</a>');
 
                         body += '<tr>' +
                             '<td><strong>' + scientificName + '</strong></td>' +
@@ -385,6 +392,7 @@
                     formData.append('__RequestVerificationToken', antiForgeryToken);
                     formData.append('SpecieId', button.dataset.specieId);
                     formData.append('Lsid', button.dataset.lsid || '');
+                    formData.append('AcceptedFullName', button.dataset.acceptedFullName || '');
 
                     const response = await fetch(applyForm.action, {
                         method: 'POST',

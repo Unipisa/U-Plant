@@ -915,6 +915,14 @@ namespace UPlant.Controllers
                 return NotFound(new { message = "Specie non trovata." });
             }
 
+            if (!string.IsNullOrWhiteSpace(input.AcceptedFullName))
+            {
+                if (!await ApplyAcceptedNameAsync(specie, input.AcceptedFullName, input.Lsid))
+                {
+                    return BadRequest(new { message = "Non riesco ad applicare automaticamente il nome accettato: apri la revisione per completare il salvataggio." });
+                }
+            }
+
             specie.validazione_tassonomica = await EnsureDefaultValidazioneTassonomicaAsync("WFO");
             specie.lsid = SpecieScientificNameHelper.NormalizeSpacing(input.Lsid);
             await _context.SaveChangesAsync();
@@ -4055,5 +4063,4 @@ namespace UPlant.Controllers
         }
     }
 }
-
 

@@ -246,6 +246,8 @@ public sealed class ApplyWfoAuditAcceptedInput
     public Guid SpecieId { get; set; }
 
     public string Lsid { get; set; } = string.Empty;
+
+    public string AcceptedFullName { get; set; } = string.Empty;
 }
 
 public sealed class StartWfoDatabaseAuditInput
