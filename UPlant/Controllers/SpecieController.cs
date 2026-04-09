@@ -548,7 +548,7 @@ namespace UPlant.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> ReviewWfo(Guid id, CancellationToken cancellationToken)
+        public async Task<IActionResult> ReviewWfo(Guid id, bool returnToAudit = false, CancellationToken cancellationToken = default)
         {
             var specie = await _context.Specie
                 .Include(s => s.genereNavigation)
@@ -570,6 +570,7 @@ namespace UPlant.Controllers
                 CurrentIucnGlobalCode = specie.iucn_globaleNavigation?.codice ?? string.Empty,
                 CurrentIucnGlobalDescription = specie.iucn_globaleNavigation?.descrizione ?? string.Empty
             };
+            model.Form.ReturnToAudit = returnToAudit;
 
             if (TempData.TryGetValue("PendingWfoForm", out var pendingWfoFormJsonObj) &&
                 pendingWfoFormJsonObj is string pendingWfoFormJson &&
@@ -932,7 +933,7 @@ namespace UPlant.Controllers
                             requiresGenusCreation = true,
                             genusName,
                             familyName,
-                            reviewUrl = Url.Action(nameof(ReviewWfo), new { id = specie.id }),
+                            reviewUrl = Url.Action(nameof(ReviewWfo), new { id = specie.id, returnToAudit = true }),
                             message = $"Manca il genere {genusName} (famiglia {familyName}). Vuoi che lo inserisca automaticamente prima di applicare il nome accettato?"
                         });
                     }
@@ -1394,7 +1395,7 @@ namespace UPlant.Controllers
                     }
 
                     await _context.SaveChangesAsync();
-                    return RedirectToAction(nameof(Index));
+                    return RedirectAfterWfoReview(input.ReturnToAudit);
                 }
 
                 if (string.Equals(input.ActionType, "keep_current", StringComparison.OrdinalIgnoreCase))
@@ -1402,30 +1403,30 @@ namespace UPlant.Controllers
                     specie.lsid = SpecieScientificNameHelper.NormalizeSpacing(input.Lsid);
                     specie.nome_scientifico = await ComposeScientificNameAsync(specie.genere, specie);
                     await _context.SaveChangesAsync();
-                    return RedirectToAction(nameof(Index));
+                    return RedirectAfterWfoReview(input.ReturnToAudit);
                 }
 
                 if (!await ApplyAcceptedNameAsync(specie, input.AcceptedFullName, input.Lsid))
                 {
                     TempData["PendingWfoForm"] = JsonSerializer.Serialize(input);
                     TempData["WfoError"] = "Il nome proposto da WFO usa un genere non presente in archivio. Inserisci prima il genere oppure correggi manualmente la specie.";
-                    return RedirectToAction(nameof(ReviewWfo), new { id = specie.id });
+                    return RedirectToAction(nameof(ReviewWfo), new { id = specie.id, returnToAudit = input.ReturnToAudit });
                 }
 
                 await _context.SaveChangesAsync();
                 input.ValidationStatusName = "A.A.";
-                return RedirectToAction(nameof(Index));
+                return RedirectAfterWfoReview(input.ReturnToAudit);
             }
 
             if (!await ApplyReviewFormAsync(specie, input))
             {
                 TempData["PendingWfoForm"] = JsonSerializer.Serialize(input);
                 TempData["WfoError"] = "Il genere indicato non esiste in archivio. Correggi il campo Genere oppure inserisci prima il genere mancante.";
-                return RedirectToAction(nameof(ReviewWfo), new { id = specie.id });
+                return RedirectToAction(nameof(ReviewWfo), new { id = specie.id, returnToAudit = input.ReturnToAudit });
             }
 
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectAfterWfoReview(input.ReturnToAudit);
         }
 
         [HttpGet("/Specie/ApplyWfoDecision")]
@@ -1450,7 +1451,7 @@ namespace UPlant.Controllers
             {
                 TempData["WfoError"] = "Non ho abbastanza dati WFO per creare automaticamente il genere.";
                 TempData["PendingWfoForm"] = input.PendingFormJson ?? string.Empty;
-                return RedirectToAction(nameof(ReviewWfo), new { id = input.SpecieId });
+                return RedirectToAction(nameof(ReviewWfo), new { id = input.SpecieId, returnToAudit = input.ReturnToAudit });
             }
 
             if (string.IsNullOrWhiteSpace(familyName))
@@ -1460,7 +1461,7 @@ namespace UPlant.Controllers
                 {
                     TempData["WfoError"] = $"Mancano sia il genere sia la famiglia in archivio e non riesco a ricavare la famiglia per {genusName} da WFO. Inserisci prima la famiglia e riprova.";
                     TempData["PendingWfoForm"] = input.PendingFormJson ?? string.Empty;
-                    return RedirectToAction(nameof(ReviewWfo), new { id = input.SpecieId });
+                    return RedirectToAction(nameof(ReviewWfo), new { id = input.SpecieId, returnToAudit = input.ReturnToAudit });
                 }
             }
 
@@ -1473,7 +1474,7 @@ namespace UPlant.Controllers
             {
                 TempData["WfoError"] = $"Il genere {genusName} esiste gia in archivio.";
                 TempData["PendingWfoForm"] = input.PendingFormJson ?? string.Empty;
-                return RedirectToAction(nameof(ReviewWfo), new { id = input.SpecieId });
+                return RedirectToAction(nameof(ReviewWfo), new { id = input.SpecieId, returnToAudit = input.ReturnToAudit });
             }
 
             var familyId = await _context.Famiglie
@@ -1507,7 +1508,7 @@ namespace UPlant.Controllers
             TempData["WfoSuccess"] = familyCreated
                 ? $"Ho inserito la famiglia {familyName} e il genere {genusName}."
                 : $"Ho inserito il genere {genusName} collegato alla famiglia {familyName}.";
-            return RedirectToAction(nameof(ReviewWfo), new { id = input.SpecieId });
+            return RedirectToAction(nameof(ReviewWfo), new { id = input.SpecieId, returnToAudit = input.ReturnToAudit });
         }
 
         private async Task<string> TryResolveFamilyNameFromWfoAsync(Guid specieId, string genusName, CancellationToken cancellationToken)
@@ -3336,6 +3337,7 @@ namespace UPlant.Controllers
             return new ApplyWfoDecisionInput
             {
                 SpecieId = specie.id,
+                ReturnToAudit = false,
                 ActionType = "save_review",
                 ValidationStatusName = currentValidationStatusName ?? string.Empty,
                 AcceptedFullName = specie.nome_scientifico ?? string.Empty,
@@ -3457,6 +3459,13 @@ namespace UPlant.Controllers
                    string.Equals(input.ActionType, "keep_current", StringComparison.OrdinalIgnoreCase)
                 ? "WFO"
                 : "A.A.";
+        }
+
+        private IActionResult RedirectAfterWfoReview(bool returnToAudit)
+        {
+            return returnToAudit
+                ? RedirectToAction(nameof(WfoDatabaseAudit))
+                : RedirectToAction(nameof(Index));
         }
 
         private async Task PopulateMissingGenusSuggestionAsync(SpecieWfoReviewViewModel model, CancellationToken cancellationToken)

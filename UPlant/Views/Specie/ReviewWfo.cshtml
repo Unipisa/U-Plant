@@ -64,6 +64,7 @@
         <form asp-controller="Specie" asp-action="ApplyWfoDecision" method="post" id="wfo-review-form">
             @Html.AntiForgeryToken()
             <input asp-for="Form.SpecieId" type="hidden" />
+            <input asp-for="Form.ReturnToAudit" type="hidden" />
             <input asp-for="Form.ActionType" type="hidden" />
             <input asp-for="Form.ValidationStatusName" type="hidden" />
             <input asp-for="Form.SelectedWfoId" type="hidden" />
@@ -389,7 +390,14 @@
 
             <div class="mt-3">
                 <button type="button" id="wfo-save-button" class="btn btn-primary">@language.Getkey("Global_Save")</button>
-                <a asp-action="Index" class="btn btn-info">@language.Getkey("Global_Go_Back")</a>
+                @if (Model.Form.ReturnToAudit)
+                {
+                    <a asp-action="WfoDatabaseAudit" class="btn btn-info">@language.Getkey("Global_Go_Back")</a>
+                }
+                else
+                {
+                    <a asp-action="Index" class="btn btn-info">@language.Getkey("Global_Go_Back")</a>
+                }
             </div>
         </form>
     </div>
@@ -422,6 +430,7 @@
                     <form asp-controller="Specie" asp-action="CreateMissingGenusFromWfo" method="post" class="m-0">
                         @Html.AntiForgeryToken()
                         <input type="hidden" name="SpecieId" value="@Model.Specie.id" />
+                        <input type="hidden" name="ReturnToAudit" value="@(Model.Form.ReturnToAudit ? "true" : "false")" />
                         <input type="hidden" name="GenusName" value="@fallbackMissingGenusName" />
                         <input type="hidden" name="FamilyName" value="@fallbackMissingFamilyName" />
                         <input type="hidden" name="PendingFormJson" id="create-genus-pending-form-json" value="" />
@@ -602,6 +611,7 @@
             $('#createGenusModal form').on('submit', function () {
                 const pendingForm = {
                     SpecieId: $('#Form_SpecieId').val() || '',
+                    ReturnToAudit: $('#Form_ReturnToAudit').val() === 'true',
                     ActionType: $('#Form_ActionType').val() || '',
                     ValidationStatusName: $('#Form_ValidationStatusName').val() || '',
                     SelectedWfoId: $('#Form_SelectedWfoId').val() || '',

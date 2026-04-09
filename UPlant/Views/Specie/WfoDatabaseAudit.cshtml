@@ -215,9 +215,9 @@
                                     ? '<span class="badge badge-success">Gia WFO</span>'
                                     : '<div class="btn-group" role="group">' +
                                         '<button type="button" class="btn btn-success btn-sm mr-1 js-audit-apply" data-specie-id="' + specieId + '" data-lsid="' + lsid + '" data-accepted-full-name="' + acceptedName + '" data-family-name="' + familyName + '">OK</button>' +
-                                        '<a class="btn btn-info btn-sm" href="@Url.Action("ReviewWfo", "Specie")/' + specieId + '">Rivedi</a>' +
+                                        '<a class="btn btn-info btn-sm" href="@Url.Action("ReviewWfo", "Specie")/' + specieId + '?returnToAudit=true">Rivedi</a>' +
                                       '</div>')
-                                : '<a class="btn btn-info btn-sm" href="@Url.Action("ReviewWfo", "Specie")/' + specieId + '">Rivedi</a>');
+                                : '<a class="btn btn-info btn-sm" href="@Url.Action("ReviewWfo", "Specie")/' + specieId + '?returnToAudit=true">Rivedi</a>');
 
                         body += '<tr>' +
                             '<td><strong>' + scientificName + '</strong></td>' +
