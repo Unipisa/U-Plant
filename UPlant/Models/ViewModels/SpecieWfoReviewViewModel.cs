@@ -40,6 +40,8 @@ public sealed class ApplyWfoDecisionInput
 {
     public Guid SpecieId { get; set; }
 
+    public bool ReturnToAudit { get; set; }
+
     public string ActionType { get; set; } = string.Empty;
 
     public string ValidationStatusName { get; set; } = string.Empty;
@@ -123,6 +125,8 @@ public sealed class WfoApplicationOption
 public sealed class CreateMissingGenusInput
 {
     public Guid SpecieId { get; set; }
+
+    public bool ReturnToAudit { get; set; }
 
     public string GenusName { get; set; } = string.Empty;
 
@@ -246,6 +250,12 @@ public sealed class ApplyWfoAuditAcceptedInput
     public Guid SpecieId { get; set; }
 
     public string Lsid { get; set; } = string.Empty;
+
+    public string AcceptedFullName { get; set; } = string.Empty;
+
+    public string FamilyName { get; set; } = string.Empty;
+
+    public bool AutoCreateMissingGenus { get; set; }
 }
 
 public sealed class StartWfoDatabaseAuditInput

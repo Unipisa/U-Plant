@@ -14,8 +14,8 @@
         : (Model.SynonymCandidateOptions.Select(x => x.FamilyName).FirstOrDefault(x => !string.IsNullOrWhiteSpace(x))
             ?? Model.AcceptedCandidateOptions.Select(x => x.FamilyName).FirstOrDefault(x => !string.IsNullOrWhiteSpace(x))
             ?? string.Empty);
+    var familyMissingInSuggestion = string.IsNullOrWhiteSpace(fallbackMissingFamilyName);
     var showCreateGenusHelper = !string.IsNullOrWhiteSpace(fallbackMissingGenusName) &&
-                                !string.IsNullOrWhiteSpace(fallbackMissingFamilyName) &&
                                 !string.IsNullOrWhiteSpace(wfoErrorMessage);
 }
 
@@ -40,14 +40,22 @@
                 <div>
                     <strong>Proposta WFO:</strong>
                     posso inserire il genere <strong>@fallbackMissingGenusName</strong>
-                    collegato alla famiglia <strong>@fallbackMissingFamilyName</strong>.
+                    @if (!familyMissingInSuggestion)
+                    {
+                        <text>collegato alla famiglia <strong>@fallbackMissingFamilyName</strong>.</text>
+                    }
+                    else
+                    {
+                        <text>ma al momento non ho il nome della famiglia associata.</text>
+                    }
+                    Se la famiglia non esiste ancora in archivio (oppure non è valorizzata), provo a recuperarla da WFO e poi la creo automaticamente.
                 </div>
                 <div class="mt-2">
                     <button type="button"
                             class="btn btn-outline-primary btn-sm"
                             data-toggle="modal"
                             data-target="#createGenusModal">
-                        Inserisci il genere @fallbackMissingGenusName
+                        Inserisci genere (e famiglia se manca)
                     </button>
                 </div>
             </div>
@@ -56,6 +64,7 @@
         <form asp-controller="Specie" asp-action="ApplyWfoDecision" method="post" id="wfo-review-form">
             @Html.AntiForgeryToken()
             <input asp-for="Form.SpecieId" type="hidden" />
+            <input asp-for="Form.ReturnToAudit" type="hidden" />
             <input asp-for="Form.ActionType" type="hidden" />
             <input asp-for="Form.ValidationStatusName" type="hidden" />
             <input asp-for="Form.SelectedWfoId" type="hidden" />
@@ -381,7 +390,14 @@
 
             <div class="mt-3">
                 <button type="button" id="wfo-save-button" class="btn btn-primary">@language.Getkey("Global_Save")</button>
-                <a asp-action="Index" class="btn btn-info">@language.Getkey("Global_Go_Back")</a>
+                @if (Model.Form.ReturnToAudit)
+                {
+                    <a asp-action="WfoDatabaseAudit" class="btn btn-info">@language.Getkey("Global_Go_Back")</a>
+                }
+                else
+                {
+                    <a asp-action="Index" class="btn btn-info">@language.Getkey("Global_Go_Back")</a>
+                }
             </div>
         </form>
     </div>
@@ -399,17 +415,26 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    Inserisco questo genere: <strong>@fallbackMissingGenusName</strong>, collegato alla famiglia <strong>@fallbackMissingFamilyName</strong>?
+                    Inserisco questo genere: <strong>@fallbackMissingGenusName</strong>
+                    @if (!familyMissingInSuggestion)
+                    {
+                        <text>, collegato alla famiglia <strong>@fallbackMissingFamilyName</strong>?</text>
+                    }
+                    else
+                    {
+                        <text>. La famiglia non è valorizzata: provo a recuperarla da WFO e, se necessario, la inserisco automaticamente.</text>
+                    }
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Annulla</button>
                     <form asp-controller="Specie" asp-action="CreateMissingGenusFromWfo" method="post" class="m-0">
                         @Html.AntiForgeryToken()
                         <input type="hidden" name="SpecieId" value="@Model.Specie.id" />
+                        <input type="hidden" name="ReturnToAudit" value="@(Model.Form.ReturnToAudit ? "true" : "false")" />
                         <input type="hidden" name="GenusName" value="@fallbackMissingGenusName" />
                         <input type="hidden" name="FamilyName" value="@fallbackMissingFamilyName" />
                         <input type="hidden" name="PendingFormJson" id="create-genus-pending-form-json" value="" />
-                        <button type="submit" class="btn btn-primary">Inserisci il genere</button>
+                        <button type="submit" class="btn btn-primary">Inserisci genere (e famiglia se manca)</button>
                     </form>
                 </div>
             </div>
@@ -586,6 +611,7 @@
             $('#createGenusModal form').on('submit', function () {
                 const pendingForm = {
                     SpecieId: $('#Form_SpecieId').val() || '',
+                    ReturnToAudit: $('#Form_ReturnToAudit').val() === 'true',
                     ActionType: $('#Form_ActionType').val() || '',
                     ValidationStatusName: $('#Form_ValidationStatusName').val() || '',
                     SelectedWfoId: $('#Form_SelectedWfoId').val() || '',

@@ -194,21 +194,30 @@
                     body = '<div class="text-muted">' + emptyText + '</div>';
                 } else {
                     body = '<div class="table-responsive"><table class="table table-bordered table-striped">' +
-                        '<thead><tr><th>Nome specie</th><th>Esito WFO</th><th>Validazione attuale</th><th style="width:150px;">Azione</th></tr></thead><tbody>';
+                        '<thead><tr><th>Nome specie</th><th>Esito WFO</th><th>Validazione attuale</th><th style="width:220px;">Azione</th></tr></thead><tbody>';
 
                     normalizedRows.forEach(function (row) {
                         const scientificName = escapeHtml(row.scientificName || row.ScientificName);
-                        const acceptedName = escapeHtml(row.acceptedName || row.AcceptedName);
+                        const acceptedNameRaw = row.acceptedName || row.AcceptedName || '';
+                        const acceptedName = escapeHtml(acceptedNameRaw);
                         const notes = escapeHtml(row.notes || row.Notes);
                         const validation = escapeHtml(row.currentValidationStatus || row.CurrentValidationStatus || '-');
                         const specieId = row.specieId || row.SpecieId;
                         const lsid = escapeHtml(row.lsid || row.Lsid || '');
+                        const familyName = escapeHtml(row.familyName || row.FamilyName || '');
                         const alreadyWfo = validation === 'WFO';
                         const actionHtml = key === 'perfectAccepted'
                             ? (alreadyWfo
                                 ? '<span class="badge badge-success">Gia WFO</span>'
                                 : '<button type="button" class="btn btn-success btn-sm js-audit-apply" data-specie-id="' + specieId + '" data-lsid="' + lsid + '">OK</button>')
-                            : '<a class="btn btn-info btn-sm" href="@Url.Action("ReviewWfo", "Specie")/' + specieId + '">Rivedi</a>';
+                            : (key === 'perfectSynonym'
+                                ? (alreadyWfo
+                                    ? '<span class="badge badge-success">Gia WFO</span>'
+                                    : '<div class="btn-group" role="group">' +
+                                        '<button type="button" class="btn btn-success btn-sm mr-1 js-audit-apply" data-specie-id="' + specieId + '" data-lsid="' + lsid + '" data-accepted-full-name="' + acceptedName + '" data-family-name="' + familyName + '">OK</button>' +
+                                        '<a class="btn btn-info btn-sm" href="@Url.Action("ReviewWfo", "Specie")/' + specieId + '?returnToAudit=true">Rivedi</a>' +
+                                      '</div>')
+                                : '<a class="btn btn-info btn-sm" href="@Url.Action("ReviewWfo", "Specie")/' + specieId + '?returnToAudit=true">Rivedi</a>');
 
                         body += '<tr>' +
                             '<td><strong>' + scientificName + '</strong></td>' +
@@ -372,19 +381,15 @@
                 await startAudit();
             });
 
-            resultsPanel.addEventListener('click', async function (event) {
-                const button = event.target.closest('.js-audit-apply');
-                if (!button) {
-                    return;
-                }
-
-                button.disabled = true;
-
+            async function applyAuditAccepted(button, autoCreateMissingGenus) {
                 try {
                     const formData = new FormData();
                     formData.append('__RequestVerificationToken', antiForgeryToken);
                     formData.append('SpecieId', button.dataset.specieId);
                     formData.append('Lsid', button.dataset.lsid || '');
+                    formData.append('AcceptedFullName', button.dataset.acceptedFullName || '');
+                    formData.append('FamilyName', button.dataset.familyName || '');
+                    formData.append('AutoCreateMissingGenus', autoCreateMissingGenus ? 'true' : 'false');
 
                     const response = await fetch(applyForm.action, {
                         method: 'POST',
@@ -397,6 +402,19 @@
 
                     const payload = await response.json();
                     if (!response.ok) {
+                        if (payload && payload.requiresGenusCreation) {
+                            const confirmationMessage = payload.message || ('Manca il genere ' + (payload.genusName || '') + '. Vuoi inserirlo automaticamente?');
+                            if (confirm(confirmationMessage)) {
+                                await applyAuditAccepted(button, true);
+                                return;
+                            }
+                            if (payload.reviewUrl) {
+                                window.location.href = payload.reviewUrl;
+                                return;
+                            }
+                            button.disabled = false;
+                            return;
+                        }
                         throw new Error(payload.message || 'Non sono riuscito a salvare il match WFO.');
                     }
 
@@ -408,6 +426,16 @@
                     button.disabled = false;
                     alert(error.message);
                 }
+            }
+
+            resultsPanel.addEventListener('click', async function (event) {
+                const button = event.target.closest('.js-audit-apply');
+                if (!button) {
+                    return;
+                }
+
+                button.disabled = true;
+                await applyAuditAccepted(button, false);
             });
 
             if (cachedAuditJson) {
