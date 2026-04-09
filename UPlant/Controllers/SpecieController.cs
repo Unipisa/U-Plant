@@ -919,7 +919,12 @@ namespace UPlant.Controllers
             {
                 if (!await ApplyAcceptedNameAsync(specie, input.AcceptedFullName, input.Lsid))
                 {
-                    return BadRequest(new { message = "Non riesco ad applicare automaticamente il nome accettato: apri la revisione per completare il salvataggio." });
+                    return Conflict(new
+                    {
+                        message = "Non riesco ad applicare automaticamente il nome accettato: apro la revisione per completare il salvataggio.",
+                        requiresReview = true,
+                        reviewUrl = Url.Action(nameof(ReviewWfo), new { id = specie.id })
+                    });
                 }
             }
 
@@ -4063,4 +4068,3 @@ namespace UPlant.Controllers
         }
     }
 }
-

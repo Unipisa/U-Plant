@@ -198,7 +198,8 @@
 
                     normalizedRows.forEach(function (row) {
                         const scientificName = escapeHtml(row.scientificName || row.ScientificName);
-                        const acceptedName = escapeHtml(row.acceptedName || row.AcceptedName);
+                        const acceptedNameRaw = row.acceptedName || row.AcceptedName || '';
+                        const acceptedName = escapeHtml(acceptedNameRaw);
                         const notes = escapeHtml(row.notes || row.Notes);
                         const validation = escapeHtml(row.currentValidationStatus || row.CurrentValidationStatus || '-');
                         const specieId = row.specieId || row.SpecieId;
@@ -212,7 +213,7 @@
                                 ? (alreadyWfo
                                     ? '<span class="badge badge-success">Gia WFO</span>'
                                     : '<div class="btn-group" role="group">' +
-                                        '<button type="button" class="btn btn-success btn-sm js-audit-apply" data-specie-id="' + specieId + '" data-lsid="' + lsid + '" data-accepted-full-name="' + acceptedName + '">OK</button>' +
+                                        '<button type="button" class="btn btn-success btn-sm mr-1 js-audit-apply" data-specie-id="' + specieId + '" data-lsid="' + lsid + '" data-accepted-full-name="' + acceptedName + '">OK</button>' +
                                         '<a class="btn btn-info btn-sm" href="@Url.Action("ReviewWfo", "Specie")/' + specieId + '">Rivedi</a>' +
                                       '</div>')
                                 : '<a class="btn btn-info btn-sm" href="@Url.Action("ReviewWfo", "Specie")/' + specieId + '">Rivedi</a>');
@@ -405,6 +406,10 @@
 
                     const payload = await response.json();
                     if (!response.ok) {
+                        if (payload && payload.requiresReview && payload.reviewUrl) {
+                            window.location.href = payload.reviewUrl;
+                            return;
+                        }
                         throw new Error(payload.message || 'Non sono riuscito a salvare il match WFO.');
                     }
 
