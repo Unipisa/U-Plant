@@ -41,13 +41,14 @@
                     <strong>Proposta WFO:</strong>
                     posso inserire il genere <strong>@fallbackMissingGenusName</strong>
                     collegato alla famiglia <strong>@fallbackMissingFamilyName</strong>.
+                    Se la famiglia non esiste ancora in archivio, la creo automaticamente.
                 </div>
                 <div class="mt-2">
                     <button type="button"
                             class="btn btn-outline-primary btn-sm"
                             data-toggle="modal"
                             data-target="#createGenusModal">
-                        Inserisci il genere @fallbackMissingGenusName
+                        Inserisci genere (e famiglia se manca)
                     </button>
                 </div>
             </div>
@@ -399,7 +400,8 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    Inserisco questo genere: <strong>@fallbackMissingGenusName</strong>, collegato alla famiglia <strong>@fallbackMissingFamilyName</strong>?
+                    Inserisco questo genere: <strong>@fallbackMissingGenusName</strong>, collegato alla famiglia <strong>@fallbackMissingFamilyName</strong>?<br />
+                    Se la famiglia non esiste ancora, la creo automaticamente.
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Annulla</button>
@@ -409,7 +411,7 @@
                         <input type="hidden" name="GenusName" value="@fallbackMissingGenusName" />
                         <input type="hidden" name="FamilyName" value="@fallbackMissingFamilyName" />
                         <input type="hidden" name="PendingFormJson" id="create-genus-pending-form-json" value="" />
-                        <button type="submit" class="btn btn-primary">Inserisci il genere</button>
+                        <button type="submit" class="btn btn-primary">Inserisci genere (e famiglia se manca)</button>
                     </form>
                 </div>
             </div>

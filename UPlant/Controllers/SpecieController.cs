@@ -1469,11 +1469,18 @@ namespace UPlant.Controllers
                 .Select(f => (Guid?)f.id)
                 .FirstOrDefaultAsync(cancellationToken);
 
+            var familyCreated = false;
             if (!familyId.HasValue)
             {
-                TempData["WfoError"] = $"La famiglia {familyName} non esiste in archivio, quindi non posso creare automaticamente il genere {genusName}.";
-                TempData["PendingWfoForm"] = input.PendingFormJson ?? string.Empty;
-                return RedirectToAction(nameof(ReviewWfo), new { id = input.SpecieId });
+                var newFamily = new Famiglie
+                {
+                    id = Guid.NewGuid(),
+                    descrizione = familyName,
+                    descrizione_en = familyName
+                };
+                _context.Famiglie.Add(newFamily);
+                familyId = newFamily.id;
+                familyCreated = true;
             }
 
             _context.Generi.Add(new Generi
@@ -1485,7 +1492,9 @@ namespace UPlant.Controllers
 
             await _context.SaveChangesAsync(cancellationToken);
             TempData["PendingWfoForm"] = input.PendingFormJson ?? string.Empty;
-            TempData["WfoSuccess"] = $"Ho inserito il genere {genusName} collegato alla famiglia {familyName}.";
+            TempData["WfoSuccess"] = familyCreated
+                ? $"Ho inserito la famiglia {familyName} e il genere {genusName}."
+                : $"Ho inserito il genere {genusName} collegato alla famiglia {familyName}.";
             return RedirectToAction(nameof(ReviewWfo), new { id = input.SpecieId });
         }
 
