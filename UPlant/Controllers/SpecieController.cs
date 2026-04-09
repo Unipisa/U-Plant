@@ -919,12 +919,11 @@ namespace UPlant.Controllers
             {
                 if (!await ApplyAcceptedNameAsync(specie, input.AcceptedFullName, input.Lsid))
                 {
-                    return Conflict(new
+                    var genusCreated = await EnsureGenusForAcceptedNameAsync(input.AcceptedFullName, input.FamilyName);
+                    if (!genusCreated || !await ApplyAcceptedNameAsync(specie, input.AcceptedFullName, input.Lsid))
                     {
-                        message = "Non riesco ad applicare automaticamente il nome accettato: apro la revisione per completare il salvataggio.",
-                        requiresReview = true,
-                        reviewUrl = Url.Action(nameof(ReviewWfo), new { id = specie.id })
-                    });
+                        return BadRequest(new { message = "Non riesco ad applicare automaticamente il nome accettato con i dati disponibili (genere o famiglia mancanti)." });
+                    }
                 }
             }
 
@@ -1946,6 +1945,13 @@ namespace UPlant.Controllers
 
             if (exactSynonym != null)
             {
+                var acceptedFromSynonym = allCandidates.FirstOrDefault(candidate =>
+                    candidate.IsAccepted &&
+                    string.Equals(
+                        SpecieScientificNameHelper.NormalizeSpacing(candidate.FullName),
+                        SpecieScientificNameHelper.NormalizeSpacing(exactSynonym.SuggestedAcceptedName),
+                        StringComparison.OrdinalIgnoreCase));
+
                 var synonymSupportCount = allCandidates.Count(candidate =>
                     !string.IsNullOrWhiteSpace(candidate.SuggestedAcceptedName) &&
                     string.Equals(
@@ -1959,8 +1965,9 @@ namespace UPlant.Controllers
                     ScientificName = row.ScientificName,
                     CurrentValidationStatus = row.CurrentValidationStatus,
                     Section = "perfectSynonym",
-                    AcceptedName = exactSynonym.SuggestedAcceptedName,
-                    Lsid = exactSynonym.Lsid,
+                    AcceptedName = acceptedFromSynonym?.FullName ?? exactSynonym.SuggestedAcceptedName,
+                    Lsid = acceptedFromSynonym?.Lsid ?? exactSynonym.Lsid,
+                    FamilyName = acceptedFromSynonym?.FamilyName ?? exactSynonym.FamilyName,
                     Notes = synonymSupportCount > 1
                         ? $"Il nome attuale esiste in WFO ma risulta sinonimo. Conferme trovate: {synonymSupportCount}."
                         : "Il nome attuale esiste in WFO ma risulta sinonimo."
@@ -3190,6 +3197,44 @@ namespace UPlant.Controllers
             return true;
         }
 
+        private async Task<bool> EnsureGenusForAcceptedNameAsync(string acceptedFullName, string familyName)
+        {
+            var parsed = SpecieScientificNameHelper.ParseWfoName(acceptedFullName);
+            var genusName = SpecieScientificNameHelper.NormalizeSpacing(parsed.Genus);
+            var normalizedFamilyName = SpecieScientificNameHelper.NormalizeSpacing(familyName);
+
+            if (string.IsNullOrWhiteSpace(genusName) || string.IsNullOrWhiteSpace(normalizedFamilyName))
+            {
+                return false;
+            }
+
+            var existingGenus = await _context.Generi.AnyAsync(g => g.descrizione == genusName);
+            if (existingGenus)
+            {
+                return true;
+            }
+
+            var familyId = await _context.Famiglie
+                .Where(f => f.descrizione == normalizedFamilyName)
+                .Select(f => (Guid?)f.id)
+                .FirstOrDefaultAsync();
+
+            if (!familyId.HasValue)
+            {
+                return false;
+            }
+
+            _context.Generi.Add(new Generi
+            {
+                id = Guid.NewGuid(),
+                descrizione = genusName,
+                famiglia = familyId.Value
+            });
+
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
         private ApplyWfoDecisionInput BuildFormInput(Specie specie, string genusName, string currentValidationStatusName)
         {
             return new ApplyWfoDecisionInput
@@ -3880,6 +3925,7 @@ namespace UPlant.Controllers
             public string Section { get; set; } = string.Empty;
             public string AcceptedName { get; set; } = string.Empty;
             public string Lsid { get; set; } = string.Empty;
+            public string FamilyName { get; set; } = string.Empty;
             public string Notes { get; set; } = string.Empty;
         }
 

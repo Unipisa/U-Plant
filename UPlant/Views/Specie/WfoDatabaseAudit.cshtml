@@ -204,6 +204,7 @@
                         const validation = escapeHtml(row.currentValidationStatus || row.CurrentValidationStatus || '-');
                         const specieId = row.specieId || row.SpecieId;
                         const lsid = escapeHtml(row.lsid || row.Lsid || '');
+                        const familyName = escapeHtml(row.familyName || row.FamilyName || '');
                         const alreadyWfo = validation === 'WFO';
                         const actionHtml = key === 'perfectAccepted'
                             ? (alreadyWfo
@@ -213,7 +214,7 @@
                                 ? (alreadyWfo
                                     ? '<span class="badge badge-success">Gia WFO</span>'
                                     : '<div class="btn-group" role="group">' +
-                                        '<button type="button" class="btn btn-success btn-sm mr-1 js-audit-apply" data-specie-id="' + specieId + '" data-lsid="' + lsid + '" data-accepted-full-name="' + acceptedName + '">OK</button>' +
+                                        '<button type="button" class="btn btn-success btn-sm mr-1 js-audit-apply" data-specie-id="' + specieId + '" data-lsid="' + lsid + '" data-accepted-full-name="' + acceptedName + '" data-family-name="' + familyName + '">OK</button>' +
                                         '<a class="btn btn-info btn-sm" href="@Url.Action("ReviewWfo", "Specie")/' + specieId + '">Rivedi</a>' +
                                       '</div>')
                                 : '<a class="btn btn-info btn-sm" href="@Url.Action("ReviewWfo", "Specie")/' + specieId + '">Rivedi</a>');
@@ -394,6 +395,7 @@
                     formData.append('SpecieId', button.dataset.specieId);
                     formData.append('Lsid', button.dataset.lsid || '');
                     formData.append('AcceptedFullName', button.dataset.acceptedFullName || '');
+                    formData.append('FamilyName', button.dataset.familyName || '');
 
                     const response = await fetch(applyForm.action, {
                         method: 'POST',
@@ -406,10 +408,6 @@
 
                     const payload = await response.json();
                     if (!response.ok) {
-                        if (payload && payload.requiresReview && payload.reviewUrl) {
-                            window.location.href = payload.reviewUrl;
-                            return;
-                        }
                         throw new Error(payload.message || 'Non sono riuscito a salvare il match WFO.');
                     }
 

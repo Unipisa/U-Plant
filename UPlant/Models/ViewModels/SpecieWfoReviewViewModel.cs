@@ -248,6 +248,8 @@ public sealed class ApplyWfoAuditAcceptedInput
     public string Lsid { get; set; } = string.Empty;
 
     public string AcceptedFullName { get; set; } = string.Empty;
+
+    public string FamilyName { get; set; } = string.Empty;
 }
 
 public sealed class StartWfoDatabaseAuditInput
