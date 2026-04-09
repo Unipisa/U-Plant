@@ -919,6 +919,28 @@ namespace UPlant.Controllers
             {
                 if (!await ApplyAcceptedNameAsync(specie, input.AcceptedFullName, input.Lsid))
                 {
+                    var parsedAccepted = SpecieScientificNameHelper.ParseWfoName(input.AcceptedFullName);
+                    var genusName = SpecieScientificNameHelper.NormalizeSpacing(parsedAccepted.Genus);
+                    var familyName = SpecieScientificNameHelper.NormalizeSpacing(input.FamilyName);
+                    var genusMissing = !string.IsNullOrWhiteSpace(genusName) &&
+                        !await _context.Generi.AnyAsync(g => g.descrizione == genusName);
+
+                    if (genusMissing && !string.IsNullOrWhiteSpace(familyName) && !input.AutoCreateMissingGenus)
+                    {
+                        return Conflict(new
+                        {
+                            requiresGenusCreation = true,
+                            genusName,
+                            familyName,
+                            message = $"Manca il genere {genusName} (famiglia {familyName}). Vuoi che lo inserisca automaticamente prima di applicare il nome accettato?"
+                        });
+                    }
+
+                    if (!input.AutoCreateMissingGenus)
+                    {
+                        return BadRequest(new { message = "Non riesco ad applicare automaticamente il nome accettato con i dati disponibili (genere o famiglia mancanti)." });
+                    }
+
                     var genusCreated = await EnsureGenusForAcceptedNameAsync(input.AcceptedFullName, input.FamilyName);
                     if (!genusCreated || !await ApplyAcceptedNameAsync(specie, input.AcceptedFullName, input.Lsid))
                     {

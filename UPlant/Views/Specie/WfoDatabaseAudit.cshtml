@@ -381,14 +381,7 @@
                 await startAudit();
             });
 
-            resultsPanel.addEventListener('click', async function (event) {
-                const button = event.target.closest('.js-audit-apply');
-                if (!button) {
-                    return;
-                }
-
-                button.disabled = true;
-
+            async function applyAuditAccepted(button, autoCreateMissingGenus) {
                 try {
                     const formData = new FormData();
                     formData.append('__RequestVerificationToken', antiForgeryToken);
@@ -396,6 +389,7 @@
                     formData.append('Lsid', button.dataset.lsid || '');
                     formData.append('AcceptedFullName', button.dataset.acceptedFullName || '');
                     formData.append('FamilyName', button.dataset.familyName || '');
+                    formData.append('AutoCreateMissingGenus', autoCreateMissingGenus ? 'true' : 'false');
 
                     const response = await fetch(applyForm.action, {
                         method: 'POST',
@@ -408,6 +402,15 @@
 
                     const payload = await response.json();
                     if (!response.ok) {
+                        if (payload && payload.requiresGenusCreation) {
+                            const confirmationMessage = payload.message || ('Manca il genere ' + (payload.genusName || '') + '. Vuoi inserirlo automaticamente?');
+                            if (confirm(confirmationMessage)) {
+                                await applyAuditAccepted(button, true);
+                                return;
+                            }
+                            button.disabled = false;
+                            return;
+                        }
                         throw new Error(payload.message || 'Non sono riuscito a salvare il match WFO.');
                     }
 
@@ -419,6 +422,16 @@
                     button.disabled = false;
                     alert(error.message);
                 }
+            }
+
+            resultsPanel.addEventListener('click', async function (event) {
+                const button = event.target.closest('.js-audit-apply');
+                if (!button) {
+                    return;
+                }
+
+                button.disabled = true;
+                await applyAuditAccepted(button, false);
             });
 
             if (cachedAuditJson) {

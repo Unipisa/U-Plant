@@ -250,6 +250,8 @@ public sealed class ApplyWfoAuditAcceptedInput
     public string AcceptedFullName { get; set; } = string.Empty;
 
     public string FamilyName { get; set; } = string.Empty;
+
+    public bool AutoCreateMissingGenus { get; set; }
 }
 
 public sealed class StartWfoDatabaseAuditInput
