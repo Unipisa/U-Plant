@@ -8,10 +8,12 @@
 <div class="card card-outline card-primary">
     <div class="card-header with-border">
         <h1 class="card-title">Elenco</h1>
-        @{
-            if (canSeeWfoImportActions)
-            {
+     
+           
                 <div class="float-right success ">
+            @{
+                if (canSeeWfoImportActions)
+                {
                     <a asp-action="BulkImportWfo" class="mr-2">
                         <span class="btn btn-info" title="Import assistito di un elenco nomi">
                             Import manuale
@@ -22,6 +24,7 @@
                             Import nomenclatura WFO
                         </span>
                     </a>
+          
                     <span class="mr-2" title="@ViewBag.WfoDatasetMessage">
                         @if (ViewBag.WfoDatasetIsLatest == true)
                         {
@@ -32,6 +35,8 @@
                             <i class="fa fa-triangle-exclamation text-warning" aria-hidden="true"></i>
                         }
                     </span>
+                }
+            }
                     <a asp-action="WfoDatabaseAudit" class="mr-2 js-wfo-audit-link">
                         <span class="btn btn-primary" id="btnWfoAuditTop" title="Verifica globale dello stato nomenclaturale rispetto a WFO">
                             Audit WFO DB
@@ -43,8 +48,7 @@
                         </span>
                     </a>
                 </div>
-            }
-        }
+        
     </div>
     <div class="card-body">
         <div class="table-responsive">
