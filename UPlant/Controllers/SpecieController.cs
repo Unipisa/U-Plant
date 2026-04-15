@@ -832,6 +832,9 @@ namespace UPlant.Controllers
 
             return View(new SpecieWfoDatabaseAuditViewModel
             {
+                OfficialDatasetLabel = string.IsNullOrWhiteSpace(cachedAudit?.OfficialDatasetLabel)
+                    ? DefaultWfoDatasetLabel
+                    : cachedAudit.OfficialDatasetLabel,
                 TotalSpeciesCount = totalSpeciesCount,
                 AlreadyWfoCount = alreadyWfoCount,
                 DefaultMaxSpeciesToProcess = Math.Min(20, Math.Max(1, totalSpeciesCount)),
@@ -3028,7 +3031,31 @@ namespace UPlant.Controllers
             }
 
             await using var stream = System.IO.File.OpenRead(cachePath);
-            return await JsonSerializer.DeserializeAsync<WfoDatabaseAuditJobSnapshot>(stream, cancellationToken: cancellationToken);
+            var snapshot = await JsonSerializer.DeserializeAsync<WfoDatabaseAuditJobSnapshot>(stream, cancellationToken: cancellationToken);
+            if (!IsAuditSnapshotCompatibleWithCurrentOfficialDataset(snapshot))
+            {
+                return null;
+            }
+
+            return snapshot;
+        }
+
+        private static bool IsAuditSnapshotCompatibleWithCurrentOfficialDataset(WfoDatabaseAuditJobSnapshot snapshot)
+        {
+            if (snapshot == null)
+            {
+                return false;
+            }
+
+            var snapshotFileName = Path.GetFileName(snapshot.OfficialDatasetFileName ?? string.Empty);
+            var currentFileName = Path.GetFileName(DefaultWfoDatasetFileName);
+            if (string.IsNullOrWhiteSpace(snapshotFileName) ||
+                !string.Equals(snapshotFileName, currentFileName, StringComparison.OrdinalIgnoreCase))
+            {
+                return false;
+            }
+
+            return true;
         }
 
         private static async Task<WfoDatabaseAuditJobSnapshot> FilterWfoDatabaseAuditSnapshotAsync(
@@ -4172,6 +4199,8 @@ namespace UPlant.Controllers
                     return new WfoDatabaseAuditJobSnapshot
                     {
                         JobId = JobId,
+                        OfficialDatasetFileName = DefaultWfoDatasetFileName,
+                        OfficialDatasetLabel = DefaultWfoDatasetLabel,
                         TotalSpecies = TotalSpecies,
                         CheckedSpecies = CheckedSpecies,
                         MaxSpeciesToProcess = Options.MaxSpeciesToProcess,
@@ -4198,6 +4227,8 @@ namespace UPlant.Controllers
         private sealed class WfoDatabaseAuditJobSnapshot
         {
             public string JobId { get; set; } = string.Empty;
+            public string OfficialDatasetFileName { get; set; } = string.Empty;
+            public string OfficialDatasetLabel { get; set; } = string.Empty;
             public int TotalSpecies { get; set; }
             public int CheckedSpecies { get; set; }
             public int MaxSpeciesToProcess { get; set; }
