@@ -224,6 +224,8 @@ public sealed class SpecieWfoNomenclatureImportSummary
 
 public sealed class SpecieWfoDatabaseAuditViewModel
 {
+    public string OfficialDatasetLabel { get; set; } = string.Empty;
+
     public int TotalSpeciesCount { get; set; }
 
     public int AlreadyWfoCount { get; set; }
