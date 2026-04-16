@@ -60,9 +60,26 @@
             var iok = data.recordIndOk;
 
             $("#avvisitotali").text(a);
-            if (t > 0) {
-                $("#avvisitotali").removeClass('label-default').addClass('label-warning')
+            if (a > 0) {
+                $("#avvisitotali")
+                    .show()
+                    .removeClass('label-default')
+                    .addClass('label-warning');
+                $("#menu-notification-bell")
+                    .removeClass('text-success')
+                    .addClass('fa-shake')
+                    .css('color', '#FFD43B');
+            } else {
+                $("#avvisitotali")
+                    .hide()
+                    .removeClass('label-warning')
+                    .addClass('label-default');
+                $("#menu-notification-bell")
+                    .removeClass('fa-shake')
+                    .addClass('text-success')
+                    .css('color', '');
             }
+
             $("#avvisitotali2").text(t);
             $("#avvisiacc").text(a);
             $("#avvisiind").text(i);
