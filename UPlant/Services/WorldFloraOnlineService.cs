@@ -65,16 +65,21 @@ public sealed class WorldFloraOnlineService : IWorldFloraOnlineService
             {
                 var mapped = ToCandidate(candidate);
                 mapped.QueryUsed = query;
-                await PopulateCandidateDetailsAsync(mapped, cancellationToken);
+
                 if (!IsRelevantCandidate(query, mapped))
                 {
                     continue;
                 }
 
-                if (result.Candidates.All(c => !string.Equals(c.WfoId, mapped.WfoId, StringComparison.OrdinalIgnoreCase)))
+                if (result.Candidates.Any(c => !string.IsNullOrWhiteSpace(c.WfoId) &&
+                                               !string.IsNullOrWhiteSpace(mapped.WfoId) &&
+                                               string.Equals(c.WfoId, mapped.WfoId, StringComparison.OrdinalIgnoreCase)))
                 {
-                    result.Candidates.Add(mapped);
+                    continue;
                 }
+
+                await PopulateCandidateDetailsAsync(mapped, cancellationToken);
+                result.Candidates.Add(mapped);
             }
         }
 
