@@ -8,7 +8,7 @@ namespace UPlant.Services;
 
 public interface IWorldFloraOnlineService
 {
-    Task<WfoCheckResult> CheckAsync(Specie specie, string genusName, CancellationToken cancellationToken = default);
+    Task<WfoCheckResult> CheckAsync(Specie specie, string genusName, CancellationToken cancellationToken = default, bool includeIucnDetails = true);
 
     Task<bool> IsAvailableAsync(CancellationToken cancellationToken = default);
 }
@@ -26,7 +26,7 @@ public sealed class WorldFloraOnlineService : IWorldFloraOnlineService
         _httpClient = httpClient;
     }
 
-    public async Task<WfoCheckResult> CheckAsync(Specie specie, string genusName, CancellationToken cancellationToken = default)
+    public async Task<WfoCheckResult> CheckAsync(Specie specie, string genusName, CancellationToken cancellationToken = default, bool includeIucnDetails = true)
     {
         var result = new WfoCheckResult
         {
@@ -49,7 +49,7 @@ public sealed class WorldFloraOnlineService : IWorldFloraOnlineService
                 var matched = ToCandidate(matchResponse.match);
                 matched.QueryUsed = query;
 
-                var details = await GetNameDetailsAsync(matched.WfoId, cancellationToken);
+                var details = await GetNameDetailsAsync(matched.WfoId, cancellationToken, includeIucnDetails);
                 matched.Lsid = details.Lsid;
                 matched.SuggestedAcceptedName = details.AcceptedName;
                 matched.IsAccepted = details.IsAccepted;
@@ -65,16 +65,21 @@ public sealed class WorldFloraOnlineService : IWorldFloraOnlineService
             {
                 var mapped = ToCandidate(candidate);
                 mapped.QueryUsed = query;
-                await PopulateCandidateDetailsAsync(mapped, cancellationToken);
+
                 if (!IsRelevantCandidate(query, mapped))
                 {
                     continue;
                 }
 
-                if (result.Candidates.All(c => !string.Equals(c.WfoId, mapped.WfoId, StringComparison.OrdinalIgnoreCase)))
+                if (result.Candidates.Any(c => !string.IsNullOrWhiteSpace(c.WfoId) &&
+                                               !string.IsNullOrWhiteSpace(mapped.WfoId) &&
+                                               string.Equals(c.WfoId, mapped.WfoId, StringComparison.OrdinalIgnoreCase)))
                 {
-                    result.Candidates.Add(mapped);
+                    continue;
                 }
+
+                await PopulateCandidateDetailsAsync(mapped, cancellationToken, includeIucnDetails);
+                result.Candidates.Add(mapped);
             }
         }
 
@@ -129,7 +134,7 @@ public sealed class WorldFloraOnlineService : IWorldFloraOnlineService
         return await JsonSerializer.DeserializeAsync<WfoMatchResponse>(stream, cancellationToken: cancellationToken);
     }
 
-    private async Task<WfoNameDetails> GetNameDetailsAsync(string wfoId, CancellationToken cancellationToken)
+    private async Task<WfoNameDetails> GetNameDetailsAsync(string wfoId, CancellationToken cancellationToken, bool includeIucnDetails)
     {
         var url = string.Format(StableDataEndpoint, Uri.EscapeDataString(wfoId));
         using var response = await _httpClient.GetAsync(url, cancellationToken);
@@ -177,7 +182,10 @@ public sealed class WorldFloraOnlineService : IWorldFloraOnlineService
             details.Lsid = ExtractLsidFromLiterals(doc.RootElement);
         }
 
-        await PopulateIucnDetailsAsync(details, wfoId, cancellationToken);
+        if (includeIucnDetails)
+        {
+            await PopulateIucnDetailsAsync(details, wfoId, cancellationToken);
+        }
 
         if (!details.IsAccepted && !string.IsNullOrWhiteSpace(details.PreferredUsageUri))
         {
@@ -286,14 +294,14 @@ public sealed class WorldFloraOnlineService : IWorldFloraOnlineService
         };
     }
 
-    private async Task PopulateCandidateDetailsAsync(WfoCandidate candidate, CancellationToken cancellationToken)
+    private async Task PopulateCandidateDetailsAsync(WfoCandidate candidate, CancellationToken cancellationToken, bool includeIucnDetails)
     {
         if (string.IsNullOrWhiteSpace(candidate.WfoId))
         {
             return;
         }
 
-        var details = await GetNameDetailsAsync(candidate.WfoId, cancellationToken);
+        var details = await GetNameDetailsAsync(candidate.WfoId, cancellationToken, includeIucnDetails);
         candidate.Lsid = details.Lsid;
         candidate.IsAccepted = details.IsAccepted;
         candidate.SuggestedAcceptedName = details.AcceptedName;

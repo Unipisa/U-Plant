@@ -1964,7 +1964,7 @@ namespace UPlant.Controllers
                             };
 
                             using var timeoutCts = new CancellationTokenSource(TimeSpan.FromSeconds(20));
-                            var checkResult = await wfoService.CheckAsync(fakeSpecie, row.GenusName, timeoutCts.Token);
+                            var checkResult = await wfoService.CheckAsync(fakeSpecie, row.GenusName, timeoutCts.Token, includeIucnDetails: false);
                             var item = BuildWfoDatabaseAuditItem(row, checkResult);
                             consecutiveServiceFailures = 0;
                             job.ReportItem(item, ShouldKeepWfoDatabaseAuditItem(item, job.Options));
