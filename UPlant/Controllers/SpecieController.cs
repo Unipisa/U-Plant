@@ -3477,13 +3477,21 @@ namespace UPlant.Controllers
         private static string ResolveValidationStatusName(ApplyWfoDecisionInput input)
         {
             var requestedStatus = SpecieScientificNameHelper.NormalizeSpacing(input.ValidationStatusName);
+            var actionType = SpecieScientificNameHelper.NormalizeSpacing(input.ActionType);
+            var selectedWfoId = SpecieScientificNameHelper.NormalizeSpacing(input.SelectedWfoId);
+
+            if (string.Equals(actionType, "save_review", StringComparison.OrdinalIgnoreCase))
+            {
+                return string.IsNullOrWhiteSpace(selectedWfoId) ? "A.A." : "WFO";
+            }
+
             if (!string.IsNullOrWhiteSpace(requestedStatus))
             {
                 return requestedStatus;
             }
 
-            return string.Equals(input.ActionType, "accept_suggested", StringComparison.OrdinalIgnoreCase) ||
-                   string.Equals(input.ActionType, "keep_current", StringComparison.OrdinalIgnoreCase)
+            return string.Equals(actionType, "accept_suggested", StringComparison.OrdinalIgnoreCase) ||
+                   string.Equals(actionType, "keep_current", StringComparison.OrdinalIgnoreCase)
                 ? "WFO"
                 : "A.A.";
         }
