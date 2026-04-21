@@ -268,15 +268,15 @@ public sealed class StartWfoDatabaseAuditInput
 {
     public int MaxSpeciesToProcess { get; set; } = 20;
 
-    public bool IncludePerfectAccepted { get; set; } = true;
+    public bool IncludePerfectAccepted { get; set; }
 
-    public bool IncludePerfectSynonym { get; set; } = true;
+    public bool IncludePerfectSynonym { get; set; }
 
-    public bool IncludeAmbiguous { get; set; } = true;
+    public bool IncludeAmbiguous { get; set; }
 
-    public bool IncludeNoMatch { get; set; } = true;
+    public bool IncludeNoMatch { get; set; }
 
-    public bool IncludeUnchecked { get; set; } = true;
+    public bool IncludeUnchecked { get; set; }
 
-    public bool IncludeUnplaced { get; set; } = true;
+    public bool IncludeUnplaced { get; set; }
 }
