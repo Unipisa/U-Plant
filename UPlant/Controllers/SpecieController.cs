@@ -858,7 +858,7 @@ namespace UPlant.Controllers
             NormalizeWfoAuditInput(input);
 
             var totalPendingSpeciesCount = await CountPendingWfoAuditSpeciesAsync(_context, cancellationToken);
-            var totalSpeciesCount = Math.Min(totalPendingSpeciesCount, input.MaxSpeciesToProcess);
+            var totalSpeciesCount = totalPendingSpeciesCount;
 
             if (!force)
             {
@@ -867,7 +867,8 @@ namespace UPlant.Controllers
                 if (cachedAudit != null &&
                     SnapshotMatchesAuditInput(cachedAudit, input) &&
                     cachedAudit.TotalSpecies == totalSpeciesCount &&
-                    GetWfoDatabaseAuditSnapshotCount(cachedAudit) >= totalSpeciesCount)
+                    (GetWfoDatabaseAuditSnapshotCount(cachedAudit) >= input.MaxSpeciesToProcess ||
+                     (cachedAudit.Status == "completed" && cachedAudit.CheckedSpecies >= cachedAudit.TotalSpecies)))
                 {
                     return Json(new
                     {
@@ -1913,7 +1914,7 @@ namespace UPlant.Controllers
 
                 job.MarkRunning("Lettura specie database");
 
-                while (processed < job.TotalSpecies)
+                while (processed < job.TotalSpecies && !job.HasReachedTargetResults())
                 {
                     var remaining = job.TotalSpecies - processed;
                     var speciesBatch = await context.Specie
@@ -1945,7 +1946,7 @@ namespace UPlant.Controllers
                         break;
                     }
 
-                    job.MarkRunning($"Analisi nominativi ({Math.Min(processed + speciesBatch.Count, job.TotalSpecies)}/{job.TotalSpecies})");
+                    job.MarkRunning($"Analisi nominativi (scansionate {Math.Min(processed + speciesBatch.Count, job.TotalSpecies)} di {job.TotalSpecies} specie)");
 
                     foreach (var row in speciesBatch)
                     {
@@ -1988,6 +1989,11 @@ namespace UPlant.Controllers
                         if (job.CheckedSpecies < job.TotalSpecies)
                         {
                             await Task.Delay(interRequestDelay, CancellationToken.None);
+                        }
+
+                        if (job.HasReachedTargetResults())
+                        {
+                            break;
                         }
                     }
 
@@ -3150,9 +3156,16 @@ namespace UPlant.Controllers
             snapshot.NoMatch = snapshot.NoMatch.Where(x => pendingSet.Contains(x.SpecieId)).ToList();
             snapshot.TotalSpecies = pendingSet.Count;
             snapshot.CheckedSpecies = Math.Min(GetWfoDatabaseAuditSnapshotCount(snapshot), snapshot.TotalSpecies);
+            snapshot.CollectedResults = GetWfoDatabaseAuditSnapshotCount(snapshot);
+            if (snapshot.TargetResults <= 0)
+            {
+                snapshot.TargetResults = Math.Max(1, snapshot.MaxSpeciesToProcess);
+            }
             snapshot.Percent = snapshot.TotalSpecies <= 0
                 ? 100
-                : Math.Min(100, (int)Math.Round(GetWfoDatabaseAuditSnapshotCount(snapshot) * 100d / snapshot.TotalSpecies));
+                : (snapshot.Status == "completed"
+                    ? 100
+                    : Math.Min(100, (int)Math.Round(snapshot.CollectedResults * 100d / Math.Max(1, snapshot.TargetResults))));
 
             return snapshot;
         }
@@ -4154,6 +4167,16 @@ namespace UPlant.Controllers
             public int TotalSpecies { get; }
             public StartWfoDatabaseAuditInput Options { get; }
             public int CheckedSpecies { get; private set; }
+            public int CollectedResultsCount
+            {
+                get
+                {
+                    lock (_sync)
+                    {
+                        return _perfectAccepted.Count + _perfectSynonym.Count + _ambiguous.Count + _unchecked.Count + _unplaced.Count + _noMatch.Count;
+                    }
+                }
+            }
             public string Status { get; private set; }
             public string Stage { get; private set; }
             public string CurrentItem { get; private set; } = string.Empty;
@@ -4236,6 +4259,16 @@ namespace UPlant.Controllers
                 }
             }
 
+            public bool HasReachedTargetResults()
+            {
+                lock (_sync)
+                {
+                    var targetResults = Math.Max(1, Options.MaxSpeciesToProcess);
+                    var collectedResults = _perfectAccepted.Count + _perfectSynonym.Count + _ambiguous.Count + _unchecked.Count + _unplaced.Count + _noMatch.Count;
+                    return collectedResults >= targetResults;
+                }
+            }
+
             public void Complete()
             {
                 lock (_sync)
@@ -4263,7 +4296,9 @@ namespace UPlant.Controllers
                 {
                     var percent = TotalSpecies <= 0
                         ? (Status == "completed" ? 100 : 0)
-                        : Math.Min(100, (int)Math.Round(CheckedSpecies * 100d / TotalSpecies));
+                        : (Status == "completed"
+                            ? 100
+                            : Math.Min(100, (int)Math.Round(CollectedResultsCount * 100d / Math.Max(1, Options.MaxSpeciesToProcess))));
 
                     return new WfoDatabaseAuditJobSnapshot
                     {
@@ -4272,6 +4307,8 @@ namespace UPlant.Controllers
                         OfficialDatasetLabel = DefaultWfoDatasetLabel,
                         TotalSpecies = TotalSpecies,
                         CheckedSpecies = CheckedSpecies,
+                        TargetResults = Math.Max(1, Options.MaxSpeciesToProcess),
+                        CollectedResults = CollectedResultsCount,
                         MaxSpeciesToProcess = Options.MaxSpeciesToProcess,
                         IncludePerfectAccepted = Options.IncludePerfectAccepted,
                         IncludePerfectSynonym = Options.IncludePerfectSynonym,
@@ -4304,6 +4341,8 @@ namespace UPlant.Controllers
             public string OfficialDatasetLabel { get; set; } = string.Empty;
             public int TotalSpecies { get; set; }
             public int CheckedSpecies { get; set; }
+            public int TargetResults { get; set; }
+            public int CollectedResults { get; set; }
             public int MaxSpeciesToProcess { get; set; }
             public bool IncludePerfectAccepted { get; set; }
             public bool IncludePerfectSynonym { get; set; }
