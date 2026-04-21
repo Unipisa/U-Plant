@@ -230,6 +230,10 @@ public sealed class SpecieWfoDatabaseAuditViewModel
 
     public int AlreadyWfoCount { get; set; }
 
+    public int AaSpeciesCount { get; set; }
+
+    public int NdSpeciesCount { get; set; }
+
     public int DefaultMaxSpeciesToProcess { get; set; } = 20;
 
     public bool DefaultIncludePerfectAccepted { get; set; } = true;
