@@ -240,6 +240,10 @@ public sealed class SpecieWfoDatabaseAuditViewModel
 
     public bool DefaultIncludeNoMatch { get; set; } = true;
 
+    public bool DefaultIncludeUnchecked { get; set; } = true;
+
+    public bool DefaultIncludeUnplaced { get; set; } = true;
+
     public bool HasCachedAudit { get; set; }
 
     public DateTime? CachedAuditUpdatedAtUtc { get; set; }
@@ -271,4 +275,8 @@ public sealed class StartWfoDatabaseAuditInput
     public bool IncludeAmbiguous { get; set; } = true;
 
     public bool IncludeNoMatch { get; set; } = true;
+
+    public bool IncludeUnchecked { get; set; } = true;
+
+    public bool IncludeUnplaced { get; set; } = true;
 }
