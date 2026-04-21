@@ -2048,7 +2048,7 @@ namespace UPlant.Controllers
             if (exactSynonym != null)
             {
                 var placement = exactSynonym.Placement ?? string.Empty;
-                var hasAcceptedSuggestion = !string.IsNullOrWhiteSpace(exactSynonym.SuggestedAcceptedName);
+                var hasResolvedAcceptedName = exactSynonym.HasResolvedAcceptedName;
                 var looksUnchecked = placement.Contains("unchecked", StringComparison.OrdinalIgnoreCase);
                 var looksUnplaced = placement.Contains("unplaced", StringComparison.OrdinalIgnoreCase);
 
@@ -2069,7 +2069,7 @@ namespace UPlant.Controllers
                     };
                 }
 
-                if (!hasAcceptedSuggestion)
+                if (!hasResolvedAcceptedName)
                 {
                     return new WfoDatabaseAuditItem
                     {
@@ -4227,7 +4227,7 @@ namespace UPlant.Controllers
                     UpdatedAtUtc = DateTime.UtcNow;
                 }
 
-                if (CheckedSpecies <= 10 || CheckedSpecies % 100 == 0)
+                if (CheckedSpecies <= 50 || CheckedSpecies % 100 == 0)
                 {
                     var outcome = item.Section == "error"
                         ? $"errore ({item.Notes})"

@@ -53,6 +53,7 @@ public sealed class WorldFloraOnlineService : IWorldFloraOnlineService
                 matched.Lsid = details.Lsid;
                 matched.SuggestedAcceptedName = details.AcceptedName;
                 matched.IsAccepted = details.IsAccepted;
+                matched.HasResolvedAcceptedName = details.HasResolvedAcceptedName;
                 matched.IucnGlobalCode = details.IucnGlobalCode;
                 matched.IucnGlobalLabel = details.IucnGlobalLabel;
 
@@ -191,6 +192,7 @@ public sealed class WorldFloraOnlineService : IWorldFloraOnlineService
         {
             var acceptedDetails = await ResolveAcceptedNameFromUsageAsync(details.PreferredUsageUri, cancellationToken);
             details.AcceptedName = acceptedDetails.FullName;
+            details.HasResolvedAcceptedName = !string.IsNullOrWhiteSpace(acceptedDetails.FullName);
             if (string.IsNullOrWhiteSpace(details.Lsid))
             {
                 details.Lsid = acceptedDetails.Lsid;
@@ -305,6 +307,7 @@ public sealed class WorldFloraOnlineService : IWorldFloraOnlineService
         candidate.Lsid = details.Lsid;
         candidate.IsAccepted = details.IsAccepted;
         candidate.SuggestedAcceptedName = details.AcceptedName;
+        candidate.HasResolvedAcceptedName = details.HasResolvedAcceptedName;
         candidate.IucnGlobalCode = details.IucnGlobalCode;
         candidate.IucnGlobalLabel = details.IucnGlobalLabel;
         if (string.IsNullOrWhiteSpace(candidate.Rank))
@@ -599,6 +602,8 @@ public sealed class WorldFloraOnlineService : IWorldFloraOnlineService
 
         public string PreferredUsageUri { get; set; } = string.Empty;
 
+        public bool HasResolvedAcceptedName { get; set; }
+
         public string Rank { get; set; } = string.Empty;
 
         public string IucnGlobalCode { get; set; } = string.Empty;
@@ -668,6 +673,8 @@ public sealed class WfoCandidate
     public string Lsid { get; set; } = string.Empty;
 
     public bool IsAccepted { get; set; }
+
+    public bool HasResolvedAcceptedName { get; set; }
 
     public string SuggestedAcceptedName { get; set; } = string.Empty;
 
