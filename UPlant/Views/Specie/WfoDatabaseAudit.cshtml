@@ -48,11 +48,6 @@
                         <label class="form-check-label" for="IncludeAmbiguous">Piu opzioni</label>
                     </div>
                     <div class="form-check form-check-inline">
-                        <input type="hidden" name="IncludeNoMatch" value="false" />
-                        <input class="form-check-input" type="checkbox" id="IncludeNoMatch" name="IncludeNoMatch" value="true" @(Model.DefaultIncludeNoMatch ? "checked" : null) />
-                        <label class="form-check-label" for="IncludeNoMatch">Nessun match</label>
-                    </div>
-                    <div class="form-check form-check-inline">
                         <input type="hidden" name="IncludeUnchecked" value="false" />
                         <input class="form-check-input" type="checkbox" id="IncludeUnchecked" name="IncludeUnchecked" value="true" @(Model.DefaultIncludeUnchecked ? "checked" : null) />
                         <label class="form-check-label" for="IncludeUnchecked">Unchecked</label>
@@ -61,6 +56,11 @@
                         <input type="hidden" name="IncludeUnplaced" value="false" />
                         <input class="form-check-input" type="checkbox" id="IncludeUnplaced" name="IncludeUnplaced" value="true" @(Model.DefaultIncludeUnplaced ? "checked" : null) />
                         <label class="form-check-label" for="IncludeUnplaced">Unplaced</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input type="hidden" name="IncludeNoMatch" value="false" />
+                        <input class="form-check-input" type="checkbox" id="IncludeNoMatch" name="IncludeNoMatch" value="true" @(Model.DefaultIncludeNoMatch ? "checked" : null) />
+                        <label class="form-check-label" for="IncludeNoMatch">Nessun match</label>
                     </div>
                 </div>
             </div>
@@ -277,14 +277,14 @@
                 if (isSectionEnabled(status, 'includeAmbiguous', 'IncludeAmbiguous')) {
                     html += renderSection('3. Nomi per cui WFO propone piu opzioni', 'ambiguous', status.ambiguous || status.Ambiguous);
                 }
-                if (isSectionEnabled(status, 'includeNoMatch', 'IncludeNoMatch')) {
-                    html += renderSection('4. Nomi che non fanno match', 'noMatch', status.noMatch || status.NoMatch);
-                }
                 if (isSectionEnabled(status, 'includeUnchecked', 'IncludeUnchecked')) {
-                    html += renderSection('5. Nomi presenti in WFO con stato unchecked', 'unchecked', status.unchecked || status.Unchecked);
+                    html += renderSection('4. Nomi presenti in WFO con stato unchecked', 'unchecked', status.unchecked || status.Unchecked);
                 }
                 if (isSectionEnabled(status, 'includeUnplaced', 'IncludeUnplaced')) {
-                    html += renderSection('6. Nomi presenti in WFO con stato unplaced', 'unplaced', status.unplaced || status.Unplaced);
+                    html += renderSection('5. Nomi presenti in WFO con stato unplaced', 'unplaced', status.unplaced || status.Unplaced);
+                }
+                if (isSectionEnabled(status, 'includeNoMatch', 'IncludeNoMatch')) {
+                    html += renderSection('6. Nomi che non fanno match', 'noMatch', status.noMatch || status.NoMatch);
                 }
 
                 resultsPanel.innerHTML = html || '<div class="alert alert-info">Nessun gruppo selezionato per la visualizzazione.</div>';

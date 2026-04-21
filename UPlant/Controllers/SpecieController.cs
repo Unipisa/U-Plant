@@ -2076,11 +2076,11 @@ namespace UPlant.Controllers
                         SpecieId = row.Id,
                         ScientificName = row.ScientificName,
                         CurrentValidationStatus = row.CurrentValidationStatus,
-                        Section = "ambiguous",
+                        Section = "unchecked",
                         AcceptedName = exactSynonym.FullName,
                         Lsid = exactSynonym.Lsid,
                         FamilyName = exactSynonym.FamilyName,
-                        Notes = "Il nome esiste in WFO ma non ha un accepted name risolto."
+                        Notes = "Il nome esiste in WFO ma non ha un accepted name risolto (trattato come unchecked)."
                     };
                 }
 
