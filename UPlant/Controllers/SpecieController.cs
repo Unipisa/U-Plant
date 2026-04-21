@@ -347,8 +347,9 @@ namespace UPlant.Controllers
                     return NotFound();
                 }
 
+                var nomenclatureChanged = HasNomenclatureChanges(existing, specie);
+
                 existing.genere = specie.genere;
-                existing.validazione_tassonomica = specie.validazione_tassonomica;
                 existing.nome = specie.nome;
                 existing.autori = specie.autori;
                 existing.regno = specie.regno;
@@ -366,7 +367,10 @@ namespace UPlant.Controllers
                 existing.iucn_italia = specie.iucn_italia;
                 existing.cites = specie.cites;
                 existing.lsid = specie.lsid;
-                existing.validazione_tassonomica = await EnsureDefaultValidazioneTassonomicaAsync("A.A.");
+                if (nomenclatureChanged)
+                {
+                    existing.validazione_tassonomica = await EnsureDefaultValidazioneTassonomicaAsync("A.A.");
+                }
                 existing.nome_scientifico = await ComposeScientificNameAsync(specie.genere, specie);
                 existing.data_inserimento = DateTime.Now;
 
@@ -3268,6 +3272,27 @@ namespace UPlant.Controllers
                 .FirstOrDefaultAsync();
 
             return SpecieScientificNameHelper.Compose(genus ?? string.Empty, specie.nome, specie.autori, specie.subspecie, specie.autorisub, specie.varieta, specie.autorivar, specie.cult, specie.autoricult);
+        }
+
+        private static bool HasNomenclatureChanges(Specie existing, Specie updated)
+        {
+            return existing.genere != updated.genere
+                || !StringFieldEquals(existing.nome, updated.nome)
+                || !StringFieldEquals(existing.autori, updated.autori)
+                || !StringFieldEquals(existing.subspecie, updated.subspecie)
+                || !StringFieldEquals(existing.autorisub, updated.autorisub)
+                || !StringFieldEquals(existing.varieta, updated.varieta)
+                || !StringFieldEquals(existing.autorivar, updated.autorivar)
+                || !StringFieldEquals(existing.cult, updated.cult)
+                || !StringFieldEquals(existing.autoricult, updated.autoricult)
+                || !StringFieldEquals(existing.lsid, updated.lsid);
+        }
+
+        private static bool StringFieldEquals(string? left, string? right)
+        {
+            var normalizedLeft = SpecieScientificNameHelper.NormalizeSpacing(left) ?? string.Empty;
+            var normalizedRight = SpecieScientificNameHelper.NormalizeSpacing(right) ?? string.Empty;
+            return string.Equals(normalizedLeft, normalizedRight, StringComparison.Ordinal);
         }
 
         private async Task<Guid?> GetCurrentUserOrganizationAsync()
