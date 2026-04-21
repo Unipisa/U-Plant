@@ -9,7 +9,7 @@
             <strong>Riferimento audit:</strong> dataset ufficiale WFO Plant List @Model.OfficialDatasetLabel.
         </div>
         <p>Questo controllo analizza le specie ancora da validare e divide i risultati in gruppi utili alla revisione.</p>
-        <p>Puoi limitare quante righe elaborare in questo run e scegliere quali esiti vuoi raccogliere.</p>
+        <p>Puoi scegliere quanti risultati vuoi ottenere in questo run e quali esiti raccogliere.</p>
 
         <div class="alert alert-info">
             <div><strong>Specie da controllare:</strong> @Model.TotalSpeciesCount</div>
@@ -25,9 +25,9 @@
             <div class="row">
                 <div class="col-md-3">
                     <div class="form-group">
-                        <label for="MaxSpeciesToProcess">Righe da processare</label>
+                        <label for="MaxSpeciesToProcess">Risultati da ottenere</label>
                         <input id="MaxSpeciesToProcess" name="MaxSpeciesToProcess" type="number" min="1" max="500" value="@Model.DefaultMaxSpeciesToProcess" class="form-control" />
-                        <small class="form-text text-muted">Consigliato: 20 per volta.</small>
+                        <small class="form-text text-muted">Consigliato: 20 risultati per volta.</small>
                     </div>
                 </div>
                 <div class="col-md-9">
@@ -69,7 +69,7 @@
                 <div class="progress mt-3">
                     <div id="wfoAuditProgressBar" class="progress-bar progress-bar-striped active" role="progressbar" style="width:0%">0%</div>
                 </div>
-                <div class="mt-2 small" id="wfoAuditCounters" style="color:#111;">Controllate 0 di @Model.TotalSpeciesCount specie</div>
+                <div class="mt-2 small" id="wfoAuditCounters" style="color:#111;">Scansionate 0 specie, trovati 0 risultati su @Model.DefaultMaxSpeciesToProcess richiesti</div>
             </div>
         </div>
 
@@ -292,11 +292,13 @@
                 }
 
                 const status = await response.json();
+                const targetResults = status.targetResults || status.TargetResults || status.maxSpeciesToProcess || status.MaxSpeciesToProcess || 0;
+                const collectedResults = status.collectedResults || status.CollectedResults || 0;
                 progressPanel.style.display = '';
                 recentPanel.style.display = '';
                 stageEl.textContent = status.stage || status.Stage || 'In esecuzione';
                 currentItemEl.textContent = status.currentItem || status.CurrentItem || '-';
-                countersEl.textContent = 'Controllate ' + (status.checkedSpecies || status.CheckedSpecies || 0) + ' di ' + (status.totalSpecies || status.TotalSpecies || 0) + ' specie';
+                countersEl.textContent = 'Scansionate ' + (status.checkedSpecies || status.CheckedSpecies || 0) + ' specie, trovati ' + collectedResults + ' risultati su ' + targetResults + ' richiesti';
                 setProgress(status.percent || status.Percent || 0);
                 renderRecentMessages(status.recentMessages || status.RecentMessages);
 
@@ -330,7 +332,7 @@
                 errorPanel.style.display = 'none';
                 stageEl.textContent = 'Avvio audit';
                 currentItemEl.textContent = '-';
-                countersEl.textContent = 'Controllate 0 di @Model.TotalSpeciesCount specie';
+                countersEl.textContent = 'Scansionate 0 specie, trovati 0 risultati su ' + (document.getElementById('MaxSpeciesToProcess').value || '@Model.DefaultMaxSpeciesToProcess') + ' richiesti';
                 setProgress(0);
                 renderRecentMessages(['Preparazione audit globale WFO...']);
 
@@ -350,11 +352,13 @@
                     }
 
                     if (payload.cached && payload.snapshot) {
+                        const targetResults = payload.snapshot.targetResults || payload.snapshot.TargetResults || payload.snapshot.maxSpeciesToProcess || payload.snapshot.MaxSpeciesToProcess || 0;
+                        const collectedResults = payload.snapshot.collectedResults || payload.snapshot.CollectedResults || 0;
                         progressPanel.style.display = '';
                         recentPanel.style.display = '';
                         stageEl.textContent = payload.snapshot.stage || payload.snapshot.Stage || 'Audit completato';
                         currentItemEl.textContent = payload.snapshot.currentItem || payload.snapshot.CurrentItem || '-';
-                        countersEl.textContent = 'Controllate ' + (payload.snapshot.checkedSpecies || payload.snapshot.CheckedSpecies || 0) + ' di ' + (payload.snapshot.totalSpecies || payload.snapshot.TotalSpecies || 0) + ' specie';
+                        countersEl.textContent = 'Scansionate ' + (payload.snapshot.checkedSpecies || payload.snapshot.CheckedSpecies || 0) + ' specie, trovati ' + collectedResults + ' risultati su ' + targetResults + ' richiesti';
                         setProgress(payload.snapshot.percent || payload.snapshot.Percent || 100);
                         renderRecentMessages(payload.snapshot.recentMessages || payload.snapshot.RecentMessages);
                         renderResults(payload.snapshot);
@@ -460,7 +464,9 @@
                 recentPanel.style.display = '';
                 stageEl.textContent = cachedAuditJson.stage || cachedAuditJson.Stage || 'Audit completato';
                 currentItemEl.textContent = cachedAuditJson.currentItem || cachedAuditJson.CurrentItem || '-';
-                countersEl.textContent = 'Controllate ' + (cachedAuditJson.checkedSpecies || cachedAuditJson.CheckedSpecies || 0) + ' di ' + (cachedAuditJson.totalSpecies || cachedAuditJson.TotalSpecies || 0) + ' specie';
+                const targetResults = cachedAuditJson.targetResults || cachedAuditJson.TargetResults || cachedAuditJson.maxSpeciesToProcess || cachedAuditJson.MaxSpeciesToProcess || 0;
+                const collectedResults = cachedAuditJson.collectedResults || cachedAuditJson.CollectedResults || 0;
+                countersEl.textContent = 'Scansionate ' + (cachedAuditJson.checkedSpecies || cachedAuditJson.CheckedSpecies || 0) + ' specie, trovati ' + collectedResults + ' risultati su ' + targetResults + ' richiesti';
                 setProgress(cachedAuditJson.percent || cachedAuditJson.Percent || 100);
                 renderRecentMessages(cachedAuditJson.recentMessages || cachedAuditJson.RecentMessages);
                 renderResults(cachedAuditJson);
