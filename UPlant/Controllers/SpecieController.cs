@@ -842,6 +842,8 @@ namespace UPlant.Controllers
                 DefaultIncludePerfectSynonym = true,
                 DefaultIncludeAmbiguous = true,
                 DefaultIncludeNoMatch = true,
+                DefaultIncludeUnchecked = true,
+                DefaultIncludeUnplaced = true,
                 HasCachedAudit = cachedAudit != null,
                 CachedAuditUpdatedAtUtc = cachedAudit?.UpdatedAtUtc,
                 CachedAuditJson = cachedAudit == null ? string.Empty : JsonSerializer.Serialize(cachedAudit)
@@ -2045,6 +2047,43 @@ namespace UPlant.Controllers
 
             if (exactSynonym != null)
             {
+                var placement = exactSynonym.Placement ?? string.Empty;
+                var hasAcceptedSuggestion = !string.IsNullOrWhiteSpace(exactSynonym.SuggestedAcceptedName);
+                var looksUnchecked = placement.Contains("unchecked", StringComparison.OrdinalIgnoreCase);
+                var looksUnplaced = placement.Contains("unplaced", StringComparison.OrdinalIgnoreCase);
+
+                if (looksUnchecked || looksUnplaced)
+                {
+                    return new WfoDatabaseAuditItem
+                    {
+                        SpecieId = row.Id,
+                        ScientificName = row.ScientificName,
+                        CurrentValidationStatus = row.CurrentValidationStatus,
+                        Section = looksUnchecked ? "unchecked" : "unplaced",
+                        AcceptedName = exactSynonym.FullName,
+                        Lsid = exactSynonym.Lsid,
+                        FamilyName = exactSynonym.FamilyName,
+                        Notes = looksUnchecked
+                            ? "Il nome esiste in WFO ma e marcato come unchecked."
+                            : "Il nome esiste in WFO ma e marcato come unplaced."
+                    };
+                }
+
+                if (!hasAcceptedSuggestion)
+                {
+                    return new WfoDatabaseAuditItem
+                    {
+                        SpecieId = row.Id,
+                        ScientificName = row.ScientificName,
+                        CurrentValidationStatus = row.CurrentValidationStatus,
+                        Section = "ambiguous",
+                        AcceptedName = exactSynonym.FullName,
+                        Lsid = exactSynonym.Lsid,
+                        FamilyName = exactSynonym.FamilyName,
+                        Notes = "Il nome esiste in WFO ma non ha un accepted name risolto."
+                    };
+                }
+
                 var acceptedFromSynonym = allCandidates.FirstOrDefault(candidate =>
                     candidate.IsAccepted &&
                     string.Equals(
@@ -2178,12 +2217,16 @@ namespace UPlant.Controllers
             if (!input.IncludePerfectAccepted &&
                 !input.IncludePerfectSynonym &&
                 !input.IncludeAmbiguous &&
-                !input.IncludeNoMatch)
+                !input.IncludeNoMatch &&
+                !input.IncludeUnchecked &&
+                !input.IncludeUnplaced)
             {
                 input.IncludePerfectAccepted = true;
                 input.IncludePerfectSynonym = true;
                 input.IncludeAmbiguous = true;
                 input.IncludeNoMatch = true;
+                input.IncludeUnchecked = true;
+                input.IncludeUnplaced = true;
             }
         }
 
@@ -2194,6 +2237,8 @@ namespace UPlant.Controllers
                 "perfectAccepted" => options.IncludePerfectAccepted,
                 "perfectSynonym" => options.IncludePerfectSynonym,
                 "ambiguous" => options.IncludeAmbiguous,
+                "unchecked" => options.IncludeUnchecked,
+                "unplaced" => options.IncludeUnplaced,
                 "error" => options.IncludeNoMatch,
                 _ => options.IncludeNoMatch
             };
@@ -2205,7 +2250,9 @@ namespace UPlant.Controllers
                 snapshot.IncludePerfectAccepted == input.IncludePerfectAccepted &&
                 snapshot.IncludePerfectSynonym == input.IncludePerfectSynonym &&
                 snapshot.IncludeAmbiguous == input.IncludeAmbiguous &&
-                snapshot.IncludeNoMatch == input.IncludeNoMatch;
+                snapshot.IncludeNoMatch == input.IncludeNoMatch &&
+                snapshot.IncludeUnchecked == input.IncludeUnchecked &&
+                snapshot.IncludeUnplaced == input.IncludeUnplaced;
         }
 
         private static void CleanupCompletedWfoAuditJobs()
@@ -3004,7 +3051,7 @@ namespace UPlant.Controllers
                 return 0;
             }
 
-            return snapshot.PerfectAccepted.Count + snapshot.PerfectSynonym.Count + snapshot.Ambiguous.Count + snapshot.NoMatch.Count;
+            return snapshot.PerfectAccepted.Count + snapshot.PerfectSynonym.Count + snapshot.Ambiguous.Count + snapshot.Unchecked.Count + snapshot.Unplaced.Count + snapshot.NoMatch.Count;
         }
 
         private static async Task<int> CountPendingWfoAuditSpeciesAsync(Entities context, CancellationToken cancellationToken)
@@ -3072,6 +3119,8 @@ namespace UPlant.Controllers
                 .Select(x => x.SpecieId)
                 .Concat(snapshot.PerfectSynonym.Select(x => x.SpecieId))
                 .Concat(snapshot.Ambiguous.Select(x => x.SpecieId))
+                .Concat(snapshot.Unchecked.Select(x => x.SpecieId))
+                .Concat(snapshot.Unplaced.Select(x => x.SpecieId))
                 .Concat(snapshot.NoMatch.Select(x => x.SpecieId))
                 .Where(x => x != Guid.Empty)
                 .Distinct()
@@ -3096,6 +3145,8 @@ namespace UPlant.Controllers
             snapshot.PerfectAccepted = snapshot.PerfectAccepted.Where(x => pendingSet.Contains(x.SpecieId)).ToList();
             snapshot.PerfectSynonym = snapshot.PerfectSynonym.Where(x => pendingSet.Contains(x.SpecieId)).ToList();
             snapshot.Ambiguous = snapshot.Ambiguous.Where(x => pendingSet.Contains(x.SpecieId)).ToList();
+            snapshot.Unchecked = snapshot.Unchecked.Where(x => pendingSet.Contains(x.SpecieId)).ToList();
+            snapshot.Unplaced = snapshot.Unplaced.Where(x => pendingSet.Contains(x.SpecieId)).ToList();
             snapshot.NoMatch = snapshot.NoMatch.Where(x => pendingSet.Contains(x.SpecieId)).ToList();
             snapshot.TotalSpecies = pendingSet.Count;
             snapshot.CheckedSpecies = Math.Min(GetWfoDatabaseAuditSnapshotCount(snapshot), snapshot.TotalSpecies);
@@ -4076,6 +4127,8 @@ namespace UPlant.Controllers
             private readonly List<WfoDatabaseAuditItem> _perfectAccepted = new();
             private readonly List<WfoDatabaseAuditItem> _perfectSynonym = new();
             private readonly List<WfoDatabaseAuditItem> _ambiguous = new();
+            private readonly List<WfoDatabaseAuditItem> _unchecked = new();
+            private readonly List<WfoDatabaseAuditItem> _unplaced = new();
             private readonly List<WfoDatabaseAuditItem> _noMatch = new();
 
             public WfoDatabaseAuditJobState(string jobId, int totalSpecies, StartWfoDatabaseAuditInput options)
@@ -4088,7 +4141,9 @@ namespace UPlant.Controllers
                     IncludePerfectAccepted = options.IncludePerfectAccepted,
                     IncludePerfectSynonym = options.IncludePerfectSynonym,
                     IncludeAmbiguous = options.IncludeAmbiguous,
-                    IncludeNoMatch = options.IncludeNoMatch
+                    IncludeNoMatch = options.IncludeNoMatch,
+                    IncludeUnchecked = options.IncludeUnchecked,
+                    IncludeUnplaced = options.IncludeUnplaced
                 };
                 Status = "pending";
                 Stage = "In attesa";
@@ -4154,6 +4209,12 @@ namespace UPlant.Controllers
                             case "ambiguous":
                                 _ambiguous.Add(item);
                                 break;
+                            case "unchecked":
+                                _unchecked.Add(item);
+                                break;
+                            case "unplaced":
+                                _unplaced.Add(item);
+                                break;
                             case "error":
                                 _noMatch.Add(item);
                                 break;
@@ -4216,6 +4277,8 @@ namespace UPlant.Controllers
                         IncludePerfectSynonym = Options.IncludePerfectSynonym,
                         IncludeAmbiguous = Options.IncludeAmbiguous,
                         IncludeNoMatch = Options.IncludeNoMatch,
+                        IncludeUnchecked = Options.IncludeUnchecked,
+                        IncludeUnplaced = Options.IncludeUnplaced,
                         Status = Status,
                         Stage = Stage,
                         CurrentItem = CurrentItem,
@@ -4226,6 +4289,8 @@ namespace UPlant.Controllers
                         PerfectAccepted = _perfectAccepted.ToList(),
                         PerfectSynonym = _perfectSynonym.ToList(),
                         Ambiguous = _ambiguous.ToList(),
+                        Unchecked = _unchecked.ToList(),
+                        Unplaced = _unplaced.ToList(),
                         NoMatch = _noMatch.ToList()
                     };
                 }
@@ -4244,6 +4309,8 @@ namespace UPlant.Controllers
             public bool IncludePerfectSynonym { get; set; }
             public bool IncludeAmbiguous { get; set; }
             public bool IncludeNoMatch { get; set; }
+            public bool IncludeUnchecked { get; set; }
+            public bool IncludeUnplaced { get; set; }
             public string Status { get; set; } = string.Empty;
             public string Stage { get; set; } = string.Empty;
             public string CurrentItem { get; set; } = string.Empty;
@@ -4254,6 +4321,8 @@ namespace UPlant.Controllers
             public List<WfoDatabaseAuditItem> PerfectAccepted { get; set; } = new();
             public List<WfoDatabaseAuditItem> PerfectSynonym { get; set; } = new();
             public List<WfoDatabaseAuditItem> Ambiguous { get; set; } = new();
+            public List<WfoDatabaseAuditItem> Unchecked { get; set; } = new();
+            public List<WfoDatabaseAuditItem> Unplaced { get; set; } = new();
             public List<WfoDatabaseAuditItem> NoMatch { get; set; } = new();
         }
     }
