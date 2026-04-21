@@ -18,7 +18,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="validazione_tassonomica" class="control-label">Validazione tassonomica</label>
-                <input class="form-control" value="A.A. (automatico sul salvataggio manuale)" readonly />
+                <input class="form-control" value="A.A. (automatico solo se modifichi la nomenclatura)" readonly />
                 <span asp-validation-for="validazione_tassonomica" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -182,5 +182,4 @@
         });
     </script>
 }
-
 
