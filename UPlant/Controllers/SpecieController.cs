@@ -823,10 +823,15 @@ namespace UPlant.Controllers
         public async Task<IActionResult> WfoDatabaseAudit(CancellationToken cancellationToken)
         {
             var totalSpeciesCount = await CountPendingWfoAuditSpeciesAsync(_context, cancellationToken);
-            var alreadyWfoId = await EnsureDefaultValidazioneTassonomicaAsync("WFO");
-            var alreadyWfoCount = alreadyWfoId == Guid.Empty
-                ? 0
-                : await _context.Specie.CountAsync(x => x.validazione_tassonomica == alreadyWfoId, cancellationToken);
+            var validationStatusCounts = await _context.Specie
+                .AsNoTracking()
+                .Where(x => x.validazione_tassonomicaNavigation != null)
+                .GroupBy(x => x.validazione_tassonomicaNavigation.descrizione)
+                .Select(g => new { Status = g.Key, Count = g.Count() })
+                .ToDictionaryAsync(x => x.Status, x => x.Count, cancellationToken);
+            var alreadyWfoCount = validationStatusCounts.TryGetValue("WFO", out var wfoCount) ? wfoCount : 0;
+            var aaSpeciesCount = validationStatusCounts.TryGetValue("A.A.", out var aaCount) ? aaCount : 0;
+            var ndSpeciesCount = validationStatusCounts.TryGetValue("N.D.", out var ndCount) ? ndCount : 0;
             var cachedAudit = await LoadWfoDatabaseAuditCacheAsync(cancellationToken);
             cachedAudit = await FilterWfoDatabaseAuditSnapshotAsync(_context, cachedAudit, cancellationToken);
 
@@ -837,6 +842,8 @@ namespace UPlant.Controllers
                     : cachedAudit.OfficialDatasetLabel,
                 TotalSpeciesCount = totalSpeciesCount,
                 AlreadyWfoCount = alreadyWfoCount,
+                AaSpeciesCount = aaSpeciesCount,
+                NdSpeciesCount = ndSpeciesCount,
                 DefaultMaxSpeciesToProcess = Math.Min(20, Math.Max(1, totalSpeciesCount)),
                 DefaultIncludePerfectAccepted = true,
                 DefaultIncludePerfectSynonym = true,
