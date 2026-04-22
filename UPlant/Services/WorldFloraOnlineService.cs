@@ -58,6 +58,13 @@ public sealed class WorldFloraOnlineService : IWorldFloraOnlineService
                 matched.IucnGlobalLabel = details.IucnGlobalLabel;
 
                 result.Match = matched;
+                var placementStatus = ResolvePlacementStatus(matched.Placement);
+                if (placementStatus.HasValue)
+                {
+                    result.Status = placementStatus.Value;
+                    return result;
+                }
+
                 result.Status = details.IsAccepted ? WfoMatchStatus.Accepted : WfoMatchStatus.Synonym;
                 return result;
             }
@@ -106,6 +113,22 @@ public sealed class WorldFloraOnlineService : IWorldFloraOnlineService
 
         result.Status = result.Candidates.Count > 0 ? WfoMatchStatus.Ambiguous : WfoMatchStatus.NotFound;
         return result;
+    }
+
+    private static WfoMatchStatus? ResolvePlacementStatus(string placement)
+    {
+        var normalizedPlacement = (placement ?? string.Empty).Trim();
+        if (normalizedPlacement.Contains("unplaced", StringComparison.OrdinalIgnoreCase))
+        {
+            return WfoMatchStatus.Unplaced;
+        }
+
+        if (normalizedPlacement.Contains("unchecked", StringComparison.OrdinalIgnoreCase))
+        {
+            return WfoMatchStatus.Unchecked;
+        }
+
+        return null;
     }
 
     public async Task<bool> IsAvailableAsync(CancellationToken cancellationToken = default)
@@ -693,6 +716,8 @@ public enum WfoMatchStatus
 {
     Accepted,
     Synonym,
+    Unplaced,
+    Unchecked,
     Ambiguous,
     NotFound
 }
