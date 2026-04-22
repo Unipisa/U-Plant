@@ -65,7 +65,20 @@ public sealed class WorldFloraOnlineService : IWorldFloraOnlineService
                     return result;
                 }
 
-                result.Status = details.IsAccepted ? WfoMatchStatus.Accepted : WfoMatchStatus.Synonym;
+                if (details.IsAccepted)
+                {
+                    result.Status = WfoMatchStatus.Accepted;
+                    return result;
+                }
+
+                if (details.HasResolvedAcceptedName)
+                {
+                    result.Status = WfoMatchStatus.Synonym;
+                    return result;
+                }
+
+                var narrativePlacementStatus = ResolvePlacementStatus(matchResponse.narrative);
+                result.Status = narrativePlacementStatus ?? WfoMatchStatus.Unchecked;
                 return result;
             }
 
@@ -126,6 +139,20 @@ public sealed class WorldFloraOnlineService : IWorldFloraOnlineService
         if (normalizedPlacement.Contains("unchecked", StringComparison.OrdinalIgnoreCase))
         {
             return WfoMatchStatus.Unchecked;
+        }
+
+        return null;
+    }
+
+    private static WfoMatchStatus? ResolvePlacementStatus(IEnumerable<string> narrative)
+    {
+        foreach (var line in narrative ?? Enumerable.Empty<string>())
+        {
+            var placementStatus = ResolvePlacementStatus(line);
+            if (placementStatus.HasValue)
+            {
+                return placementStatus;
+            }
         }
 
         return null;
@@ -222,9 +249,10 @@ public sealed class WorldFloraOnlineService : IWorldFloraOnlineService
             }
         }
 
-        if (string.IsNullOrWhiteSpace(details.AcceptedName))
+        if (details.IsAccepted && string.IsNullOrWhiteSpace(details.AcceptedName))
         {
             details.AcceptedName = details.CurrentName;
+            details.HasResolvedAcceptedName = !string.IsNullOrWhiteSpace(details.AcceptedName);
         }
 
         return details;
