@@ -362,7 +362,24 @@
                         }
 
                         if (data.status === 'synonym' && data.match) {
-                            if (normalizeScientificName(data.currentScientificName) === normalizeScientificName(data.match.acceptedName)) {
+                            var placement = (data.match.placement || '').toLowerCase();
+                            var isUncheckedOrUnplaced = placement.indexOf('unchecked') >= 0 || placement.indexOf('unplaced') >= 0;
+
+                            if (isUncheckedOrUnplaced) {
+                                var placementLabel = placement.indexOf('unplaced') >= 0 ? 'unplaced' : 'unchecked';
+                                $('#wfoModalBody').html(
+                                    '<p><strong>' + data.match.fullName + '</strong> in WFO risulta marcato come <strong>' + placementLabel + '</strong>.</p>' +
+                                    '<p>Per questo caso non viene applicato il salvataggio diretto: apri la revisione per confermare manualmente.</p>'
+                                );
+                                $('#wfoModalFooter').html(
+                                    '<button type="button" class="btn btn-secondary" data-dismiss="modal">Chiudi</button>' +
+                                    '<a class="btn btn-primary" href="' + data.reviewUrl + '">Apri revisione WFO</a>'
+                                );
+                                return;
+                            }
+
+                            if (data.match.hasResolvedAcceptedName &&
+                                normalizeScientificName(data.currentScientificName) === normalizeScientificName(data.match.acceptedName)) {
                                 $('#wfoModalBody').html(
                                     '<p>Il nome accettato proposto da WFO coincide con quello gia presente.</p>' +
                                     '<p>Posso salvare subito stato WFO e LSID.</p>' +
@@ -380,7 +397,7 @@
 
                             $('#wfoModalBody').html(
                                 '<p><strong>' + data.match.fullName + '</strong> risulta un sinonimo.</p>' +
-                                '<p>Nome accettato proposto da WFO: <strong>' + data.match.acceptedName + '</strong></p>' +
+                                '<p>Nome accettato proposto da WFO: <strong>' + (data.match.acceptedName || 'non risolto') + '</strong></p>' +
                                 '<p>Apri la revisione per scegliere quale proposta caricare nel form prima del salvataggio.</p>' +
                                 '<p><strong>LSID WFO:</strong> ' + (data.match.lsid || 'non restituito da WFO') + '</p>'
                             );

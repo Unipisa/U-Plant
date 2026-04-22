@@ -470,7 +470,9 @@ namespace UPlant.Controllers
                         fullName = result.Match.FullName,
                         acceptedName = result.Match.SuggestedAcceptedName,
                         lsid = result.Match.Lsid,
-                        isAccepted = result.Match.IsAccepted
+                        isAccepted = result.Match.IsAccepted,
+                        hasResolvedAcceptedName = result.Match.HasResolvedAcceptedName,
+                        placement = result.Match.Placement
                     },
                     candidates = result.Candidates.Select(c => new
                     {
