@@ -596,7 +596,11 @@ namespace UPlant.Controllers
                 }
             }
 
-            if (checkResult.Match != null)
+            var canApplyAcceptedOrSynonymOptions =
+                checkResult.Status == WfoMatchStatus.Accepted ||
+                checkResult.Status == WfoMatchStatus.Synonym;
+
+            if (checkResult.Match != null && canApplyAcceptedOrSynonymOptions)
             {
                 model.MatchedOption = BuildOption(
                     "Aggiorna il form con il match WFO",

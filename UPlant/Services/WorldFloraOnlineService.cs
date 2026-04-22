@@ -58,7 +58,27 @@ public sealed class WorldFloraOnlineService : IWorldFloraOnlineService
                 matched.IucnGlobalLabel = details.IucnGlobalLabel;
 
                 result.Match = matched;
-                result.Status = details.IsAccepted ? WfoMatchStatus.Accepted : WfoMatchStatus.Synonym;
+                var placementStatus = ResolvePlacementStatus(matched.Placement);
+                if (placementStatus.HasValue)
+                {
+                    result.Status = placementStatus.Value;
+                    return result;
+                }
+
+                if (details.IsAccepted)
+                {
+                    result.Status = WfoMatchStatus.Accepted;
+                    return result;
+                }
+
+                if (details.HasResolvedAcceptedName)
+                {
+                    result.Status = WfoMatchStatus.Synonym;
+                    return result;
+                }
+
+                var narrativePlacementStatus = ResolvePlacementStatus(matchResponse.narrative);
+                result.Status = narrativePlacementStatus ?? WfoMatchStatus.Unchecked;
                 return result;
             }
 
@@ -106,6 +126,36 @@ public sealed class WorldFloraOnlineService : IWorldFloraOnlineService
 
         result.Status = result.Candidates.Count > 0 ? WfoMatchStatus.Ambiguous : WfoMatchStatus.NotFound;
         return result;
+    }
+
+    private static WfoMatchStatus? ResolvePlacementStatus(string placement)
+    {
+        var normalizedPlacement = (placement ?? string.Empty).Trim();
+        if (normalizedPlacement.Contains("unplaced", StringComparison.OrdinalIgnoreCase))
+        {
+            return WfoMatchStatus.Unplaced;
+        }
+
+        if (normalizedPlacement.Contains("unchecked", StringComparison.OrdinalIgnoreCase))
+        {
+            return WfoMatchStatus.Unchecked;
+        }
+
+        return null;
+    }
+
+    private static WfoMatchStatus? ResolvePlacementStatus(IEnumerable<string> narrative)
+    {
+        foreach (var line in narrative ?? Enumerable.Empty<string>())
+        {
+            var placementStatus = ResolvePlacementStatus(line);
+            if (placementStatus.HasValue)
+            {
+                return placementStatus;
+            }
+        }
+
+        return null;
     }
 
     public async Task<bool> IsAvailableAsync(CancellationToken cancellationToken = default)
@@ -199,9 +249,10 @@ public sealed class WorldFloraOnlineService : IWorldFloraOnlineService
             }
         }
 
-        if (string.IsNullOrWhiteSpace(details.AcceptedName))
+        if (details.IsAccepted && string.IsNullOrWhiteSpace(details.AcceptedName))
         {
             details.AcceptedName = details.CurrentName;
+            details.HasResolvedAcceptedName = !string.IsNullOrWhiteSpace(details.AcceptedName);
         }
 
         return details;
@@ -693,6 +744,8 @@ public enum WfoMatchStatus
 {
     Accepted,
     Synonym,
+    Unplaced,
+    Unchecked,
     Ambiguous,
     NotFound
 }

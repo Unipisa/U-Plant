@@ -408,6 +408,20 @@
                             return;
                         }
 
+                        if ((data.status === 'unplaced' || data.status === 'unchecked') && data.match) {
+                            var statusLabel = data.status === 'unplaced' ? 'unplaced' : 'unchecked';
+                            $('#wfoModalBody').html(
+                                '<p><strong>' + data.match.fullName + '</strong> in WFO risulta marcato come <strong>' + statusLabel + '</strong>.</p>' +
+                                '<p>In questo stato WFO non consente di considerarlo automaticamente come accettato o sinonimo.</p>' +
+                                '<p>Apri la revisione per una valutazione manuale.</p>'
+                            );
+                            $('#wfoModalFooter').html(
+                                '<button type="button" class="btn btn-secondary" data-dismiss="modal">Chiudi</button>' +
+                                '<a class="btn btn-primary" href="' + data.reviewUrl + '">Apri revisione WFO</a>'
+                            );
+                            return;
+                        }
+
                         var body = '<p>Il check WFO non ha trovato un match univoco.</p>';
                         if (data.candidates && data.candidates.length > 0) {
                             body += '<p>Sono stati trovati ' + data.candidates.length + ' candidati possibili.</p>';

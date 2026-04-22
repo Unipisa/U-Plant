@@ -195,11 +195,35 @@
                     </button>
                 </div>
             }
+            else if (Model.CheckResult.Status == UPlant.Services.WfoMatchStatus.Unplaced || Model.CheckResult.Status == UPlant.Services.WfoMatchStatus.Unchecked)
+            {
+                var placementLabel = Model.CheckResult.Status == UPlant.Services.WfoMatchStatus.Unplaced ? "unplaced" : "unchecked";
+                <div class="alert alert-warning">
+                    <p>
+                        <strong>@Model.CheckResult.Match?.FullName</strong> in WFO risulta <strong>@placementLabel</strong>.
+                    </p>
+                    <p class="mb-0">
+                        In questo stato WFO non fornisce una classificazione affidabile come nome accettato o sinonimo:
+                        mantieni/valuta i campi manualmente prima del salvataggio.
+                    </p>
+                </div>
+                <div class="mb-3">
+                    <button type="button" class="btn btn-outline-secondary js-use-current-values">Mantieni i campi attuali</button>
+                </div>
+            }
             else if (Model.CheckResult.Status == UPlant.Services.WfoMatchStatus.Synonym)
             {
+                var normalizedAcceptedName = UPlant.Services.SpecieScientificNameHelper.NormalizeSpacing(Model.AcceptedOption?.FullName ?? string.Empty);
+                var normalizedMatchedName = UPlant.Services.SpecieScientificNameHelper.NormalizeSpacing(Model.MatchedOption?.FullName ?? string.Empty);
+                var hideMatchedSynonymRow = !string.IsNullOrWhiteSpace(normalizedAcceptedName) &&
+                    string.Equals(normalizedAcceptedName, normalizedMatchedName, StringComparison.OrdinalIgnoreCase);
                 <div class="alert alert-warning">
                     <p><strong>@Model.CheckResult.Match?.FullName</strong> risulta un sinonimo.</p>
                     <p>Nome accettato suggerito: <strong>@Model.CheckResult.Match?.SuggestedAcceptedName</strong></p>
+                    @if (hideMatchedSynonymRow)
+                    {
+                        <p class="mb-0">Il nome accettato coincide con il sinonimo trovato: mostro una sola scelta per evitare duplicati.</p>
+                    }
                 </div>
                 <table class="table table-bordered table-striped mb-3">
                     <thead>
@@ -243,7 +267,7 @@
                                 </td>
                             </tr>
                         }
-                        @if (Model.MatchedOption != null)
+                        @if (Model.MatchedOption != null && !hideMatchedSynonymRow)
                         {
                             <tr class="table-warning">
                                 <td class="text-center"><i class="fa-solid fa-circle text-warning"></i></td>
