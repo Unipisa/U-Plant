@@ -47,7 +47,7 @@
                 <div class="row">
                     <div class="form-group col">
                         <label asp-for="dataultimamodifica" class="control-label">@language.Getkey("Global_Last_Modified_Date")</label>
-                        <input asp-for="dataultimamodifica" type="datetime-local" class="form-control" />
+                        <input asp-for="dataultimamodifica" asp-format="{0:yyyy-MM-ddTHH:mm}" type="datetime-local" step="60" class="form-control" />
                         <span asp-validation-for="dataultimamodifica" class="text-danger"></span>
                     </div>
                 </div>
