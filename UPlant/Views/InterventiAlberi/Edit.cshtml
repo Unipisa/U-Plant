@@ -43,6 +43,15 @@
                 <input type="hidden" asp-for="utenteapertura" />
                 <input type="hidden" asp-for="utenteultimamodifica" />
                 <input type="hidden" name="source" value="@(ViewBag.source ?? string.Empty)" />
+
+                <div class="row">
+                    <div class="form-group col">
+                        <label asp-for="dataultimamodifica" class="control-label">@language.Getkey("Global_Last_Modified_Date")</label>
+                        <input asp-for="dataultimamodifica" type="datetime-local" class="form-control" />
+                        <span asp-validation-for="dataultimamodifica" class="text-danger"></span>
+                    </div>
+                </div>
+
                 <div class="row">
                     <div class="form-group col">
                         <label asp-for="priorita" class="control-label">@language.Getkey("Global_Tree_Priority")</label>
