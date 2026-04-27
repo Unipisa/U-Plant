@@ -757,13 +757,15 @@ namespace UPlant.Controllers
                     var chiusuraIntervento = existingIntervento.statoIntervento == false && interventiAlberi.statoIntervento == true;
                     var riaperturaIntervento = existingIntervento.statoIntervento == true && interventiAlberi.statoIntervento == false;
 
+                    var dataUltimaModifica = interventiAlberi.dataultimamodifica ?? DateTime.Now;
+
                     existingIntervento.priorita = interventiAlberi.priorita;
                     existingIntervento.intervento = interventiAlberi.intervento;
                     existingIntervento.fornitore = interventiAlberi.fornitore;
                     existingIntervento.motivo = interventiAlberi.motivo;
                     existingIntervento.esitointervento = interventiAlberi.esitointervento;
                     existingIntervento.statoIntervento = interventiAlberi.statoIntervento;
-                    existingIntervento.dataultimamodifica = DateTime.Now;
+                    existingIntervento.dataultimamodifica = dataUltimaModifica;
                     if (utenteCorrente != Guid.Empty)
                     {
                         existingIntervento.utenteultimamodifica = utenteCorrente;
@@ -787,7 +789,7 @@ namespace UPlant.Controllers
                         {
                             id = Guid.NewGuid(),
                             individuo = existingIntervento.individuo,
-                            dataInserimento = DateTime.Now,
+                            dataInserimento = dataUltimaModifica,
                             statoIndividuo = existingIntervento.statoIndividuo,
                             condizione = existingIntervento.condizione,
                             operazioniColturali = existingIntervento.esitointervento,
@@ -808,7 +810,7 @@ namespace UPlant.Controllers
                             storico.condizione = existingIntervento.condizione;
                             storico.operazioniColturali = existingIntervento.esitointervento;
                             storico.utente = utenteIdStorico;
-                            storico.dataInserimento = DateTime.Now;
+                            storico.dataInserimento = dataUltimaModifica;
                         }
                     }
 
