@@ -1,9 +1,30 @@
 ﻿@using System.Security.Principal
+@using UPlant.Models.DB
+@inject Entities DbContext
 
 @if (User.Identity.IsAuthenticated)
 {
-    var cognome = @User.Identities.FirstOrDefault()?.Claims?.Where(c => c.Type == "family_name").FirstOrDefault()?.Value;
-    var nome = @User.Identities.FirstOrDefault()?.Claims?.Where(c => c.Type == "given_name").FirstOrDefault()?.Value;
+    var userName = User?.Identity?.Name;
+    var unipiUserName = !string.IsNullOrWhiteSpace(userName) && userName.Contains("@")
+        ? userName.Substring(0, userName.IndexOf("@"))
+        : userName;
+
+    var userFromDb = !string.IsNullOrWhiteSpace(unipiUserName)
+        ? DbContext.Users.FirstOrDefault(u => u.UnipiUserName == unipiUserName)
+        : null;
+
+    var cognome = User.Identities.FirstOrDefault()?.Claims?.Where(c => c.Type == "family_name").FirstOrDefault()?.Value;
+    var nome = User.Identities.FirstOrDefault()?.Claims?.Where(c => c.Type == "given_name").FirstOrDefault()?.Value;
+
+    if (string.IsNullOrWhiteSpace(cognome))
+    {
+        cognome = userFromDb?.LastName;
+    }
+
+    if (string.IsNullOrWhiteSpace(nome))
+    {
+        nome = userFromDb?.Name;
+    }
     <li class="nav-item dropdown">
         <a class="nav-link" data-toggle="dropdown" href="#">
             <i class="fas fa-user"></i>
