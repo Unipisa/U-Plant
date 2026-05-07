@@ -1,5 +1,7 @@
 @model IEnumerable<SidebarMenu>
+@using UPlant.Models.DB
 @inject LanguageService language
+@inject Entities DbContext
 
 <aside class="main-sidebar sidebar-dark-primary elevation-4 customBorder">
     <aside class="main-sidebar sidebar-dark-primary elevation-4">
@@ -9,8 +11,31 @@
             var logol = @AppSettings.Value.Application.UrlLogoSlarge;
             var definizione = @AppSettings.Value.Application.NomeUrlLogoS;
 
-            var cognome = @User.Identities.FirstOrDefault()?.Claims?.Where(c => c.Type == "family_name").FirstOrDefault()?.Value;
-            var nome = @User.Identities.FirstOrDefault()?.Claims?.Where(c => c.Type == "given_name").FirstOrDefault()?.Value;
+            var userName = User?.Identity?.Name;
+            var unipiUserName = !string.IsNullOrWhiteSpace(userName) && userName.Contains("@")
+                ? userName.Substring(0, userName.IndexOf("@"))
+                : userName;
+
+            var userFromDb = !string.IsNullOrWhiteSpace(unipiUserName)
+                ? DbContext.Users.FirstOrDefault(u => u.UnipiUserName == unipiUserName)
+                : null;
+
+            var cognome = User.Identities.FirstOrDefault()?.Claims?.Where(c => c.Type == "family_name").FirstOrDefault()?.Value;
+            var nome = User.Identities.FirstOrDefault()?.Claims?.Where(c => c.Type == "given_name").FirstOrDefault()?.Value;
+
+            if (string.IsNullOrWhiteSpace(cognome))
+            {
+                cognome = userFromDb?.LastName;
+            }
+
+            if (string.IsNullOrWhiteSpace(nome))
+            {
+                nome = userFromDb?.Name;
+            }
+
+            var isSuperUser = !string.IsNullOrWhiteSpace(cognome)
+                && string.Equals(cognome, "PICCONI", StringComparison.OrdinalIgnoreCase);
+
             var canAccessDiscoverTools = User.IsInRole("Administrator") || (User.IsInRole("Operator") && User.IsInRole("Discover"));
             var canAccessTreeModule = User.IsInRole("Administrator") || User.IsInRole("Operator");
             <div class="user-panel pull-left image">
@@ -475,7 +500,7 @@
 
 
                         }
-                        @if ((@cognome.ToUpper() == "PICCONI"))
+                        @if (isSuperUser)
                         {
                             <li class="nav-item has-treeview">
                                 <a href="#" class="nav-link">
