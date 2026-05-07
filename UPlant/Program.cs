@@ -207,32 +207,39 @@ if (typeauth == "AZURE")
 
       if (roles.Count > 0)
       {
-         
-          var identity = (ClaimsIdentity)context.Principal.Identity;
+
+          var identity = context.Principal.Identity as ClaimsIdentity;
           if (identity != null)
           {
-              
-              ((ClaimsIdentity)identity).AddClaims(
-                      new[] {new Claim("principal", context.Principal.Identity.Name),
-                          new Claim("sub", context.Principal.Identity.Name),
-                      new Claim("UnipiUserID", context.Principal.Identity.Name),
-                          new Claim("email", Utente.Select(x => x.Email).FirstOrDefault()),
-                          new Claim("given_name", Utente.Select(x => x.Name).FirstOrDefault()),
-                          new Claim("family_name", Utente.Select(x => x.LastName).FirstOrDefault()),
-                          new Claim("fiscalNumber", Utente.Select(x => x.CF).FirstOrDefault())
-                      });
-                 
-              }
-              List<Claim> claims = new List<Claim>();
-             
-              foreach (var r in roles)
+              var principalName = context.Principal.Identity?.Name;
+              var userData = Utente.FirstOrDefault();
+
+              var claimsToAdd = new List<Claim>();
+
+              void AddClaimIfNotEmpty(string claimType, string? claimValue)
               {
-                  claims.Add(new Claim(ClaimTypes.Role, r));
-
+                  if (!string.IsNullOrWhiteSpace(claimValue))
+                  {
+                      claimsToAdd.Add(new Claim(claimType, claimValue));
+                  }
               }
-              identity.AddClaims(claims);
 
-           
+              AddClaimIfNotEmpty("principal", principalName);
+              AddClaimIfNotEmpty("sub", principalName);
+              AddClaimIfNotEmpty("UnipiUserID", principalName);
+              AddClaimIfNotEmpty("email", userData?.Email);
+              AddClaimIfNotEmpty("given_name", userData?.Name);
+              AddClaimIfNotEmpty("family_name", userData?.LastName);
+              AddClaimIfNotEmpty("fiscalNumber", userData?.CF);
+
+              identity.AddClaims(claimsToAdd);
+
+              foreach (var r in roles.Where(x => !string.IsNullOrWhiteSpace(x)))
+              {
+                  identity.AddClaim(new Claim(ClaimTypes.Role, r));
+              }
+          }
+
           }
               return Task.CompletedTask;
           };
