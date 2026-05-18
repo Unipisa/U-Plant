@@ -112,20 +112,24 @@ namespace UplantDiscover.Controllers
                 }
                 if (collezione != null && collezione.Length > 2)
                 {
+                   
                         if (settore != null && settore.Length > 2)
                         {
                             listaind = listaind.Where(x => x.individuoNavigation.collezione == new Guid(collezione));
                         }
                         else
                         {
-
-                            if (lingua == "it")
+                        if (lingua == "it")
                             {
-                                listaind = listaind.Where(x => x.individuoNavigation.collezioneNavigation.collezione.Contains(collezionedescr));
+                            collezionedescr = _context.Collezioni.Where(x => x.id == new Guid(collezione)).Select(x => x.collezione).FirstOrDefault();
+
+                            listaind = listaind.Where(x => x.individuoNavigation.collezioneNavigation.collezione.Contains(collezionedescr));
                             }
                             if (lingua == "en")
                             {
-                                listaind = listaind.Where(x => x.individuoNavigation.collezioneNavigation.collezione_en.Contains(collezionedescr));
+                            collezionedescr = _context.Collezioni.Where(z => z.id == new Guid(collezione)).Select(z => z.collezione_en).FirstOrDefault();
+
+                            listaind = listaind.Where(x => x.individuoNavigation.collezioneNavigation.collezione_en.Contains(collezionedescr));
                             }
                         }
 
