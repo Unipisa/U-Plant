@@ -13,6 +13,7 @@ using UPlant.Models.DB;
 using Microsoft.AspNetCore.Http;
 using System.Drawing;
 using System.IO;
+using System.Globalization;
 using Image = System.Drawing.Image;
 
 namespace UPlant.Controllers
@@ -675,6 +676,11 @@ namespace UPlant.Controllers
                 individuo.collezione = collezionenon;
             }
 
+            if (!TryNormalizeCoordinates(ref latitudine, ref longitudine, out string coordinateError))
+            {
+                ModelState.AddModelError(string.Empty, coordinateError);
+            }
+
             individuo.indexSeminum = indexSeminum;
             individuo.destinazioni = destinazioni;
             individuo.note = note;
@@ -876,6 +882,11 @@ namespace UPlant.Controllers
             // Storico storico = db.Storico.Where(x => x.individuo == id).Single(); 
             StoricoIndividuo storico = _context.StoricoIndividuo.Where(x => x.individuo == individui.id).OrderByDescending(x => x.dataInserimento).First();
             //var storicoesite = _context.Storico.Where(x => x.individuo == individui.id).FirstOrDefault();
+            if (!TryNormalizeCoordinates(ref latitudine, ref longitudine, out string coordinateError))
+            {
+                ModelState.AddModelError(string.Empty, coordinateError);
+            }
+
             if (ModelState.IsValid)
             {
 
@@ -974,6 +985,58 @@ namespace UPlant.Controllers
             if (TempData["MsgAck"] != null)
                 ViewBag.MsgAck = TempData["MsgAck"];
             return View(individui);
+        }
+
+        private static bool TryNormalizeCoordinates(ref string latitudine, ref string longitudine, out string error)
+        {
+            error = null;
+            latitudine = NormalizeCoordinateString(latitudine);
+            longitudine = NormalizeCoordinateString(longitudine);
+
+            if (string.IsNullOrWhiteSpace(latitudine) && string.IsNullOrWhiteSpace(longitudine))
+            {
+                return true;
+            }
+
+            if (string.IsNullOrWhiteSpace(latitudine) || string.IsNullOrWhiteSpace(longitudine))
+            {
+                error = "Latitudine e longitudine devono essere compilate entrambe oppure lasciate entrambe vuote.";
+                return false;
+            }
+
+            if (!decimal.TryParse(latitudine, NumberStyles.Float, CultureInfo.InvariantCulture, out decimal lat) ||
+                !decimal.TryParse(longitudine, NumberStyles.Float, CultureInfo.InvariantCulture, out decimal lon))
+            {
+                error = "Coordinate non valide: usare solo numeri (es. 43.7167 o 43,7167).";
+                return false;
+            }
+
+            bool latOk = lat >= -90m && lat <= 90m;
+            bool lonOk = lon >= -180m && lon <= 180m;
+
+            if (!latOk && lon >= -90m && lon <= 90m && lat >= -180m && lat <= 180m)
+            {
+                (latitudine, longitudine) = (longitudine, latitudine);
+                return true;
+            }
+
+            if (!latOk || !lonOk)
+            {
+                error = "Coordinate fuori intervallo: latitudine [-90,90], longitudine [-180,180].";
+                return false;
+            }
+
+            return true;
+        }
+
+        private static string NormalizeCoordinateString(string value)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                return null;
+            }
+
+            return value.Trim().Replace(',', '.');
         }
 
         // GET: Individui/Delete/5
