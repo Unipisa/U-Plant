@@ -767,8 +767,8 @@
             return Number.isFinite(parsed) ? parsed : null;
         }
 
-        const defaultLat = 43.71944963861506;
-        const defaultLng = 10.396344067111961;
+        const defaultLat = @AppSettings.Value.Maps.DefaultLatitude.ToString(System.Globalization.CultureInfo.InvariantCulture);
+        const defaultLng = @AppSettings.Value.Maps.DefaultLongitude.ToString(System.Globalization.CultureInfo.InvariantCulture);
         const latInput = $('#latitudine').val();
         const lngInput = $('#longitudine').val();
         const startLat = parseCoordinate(latInput) ?? defaultLat;

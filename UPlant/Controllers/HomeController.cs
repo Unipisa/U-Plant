@@ -210,7 +210,8 @@ namespace UPlant.Controllers
             ViewData["condizione"] = "";
             ViewData["cartellino"] = "";
             ViewBag.hasSearched = false;
-          
+            ViewBag.mapDefaultLatitude = _opt.Value.Maps.DefaultLatitude;
+            ViewBag.mapDefaultLongitude = _opt.Value.Maps.DefaultLongitude;
 
             return View();
         }
@@ -372,7 +373,8 @@ namespace UPlant.Controllers
             
             ViewData["famiglia"] = famiglia;
             ViewBag.hasSearched = true;
-            
+            ViewBag.mapDefaultLatitude = _opt.Value.Maps.DefaultLatitude;
+            ViewBag.mapDefaultLongitude = _opt.Value.Maps.DefaultLongitude;
 
             return View(listarisultatoricerca);
         }

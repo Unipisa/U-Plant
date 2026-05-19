@@ -1,5 +1,6 @@
 ﻿@model UPlant.Models.DB.Individui
 @inject LanguageService language
+@inject Microsoft.Extensions.Options.IOptions<UPlant.Models.AppSettings> AppSettings
 @{
     ViewData["Title"] = "Individui";
       var currentCulture = language.GetCurrentCulture();
@@ -895,8 +896,8 @@
     </script>
 
     <script type="text/javascript">
-        const defaultLat = 43.71944963861506;
-        const defaultLng = 10.396344067111961;
+        const defaultLat = @AppSettings.Value.Maps.DefaultLatitude.ToString(System.Globalization.CultureInfo.InvariantCulture);
+        const defaultLng = @AppSettings.Value.Maps.DefaultLongitude.ToString(System.Globalization.CultureInfo.InvariantCulture);
         const latInput = $('#latitudine').val();
         const lngInput = $('#longitudine').val();
         const startLat = latInput ? parseFloat(latInput) : defaultLat;
