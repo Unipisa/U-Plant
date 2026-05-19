@@ -337,13 +337,27 @@
                 $.extend($.fn.dataTable.defaults, { language: { url: "/js/dataTables.default.json" } });
             }
 
+            var defaultLat = Number(String('@ViewBag.mapDefaultLatitude').replace(',', '.'));
+            var defaultLng = Number(String('@ViewBag.mapDefaultLongitude').replace(',', '.'));
+            if (!Number.isFinite(defaultLat) || defaultLat < -90 || defaultLat > 90) {
+                defaultLat = 43.71944963861506;
+            }
+            if (!Number.isFinite(defaultLng) || defaultLng < -180 || defaultLng > 180) {
+                defaultLng = 10.396344067111961;
+            }
+
+            function normalizeCoordinate(value, min, max, fallbackValue) {
+                var parsed = Number(String(value || '').replace(',', '.'));
+                if (!Number.isFinite(parsed) || parsed < min || parsed > max) {
+                    return fallbackValue;
+                }
+                return parsed;
+            }
+
             var rawData = @Html.Raw(JsonSerializer.Serialize(mapData));
             var markersData = (rawData || []).map(function (entry) {
-                var lat = Number(String(entry.lat || '').replace(',', '.'));
-                var lng = Number(String(entry.lng || '').replace(',', '.'));
-                if (!Number.isFinite(lat) || !Number.isFinite(lng)) {
-                    return null;
-                }
+                var lat = normalizeCoordinate(entry.lat, -90, 90, defaultLat);
+                var lng = normalizeCoordinate(entry.lng, -180, 180, defaultLng);
                 return {
                     lat: lat,
                     lng: lng,
