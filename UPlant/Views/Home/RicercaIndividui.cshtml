@@ -340,10 +340,10 @@
             var defaultLat = Number(String('@ViewBag.mapDefaultLatitude').replace(',', '.'));
             var defaultLng = Number(String('@ViewBag.mapDefaultLongitude').replace(',', '.'));
             if (!Number.isFinite(defaultLat) || defaultLat < -90 || defaultLat > 90) {
-                defaultLat = 43.71944963861506;
+                defaultLat = 0;
             }
             if (!Number.isFinite(defaultLng) || defaultLng < -180 || defaultLng > 180) {
-                defaultLng = 10.396344067111961;
+                defaultLng = 0;
             }
 
             function normalizeCoordinate(value, min, max, fallbackValue) {
