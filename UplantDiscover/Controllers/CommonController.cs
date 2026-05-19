@@ -31,22 +31,7 @@ namespace UplantDiscover.Controllers
         public Object GetFamiglie(string lingua)
         {
             List<SelectListItem> listafamiglie = new List<SelectListItem>();
-            if (lingua == "it-IT")
-            {
-                listafamiglie = (from product in _context.Famiglie.OrderBy(a => a.descrizione)
-
-                                 select new SelectListItem()
-                                 {
-                                     Text = product.descrizione != null ? product.descrizione : product.descrizione_en,
-                                     Value = product.id.ToString(),
-                                 }).ToList();
-
-                listafamiglie.Insert(0, new SelectListItem()
-                {
-                    Text = "----Tutte----",
-                    Value = string.Empty
-                });
-            }
+           
                 if (lingua == "en-US")
                 {
                     listafamiglie = (from product in _context.Famiglie.OrderBy(a => a.descrizione)
@@ -62,15 +47,43 @@ namespace UplantDiscover.Controllers
                     Text = "----All----",
                     Value = string.Empty
                 });
-            } 
+            }
+            else {
+                listafamiglie = (from product in _context.Famiglie.OrderBy(a => a.descrizione)
+
+                                 select new SelectListItem()
+                                 {
+                                     Text = product.descrizione != null ? product.descrizione : product.descrizione_en,
+                                     Value = product.id.ToString(),
+                                 }).ToList();
+
+                listafamiglie.Insert(0, new SelectListItem()
+                {
+                    Text = "----Tutte----",
+                    Value = string.Empty
+                });
+            }
             return listafamiglie;
         }
         public Object GetRegni(string lingua)
         {
             var notallowedreign = new[] { "343b8a465dfa41279ab429eb0d1d1ad5" };//non Definito
             List<SelectListItem> listaregni = new List<SelectListItem>();
-            if (lingua == "it-IT")
+            if (lingua == "en-US")
             {
+                listaregni = (from product in _context.Regni.OrderBy(a => a.descrizione_en).Where(a => !notallowedreign.Contains(a.descrizione_en))
+                              select new SelectListItem()
+                              {
+                                  Text = product.descrizione_en != null ? product.descrizione_en : product.descrizione,
+                                  Value = product.id.ToString(),
+                              }).ToList();
+
+                listaregni.Insert(0, new SelectListItem()
+                {
+                    Text = "----All----",
+                    Value = string.Empty
+                });
+            } else {
 
 
                 listaregni = (from product in _context.Regni.OrderBy(a => a.descrizione).Where(a => !notallowedreign.Contains(a.descrizione))
@@ -86,22 +99,7 @@ namespace UplantDiscover.Controllers
                     Value = string.Empty
                 });
             }
-            if (lingua == "en-US")
-            {
-                listaregni = (from product in _context.Regni.OrderBy(a => a.descrizione_en).Where(a => !notallowedreign.Contains(a.descrizione_en))
-                              select new SelectListItem()
-                              {
-                                  Text = product.descrizione_en != null ? product.descrizione_en : product.descrizione,
-                                  Value = product.id.ToString(),
-                              }).ToList();
-
-                listaregni.Insert(0, new SelectListItem()
-                {
-                    Text = "----All----",
-                    Value = string.Empty
-                });
-            }
-                return listaregni;
+            return listaregni;
         }
 
         public Object GetSettori(string lingua)
@@ -109,23 +107,7 @@ namespace UplantDiscover.Controllers
             var notallowedsector = new[] { "0ba85efcea3544e485141f7e311d82e2", "0e551835b07642f88540a4ff9d15e84e", "17650e74de9e40c3b1b604531c1d0f6f", "900fdc0ec2de45098ccc5013e796b14f" }; //Nursery , Banca Semi,Portineria e Non Definito
 
             List<SelectListItem> listasettori = new List<SelectListItem>();
-            if (lingua == "it-IT")
-            {
-                listasettori = (from product in _context.Settori.OrderBy(a => a.settore).Where(a => a.visualizzazioneweb == true)
-                                select new SelectListItem()
-                                {
-
-                                    Text = product.settore != null ? product.settore : product.settore_en,
-                                    Value = product.id.ToString(),
-                                }).ToList();
-
-
-                listasettori.Insert(0, new SelectListItem()
-                {
-                    Text = "----Tutti----",
-                    Value = string.Empty
-                });
-            }
+            
             if (lingua == "en-US")
             {
                 listasettori = (from product in _context.Settori.OrderBy(a => a.settore_en).Where(a => a.visualizzazioneweb == true)
@@ -142,39 +124,30 @@ namespace UplantDiscover.Controllers
                     Text = "----All----",
                     Value = string.Empty
                 });
+            } else {
+                listasettori = (from product in _context.Settori.OrderBy(a => a.settore).Where(a => a.visualizzazioneweb == true)
+                                select new SelectListItem()
+                                {
+
+                                    Text = product.settore != null ? product.settore : product.settore_en,
+                                    Value = product.id.ToString(),
+                                }).ToList();
+
+
+                listasettori.Insert(0, new SelectListItem()
+                {
+                    Text = "----Tutti----",
+                    Value = string.Empty
+                });
             }
             return listasettori;
 
         }
         public Object GetCollezioni(string lingua)
         {
-            var notallowedsector = new[] { "0ba85efcea3544e485141f7e311d82e2", "0e551835b07642f88540a4ff9d15e84e", "17650e74de9e40c3b1b604531c1d0f6f", "900fdc0ec2de45098ccc5013e796b14f" }; //Nursery , Banca Semi,Portineria e Non Definito
+          
             List<SelectListItem> listacollezioni = new List<SelectListItem>();
-            if (lingua == "it-IT")
-            {
-               
-                /* listacollezioni = _context.Collezioni.Select(c => new SelectListItem
-                 {
-                     Value = c.Id.ToString(),
-                     Text = c.Collezione,
-                 }).Distinct().ToList();*/
-                
-
-                listacollezioni = (from product in _context.Collezioni.OrderBy(a => a.collezione).Where(a => a.settoreNavigation.visualizzazioneweb==true).Where(a =>!a.collezione.Contains("Non Def")).Where(a => !a.collezione.ToUpper().Contains("NESSUNA"))
-                                   select  new SelectListItem()
-                                     {
-                                         Text = product.collezione != null ? product.collezione : product.collezione_en,
-                                         Value = product.id.ToString(),
-                                     }).ToList();
-                
-                listacollezioni = listacollezioni.GroupBy(x => x.Text).Select(x => x.First()).ToList();
-                listacollezioni.Insert(0, new SelectListItem()
-                {
-                    Text = "----Tutti----",
-                    Value = string.Empty
-                });
-                
-            }
+           
             if (lingua == "en-US")
             {
                 listacollezioni = (from product in _context.Collezioni.OrderBy(a => a.collezione_en).Where(a => a.settoreNavigation.visualizzazioneweb==true).Where(a => !a.collezione_en.ToUpper().Contains("UNDEFINED")).Where(a => !a.collezione_en.ToUpper().Contains("NONE"))
@@ -189,6 +162,22 @@ namespace UplantDiscover.Controllers
                     Text = "----All----",
                     Value = string.Empty
                 });
+            } else {
+
+                listacollezioni = (from product in _context.Collezioni.OrderBy(a => a.collezione).Where(a => a.settoreNavigation.visualizzazioneweb == true).Where(a => !a.collezione.Contains("Non Def")).Where(a => !a.collezione.ToUpper().Contains("NESSUNA"))
+                                   select new SelectListItem()
+                                   {
+                                       Text = product.collezione != null ? product.collezione : product.collezione_en,
+                                       Value = product.id.ToString(),
+                                   }).ToList();
+
+                listacollezioni = listacollezioni.GroupBy(x => x.Text).Select(x => x.First()).ToList();
+                listacollezioni.Insert(0, new SelectListItem()
+                {
+                    Text = "----Tutti----",
+                    Value = string.Empty
+                });
+
             }
 
 
@@ -199,20 +188,7 @@ namespace UplantDiscover.Controllers
         {
             var notallowedsector = new[] { "0ba85efcea3544e485141f7e311d82e2", "0e551835b07642f88540a4ff9d15e84e", "17650e74de9e40c3b1b604531c1d0f6f", "900fdc0ec2de45098ccc5013e796b14f" }; //Nursery , Banca Semi,Portineria e Non Definito
             IEnumerable<Collezioni> col = null;
-            if (lingua == "it")
-            {
-                col = _context.Collezioni.OrderBy(a => a.collezione).Where(a => a.settoreNavigation.visualizzazioneweb == true).Where(a => !a.collezione.ToUpper().Contains("NON DEF")).Where(a => !a.collezione.ToUpper().Contains("NESSUNA"));
-                if (codicesettore != null)
-                {
-                    col = col.Where(x => x.settore == codicesettore);
-
-                }
-                else
-                {
-                     col = col.GroupBy(x => x.collezione).Select(x => x.First()).ToList();
-
-                }
-            }
+           
             if (lingua == "en")
             {
                 col = _context.Collezioni.OrderBy(a => a.collezione_en).Where(a => a.settoreNavigation.visualizzazioneweb == true).Where(a => !a.collezione_en.ToUpper().Contains("UNDEFINED")).Where(a => !a.collezione_en.ToUpper().Contains("NONE"));
@@ -224,7 +200,21 @@ namespace UplantDiscover.Controllers
                 {
                     col = col.GroupBy(x => x.collezione_en).Select(x => x.First()).ToList();
                 }
+            } else {
+                col = _context.Collezioni.OrderBy(a => a.collezione).Where(a => a.settoreNavigation.visualizzazioneweb == true).Where(a => !a.collezione.ToUpper().Contains("NON DEF")).Where(a => !a.collezione.ToUpper().Contains("NESSUNA"));
+                if (codicesettore != null)
+                {
+                    col = col.Where(x => x.settore == codicesettore);
+
+                }
+                else
+                {
+                    col = col.GroupBy(x => x.collezione).Select(x => x.First()).ToList();
+
+                }
             }
+
+
             return col;
            
         }

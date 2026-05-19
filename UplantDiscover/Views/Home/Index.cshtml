@@ -221,7 +221,9 @@
         var bandiera = '@language.Getkey("bandiera")';
         var detailBaseUrl = '@Url.Action("Details", "Home")?id=';
         var homeMap = null;
-
+        function valoreOrDefault(valore, fallback) {
+            return valore == null || valore === "" ? fallback : valore;
+        }
         function generatabella(data) {
             if (data.length != 0) {
                 var pathimg = '';
@@ -242,8 +244,8 @@
 
                 for (var i = 0; i < data.length; i++) {
 
-                    var latitudine = data[i].Latitudine == "" ? "43.71944963861506" : data[i].Latitudine;
-                    var longitudine = data[i].Longitudine == "" ? "10.396344067111961" : data[i].Longitudine;
+                    var latitudine = valoreOrDefault(data[i].Latitudine, "43.71944963861506");
+                    var longitudine = valoreOrDefault(data[i].Longitudine, "10.396344067111961");
 
                     var settoreColore = data[i].SettoreColore || '#2b7de9';
                     if (settoreColore.indexOf('#') !== 0 && settoreColore.indexOf('rgb') !== 0) {
@@ -266,8 +268,8 @@
                     })(data[i].Individuo));
 
                     s += '<tr><td id ="immagine' + i + '" data-label="Immagine" >'
-                        + '<input type="hidden" id="longitudine' + i + '" name="longitudine' + i + '" value="' + data[i].Longitudine + '">'
-                        + '<input type="hidden" id="latitudine' + i + '" name="latitudine' + i + '" value="' + data[i].Latitudine + '">'
+                        + '<input type="hidden" id="longitudine' + i + '" name="longitudine' + i + '" value="' + longitudine + '">'
+                        + '<input type="hidden" id="latitudine' + i + '" name="latitudine' + i + '" value="' + latitudine + '">'
                         +'<a href ="@Url.Action("Details", "Home")?id='+data[i].Individuo+'">'
                     if (data[i].Immagine.length > 3) {
 
