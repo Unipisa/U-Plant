@@ -221,7 +221,7 @@
                             <th style="width: 239px; height: 23px;">@language.Getkey("Global_Location")</th>
                                     <td style="width: 239px; height: 23px;" colspan="2">
                                         <span class="mr-2">@Html.DisplayFor(model => model.localita)</span>
-                                        @if (User.IsInRole("Administrator") || User.IsInRole("Operator"))
+                                        @if (!string.IsNullOrWhiteSpace(Model.localita) && (User.IsInRole("Administrator") || User.IsInRole("Operator")))
                                         {
                                             if (Model.visualizzaLocalitaWeb == true)
                                             {
