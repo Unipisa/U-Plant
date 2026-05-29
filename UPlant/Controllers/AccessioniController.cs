@@ -431,6 +431,7 @@ namespace UPlant.Controllers
             }
 
             accessioni.localita = localita;
+            accessioni.visualizzaLocalitaWeb = true;
             accessioni.habitat = habitat;
 
             if (!String.IsNullOrEmpty(altitudine))
@@ -931,6 +932,27 @@ namespace UPlant.Controllers
             return View(accessioni);
         }
 
+
+
+        public async Task<IActionResult> ShowHiddenLocalita(Guid id, string tipo)
+        {
+            if (!(User.IsInRole("Administrator") || User.IsInRole("Operator")))
+            {
+                return Forbid();
+            }
+
+            var accessioni = await _context.Accessioni.FirstOrDefaultAsync(m => m.id == id);
+            if (accessioni == null)
+            {
+                return NotFound();
+            }
+
+            accessioni.visualizzaLocalitaWeb = !accessioni.visualizzaLocalitaWeb;
+            _context.Entry(accessioni).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Details", "Accessioni", new { id, tipo });
+        }
 
         [HttpPost, ActionName("ValidaAccessione")]
         [ValidateAntiForgeryToken]

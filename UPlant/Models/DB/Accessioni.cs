@@ -37,6 +37,8 @@ public partial class Accessioni
 
     public string localita { get; set; }
 
+    public bool visualizzaLocalitaWeb { get; set; } = true;
+
     public int? altitudine { get; set; }
 
     public string habitat { get; set; }

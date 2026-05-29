@@ -97,6 +97,7 @@
                 const apiurl = '/api/orto/dettaglio';
             $.ajax({
                     url: apiurl,
+                    cache: false,
               //  headers: { 'Authorization': token },
                     data: { id: "@i.id.ToString()", lingua: bandiera},
 
@@ -107,6 +108,10 @@
                     var immagini = data[0].ListaImmagini;
                     var messaggio = '';
                     var datiaggiuntivi = false;
+                    var visualizzaLocalitaWeb = data[0].VisualizzaLocalitaWeb === true;
+                    if (!visualizzaLocalitaWeb) {
+                        data[0].RaccoltaL = '';
+                    }
                     if (bandiera == 'it') {
                         messaggio = 'Per favore Inserire Nome e Cognome%0A%0AInvio di foto relative all’esemplare di ' + data[0].Indentitatassonomica + ', codice IPEN ' + data[0].Ipen + ' nel settore ' + data[0].Settore + ', collezione ' + data[0].Collezione + '.%0A%0ACon questo invio consento all’Orto e Museo Botanico di Pisa ad utilizzare le foto per le proprie finalità.';
                         messaggio = messaggio.replace( "&", "");
@@ -169,7 +174,7 @@
                         if (data[0].RaccoltaP.length > 0) {
                             s += '<b>@language.Getkey("provincia")</b>: ' + data[0].RaccoltaP + '<br>';
                         }
-                        if (data[0].RaccoltaL.length > 0 ) {
+                        if (visualizzaLocalitaWeb && data[0].RaccoltaL.length > 0 ) {
                             s += '<b>@language.Getkey("localita")</b>: ' + data[0].RaccoltaL + '<br>';
 						}
 						if (data[0].Habitat.length > 0 ) {
