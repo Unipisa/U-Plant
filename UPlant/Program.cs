@@ -84,22 +84,33 @@ builder.Services.AddControllersWithViews()
         .AddViewLocalization()
         .AddDataAnnotationsLocalization();
 
-    // Leggi la cultura di default da appsettings
-    var defaultCulture = configuration["Localization:DefaultCulture"];
+// Leggi la cultura di default da appsettings, con fallback per gli ambienti che non hanno Localization:DefaultCulture.
+var configuredDefaultCulture = configuration["Localization:DefaultCulture"];
+var fallbackDefaultCulture = configuration["AppSettings:Application:TypeLanguage"];
+var defaultCulture = !string.IsNullOrWhiteSpace(configuredDefaultCulture)
+    ? configuredDefaultCulture
+    : !string.IsNullOrWhiteSpace(fallbackDefaultCulture)
+        ? fallbackDefaultCulture
+        : "it-IT";
 
-    builder.Services.Configure<RequestLocalizationOptions>(options =>
+builder.Services.Configure<RequestLocalizationOptions>(options =>
+{
+    var supportedCultures = new List<CultureInfo>
     {
-        var supportedCultures = new List<CultureInfo>
-        {
-            new CultureInfo("it-IT"),
-            new CultureInfo("en-US")
-            // aggiungi altre lingue se necessario
-        };
+        new CultureInfo("it-IT"),
+        new CultureInfo("en-US")
+        // aggiungi altre lingue se necessario
+    };
 
-        options.DefaultRequestCulture = new RequestCulture(defaultCulture);
-        options.SupportedCultures = supportedCultures;
-        options.SupportedUICultures = supportedCultures;
-    });
+    if (!supportedCultures.Any(c => c.Name.Equals(defaultCulture, StringComparison.OrdinalIgnoreCase)))
+    {
+        defaultCulture = "it-IT";
+    }
+
+    options.DefaultRequestCulture = new RequestCulture(culture: defaultCulture, uiCulture: defaultCulture);
+    options.SupportedCultures = supportedCultures;
+    options.SupportedUICultures = supportedCultures;
+});
 
 
 builder.Services.AddSingleton<LanguageService>();
