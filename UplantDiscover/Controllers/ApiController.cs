@@ -336,7 +336,7 @@ namespace UplantDiscover.Controllers
         }
 
         [HttpGet("dettaglio")]
-
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Details(Guid? id, string lingua)
         {
             
@@ -417,6 +417,7 @@ namespace UplantDiscover.Controllers
                 RaccoltaPid = x.individuoNavigation.accessioneNavigation.provincia,
                 RaccoltaP = x.individuoNavigation.accessioneNavigation.provincia == null ? "" : x.individuoNavigation.accessioneNavigation.provincia =="999" ? "" : x.individuoNavigation.accessioneNavigation.provinciaNavigation.descrizione,
                 RaccoltaL = x.individuoNavigation.accessioneNavigation.visualizzaLocalitaWeb && !String.IsNullOrEmpty(x.individuoNavigation.accessioneNavigation.localita) ? x.individuoNavigation.accessioneNavigation.localita : "",
+                VisualizzaLocalitaWeb = x.individuoNavigation.accessioneNavigation.visualizzaLocalitaWeb,
                 Habitat = String.IsNullOrEmpty(x.individuoNavigation.accessioneNavigation.habitat) ? "" : x.individuoNavigation.accessioneNavigation.habitat,
                 Dataraccolta = x.individuoNavigation.accessioneNavigation.dataraccolta != null ? string.Format(Convert.ToDateTime(x.individuoNavigation.accessioneNavigation.dataraccolta).ToString(),"{0:yyyy-MM-dd HH:mm:ss}", "dd/MM/yyyy"): "",
                 Raccoglitore = x.individuoNavigation.accessioneNavigation.raccoglitoreNavigation.id == Guid.Parse("36e4304735d74ea3bc8e8e4caac94291") ?  ""  : x.individuoNavigation.accessioneNavigation.raccoglitoreNavigation.nominativo,

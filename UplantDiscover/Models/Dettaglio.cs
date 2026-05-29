@@ -34,6 +34,7 @@ namespace UplantDiscover.Models
         public string RaccoltaP { get; set; }
         public string RaccoltaPid { get; set; }
         public string RaccoltaL { get; set; }
+        public bool VisualizzaLocalitaWeb { get; set; }
         public string Habitat { get; set; }
         public string Propagatodata { get; set; }
         public string Dataraccolta { get; set; }
