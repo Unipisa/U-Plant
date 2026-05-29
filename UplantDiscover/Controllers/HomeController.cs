@@ -69,6 +69,7 @@ namespace UplantDiscover.Controllers
 
         }
        
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Details(Guid? id)
         { 
 

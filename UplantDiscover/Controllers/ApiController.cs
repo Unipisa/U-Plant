@@ -343,6 +343,10 @@ namespace UplantDiscover.Controllers
        //  Request.Headers.TryGetValue("Authorization", out var headerValue);
        //  if (headerValue == "Bearer 456-12A4-2288-123F") {
            try { 
+            Response.Headers["Cache-Control"] = "no-store, no-cache, max-age=0";
+            Response.Headers["Pragma"] = "no-cache";
+            Response.Headers["Expires"] = "0";
+
             IEnumerable<StoricoIndividuo> listaind = _context.StoricoIndividuo
                 .Include(x => x.individuoNavigation).ThenInclude(x => x.settoreNavigation)
                 .Include(x => x.individuoNavigation).ThenInclude(x => x.collezioneNavigation)
