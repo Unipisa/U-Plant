@@ -129,6 +129,9 @@ public partial class Entities : DbContext
                 .IsUnicode(false);
             entity.Property(e => e.latitudine).IsUnicode(false);
             entity.Property(e => e.localita).IsUnicode(false);
+            entity.Property(e => e.visualizzaLocalitaWeb)
+                .IsRequired()
+                .HasDefaultValue(true);
             entity.Property(e => e.longitudine).IsUnicode(false);
             entity.Property(e => e.nazione)
                 .IsRequired()
