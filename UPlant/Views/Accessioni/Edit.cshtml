@@ -174,7 +174,26 @@
                             <tr style="height: 23px;">
                             <th style="width: 239px; height: 23px;">@language.Getkey("Global_Location")</th>
                                 <td style="width: 239px; height: 23px;" colspan="2">
-                                        @Html.EditorFor(model => model.localita, new { htmlAttributes = new { @class = "form-control" } })
+                                        <div class="input-group">
+                                            @Html.EditorFor(model => model.localita, new { htmlAttributes = new { @class = "form-control" } })
+                                            @if (!string.IsNullOrWhiteSpace(Model.localita) && (User.IsInRole("Administrator") || User.IsInRole("Operator")))
+                                            {
+                                                <div class="input-group-append ml-1">
+                                                    @if (Model.visualizzaLocalitaWeb == true)
+                                                    {
+                                                        <button type="button" id="LocalitaWeb" class="btn btn-info btn-xs" title="Località visibile su UplantDiscover" onclick="window.location.href = '@Url.Action("ShowHiddenLocalita", "Accessioni", new { id = Model.id })';">
+                                                            <i class="fa-solid fa-eye"></i>
+                                                        </button>
+                                                    }
+                                                    else
+                                                    {
+                                                        <button type="button" id="LocalitaWeb" class="btn btn-light btn-xs" title="Località nascosta su UplantDiscover" onclick="window.location.href = '@Url.Action("ShowHiddenLocalita", "Accessioni", new { id = Model.id })';">
+                                                            <i class="fa-solid fa-eye-slash"></i>
+                                                        </button>
+                                                    }
+                                                </div>
+                                            }
+                                        </div>
                                         @Html.ValidationMessageFor(model => model.localita, "", new { @class = "text-danger" })
                                 </td>
                             <th style="width: 239px; height: 23px;">@language.Getkey("Global_Habitat")</th>

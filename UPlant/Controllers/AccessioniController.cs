@@ -951,7 +951,7 @@ namespace UPlant.Controllers
             _context.Entry(accessioni).State = EntityState.Modified;
             await _context.SaveChangesAsync();
 
-            return RedirectToAction("Details", "Accessioni", new { id, tipo });
+            return RedirectToAction("Edit", "Accessioni", new { id });
         }
 
         [HttpPost, ActionName("ValidaAccessione")]
