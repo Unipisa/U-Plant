@@ -522,9 +522,6 @@
   <data name="Global_Horticultural_Operations" xml:space="preserve">
     <value>Horticultural Operations</value>
   </data>
-  <data name="Global_Propagation_Data" xml:space="preserve">
-    <value>Propagation Date</value>
-  </data>
   <data name="Global_Yes" xml:space="preserve">
     <value>Yes</value>
   </data>
@@ -803,5 +800,8 @@
   </data>
   <data name="Global_Size" xml:space="preserve">
     <value>Size</value>
+  </data>
+  <data name="Global_Creation_Date" xml:space="preserve">
+    <value>Creation Date</value>
   </data>
 </root>
