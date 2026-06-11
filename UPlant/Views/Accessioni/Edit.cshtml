@@ -94,8 +94,8 @@
                             <tr style="height: 23px;">
                             <th style="width: 239px; height: 23px;">@language.Getkey("Global_Quantity")</th>
                             <th style="width: 239px; height: 23px;">@language.Getkey("Global_Taxonomic_Uncertainty")</th>
-                            <th style="width: 239px; height: 23px;">@language.Getkey("Global_Associated_Herbarium")</th>
                             <th style="width: 239px; height: 23px;">@language.Getkey("Global_Old_Progressive")</th>
+                                <th style="width: 239px; height: 23px;">&nbsp;</th>
                                 <th style="width: 239px; height: 23px;">&nbsp;</th>
                             </tr>
                             <tr style="height: 23px;">
@@ -107,17 +107,11 @@
                                     @Html.DropDownList("gradoIncertezza", null, htmlAttributes: new { @class = "form-control" })
                                     @Html.ValidationMessageFor(model => model.gradoIncertezza, "", new { @class = "text-danger" })
                                 </td>
-                                <td style="width: 239px; height: 23px;" align="center">
-
-                                    @Html.CheckBoxFor(model => model.associatoErbario, new { @style = "margin-left: 0px" })
-                                    @Html.ValidationMessageFor(model => model.associatoErbario, "", new { @class = "text-danger" })
-
-
-                                </td>
                                 <td style="width: 239px; height: 23px;">
                                     @Html.EditorFor(model => model.vecchioprogressivo, new { htmlAttributes = new { @class = "form-control" } })
                                     @Html.ValidationMessageFor(model => model.vecchioprogressivo, "", new { @class = "text-danger" })
                                 </td>
+                                <td style="width: 239px; height: 23px;">&nbsp;</td>
                                 <td style="width: 239px; height: 23px;">
                                     @*   @Html.EditorFor(model => model.ipendiprovenienza, new { htmlAttributes = new { @class = "form-control" } })
                                 @Html.ValidationMessageFor(model => model.ipendiprovenienza, "", new { @class = "text-danger" })*@ &nbsp;
@@ -274,6 +268,18 @@
                                 <th style="width: 1195px; height: 0px;" colspan="5"></th>
                             </tr>
 
+                            <tr style="height: 23px;">
+                                <th style="width: 239px; height: 23px;">@language.Getkey("Global_Associated_Herbarium")</th>
+                                <td style="width: 239px; height: 23px;">
+                                    @Html.CheckBoxFor(model => model.associatoErbario, new { @id = "associatoErbario", @style = "margin-left: 0px" })
+                                    @Html.ValidationMessageFor(model => model.associatoErbario, "", new { @class = "text-danger" })
+                                </td>
+                                <th class="voucher-code-cell" style="width: 239px; height: 23px;">@language.Getkey("Global_Voucher_Code")</th>
+                                <td class="voucher-code-cell" style="width: 239px; height: 23px;" colspan="2">
+                                    @Html.EditorFor(model => model.vouchercode, new { htmlAttributes = new { @class = "form-control", @id = "vouchercode" } })
+                                    @Html.ValidationMessageFor(model => model.vouchercode, "", new { @class = "text-danger" })
+                                </td>
+                            </tr>
                             <tr style="height: 23px;">
                             <th style="width: 239px; height: 23px;">@language.Getkey("Global_Notes")</th>
                                 <td style="width: 239px; height: 23px;" colspan="4">
@@ -436,6 +442,19 @@
         var baseUrlProvince = '@Url.Action("GetProvince", "Common")';
     </script>
     <script type="text/javascript">
+
+        function toggleVoucherCode() {
+            var isAssociated = $('#associatoErbario').is(':checked');
+            $('.voucher-code-cell').toggle(isAssociated);
+            if (!isAssociated) {
+                $('#vouchercode').val('');
+            }
+        }
+
+        $(document).ready(function () {
+            toggleVoucherCode();
+            $('#associatoErbario').on('change', toggleVoucherCode);
+        });
                  document.addEventListener('DOMContentLoaded', function() {
 
                             var country = $('#nazione').val();

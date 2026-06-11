@@ -120,8 +120,8 @@
                         <tr style="height: 23px;">
                             <th style="width: 239px; height: 23px;">@language.Getkey("Global_Quantity")</th>
                             <th style="width: 239px; height: 23px;">@language.Getkey("Global_Taxonomic_Uncertainty")</th>
-                            <th style="width: 239px; height: 23px;">@language.Getkey("Global_Associated_Herbarium")</th>
                             <th style="width: 239px; height: 23px;">IPEN</th>
+                            <th style="width: 239px; height: 23px;">&nbsp;</th>
                             <th style="width: 239px; height: 23px;">&nbsp;</th>
                         </tr>
 
@@ -139,19 +139,9 @@
                             }
 
 
-                            <td style="width: 239px; height: 23px;">
-                                @if (Model.associatoErbario == true)
-                                {
-                                    @language.Getkey("Global_Yes")
-                                }
-                                else
-                                {
-                                    @language.Getkey("Global_No")
-                                }
-
-                            </td>
                             <td style="width: 239px; height: 23px;">@Html.DisplayFor(model => model.ipen)</td>
                             <td style="width: 239px; height: 23px;">@*@Html.DisplayFor(model => model.ipendiprovenienza)*@&nbsp;</td>
+                            <td style="width: 239px; height: 23px;">&nbsp;</td>
                         </tr>
 
                         <tr style="height: 12px;">
@@ -277,6 +267,26 @@
                                     <th style="width: 1195px; height: 0px;" colspan="5"></th>
                                 </tr>
 
+                                <tr style="height: 23px;">
+                            <th style="width: 239px; height: 23px;">@language.Getkey("Global_Associated_Herbarium")</th>
+                                    <td style="width: 239px; height: 23px;">
+                                        @if (Model.associatoErbario == true)
+                                        {
+                                            @language.Getkey("Global_Yes")
+                                        }
+                                        else
+                                        {
+                                            @language.Getkey("Global_No")
+                                        }
+                                    </td>
+                                    <th style="width: 239px; height: 23px;">@language.Getkey("Global_Voucher_Code")</th>
+                                    <td style="width: 239px; height: 23px;" colspan="2">
+                                        @if (Model.associatoErbario == true)
+                                        {
+                                            @Html.DisplayFor(model => model.vouchercode)
+                                        }
+                                    </td>
+                                </tr>
                                 <tr style="height: 23px;">
                             <th style="width: 239px; height: 23px;">@language.Getkey("Global_Notes")</th>
                                     <td style="width: 239px; height: 23px;" colspan="4"> @Html.DisplayFor(model => model.note)</td>

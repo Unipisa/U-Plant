@@ -138,6 +138,9 @@ public partial class Entities : DbContext
                 .HasMaxLength(2)
                 .IsUnicode(false);
             entity.Property(e => e.note).HasColumnType("text");
+            entity.Property(e => e.vouchercode)
+                .HasMaxLength(100)
+                .IsUnicode(false);
             entity.Property(e => e.progressivo)
                 .IsRequired()
                 .HasMaxLength(50)

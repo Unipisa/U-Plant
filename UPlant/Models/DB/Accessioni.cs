@@ -53,6 +53,8 @@ public partial class Accessioni
 
     public bool associatoErbario { get; set; }
 
+    public string vouchercode { get; set; }
+
     public string note { get; set; }
 
     public Guid utenteUltimaModifica { get; set; }
