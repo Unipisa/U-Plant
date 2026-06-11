@@ -17,15 +17,17 @@
     <div class="card card-outline card-primary">
         <div class="card-header with-border">
             <h3 class="card-title font-weight-bold">
-                <span class="text-primary">@language.Getkey("Global_Add") @language.Getkey("Global_Individual")</span> - @language.Getkey("Global_Accession_Progressive") : @ViewBag.progressivo
+                <span class="text-primary">@language.Getkey("Global_Add") @language.Getkey("Global_Individual")</span> - @language.Getkey("Global_Accession_Progressive"): <span class="font-weight-light">
+                    @ViewBag.progressivo
+                </span>
                 @if (!String.IsNullOrEmpty(ViewBag.accvecprog))
                 {
 
-                    <span> - </span>
+                    <span class="font-weight-light"> - </span>
                     <label asp-for="individuoNavigation.accessioneNavigation.vecchioprogressivo" class="control-label">@language.Getkey("Global_Old_Accession_Progressive")</label>
                      @ViewBag.accvecprog
                 }
-<span> - </span> @language.Getkey("Global_Species")@Html.Label(" :  ") @ViewBag.nome_scientifico
+                <span class="font-weight-light"> -  @language.Getkey("Global_Species"): @ViewBag.nome_scientifico</span>
             </h3>
             </div>
             @using (Html.BeginForm())

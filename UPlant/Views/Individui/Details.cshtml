@@ -57,15 +57,13 @@
             
             <div class="card-header with-border">
                 <h3 class="card-title font-weight-bold">
-                    <span class="text-primary">@language.Getkey("Global_Detail")  @language.Getkey("Global_Individual")</span> - @Html.DisplayFor(model => model.progressivo) 
+                    <span class="text-primary">@language.Getkey("Global_Detail")  @language.Getkey("Global_Individual")</span> - @language.Getkey("Global_Individual") @language.Getkey("Global_Progressive")@Html.Label(": ")  <span class="font-weight-light">@Html.DisplayFor(model => model.progressivo)</span>
                     @if (!String.IsNullOrEmpty(Model.vecchioprogressivo))
                     {
 
-                        <span> - </span> <label asp-for="vecchioprogressivo" class="control-label">@language.Getkey("Global_Old_Progressive")</label>  @Html.DisplayFor(model => model.vecchioprogressivo)
-                    }<span> - </span>@language.Getkey("Global_Species") @Html.Label(": ") @Html.DisplayFor(model => model.accessioneNavigation.specieNavigation.nome_scientifico)
+                        <span class="font-weight-light"> -  <label asp-for="vecchioprogressivo" class="control-label">@language.Getkey("Global_Old_Progressive")</label>  @Html.DisplayFor(model => model.vecchioprogressivo)</span>
+                    }<span class="font-weight-light"> - @language.Getkey("Global_Species"): @Html.DisplayFor(model => model.accessioneNavigation.specieNavigation.nome_scientifico)</span>
                 </h3>
-
-            </div>
             
 
             @Html.AntiForgeryToken()
