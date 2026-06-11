@@ -364,7 +364,7 @@ namespace UPlant.Controllers
         public async Task<IActionResult> Create(string dataAcquisizione, Guid identificatore, Guid tipoAcquisizione,
                                    Guid fornitore, Guid raccoglitore, Guid provenienza, Guid famiglia, Guid genere,// non mi serve la famiglia e il genere
                                    Guid specie,
-                                   bool associatoErbario,
+                                   bool associatoErbario, string vouchercode,
                                    string nazione, string regione, string provincia,
                                    string localita,
                                    string altitudine,
@@ -392,10 +392,12 @@ namespace UPlant.Controllers
             if (associatoErbario == true)
             {
                 accessioni.associatoErbario = true;
+                accessioni.vouchercode = vouchercode;
             }
             else
             {
                 accessioni.associatoErbario = false;
+                accessioni.vouchercode = null;
             }
             if (ruolo == "Administrator")
             {
@@ -631,7 +633,7 @@ namespace UPlant.Controllers
                                    Guid fornitore, Guid raccoglitore, Guid provenienza, // non mi serve la famiglia e il genere
                                    Guid specie, string nazione, string regione, string provincia,
                                    string localita, string altitudine, string habitat, Guid tipoMateriale,
-                                   int numeroEsemplari, Guid statoMateriale, Guid gradoIncertezza, bool associatoErbario, string note, string vecchioprogressivo, string longitudine, string latitudine, string dataraccolta)//,string ipendiprovenienza
+                                   int numeroEsemplari, Guid statoMateriale, Guid gradoIncertezza, bool associatoErbario, string vouchercode, string note, string vecchioprogressivo, string longitudine, string latitudine, string dataraccolta)//,string ipendiprovenienza
         {
             Accessioni accessioni = _context.Accessioni.Find(id);
             string msgerr = "";
@@ -687,10 +689,12 @@ namespace UPlant.Controllers
                     if (associatoErbario == true)
                     {
                         accessioni.associatoErbario = true;
+                        accessioni.vouchercode = vouchercode;
                     }
                     else
                     {
                         accessioni.associatoErbario = false;
+                        accessioni.vouchercode = null;
                     }
 
 

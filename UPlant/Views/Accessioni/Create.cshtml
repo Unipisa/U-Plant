@@ -270,20 +270,31 @@
                             <tr style="height: 0px;">
                                 <th style="width: 100%; height: 0px;" colspan="4"></th>
                             </tr>
+                            <tr style="height: 23px;">
+                                <th style="width: 250px; height: 23px;">@language.Getkey("Global_Associated_Herbarium")</th>
+                                <td style="width: 250px; height: 23px;">
+                                    @Html.CheckBoxFor(model => model.associatoErbario, new { @id = "associatoErbario" })
+                                    @Html.ValidationMessageFor(model => model.associatoErbario, "", new { @class = "text-danger" })
+                                </td>
+                                <th class="voucher-code-cell" style="width: 250px; height: 23px;">@language.Getkey("Global_Voucher_Code")</th>
+                                <td class="voucher-code-cell" style="width: 250px; height: 23px;">
+                                    @Html.EditorFor(model => model.vouchercode, new { htmlAttributes = new { @class = "form-control", @id = "vouchercode" } })
+                                    @Html.ValidationMessageFor(model => model.vouchercode, "", new { @class = "text-danger" })
+                                </td>
+                            </tr>
                             <tr style="height: 0px;">
                                     <th style="width: 250px; height: 23px;">@language.Getkey("Global_Notes")</th>
-                                    <th style="width: 278px; height: 23px;" colspan="3">@language.Getkey("Global_Associated_Herbarium")</th>
+                                    <th style="width: 278px; height: 23px;" colspan="3">&nbsp;</th>
                                 
                             </tr>
                             <tr  style="width: 250px; height: 23px;">
 
-                                <td>
+                                <td colspan="4">
                                     @*    @Html.EditorFor(model => model.note, new { htmlAttributes = new { @class = "form-control" } })*@
                                     @Html.TextAreaFor(model => model.note, new { @class = "form-control", @rows = "5", @cols = "10", @style = "width:100%;" })
                                     @Html.ValidationMessageFor(model => model.note, "", new { @class = "text-danger" })
 
                                 </td>
-                                <td style="width: 278px; height: 23px;" colspan="3">@Html.CheckBoxFor(model => model.associatoErbario)</td>
                                 
                             </tr>
                             <tr style="height: 0px;">
@@ -564,6 +575,19 @@
 
     <script>
 
+
+        function toggleVoucherCode() {
+            var isAssociated = $('#associatoErbario').is(':checked');
+            $('.voucher-code-cell').toggle(isAssociated);
+            if (!isAssociated) {
+                $('#vouchercode').val('');
+            }
+        }
+
+        $(document).ready(function () {
+            toggleVoucherCode();
+            $('#associatoErbario').on('change', toggleVoucherCode);
+        });
         $(document).ready(function () {
             var date = new Date();
 
