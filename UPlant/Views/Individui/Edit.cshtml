@@ -5,45 +5,45 @@
     ViewData["Title"] = "Edit";
 }
 
- <form asp-action="Edit">
+<form asp-action="Edit">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-   
-<div class="col-lg-12">
+
+    <div class="col-lg-12">
         <div class="form-group">
 
 
             @Html.ActionLink(@language.Getkey("Global_Go_Back"), null, null, null, new { @class = "btn btn-info go_back" })
-                    
 
 
 
-           
+
+
             <span> </span>
             @Html.ActionLink(@language.Getkey("Global_Return_To_Parent_Accession"), "Details", "Accessioni", new { id = Model.accessione }, new { @class = "btn btn-warning" })
-           
-            
-            
+
+
+
 
         </div>
-        
-    <div class="card card-outline card-primary">
-        <div class="card-header with-border">
+
+        <div class="card card-outline card-primary">
+            <div class="card-header with-border">
                 <h3 class="card-title font-weight-bold"> <span class="text-primary">@language.Getkey("Global_Edit")</span> - @Html.DisplayFor(model => model.progressivo) - @Html.DisplayFor(model => model.accessioneNavigation.specieNavigation.nome_scientifico) </h3>
-                
-        </div>
 
-       <div class="card-body">
+            </div>
+
+            <div class="card-body">
                 <div class="form-group">
                     @Html.HiddenFor(model => model.id)
                     @Html.Hidden("id", null, new { @id = "id" })
                     @Html.Hidden("idindividuo", null, new { @id = "idindividuo" })
                     @Html.Hidden("progressivo", null, new { @id = "progressivo" })
-                    @Html.Hidden("tipo", null, new { @id =  ViewBag.tipo })
-               
+                    @Html.Hidden("tipo", null, new { @id = ViewBag.tipo })
+
                 </div>
                 <div class="row">
                     <div class="form-group col">
-                        <label asp-for="propagatoData" class="control-label">@language.Getkey("Global_Propagation_Data")</label>
+                        <label asp-for="propagatoData" class="control-label">@language.Getkey("Global_Creation_Date")</label>
                         <input asp-for="propagatoData" class="form-control" />
                         <span asp-validation-for="propagatoData" class="text-danger"></span>
                     </div>
@@ -71,7 +71,7 @@
                     <div class="form-group col font-weight-bold"> @language.Getkey("Global_Location_Garden")</div>
                 </div>
                 <hr>
-                <div class="row"> 
+                <div class="row">
 
                     <div class="form-group col">
                         <label asp-for="settore" class="control-label">@language.Getkey("Global_Sector")</label>
@@ -141,20 +141,20 @@
                 </div>
                 <hr>
                 <div class="row">
-                <div class="form-group col">
+                    <div class="form-group col">
                         @Html.Label(@language.Getkey("Global_Condition"))<br />
                         @ViewBag.condizione
                         @*Html.DisplayFor(model => model.StoricoIndividuo.ToList().Last().condizioneNavigation.condizione)*@
-                </div>
-                <div class="form-group col">
+                    </div>
+                    <div class="form-group col">
                         @Html.Label(@language.Getkey("Global_Individual_Status"))<br />
                         @ViewBag.statoindividuo
                         @* @Html.DisplayFor(model => model.StoricoIndividuo.ToList().Last().statoIndividuoNavigation.stato)*@
-                </div>
-                <div class="form-group col">
+                    </div>
+                    <div class="form-group col">
                         @Html.Label(@language.Getkey("Global_Horticultural_Operations"))<br />
-                    @Html.DisplayFor(model => model.StoricoIndividuo.ToList().Last().operazioniColturali)
-                </div>
+                        @Html.DisplayFor(model => model.StoricoIndividuo.ToList().Last().operazioniColturali)
+                    </div>
                 </div>
                 <hr>
                 <div class="row">
@@ -162,10 +162,10 @@
                         <input type="submit" value="@language.Getkey("Global_Save")" class="btn btn-success" />
                     </div>
                 </div>
-       </div>
+            </div>
 
-            
-    </div>
+
+        </div>
 
         <div class="form-group">
 
@@ -177,9 +177,9 @@
 
 
         </div>
-    
-</div>
-    
+
+    </div>
+
 </form>
 @section Styles {
     <link href="~/css/select2.min.css" rel="stylesheet" />
@@ -330,22 +330,22 @@
     </script>
 
     <script>
-       // $('#collezione').prop('disabled', true);// aggiunta altrimenti si poteva selezionare una collezione senza aver selezionato prima un settore
-        var baseUrlSettori = '@Url.Action("GetSettori", "Common")';
-        var baseUrlCollezioni = '@Url.Action("GetCollezioni", "Common")';
-        var settoriColorMap = {};
+        // $('#collezione').prop('disabled', true);// aggiunta altrimenti si poteva selezionare una collezione senza aver selezionato prima un settore
+         var baseUrlSettori = '@Url.Action("GetSettori", "Common")';
+         var baseUrlCollezioni = '@Url.Action("GetCollezioni", "Common")';
+         var settoriColorMap = {};
 
-        $.getJSON(baseUrlSettori, function (settori) {
-            (settori || []).forEach(function (item) {
-                settoriColorMap[item.codicesettore] = item.coloresettore || '#6c757d';
-            });
+         $.getJSON(baseUrlSettori, function (settori) {
+             (settori || []).forEach(function (item) {
+                 settoriColorMap[item.codicesettore] = item.coloresettore || '#6c757d';
+             });
 
-            marker.setIcon(buildColoredMarkerIcon(getSelectedSettoreColor()));
-        });
+             marker.setIcon(buildColoredMarkerIcon(getSelectedSettoreColor()));
+         });
 
-        $('#settore').on('change', function () {
-            marker.setIcon(buildColoredMarkerIcon(getSelectedSettoreColor()));
-        });
+         $('#settore').on('change', function () {
+             marker.setIcon(buildColoredMarkerIcon(getSelectedSettoreColor()));
+         });
     </script>
     <script type="text/javascript">
         $(function () {

@@ -525,8 +525,8 @@
   <data name="Global_Horticultural_Operations" xml:space="preserve">
     <value>Operazioni Culturali</value>
   </data>
-  <data name="Global_Propagation_Data" xml:space="preserve">
-    <value>Propagato Data</value>
+  <data name="Global_Creation_Date" xml:space="preserve">
+    <value>Data Creazione</value>
   </data>
   <data name="Global_Yes" xml:space="preserve">
     <value>Si</value>
