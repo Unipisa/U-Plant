@@ -306,6 +306,9 @@
   <data name="Global_Associated_Herbarium" xml:space="preserve">
     <value>Associated Herbarium</value>
   </data>
+  <data name="Global_Voucher_Code" xml:space="preserve">
+    <value>Voucher Code</value>
+  </data>
   <data name="Global_Not_Defined" xml:space="preserve">
     <value>Not Defined</value>
   </data>
