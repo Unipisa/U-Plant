@@ -256,7 +256,7 @@
     <value>User</value>
   </data>
   <data name="Global_Material_Origin" xml:space="preserve">
-    <value>Material Origin</value>
+    <value>Source Type</value>
   </data>
   <data name="Global_Acquisition_Date" xml:space="preserve">
     <value>Acquisition Date</value>
@@ -429,7 +429,7 @@
   <data name="Global_Image" xml:space="preserve">
     <value>Image</value>
   </data>
-  <data name="Global_Images" xml:space="preserve">
+  <data name="DO" xml:space="preserve">
     <value>Images</value>
   </data>
   <data name="Global_Location_Garden" xml:space="preserve">
@@ -791,5 +791,17 @@
   </data>
   <data name="Global_Coordinates_Not_Available" xml:space="preserve">
     <value>Coordinates Not Available</value>
+  </data>
+  <data name="Global_Documents" xml:space="preserve">
+    <value>Documents</value>
+  </data>
+  <data name="Global_File_Name" xml:space="preserve">
+    <value>File Name</value>
+  </data>
+  <data name="Global_Format" xml:space="preserve">
+    <value>Format</value>
+  </data>
+  <data name="Global_Size" xml:space="preserve">
+    <value>Size</value>
   </data>
 </root>

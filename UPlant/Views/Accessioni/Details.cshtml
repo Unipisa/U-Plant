@@ -300,7 +300,7 @@
     <div id="documentiAccessione">
         <div class="card card-outline card-primary col-xs-12">
             <div class="card-header with-border col-xs-12">
-                <h3 class="card-title mb-0"><button class="btn btn-link" data-toggle="collapse" data-target="#collapseDocAcc" aria-expanded="true" aria-controls="collapseDocAcc">Documenti</button></h3>
+                <h3 class="card-title mb-0"><button class="btn btn-link" data-toggle="collapse" data-target="#collapseDocAcc" aria-expanded="true" aria-controls="collapseDocAcc">@language.Getkey("Global_List") @language.Getkey("Global_Documents") </button></h3>
                 @{
                     if (User.IsInRole("Administrator") || User.IsInRole("Operator") || User.IsInRole("TreeKeeper") || User.IsInRole("Discover") || User.IsInRole("Seminum") || User.IsInRole("Utility"))
                     {
@@ -318,12 +318,12 @@
                         <table class="table table-bordered table-striped dataTable">
                             <thead>
                             <tr>
-                                <th>Nome file</th>
-                                <th>Formato</th>
-                                <th>Dimensione</th>
+                                <th>@language.Getkey("Global_File_Name")</th>
+                                <th>@language.Getkey("Global_Format")</th>
+                                <th>@language.Getkey("Global_Size")</th>
                                 <th>@language.Getkey("Global_Description")</th>
                                 <th>@language.Getkey("Global_Entry_Date")</th>
-                                <th>Utente</th>
+                                <th>@language.Getkey("Global_User")</th>
                                 <th></th>
                             </tr>
                             </thead>

@@ -429,7 +429,7 @@
   <data name="Global_Image" xml:space="preserve">
     <value>Immagine</value>
   </data>
-  <data name="Global_Images" xml:space="preserve">
+  <data name="DO" xml:space="preserve">
     <value>Immagini</value>
   </data>
   <data name="Global_Location_Garden" xml:space="preserve">
@@ -791,5 +791,17 @@
   </data>
   <data name="Global_Coordinates_Not_Available" xml:space="preserve">
     <value>Coordinate Non Disponibili</value>
+  </data>
+  <data name="Global_Documents" xml:space="preserve">
+    <value>Documenti</value>
+  </data>
+  <data name="Global_File_Name" xml:space="preserve">
+    <value>Nome File</value>
+  </data>
+  <data name="Global_Format" xml:space="preserve">
+    <value>Formato</value>
+  </data>
+  <data name="Global_Size" xml:space="preserve">
+    <value>Dimensione</value>
   </data>
 </root>

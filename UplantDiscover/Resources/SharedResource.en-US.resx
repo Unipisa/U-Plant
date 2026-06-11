@@ -178,7 +178,7 @@
     <value>Year</value>
   </data>
   <data name="provenienza" xml:space="preserve">
-    <value>Provenance</value>
+    <value>Source Type</value>
   </data>
   <data name="provincia" xml:space="preserve">
     <value>Province</value>
