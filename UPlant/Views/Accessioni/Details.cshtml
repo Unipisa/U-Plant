@@ -279,13 +279,17 @@
                                             @language.Getkey("Global_No")
                                         }
                                     </td>
-                                    <th style="width: 239px; height: 23px;">@language.Getkey("Global_Voucher_Code")</th>
-                                    <td style="width: 239px; height: 23px;" colspan="2">
-                                        @if (Model.associatoErbario == true)
-                                        {
+                                    @if (Model.associatoErbario == true)
+                                    {
+                                        <th style="width: 239px; height: 23px;">@language.Getkey("Global_Voucher_Code")</th>
+                                        <td style="width: 239px; height: 23px;" colspan="2">
                                             @Html.DisplayFor(model => model.vouchercode)
-                                        }
-                                    </td>
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td style="width: 239px; height: 23px;" colspan="3">&nbsp;</td>
+                                    }
                                 </tr>
                                 <tr style="height: 23px;">
                             <th style="width: 239px; height: 23px;">@language.Getkey("Global_Notes")</th>
