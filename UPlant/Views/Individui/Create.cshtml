@@ -27,7 +27,7 @@
                     <label asp-for="individuoNavigation.accessioneNavigation.vecchioprogressivo" class="control-label">@language.Getkey("Global_Old_Accession_Progressive")</label>
                      @ViewBag.accvecprog
                 }
-                <span class="font-weight-light"> -  @language.Getkey("Global_Species"): @ViewBag.nome_scientifico</span>
+                <span class="font-weight-light"> - </span>@language.Getkey("Global_Species"): <span class="font-weight-light">@ViewBag.nome_scientifico</span>
             </h3>
             </div>
             @using (Html.BeginForm())

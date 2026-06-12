@@ -429,9 +429,6 @@
   <data name="Global_Image" xml:space="preserve">
     <value>Image</value>
   </data>
-  <data name="DO" xml:space="preserve">
-    <value>Images</value>
-  </data>
   <data name="Global_Location_Garden" xml:space="preserve">
     <value>Location in the Botanic Garden</value>
   </data>
@@ -805,6 +802,9 @@
     <value>Creation Date</value>
   </data>
   <data name="Global_Voucher_Code" xml:space="preserve">
-    <value>Voucher Code</value>
+    <value>Herbarium Voucher</value>
+  </data>
+  <data name="Global_Images" xml:space="preserve">
+    <value>Images</value>
   </data>
 </root>

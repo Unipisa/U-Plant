@@ -28,7 +28,18 @@
         
     <div class="card card-outline card-primary">
         <div class="card-header with-border">
-                <h3 class="card-title font-weight-bold"> <span class="text-primary">@language.Getkey("Global_Edit") @language.Getkey("Global_Individual")</span> - @language.Getkey("Global_Individual") @language.Getkey("Global_Progressive") @Html.DisplayFor(model => model.progressivo) - @Html.DisplayFor(model => model.accessioneNavigation.specieNavigation.nome_scientifico) </h3>
+                <h3 class="card-title font-weight-bold">
+                    <span class="text-primary">@language.Getkey("Global_Edit") @language.Getkey("Global_Individual")</span> - @language.Getkey("Global_Individual") @language.Getkey("Global_Progressive"): <span class="font-weight-light">@Html.DisplayFor(model => model.progressivo)</span>
+                        @if (!String.IsNullOrEmpty(Model.vecchioprogressivo))
+                        {
+
+                            <span class="font-weight-light"> -  </span>
+                            <label asp-for="vecchioprogressivo" class="control-label">@language.Getkey("Global_Old_Progressive"):</label>
+
+                            <span class="font-weight-light">@Html.DisplayFor(model => model.vecchioprogressivo)</span>
+                        }
+                        <span class="font-weight-light"> - </span>@language.Getkey("Global_Species"): <span class="font-weight-light">@Html.DisplayFor(model => model.accessioneNavigation.specieNavigation.nome_scientifico)</span>
+                </h3>
                 
         </div>
 

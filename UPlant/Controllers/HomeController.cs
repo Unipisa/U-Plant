@@ -877,7 +877,7 @@ namespace UPlant.Controllers
                 .Include(i => i.settoreNavigation).ToList();
             StringBuilder sb = new StringBuilder();
            
-            sb.AppendFormat("{0};{1};{2};{3};{4};{5};{6};{7};{8};{9};{10};{11};{12};{13};{14};{15};{16};{17};{18};{19};", ada("Progressivo Individuo"), ada("VecchioProgressivo"), ada("Accessione"), ada("Ipen"), ada("Individuo Padre"), ada("Sesso"), ada("PropagatoData"), ada("PropagatoModalità"), ada("Nome Scientifico"), ada("Settore"), ada("Collezione"), ada("IndexSeminum"), ada("Destinazione"), ada("Longitudine"), ada("Latitudine"), ada("Cartellino"), ada("Stato"), ada("Numero Immagini"), ada("Validazione"), ada("Note"));
+            sb.AppendFormat("{0};{1};{2};{3};{4};{5};{6};{7};{8};{9};{10};{11};{12};{13};{14};{15};{16};{17};{18};{19};", ada("Progressivo Individuo"), ada("VecchioProgressivo"), ada("Accessione"), ada("Ipen"), ada("Individuo Padre"), ada("Sesso"), ada("PropagatoData"), ada("PropagatoModalità"), ada("Nome Scientifico"), ada("Settore"), ada("Collezione"), ada("Index Seminum"), ada("Destinazione"), ada("Longitudine"), ada("Latitudine"), ada("Cartellino"), ada("Stato"), ada("Numero Immagini"), ada("Validazione"), ada("Note"));
             sb.AppendFormat(Environment.NewLine);
             foreach (var item in listaindividui)
             {

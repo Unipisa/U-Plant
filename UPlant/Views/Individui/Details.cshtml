@@ -61,8 +61,8 @@
                     @if (!String.IsNullOrEmpty(Model.vecchioprogressivo))
                     {
 
-                        <span class="font-weight-light"> -  <label asp-for="vecchioprogressivo" class="control-label">@language.Getkey("Global_Old_Progressive")</label>  @Html.DisplayFor(model => model.vecchioprogressivo)</span>
-                    }<span class="font-weight-light"> - @language.Getkey("Global_Species"): @Html.DisplayFor(model => model.accessioneNavigation.specieNavigation.nome_scientifico)</span>
+                        <span class="font-weight-light"> -  </span><label asp-for="vecchioprogressivo" class="control-label">@language.Getkey("Global_Old_Progressive"):</label>  <span class="font-weight-light">@Html.DisplayFor(model => model.vecchioprogressivo)</span>
+                    }<span class="font-weight-light"> - </span>@language.Getkey("Global_Species"): <span class="font-weight-light">@Html.DisplayFor(model => model.accessioneNavigation.specieNavigation.nome_scientifico)</span>
                 </h3>
             
 
@@ -219,7 +219,7 @@
 
                     <tr>
                         <th style="width: 33% ">
-                            IndexSeminum
+                            Index Seminum
                         </th>
                         <th style="width: 33% ">
                             @language.Getkey("Global_Destinations")
@@ -398,7 +398,7 @@
              
                 } else {
                             <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#storico">
-                                <div>Niente Storico</div>
+                                <div>@language.Getkey("Global_Empty")</div>
                             </div>
 
                 }
@@ -406,7 +406,7 @@
                     <div id="documenti">
                         <div class="card card-outline card-primary col-xs-12">
                             <div class="card-header with-border ml-2 col-xs-12">
-                                <h3 class="card-title mb-0"><button class="btn btn-link" data-toggle="collapse" data-target="#collapseDoc" aria-expanded="true" aria-controls="collapseDoc">@language.Getkey("Global_List") @language.Getkey("Global_Documents")  </button></h3>
+                                <h3 class="card-title mb-0"><button class="btn btn-link" data-toggle="collapse" data-target="#collapseDoc" aria-expanded="true" aria-controls="collapseDoc">@language.Getkey("Global_Documents")  </button></h3>
                                 @{
                                     if (User.IsInRole("Administrator") || User.IsInRole("Operator") || User.IsInRole("TreeKeeper") || User.IsInRole("Discover") || User.IsInRole("Seminum") || User.IsInRole("Utility"))
                                     {
