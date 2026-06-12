@@ -191,7 +191,15 @@
                             <tr style="height: 23px;">
                                     <th style="height: 23px;">@language.Getkey("Global_Location")</th>
                                 <td style="height: 23px;">
-                                    @Html.EditorFor(model => model.localita, new { htmlAttributes = new { @class = "form-control" } })
+                                    <div class="input-group localita-web-input-group">
+                                        @Html.EditorFor(model => model.localita, new { htmlAttributes = new { @class = "form-control" } })
+                                        <input type="hidden" id="visualizzaLocalitaWeb" name="visualizzaLocalitaWeb" value="true" />
+                                        <div class="input-group-append" id="LocalitaWebContainer" style="display: none;">
+                                            <button type="button" id="LocalitaWeb" class="btn btn-info btn-xs" title="Località visibile su UplantDiscover" aria-pressed="true">
+                                                <i class="fa-solid fa-eye"></i>
+                                            </button>
+                                        </div>
+                                    </div>
                                     @Html.ValidationMessageFor(model => model.localita, "", new { @class = "text-danger" })
                                 </td>
 
@@ -490,6 +498,14 @@
             width: 100%;
         }
 
+        .localita-web-input-group .form-control {
+            min-width: 0;
+        }
+
+        .localita-web-input-group .btn {
+            min-width: 34px;
+        }
+
         .bg-light-blue-active {
             background-color: #357CA5;
             color: #FFFFFF
@@ -584,9 +600,35 @@
             }
         }
 
+        function updateLocalitaWebButton(isVisible) {
+            var button = $('#LocalitaWeb');
+            var icon = button.find('i');
+            $('#visualizzaLocalitaWeb').val(isVisible ? 'true' : 'false');
+            button.toggleClass('btn-info', isVisible);
+            button.toggleClass('btn-light', !isVisible);
+            button.attr('title', isVisible ? 'Località visibile su UplantDiscover' : 'Località nascosta su UplantDiscover');
+            button.attr('aria-pressed', isVisible ? 'true' : 'false');
+            icon.toggleClass('fa-eye', isVisible);
+            icon.toggleClass('fa-eye-slash', !isVisible);
+        }
+
+        function toggleLocalitaWebButton() {
+            var hasLocalita = $.trim($('#localita').val()).length > 0;
+            $('#LocalitaWebContainer').toggle(hasLocalita);
+            if (!hasLocalita) {
+                updateLocalitaWebButton(true);
+            }
+        }
+
         $(document).ready(function () {
             toggleVoucherCode();
             $('#associatoErbario').on('change', toggleVoucherCode);
+            updateLocalitaWebButton($('#visualizzaLocalitaWeb').val() !== 'false');
+            toggleLocalitaWebButton();
+            $('#localita').on('input change', toggleLocalitaWebButton);
+            $('#LocalitaWeb').on('click', function () {
+                updateLocalitaWebButton($('#visualizzaLocalitaWeb').val() === 'false');
+            });
         });
         $(document).ready(function () {
             var date = new Date();
