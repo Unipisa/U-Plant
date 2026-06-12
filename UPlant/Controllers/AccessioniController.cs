@@ -367,6 +367,7 @@ namespace UPlant.Controllers
                                    bool associatoErbario, string vouchercode,
                                    string nazione, string regione, string provincia,
                                    string localita,
+                                   bool visualizzaLocalitaWeb,
                                    string altitudine,
                                    string habitat, Guid tipoMateriale,
                                    int numeroEsemplari, Guid statoMateriale, Guid gradoIncertezza, string note, string vecchioprogressivo, string longitudine, string latitudine, string dataraccolta, string ipendiprovenienza)
@@ -433,7 +434,7 @@ namespace UPlant.Controllers
             }
 
             accessioni.localita = localita;
-            accessioni.visualizzaLocalitaWeb = true;
+            accessioni.visualizzaLocalitaWeb = string.IsNullOrWhiteSpace(localita) || visualizzaLocalitaWeb;
             accessioni.habitat = habitat;
 
             if (!String.IsNullOrEmpty(altitudine))
