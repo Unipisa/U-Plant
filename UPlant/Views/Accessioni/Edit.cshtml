@@ -48,8 +48,8 @@
                                 </td>
                                 @* modifica campo ipen editabile  <td style="width: 239px; height: 23px;">@Html.DisplayFor(model => model.ipen)</td>*@
                                 <td style="width: 239px; height: 23px;">@Html.DisplayFor(model => model.organizzazioneNavigation.descrizione)</td>
-                                <td style="width: 239px; height: 23px;">@Convert.ToDateTime(Model.dataAcquisizione).ToString("dd/MM/yyyy")</td>
-                                <td style="width: 239px; height: 23px;">@Convert.ToDateTime(Model.dataUltimaModifica).ToString("dd/MM/yyyy")</td>
+                                <td style="width: 239px; height: 23px;">@Html.LocalizedDate(Model.dataAcquisizione)</td>
+                                <td style="width: 239px; height: 23px;">@Html.LocalizedDate(Model.dataUltimaModifica)</td>
                             </tr>
                             <tr style="height: 12px;">
                             <th style="width: 1195px; height: 12px; " colspan="5" rowspan="2" class="bg-light-blue-active">@language.Getkey("Global_Details")</th>
@@ -210,7 +210,7 @@
                                     <div id="insdataraccolta" class="form-group  col-md-6" style="display:none">
                                         @Html.LabelFor(model => model.dataraccolta, htmlAttributes: null)-- @language.Getkey("Global_Edit")" & @language.Getkey("Global_Save")" -- <br />
 
-                                            @Html.EditorFor(model => model.dataraccolta, "{0:dd/MM/yyyy}", new { htmlAttributes = new { @type = "date" } })
+                                            <input type="text" id="dataraccolta" name="dataraccolta" class="form-control datepicker" value="@Html.LocalizedDate(Model.dataraccolta)" autocomplete="off" data-date-format="@Html.JsDateFormat()" />
                                         <button id="bottonecalendario" type="button" class="btn btn-success btn-xs" onclick="savedata();">
                                             <span class="fa-regular fa-save" aria-hidden="true"></span>
                                         </button>
@@ -433,7 +433,7 @@
         function convertDate(inputFormat) {
             function pad(s) { return (s < 10) ? '0' + s : s; }
             var d = new Date(inputFormat)
-            return [pad(d.getDate()), pad(d.getMonth() + 1), d.getFullYear()].join('/')
+            return window.uplantFormatIsoDate ? window.uplantFormatIsoDate(inputFormat) : [pad(d.getDate()), pad(d.getMonth() + 1), d.getFullYear()].join('/')
         }
     </script>
     <script>

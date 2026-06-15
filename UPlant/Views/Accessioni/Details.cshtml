@@ -71,8 +71,8 @@
                             <td style="width: 478px; height: 23px;">@Html.DisplayFor(model => model.progressivo)</td>
                             <td style="width: 239px; height: 23px;">@Html.DisplayFor(model => model.vecchioprogressivo)</td>
                             <td style="width: 239px; height: 23px;">@Html.DisplayFor(model => model.organizzazioneNavigation.descrizione)</td>
-                            <td style="width: 239px; height: 23px;">@Convert.ToDateTime(Model.dataAcquisizione).ToString("dd/MM/yyyy")</td>
-                            <td style="width: 239px; height: 23px;">@Convert.ToDateTime(Model.dataUltimaModifica).ToString("dd/MM/yyyy")</td>
+                            <td style="width: 239px; height: 23px;">@Html.LocalizedDate(Model.dataAcquisizione)</td>
+                            <td style="width: 239px; height: 23px;">@Html.LocalizedDate(Model.dataUltimaModifica)</td>
                         </tr>
                         <tr style="height: 12px;">
                             <th style="width: 1195px; height: 12px; " colspan="5" rowspan="2" class="bg-lightblue">@language.Getkey("Global_Details")</th>

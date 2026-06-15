@@ -118,7 +118,7 @@
                                             </td>
 
                                             <td>
-                                                @Convert.ToDateTime(item.dataAcquisizione).ToString("dd/MM/yyyy")
+                                                @Html.LocalizedDate(item.dataAcquisizione)
                                             </td>
                                             <td>
                                                 @Convert.ToDateTime(item.dataAcquisizione).ToString("yyyyMMdd")
