@@ -211,6 +211,21 @@
                             <th style="width: 239px; height: 23px;">@language.Getkey("Global_Location")</th>
                                     <td style="width: 239px; height: 23px;" colspan="2">
                                         <span class="mr-2">@Html.DisplayFor(model => model.localita)</span>
+                                        @if (!string.IsNullOrWhiteSpace(Model.localita))
+                                        {
+                                            if (Model.visualizzaLocalitaWeb == true)
+                                            {
+                                                <span class="btn btn-info btn-xs disabled" title="Località visibile su UplantDiscover" aria-label="Località visibile su UplantDiscover" role="img">
+                                                    <i class="fa-solid fa-eye"></i>
+                                                </span>
+                                            }
+                                            else
+                                            {
+                                                <span class="btn btn-light btn-xs disabled" title="Località nascosta su UplantDiscover" aria-label="Località nascosta su UplantDiscover" role="img">
+                                                    <i class="fa-solid fa-eye-slash"></i>
+                                                </span>
+                                            }
+                                        }
                                     </td>
                             <th style="width: 239px; height: 23px;">@language.Getkey("Global_Habitat")</th>
                                     <td style="width: 239px; height: 23px;">@Html.DisplayFor(model => model.habitat)</td>
