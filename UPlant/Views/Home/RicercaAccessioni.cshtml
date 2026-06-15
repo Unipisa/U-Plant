@@ -5,20 +5,20 @@
     ViewBag.Title = @language.Getkey("Home_Ricerca_Accessioni_1");
     ViewBag.lang = language.GetCurrentCulture();
     var currentCulture = language.GetCurrentCulture();
+    var results = Model?.ToList() ?? new List<UPlant.Models.DB.RisultatoRicercaAcc>();
+    var hasSearched = Model != null;
 }
 
-<div class="title">
-    <h3>@language.Getkey("Home_Ricerca_Accessioni_1")</h3>
-</div>
-<div>
-    &nbsp;
-</div>
-
-@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "ricercaform" }))
-{
-    @Html.AntiForgeryToken()
-    <div class="box-body">
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+<div class="card card-outline card-primary mt-2">
+    <div class="card-header" data-toggle="collapse" data-target="#ricercaCollapse" style="cursor:pointer;">
+        <h3 class="card-title mb-0 font-weight-bold">@language.Getkey("Home_Ricerca_Accessioni_1")</h3>
+    </div>
+    <div id="ricercaCollapse" class="collapse show">
+        <div class="card-body">
+            @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "ricercaform" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
         <!-- 1) Prima riga: Nome Scientifico + Famiglia -->
         <div class="row">
@@ -89,7 +89,7 @@
         <div class="form-group col-md-4">
             <label>@language.Getkey("Global_Acquisition_Date")</label>
 
-            <div class="d-flex">
+            <div class="search-date-range">
                 <div class="input-group mr-2">
                     <div class="input-group-prepend">
                         <span class="input-group-text">@language.Getkey("Global_From")</span>
@@ -156,7 +156,7 @@
                 if (User.IsInRole("Administrator") || User.IsInRole("Operator") || User.IsInRole("TreeKeeper") ||
                 User.IsInRole("Discover") || User.IsInRole("Seminum") || User.IsInRole("Utility"))
                 {
-                    if (Model != null && Model.Count() > 0)
+                    if (results.Count > 0)
                     {
                         <div class="form-group col-md-3">
                             @language.Getkey("Global_Download_Search_File")
@@ -169,12 +169,18 @@
                 }
             }
         </div>
+            }
+        </div>
     </div>
-}
+</div>
 
-<div class="row" id="risultato" style="display:none">
-    <div class="col-sm-12">
-        <div class="table-responsive">
+<div class="card card-outline card-primary mt-3" id="risultatoCard" style="display:none">
+    <div class="card-header" data-toggle="collapse" data-target="#risultatiCollapse" style="cursor:pointer;">
+        <h3 class="card-title mb-0 font-weight-bold">@language.Getkey("Global_Search_Results")</h3>
+    </div>
+    <div id="risultatiCollapse" class="collapse show">
+        <div class="card-body">
+            <div class="table-responsive">
             <table id="table1" class="table table-bordered table-striped dataTable">
                 <thead>
                     <tr>
@@ -194,11 +200,8 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @{
-                        if (Model != null)
-                        {
-                            foreach (var item in Model)
-                            {
+                    @foreach (var item in results)
+                    {
                                 <tr>
                                     <td>
                                         <a asp-action="Details" asp-controller="Accessioni"
@@ -284,13 +287,12 @@
                                         }
                                     </td>
                                 </tr>
-                            }
-                        }
                     }
                 </tbody>
             </table>
         </div>
     </div>
+</div>
 </div>
 
 <div class="row" id="gifricerca">
@@ -317,6 +319,28 @@
 }
 
 @section CustomStyles {
+    <style>
+        .search-date-range {
+            display: flex;
+            gap: 0.5rem;
+            align-items: stretch;
+        }
+
+        .search-date-range .input-group {
+            flex: 1 1 0;
+            min-width: 0;
+        }
+
+        @@media (max-width: 991.98px) {
+            .search-date-range {
+                display: block;
+            }
+
+            .search-date-range .input-group + .input-group {
+                margin-top: 0.5rem;
+            }
+        }
+    </style>
 }
 
 @section Scripts {
@@ -328,10 +352,13 @@
     <script type="text/javascript">
         $(document).ready(function () {
             $('#gifricerca').hide();
-            $('#risultato').show();
+
+            if (@(hasSearched.ToString().ToLower())) {
+                $('#risultatoCard').show();
+            }
 
             $('#ricercaform').submit(function () {
-                $('#risultato').hide();
+                $('#risultatoCard').hide();
                 $('#gifricerca').show();
             });
 
