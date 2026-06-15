@@ -41,5 +41,40 @@ namespace UPlant.Extensions
             return CultureInfo.CurrentCulture.Name.StartsWith("en", StringComparison.OrdinalIgnoreCase) ? "mm/dd/yy" : "dd/mm/yy";
         }
 
+        public static string LocalizedDate<TModel>(this IHtmlHelper<TModel> html, DateTime? value)
+        {
+            return ((IHtmlHelper)html).LocalizedDate(value);
+        }
+
+        public static string LocalizedDate<TModel>(this IHtmlHelper<TModel> html, DateTime value)
+        {
+            return ((IHtmlHelper)html).LocalizedDate(value);
+        }
+
+        public static string LocalizedDateTime<TModel>(this IHtmlHelper<TModel> html, DateTime? value)
+        {
+            return ((IHtmlHelper)html).LocalizedDateTime(value);
+        }
+
+        public static string LocalizedDateTime<TModel>(this IHtmlHelper<TModel> html, DateTime value)
+        {
+            return ((IHtmlHelper)html).LocalizedDateTime(value);
+        }
+
+        public static string IsoDateValue<TModel>(this IHtmlHelper<TModel> html, DateTime? value)
+        {
+            return ((IHtmlHelper)html).IsoDateValue(value);
+        }
+
+        public static string IsoDateValue<TModel>(this IHtmlHelper<TModel> html, DateTime value)
+        {
+            return ((IHtmlHelper)html).IsoDateValue(value);
+        }
+
+        public static string JsDateFormat<TModel>(this IHtmlHelper<TModel> html)
+        {
+            return ((IHtmlHelper)html).JsDateFormat();
+        }
+
     }
 }
