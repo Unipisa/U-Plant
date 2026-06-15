@@ -346,7 +346,7 @@
     <value>Nome Comune Inglese</value>
   </data>
   <data name="Global_Floristic_Kingdom" xml:space="preserve">
-    <value>Regno Floristico</value>
+    <value>Regionalizzazione Biogeografica</value>
   </data>
   <data name="Global_Range" xml:space="preserve">
     <value>Areale</value>
@@ -430,7 +430,7 @@
     <value>Immagine</value>
   </data>
   <data name="Global_Location_Garden" xml:space="preserve">
-    <value>Posizione nell' Ortobotanico</value>
+    <value>Posizione nell' Orto Botanico</value>
   </data>
   <data name="Global_Sector_In_English" xml:space="preserve">
     <value>Settore In Inglese</value>
@@ -806,5 +806,11 @@
   </data>
   <data name="Global_Images" xml:space="preserve">
     <value>Immagini</value>
+  </data>
+  <data name="Global_Map" xml:space="preserve">
+    <value>Mappa</value>
+  </data>
+  <data name="Global_Taxonomic_Validation" xml:space="preserve">
+    <value>Validazione Tassonomica</value>
   </data>
 </root>

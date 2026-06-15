@@ -178,7 +178,7 @@
     <value>Year</value>
   </data>
   <data name="provenienza" xml:space="preserve">
-    <value>Source Type</value>
+    <value>Source type</value>
   </data>
   <data name="provincia" xml:space="preserve">
     <value>Province</value>
@@ -193,7 +193,7 @@
     <value>Region</value>
   </data>
   <data name="regno" xml:space="preserve">
-    <value>Floristic Kingdom</value>
+    <value>Biogeographical Distribution</value>
   </data>
   <data name="risultato" xml:space="preserve">
     <value>We currently do not have in cultivation specimens meeting the search criteria</value>
