@@ -1,6 +1,5 @@
 using System;
 using System.Globalization;
-using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace UPlant.Extensions
@@ -42,16 +41,5 @@ namespace UPlant.Extensions
             return CultureInfo.CurrentCulture.Name.StartsWith("en", StringComparison.OrdinalIgnoreCase) ? "mm/dd/yy" : "dd/mm/yy";
         }
 
-        public static IHtmlContent LocalizedDateInput(this IHtmlHelper html, string name, DateTime? value, object htmlAttributes = null)
-        {
-            var attributes = HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes ?? new { });
-            attributes["type"] = "text";
-            attributes["name"] = name;
-            attributes["id"] = attributes.ContainsKey("id") ? attributes["id"] : name;
-            attributes["value"] = html.LocalizedDate(value);
-            attributes["data-date-format"] = html.JsDateFormat();
-            attributes["autocomplete"] = "off";
-            return html.TextBox(name, html.LocalizedDate(value), attributes);
-        }
     }
 }
