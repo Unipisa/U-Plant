@@ -16,6 +16,22 @@ namespace UPlant.Extensions
             return value.ToString("d", CultureInfo.CurrentCulture);
         }
 
+        public static string LocalizedDate(this IHtmlHelper html, string value)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                return string.Empty;
+            }
+
+            if (DateTime.TryParse(value, CultureInfo.InvariantCulture, DateTimeStyles.None, out var invariantDate) ||
+                DateTime.TryParse(value, CultureInfo.CurrentCulture, DateTimeStyles.None, out invariantDate))
+            {
+                return invariantDate.ToString("d", CultureInfo.CurrentCulture);
+            }
+
+            return value;
+        }
+
         public static string LocalizedDateTime(this IHtmlHelper html, DateTime? value)
         {
             return value.HasValue ? value.Value.ToString("g", CultureInfo.CurrentCulture) : string.Empty;
@@ -47,6 +63,11 @@ namespace UPlant.Extensions
         }
 
         public static string LocalizedDate<TModel>(this IHtmlHelper<TModel> html, DateTime value)
+        {
+            return ((IHtmlHelper)html).LocalizedDate(value);
+        }
+
+        public static string LocalizedDate<TModel>(this IHtmlHelper<TModel> html, string value)
         {
             return ((IHtmlHelper)html).LocalizedDate(value);
         }
