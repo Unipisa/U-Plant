@@ -210,8 +210,8 @@
                         s += ' <a href="' + immagini[i].Path + '" title="' + immagini[i].Credits + '"  data-effect="mfp-zoom-in" target="_blank">';
                         s += '<div style="background-image: url(' + immagini[i].Paththumb + '); background-size: cover;" class="square">';
                         if (immagini[i].Credits != null && immagini[i].Credits.length > 2) {
-                            s += '<div class="text-white text-shadow-1 fw-bold">';
-                            s += '' + immagini[i].Credits.substring(0, 15) + '';
+                            s += '<div class="text-white text-shadow-1 fw-bold" style="font-size: 16px;">';
+                            s += '' + immagini[i].Credits.substring(0, 20) + '';
                             s += '</div>';
                         }
                         s += '</div>';
