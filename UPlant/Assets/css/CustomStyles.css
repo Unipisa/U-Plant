@@ -157,6 +157,100 @@ textarea {
     border: 1px solid #043659;
 }
 
+/* Datepicker: readable navigation and visibility above Leaflet maps. */
+.ui-datepicker {
+    z-index: 3000 !important;
+}
+
+.ui-datepicker .ui-datepicker-header {
+    padding: 0.35rem 2.55rem;
+}
+
+.ui-datepicker .ui-datepicker-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    margin: 0;
+}
+
+.ui-datepicker .ui-datepicker-title select {
+    max-width: none;
+    height: calc(1.75rem + 2px);
+    padding: 0.15rem 0.35rem;
+    border: 1px solid #ced4da;
+    border-radius: 0.2rem;
+    background-color: #fff;
+    color: #212529;
+    font: inherit;
+}
+
+.ui-datepicker select.ui-datepicker-month {
+    flex: 1 1 7rem;
+    width: auto;
+}
+
+.ui-datepicker select.ui-datepicker-year {
+    flex: 0 0 5.25rem;
+    width: auto;
+}
+
+.ui-datepicker .ui-datepicker-prev,
+.ui-datepicker .ui-datepicker-next {
+    top: 0.35rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.9rem;
+    height: 1.9rem;
+    border: 1px solid #ced4da;
+    border-radius: 0.2rem;
+    background: #fff;
+    color: #212529;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.ui-datepicker .ui-datepicker-prev {
+    left: 0.35rem;
+}
+
+.ui-datepicker .ui-datepicker-next {
+    right: 0.35rem;
+}
+
+.ui-datepicker .ui-datepicker-prev span,
+.ui-datepicker .ui-datepicker-next span {
+    display: none;
+}
+
+.ui-datepicker .ui-datepicker-prev:before,
+.ui-datepicker .ui-datepicker-next:before {
+    font-size: 1.45rem;
+    line-height: 1;
+}
+
+.ui-datepicker .ui-datepicker-prev:before {
+    content: "\2039";
+}
+
+.ui-datepicker .ui-datepicker-next:before {
+    content: "\203A";
+}
+
+.ui-datepicker .ui-datepicker-prev-hover,
+.ui-datepicker .ui-datepicker-next-hover {
+    top: 0.35rem;
+}
+
+.ui-datepicker .ui-datepicker-prev-hover {
+    left: 0.35rem;
+}
+
+.ui-datepicker .ui-datepicker-next-hover {
+    right: 0.35rem;
+}
+
 
 
 
