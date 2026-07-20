@@ -288,3 +288,34 @@ textarea {
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#043659,endColorstr=#03497c,GradientType=0);
     background-color: #043659;*/
 }
+
+.uplant-datepicker-field {
+    position: relative;
+}
+
+.uplant-datepicker-field > .uplant-datepicker-input,
+.uplant-datepicker-field > .datepicker,
+.uplant-datepicker-field > .datetimepicker {
+    padding-right: 2.25rem;
+}
+
+.uplant-datepicker-field > .ui-datepicker-trigger {
+    position: absolute;
+    top: 50%;
+    right: 0.35rem;
+    z-index: 4;
+    width: 1.6rem;
+    height: 1.6rem;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: #212529;
+    transform: translateY(-50%);
+}
+
+.uplant-datepicker-field > .ui-datepicker-trigger:hover,
+.uplant-datepicker-field > .ui-datepicker-trigger:focus {
+    background: transparent;
+    color: #0056b3;
+}
