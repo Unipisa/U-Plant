@@ -55,7 +55,7 @@
                 <div class="row">
                     <div class="form-group col">
                         <label asp-for="propagatoData" class="control-label">@language.Getkey("Global_Creation_Date")</label>
-                        <input asp-for="propagatoData" class="form-control" />
+                        <input asp-for="propagatoData" asp-format="{0:d}" type="text" class="form-control datepicker" autocomplete="off" data-date-format="@Html.JsDateFormat()" />
                         <span asp-validation-for="propagatoData" class="text-danger"></span>
                     </div>
 

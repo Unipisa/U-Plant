@@ -162,6 +162,30 @@ textarea {
     z-index: 3000 !important;
 }
 
+.ui-datepicker-trigger {
+    margin-left: 0.35rem;
+    padding: 0.35rem 0.55rem;
+    border: 1px solid #ced4da;
+    border-radius: 0.2rem;
+    background: #fff;
+    color: #212529;
+    font-size: 0;
+    line-height: 1.2;
+    cursor: pointer;
+}
+
+.ui-datepicker-trigger:before {
+    content: "\1F4C5";
+    font-size: 1rem;
+}
+
+.ui-datepicker-trigger:hover,
+.ui-datepicker-trigger:focus {
+    background: #e9ecef;
+    color: #0056b3;
+    outline: none;
+}
+
 .ui-datepicker .ui-datepicker-header {
     padding: 0.35rem 2.55rem;
 }
@@ -264,4 +288,3 @@ textarea {
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#043659,endColorstr=#03497c,GradientType=0);
     background-color: #043659;*/
 }
-
