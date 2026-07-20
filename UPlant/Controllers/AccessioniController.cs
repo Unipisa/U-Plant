@@ -326,6 +326,9 @@ namespace UPlant.Controllers
                 ViewData["statoMateriale"] = new SelectList(_context.StatoMateriale.OrderBy(a => a.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.descrizione : a.descrizione_en }), "id", "Desc");
                 ViewData["tipoAcquisizione"] = new SelectList(_context.TipoAcquisizione.OrderBy(a => a.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.descrizione : a.descrizione_en }), "id", "Desc");
                 ViewData["tipoMateriale"] = new SelectList(_context.TipiMateriale.OrderBy(a => a.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.descrizione : a.descrizione_en }), "id", "Desc");
+                ViewData["fornitore"] = new SelectList(_context.Fornitori.OrderBy(a => a.descrizione).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.descrizione : a.descrizione_en }), "id", "Desc");
+                ViewData["identificatore"] = new SelectList(_context.Identificatori.OrderBy(a => a.nominativo).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.nominativo_en) ? a.nominativo : a.nominativo_en }), "id", "Desc");
+                ViewData["raccoglitore"] = new SelectList(_context.Raccoglitori.OrderBy(a => a.nominativo).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.nominativo_en) ? a.nominativo : a.nominativo_en }), "id", "Desc");
             } else
             {
                 ViewData["regione"] = new SelectList(_context.Regioni.OrderBy(a => a.descrizione), "codice", "descrizione");
@@ -337,18 +340,21 @@ namespace UPlant.Controllers
                 ViewData["statoMateriale"] = new SelectList(_context.StatoMateriale.OrderBy(a => a.ordinamento), "id", "descrizione");
                 ViewData["tipoAcquisizione"] = new SelectList(_context.TipoAcquisizione.OrderBy(a => a.ordinamento), "id", "descrizione");
                 ViewData["tipoMateriale"] = new SelectList(_context.TipiMateriale.OrderBy(a => a.ordinamento), "id", "descrizione");
+                ViewData["fornitore"] = new SelectList(_context.Fornitori.OrderBy(a => a.descrizione), "id", "descrizione");
+                ViewData["identificatore"] = new SelectList(_context.Identificatori.OrderBy(a => a.nominativo), "id", "nominativo");
+                ViewData["raccoglitore"] = new SelectList(_context.Raccoglitori.OrderBy(a => a.nominativo), "id", "nominativo");
             }
 
 
             ViewData["provincia"] = new SelectList(_context.Province.OrderBy(a => a.descrizione), "codice", "descrizione");
             ViewData["areale"] = new SelectList(_context.Areali.OrderBy(e => e.descrizione), "id", "descrizione");
-            ViewData["fornitore"] = new SelectList(_context.Fornitori.OrderBy(a => a.descrizione), "id", "descrizione");
+           
             ViewData["organizzazione"] = new SelectList(_context.Organizzazioni, "id", "descrizione");
-            ViewData["raccoglitore"] = new SelectList(_context.Raccoglitori.OrderBy(a => a.nominativo), "id", "nominativo");
+            
             ViewData["specie"] = new SelectList(_context.Specie.OrderBy(a => a.nome_scientifico), "id", "nome_scientifico");
             ViewData["utenteAcquisizione"] = new SelectList(_context.Users, "Id", "CreatedBy");
             ViewData["utenteUltimaModifica"] = new SelectList(_context.Users, "Id", "CreatedBy");
-            ViewData["identificatore"] = new SelectList(_context.Identificatori.OrderBy(a => a.nominativo), "id", "nominativo");
+            
             List<SelectListItem> x = new List<SelectListItem>();
             ViewBag.genere = new SelectList(x);
             ViewBag.specie = new SelectList(x);
@@ -514,6 +520,9 @@ namespace UPlant.Controllers
                     ViewData["statoMateriale"] = new SelectList(_context.StatoMateriale.OrderBy(a => a.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.descrizione : a.descrizione_en }), "id", "Desc", accessioni.statoMateriale);
                     ViewData["tipoAcquisizione"] = new SelectList(_context.TipoAcquisizione.OrderBy(a => a.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.descrizione : a.descrizione_en }), "id", "Desc", accessioni.tipoAcquisizione);
                     ViewData["tipoMateriale"] = new SelectList(_context.TipiMateriale.OrderBy(a => a.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.descrizione : a.descrizione_en }), "id", "Desc", accessioni.tipoMateriale);
+                    ViewData["fornitore"] = new SelectList(_context.Fornitori.OrderBy(a => a.descrizione).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.descrizione : a.descrizione_en }), "id", "Desc", accessioni.fornitore);
+                    ViewData["identificatore"] = new SelectList(_context.Identificatori.OrderBy(a => a.nominativo).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.nominativo_en) ? a.nominativo : a.nominativo_en }), "id", "Desc", accessioni.identificatore);
+                    ViewData["raccoglitore"] = new SelectList(_context.Raccoglitori.OrderBy(a => a.nominativo).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.nominativo_en) ? a.nominativo : a.nominativo_en }), "id", "Desc", accessioni.raccoglitore);
                 }
                 else
                 {
@@ -526,14 +535,17 @@ namespace UPlant.Controllers
                     ViewData["statoMateriale"] = new SelectList(_context.StatoMateriale.OrderBy(a => a.ordinamento), "id", "descrizione",accessioni.statoMateriale);
                     ViewData["tipoAcquisizione"] = new SelectList(_context.TipoAcquisizione.OrderBy(a => a.ordinamento), "id", "descrizione", accessioni.tipoAcquisizione);
                     ViewData["tipoMateriale"] = new SelectList(_context.TipiMateriale.OrderBy(a => a.ordinamento), "id", "descrizione", accessioni.tipoMateriale);
+                    ViewData["fornitore"] = new SelectList(_context.Fornitori.OrderBy(a => a.descrizione), "id", "descrizione", accessioni.fornitore);
+                    ViewData["identificatore"] = new SelectList(_context.Identificatori.OrderBy(a => a.nominativo), "id", "nominativo", accessioni.identificatore);
+                    ViewData["raccoglitore"] = new SelectList(_context.Raccoglitori.OrderBy(a => a.nominativo), "id", "nominativo", accessioni.raccoglitore);
                 }
 
 
 
+                
+                
+                
 
-
-
-                ViewData["fornitore"] = new SelectList(_context.Fornitori.OrderBy(a => a.descrizione), "id", "descrizione", accessioni.fornitore);
                 ViewData["organizzazione"] = new SelectList(_context.Organizzazioni, "id", "descrizione", accessioni.organizzazione);
                 ViewData["provincia"] = new SelectList(_context.Province.OrderBy(a => a.descrizione), "codice", "descrizione", accessioni.provincia);
                 ViewData["raccoglitore"] = new SelectList(_context.Raccoglitori.OrderBy(a => a.nominativo), "id", "nominativo", accessioni.raccoglitore);
@@ -541,7 +553,7 @@ namespace UPlant.Controllers
                 ViewData["specie"] = new SelectList(_context.Specie.OrderBy(a => a.nome_scientifico), "id", "nome_scientifico", accessioni.specie);
                 ViewData["utenteAcquisizione"] = new SelectList(_context.Users, "Id", "CreatedBy", accessioni.utenteAcquisizione);
                 ViewData["utenteUltimaModifica"] = new SelectList(_context.Users, "Id", "CreatedBy", accessioni.utenteUltimaModifica);
-                ViewData["identificatore"] = new SelectList(_context.Identificatori.OrderBy(a => a.nominativo), "id", "nominativo", accessioni.identificatore);
+                
                 ViewData["areale"] = new SelectList(_context.Areali.OrderBy(e => e.descrizione), "id", "descrizione");
                 
 

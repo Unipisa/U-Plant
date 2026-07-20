@@ -1,4 +1,4 @@
-@model UPlant.Models.ViewModels.SpecieWfoNomenclatureImportViewModel
+﻿@model UPlant.Models.ViewModels.SpecieWfoNomenclatureImportViewModel
 
 <div class="card card-outline card-primary">
     <div class="card-header with-border">
@@ -39,7 +39,7 @@
                     <div class="mt-1">@Model.InterruptedImportMessage</div>
                     @if (Model.InterruptedImportUpdatedAtUtc.HasValue)
                     {
-                        <div class="mt-1 small text-muted">Checkpoint aggiornato il @Model.InterruptedImportUpdatedAtUtc.Value.ToLocalTime().ToString("dd/MM/yyyy HH:mm:ss")</div>
+                        <div class="mt-1 small text-muted">Checkpoint aggiornato il @Model.InterruptedImportUpdatedAtUtc.Value.ToLocalTime().ToString("g", System.Globalization.CultureInfo.CurrentCulture)</div>
                     }
                 </div>
             }

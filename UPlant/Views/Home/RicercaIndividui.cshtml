@@ -1,5 +1,6 @@
-@using Azure.Core
+﻿@using Azure.Core
 @using System.Text.Json
+@using UPlant.Extensions
 @model IEnumerable<UPlant.Models.DB.RisultatoRicercaInd>
 @inject LanguageService language
 
@@ -69,13 +70,13 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text">@language.Getkey("Global_From")</span>
                                 </div>
-                                <input id="datapropagazioneinizio" name="datapropagazioneinizio" class="form-control" type="date" value="@ViewBag.datapropagazioneinizio.ToString("yyyy-MM-dd")" />
+                                <input id="datapropagazioneinizio" name="datapropagazioneinizio" class="form-control datepicker" type="text" autocomplete="off" data-date-format="@Html.JsDateFormat()" value="@Html.LocalizedDate((DateTime)ViewBag.datapropagazioneinizio)" />
                             </div>
                             <div class="input-group">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text">@language.Getkey("Global_To")</span>
                                 </div>
-                                <input id="datapropagazionefine" name="datapropagazionefine" class="form-control" type="date" value="@ViewBag.datapropagazionefine.ToString("yyyy-MM-dd")" />
+                                <input id="datapropagazionefine" name="datapropagazionefine" class="form-control datepicker" type="text" autocomplete="off" data-date-format="@Html.JsDateFormat()" value="@Html.LocalizedDate((DateTime)ViewBag.datapropagazionefine)" />
                             </div>
                         </div>
                     </div>
@@ -172,7 +173,7 @@
                                     <td>@Html.DisplayFor(modelItem => item.cartellino)</td>
                                 }
                                 <td>@Html.DisplayFor(modelItem => item.nomecognome)</td>
-                                <td>@Convert.ToDateTime(item.datainserimento).ToString("dd/MM/yyyy")</td>
+                                <td>@Html.LocalizedDate(item.datainserimento)</td>
                                 <td>@Convert.ToDateTime(item.datainserimento).ToString("yyyyMMdd")</td>
                                 <td>@Html.DisplayFor(modelItem => item.countimg)</td>
                                 <td>
@@ -319,7 +320,7 @@
         $(document).ready(function () {
             $('#gifricerca').hide();
 
-            if (@(hasSearched.ToString().ToLower())) {
+            if ('@hasSearched'.toLowerCase() === 'true') {
                 $('#risultatoCard').show();
                 $('#mappaCard').show();
             }
@@ -354,7 +355,7 @@
                 return parsed;
             }
 
-            var rawData = @Html.Raw(JsonSerializer.Serialize(mapData));
+            var rawData = JSON.parse('@Html.Raw(System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(JsonSerializer.Serialize(mapData)))');
             var markersData = (rawData || []).map(function (entry) {
                 var lat = normalizeCoordinate(entry.lat, -90, 90, defaultLat);
                 var lng = normalizeCoordinate(entry.lng, -180, 180, defaultLng);
@@ -371,7 +372,7 @@
                 };
             }).filter(function (x) { return x !== null; });
 
-            if (@(hasSearched.ToString().ToLower())) {
+            if ('@hasSearched'.toLowerCase() === 'true') {
                 if (markersData.length === 0) {
                     $('#ricercaIndividuiMap').addClass('d-none');
                     $('#ricercaIndividuiMapEmpty').removeClass('d-none');

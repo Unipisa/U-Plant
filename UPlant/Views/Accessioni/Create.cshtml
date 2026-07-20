@@ -108,7 +108,7 @@
                                 </tr>
                                 <tr style="height: 23px;">
                                     <td style=" height: 23px;">
-                                        <input type="date" id="dataAcquisizione" name="dataAcquisizione" />
+                                        <input type="text" id="dataAcquisizione" name="dataAcquisizione" class="form-control datepicker" autocomplete="off" data-date-format="@Html.JsDateFormat()" />
                                         @Html.ValidationMessageFor(model => model.dataAcquisizione, "", new { @class = "text-danger" })
                                     </td>
                                     <td style=" height: 23px;">
@@ -183,7 +183,7 @@
                                 <tr style="height: 23px;">
                                     <th style="height: 23px;">@language.Getkey("Global_Collection_Date")</th>
                                     <td style="height: 23px;">
-                                        <input type="date" id="dataraccolta" name="dataraccolta" />
+                                        <input type="text" id="dataraccolta" name="dataraccolta" class="form-control datepicker" autocomplete="off" data-date-format="@Html.JsDateFormat()" />
                                         @Html.ValidationMessageFor(model => model.dataraccolta, "", new { @class = "text-danger" })
                                     </td>
 
@@ -641,7 +641,7 @@
             if (day < 10) day = "0" + day;
 
             var today = year + "-" + month + "-" + day;
-            $("#dataAcquisizione").attr("value", today);
+            $("#dataAcquisizione").attr("value", window.uplantFormatIsoDate ? window.uplantFormatIsoDate(today) : today);
         });
     </script>
     

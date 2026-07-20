@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html>
+<html lang="@System.Globalization.CultureInfo.CurrentUICulture.Name">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -43,5 +43,6 @@
     @RenderSection("Scripts", required: false)
     <script src="~/js/site.min.js"></script>
     @RenderSection("CustomSCripts", required: false)
+    <script src="~/js/uplant-date-localization.js"></script>
 </body>
 </html>
