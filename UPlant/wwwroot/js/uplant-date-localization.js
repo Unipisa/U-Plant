@@ -69,8 +69,7 @@
             format: window.uplantDateFormat.replace('yy', 'yyyy'),
             autoclose: true,
             todayHighlight: true,
-            showOn: 'both',
-            buttonText: window.uplantDatepickerLanguage === 'en' ? 'Open calendar' : 'Apri calendario'
+            showOn: 'focus'
         });
     }
 
@@ -89,8 +88,7 @@
             language: window.uplantDatepickerLanguage,
             autoclose: true,
             todayHighlight: true,
-            showOn: 'both',
-            buttonText: window.uplantDatepickerLanguage === 'en' ? 'Open calendar' : 'Apri calendario',
+            showOn: 'focus',
             onSelect: function (dateText) {
                 if (!$input.data('preserve-time')) {
                     return;
@@ -107,8 +105,7 @@
             var $input = $(this);
             $input.datepicker(buildOptions($input));
             $input.addClass('uplant-datepicker-input');
-            $input.parent().addClass('uplant-datepicker-field');
-            $input.next('.ui-datepicker-trigger').addClass('uplant-datepicker-trigger');
+            $input.next('.ui-datepicker-trigger').remove();
         });
     });
 })(window.jQuery, window);
