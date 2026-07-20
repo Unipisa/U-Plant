@@ -106,6 +106,9 @@
         $('.datepicker, .datetimepicker').each(function () {
             var $input = $(this);
             $input.datepicker(buildOptions($input));
+            $input.addClass('uplant-datepicker-input');
+            $input.parent().addClass('uplant-datepicker-field');
+            $input.next('.ui-datepicker-trigger').addClass('uplant-datepicker-trigger');
         });
     });
 })(window.jQuery, window);
