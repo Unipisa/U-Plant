@@ -98,7 +98,7 @@
                         }
                         <td class="text-center">@item.interventoNavigation.descrizione</td>
                         <td class="text-center">@item.motivo</td>
-                        <td class="text-center">@(item.dataultimamodifica?.ToString("dd/MM/yyyy HH:mm") ?? "-")</td>
+                        <td class="text-center">@(Html.LocalizedDateTime(item.dataultimamodifica) ?? "-")</td>
                         <td class="text-center">@(item.statoIntervento == false ? language.Getkey("Global_Open") : language.Getkey("Global_Close"))</td>
                         @if (canManageOpenInterventions)
                         {

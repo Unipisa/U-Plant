@@ -102,7 +102,7 @@
                     </tr>
                     <tr>
                         <td style="width:33%">
-                            @Convert.ToDateTime(Model.propagatoData).ToString("dd/MM/yyyy")
+                            @Html.LocalizedDate(Model.propagatoData)
                             
                         </td>
                         @if (currentCulture == "en-US"){
@@ -319,7 +319,7 @@
                                                         <tr>
 
                                                             <td>
-                                                                @Convert.ToDateTime(item.dataInserimento).ToString("dd/MM/yyyy")
+                                                                @Html.LocalizedDate(item.dataInserimento)
                                                             </td>
                                                     <td>
                                                             @Html.DisplayFor(modelItem => item.utenteNavigation.NomeCognome)
@@ -565,7 +565,7 @@
                                                                 @Html.DisplayFor(modelItem => item.credits)
                                                             </td>
                                                             <td style="vertical-align: middle;">
-                                                                @Convert.ToDateTime(item.dataInserimento).ToString("dd/MM/yyyy")
+                                                                @Html.LocalizedDate(item.dataInserimento)
                                                             </td>
                                                             <td style="vertical-align: middle;">
                                                                 @Html.DisplayFor(modelItem => item.autore)

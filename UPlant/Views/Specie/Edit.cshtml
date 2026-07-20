@@ -1,4 +1,4 @@
-@model UPlant.Models.DB.Specie
+﻿@model UPlant.Models.DB.Specie
 @inject LanguageService language
 @{
     ViewData["Title"] = "Edit";
@@ -148,7 +148,7 @@
     <script>
         jQuery(function () {
             jQuery(".datepicker").datepicker({
-                language: "it",
+                dateFormat: "@Html.JsDateFormat()",
                 autoclose: true
             });
         });

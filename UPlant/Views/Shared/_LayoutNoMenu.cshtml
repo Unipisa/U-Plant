@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html>
+<html lang="@System.Globalization.CultureInfo.CurrentUICulture.Name">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -42,6 +42,7 @@
     @await Html.PartialAsync("_Scripts.cshtml")
     @RenderSection("Scripts", required: false)
     <script src="~/js/site.min.js"></script>
+    <script src="~/js/uplant-date-localization.js"></script>
     @RenderSection("CustomSCripts", required: false)
 </body>
 </html>

@@ -135,7 +135,7 @@
                     var isOpenOrder = (!item.statoIntervento) ? 1 : 0; // aperto=1, chiuso=0 (così DESC mette aperti prima)
                     var livello = item.prioritaNavigation?.livello ?? 0; // 4 urgente ... 0 nd
                     var dataIso = item.dataultimamodifica?.ToString("yyyy-MM-dd HH:mm:ss") ?? "0000-00-00 00:00:00";
-                    var dataHuman = item.dataultimamodifica?.ToString("dd/MM/yyyy HH:mm") ?? "-";
+                    var dataHuman = Html.LocalizedDateTime(item.dataultimamodifica) ?? "-";
 
                     <tr class="@(item.statoIntervento ? "intervento-chiuso" : string.Empty)">
                         <td class="text-center">

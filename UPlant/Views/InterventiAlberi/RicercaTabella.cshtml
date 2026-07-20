@@ -1,4 +1,4 @@
-@model IEnumerable<UPlant.Models.DB.InterventiAlberi>
+﻿@model IEnumerable<UPlant.Models.DB.InterventiAlberi>
 @inject LanguageService language
 @using System.Text.Json
 
@@ -65,11 +65,11 @@
                         <div class="d-flex">
                             <div class="input-group mr-2">
                                 <div class="input-group-prepend"><span class="input-group-text">@language.Getkey("Global_From")</span></div>
-                                <input type="date" id="dataUltimaModificaDa" name="dataUltimaModificaDa" class="form-control" value="@(((DateTime)ViewBag.dataUltimaModificaDa).ToString("yyyy-MM-dd"))" />
+                                <input type="text" id="dataUltimaModificaDa" name="dataUltimaModificaDa" class="form-control datepicker" autocomplete="off" data-date-format="@Html.JsDateFormat()" value="@Html.LocalizedDate((DateTime)ViewBag.dataUltimaModificaDa)" />
                             </div>
                             <div class="input-group">
                                 <div class="input-group-prepend"><span class="input-group-text">@language.Getkey("Global_To")</span></div>
-                                <input type="date" id="dataUltimaModificaA" name="dataUltimaModificaA" class="form-control" value="@(((DateTime)ViewBag.dataUltimaModificaA).ToString("yyyy-MM-dd"))" />
+                                <input type="text" id="dataUltimaModificaA" name="dataUltimaModificaA" class="form-control datepicker" autocomplete="off" data-date-format="@Html.JsDateFormat()" value="@Html.LocalizedDate((DateTime)ViewBag.dataUltimaModificaA)" />
                             </div>
                         </div>
                     </div>
@@ -199,7 +199,7 @@
                             </td>
                             <td>@item.interventoNavigation?.descrizione</td>
                             <td>@item.fornitoreNavigation?.descrizione</td>
-                            <td>@((item.dataultimamodifica ?? item.dataapertura).ToString("dd/MM/yyyy"))</td>
+                            <td>@Html.LocalizedDate(item.dataultimamodifica ?? item.dataapertura)</td>
                              @if (canManageOpenInterventions)
                             {
                                 <td class="text-center">
