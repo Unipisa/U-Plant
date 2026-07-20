@@ -10,6 +10,28 @@
     }
 
     window.uplantDateFormat = isEnglish ? 'mm/dd/yy' : 'dd/mm/yy';
+    window.uplantDatepickerLanguage = isEnglish ? 'en' : 'it';
+    window.uplantDatepickerTexts = isEnglish ? {
+        closeText: 'Done',
+        currentText: 'Today',
+        monthNames: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+        monthNamesShort: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+        dayNames: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+        dayNamesShort: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+        dayNamesMin: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
+        weekHeader: 'Wk',
+        firstDay: 0
+    } : {
+        closeText: 'Chiudi',
+        currentText: 'Oggi',
+        monthNames: ['gennaio', 'febbraio', 'marzo', 'aprile', 'maggio', 'giugno', 'luglio', 'agosto', 'settembre', 'ottobre', 'novembre', 'dicembre'],
+        monthNamesShort: ['gen', 'feb', 'mar', 'apr', 'mag', 'giu', 'lug', 'ago', 'set', 'ott', 'nov', 'dic'],
+        dayNames: ['domenica', 'lunedì', 'martedì', 'mercoledì', 'giovedì', 'venerdì', 'sabato'],
+        dayNamesShort: ['dom', 'lun', 'mar', 'mer', 'gio', 'ven', 'sab'],
+        dayNamesMin: ['do', 'lu', 'ma', 'me', 'gi', 've', 'sa'],
+        weekHeader: 'Sm',
+        firstDay: 1
+    };
 
     window.uplantFormatIsoDate = function (isoDate) {
         if (!isoDate) {
@@ -35,63 +57,55 @@
         return;
     }
 
-    var culture = (document.documentElement.lang || navigator.language || 'it-IT').toLowerCase();
-    var isEnglish = culture.indexOf('en') === 0;
-
-    var regionalOptions = isEnglish ? {
-        closeText: 'Done',
-        currentText: 'Today',
-        prevText: 'Previous',
-        nextText: 'Next',
-        monthNames: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-        monthNamesShort: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-        dayNamesMin: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
-        firstDay: 0
-    } : {
-        closeText: 'Chiudi',
-        currentText: 'Oggi',
-        prevText: 'Precedente',
-        nextText: 'Successivo',
-        monthNames: ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno', 'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre'],
-        monthNamesShort: ['Gen', 'Feb', 'Mar', 'Apr', 'Mag', 'Giu', 'Lug', 'Ago', 'Set', 'Ott', 'Nov', 'Dic'],
-        dayNamesMin: ['Do', 'Lu', 'Ma', 'Me', 'Gi', 'Ve', 'Sa'],
-        firstDay: 1
-    };
-
-    function keepDatepickerAboveMaps(instance) {
-        window.setTimeout(function () {
-            instance.dpDiv.css('z-index', 3000);
-        }, 0);
+    if ($.datepicker && $.datepicker.setDefaults) {
+        $.datepicker.setDefaults($.extend({}, window.uplantDatepickerTexts || {}, {
+            dateFormat: window.uplantDateFormat
+        }));
     }
 
-    function getOptions($input) {
-        return $.extend({}, regionalOptions, {
-            dateFormat: $input.data('date-format') || window.uplantDateFormat,
-            changeMonth: true,
-            changeYear: true,
-            showButtonPanel: true,
-            yearRange: '1900:+10',
+    if ($.fn.datepicker.defaults) {
+        $.extend($.fn.datepicker.defaults, {
+            language: window.uplantDatepickerLanguage,
+            format: window.uplantDateFormat.replace('yy', 'yyyy'),
             autoclose: true,
-            beforeShow: function (input, instance) {
-                keepDatepickerAboveMaps(instance);
-            },
-            onChangeMonthYear: function (year, month, instance) {
-                keepDatepickerAboveMaps(instance);
+            todayHighlight: true
+        });
+    }
+
+    function getTimeSuffix(value) {
+        var match = String(value || '').match(/\s+(\d{1,2}:\d{2}(?:\s*[AP]M)?)\s*$/i);
+        return match ? match[1] : '';
+    }
+
+    function buildOptions($input) {
+        var dateFormat = $input.data('date-format') || window.uplantDateFormat;
+        var texts = window.uplantDatepickerTexts || {};
+
+        return $.extend({}, texts, {
+            dateFormat: dateFormat,
+            format: dateFormat.replace('yy', 'yyyy'),
+            language: window.uplantDatepickerLanguage,
+            autoclose: true,
+            todayHighlight: true,
+            onSelect: function (dateText) {
+                if (!$input.data('preserve-time')) {
+                    return;
+                }
+
+                var time = getTimeSuffix($input.val());
+                $input.val(time ? dateText + ' ' + time : dateText);
             }
         });
     }
 
     $(function () {
-        $('.datepicker').each(function () {
+        $('.datepicker, .datetimepicker').each(function () {
             var $input = $(this);
-            var options = getOptions($input);
-
             if ($input.data('datepicker')) {
-                $input.datepicker('option', options);
                 return;
             }
 
-            $input.datepicker(options);
+            $input.datepicker(buildOptions($input));
         });
     });
 })(window.jQuery, window);
