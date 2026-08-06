@@ -1,11 +1,12 @@
 # UPlant
 
 ## Panoramica
-UPlant è un gestionale per orti botanici nato per digitalizzare e semplificare le attività operative quotidiane (anagrafica piante, tracciamento storico, collocazione, immagini, percorsi per visitatori e stampa etichette).
+U-Plant è un gestionale per orti botanici nato per digitalizzare e semplificare le attività operative quotidiane (anagrafica piante, tracciamento storico, collocazione, immagini, percorsi per visitatori e stampa etichette).
 
 Il progetto è stato ideato e sviluppato da **Pietro Picconi**, con la collaborazione di **Marco D'Antraccoli** (Coordinatore dell'Orto Botanico dell'Università di Pisa), per offrire uno strumento concreto di verticalizzazione e ottimizzazione del lavoro in orto botanico.
 
 Questa repository contiene la nuova versione in **.NET 8**; la versione oggi in produzione è su .NET Framework 4.7.
+Il progetto è OpenSource ma saremmo lieti di avere da parte vostra una segnalazione di utilizzo per poter cooperare e migliorare il prodotto.
 
 ---
 
