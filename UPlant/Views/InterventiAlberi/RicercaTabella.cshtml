@@ -149,6 +149,14 @@
     </div>
 </div>
 
+
+@if (TempData["InterventiAlberiDeleteError"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["InterventiAlberiDeleteError"]
+    </div>
+}
+
 <div class="card card-outline card-primary mt-3">
     <div class="card-header" data-toggle="collapse" data-target="#risultatiCollapse" style="cursor:pointer;">
         <h3 class="card-title mb-0 font-weight-bold">@language.Getkey("Global_Search_Results")</h3>
@@ -207,6 +215,12 @@
                                     {
                                         <a asp-action="Edit" asp-controller="InterventiAlberi" asp-route-id="@item.id" asp-route-source="ricerca" class="btn btn-warning btn-sm" title="@language.Getkey("Global_Edit")">
                                             <i class="fa-solid fa-pencil"></i>
+                                        </a>
+                                    }
+                                    @if (isAdministrator && !item.statoIntervento)
+                                    {
+                                        <a asp-action="Delete" asp-controller="InterventiAlberi" asp-route-id="@item.id" asp-route-source="ricerca" class="btn btn-danger btn-sm" title="@language.Getkey("Global_Delete")">
+                                            <i class="fa-solid fa-trash"></i>
                                         </a>
                                     }
                                 </td>

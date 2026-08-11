@@ -892,7 +892,7 @@ namespace UPlant.Controllers
         }
         [Authorize(Roles = "Administrator")]
         // GET: Alberi/Delete/5
-        public async Task<IActionResult> Delete(Guid? id)
+        public async Task<IActionResult> Delete(Guid? id, string source)
         {
             if (id == null)
             {
@@ -912,17 +912,30 @@ namespace UPlant.Controllers
                 return NotFound();
             }
 
+            if (interventiAlberi.statoIntervento)
+            {
+                TempData["InterventiAlberiDeleteError"] = "Gli interventi chiusi non possono essere eliminati: riaprire l'intervento prima di cancellarlo.";
+                return RedirectToInterventiSource(source, interventiAlberi.individuo);
+            }
+
+            ViewData["source"] = source;
             return View(interventiAlberi);
         }
         [Authorize(Roles = "Administrator")]
         // POST: Alberi/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(Guid id)
+        public async Task<IActionResult> DeleteConfirmed(Guid id, string source)
         {
             var interventiAlberi = await _context.InterventiAlberi.FindAsync(id);
             if (interventiAlberi != null)
             {
+                if (interventiAlberi.statoIntervento)
+                {
+                    TempData["InterventiAlberiDeleteError"] = "Gli interventi chiusi non possono essere eliminati: riaprire l'intervento prima di cancellarlo.";
+                    return RedirectToInterventiSource(source, interventiAlberi.individuo);
+                }
+
                 if (interventiAlberi.storicoIndividuoId.HasValue)
                 {
                     var storico = await _context.StoricoIndividuo
@@ -938,6 +951,21 @@ namespace UPlant.Controllers
             }
 
             await _context.SaveChangesAsync();
+            return RedirectToInterventiSource(source, interventiAlberi?.individuo);
+        }
+
+        private IActionResult RedirectToInterventiSource(string source, Guid? individuoId)
+        {
+            if (string.Equals(source, "elenco", StringComparison.OrdinalIgnoreCase) && individuoId.HasValue)
+            {
+                return RedirectToAction(nameof(ElencoInterventi), new { id = individuoId.Value });
+            }
+
+            if (string.Equals(source, "ricerca", StringComparison.OrdinalIgnoreCase))
+            {
+                return RedirectToAction(nameof(RicercaTabella));
+            }
+
             return RedirectToAction(nameof(Index));
         }
 

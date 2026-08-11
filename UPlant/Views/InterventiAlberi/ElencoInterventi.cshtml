@@ -26,6 +26,13 @@
     }
     }
 </p>
+@if (TempData["InterventiAlberiDeleteError"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["InterventiAlberiDeleteError"]
+    </div>
+}
+
 
 <div class="card card-outline card-primary mt-3">
 
@@ -54,7 +61,7 @@
         <table id="table1" class="table table-bordered table-striped table-sm">
             <thead>
                 <tr>
-                    <th style="width:60px;"></th>
+                    <th style="width:100px;"></th>
                     <th>@language.Getkey("Global_Tree_Priority")</th>
                     <th>@language.Getkey("Global_Intervetion_Type")</th>
                     <th>@language.Getkey("Global_Reason")</th>
@@ -62,7 +69,7 @@
                     <th>@language.Getkey("Global_Intervention_Status")</th>
                     @if (canManageOpenInterventions)
                     {
-                        <th style="width:60px;"></th>
+                        <th style="width:100px;"></th>
                     }
                         </tr>
             </thead>
@@ -107,6 +114,12 @@
                                 {
                                     <a asp-action="Edit" asp-route-id="@item.id" asp-route-source="elenco" class="btn btn-warning btn-sm" title="@language.Getkey("Global_Edit")">
                                         <i class="fa-solid fa-pencil" style="color: #fafafa;"></i>
+                                    </a>
+                                }
+                                @if (isAdministrator && !item.statoIntervento)
+                                {
+                                    <a asp-action="Delete" asp-route-id="@item.id" asp-route-source="elenco" class="btn btn-danger btn-sm" title="@language.Getkey("Global_Delete")">
+                                        <i class="fa-solid fa-trash"></i>
                                     </a>
                                 }
                             </td>

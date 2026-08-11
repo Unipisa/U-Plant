@@ -3,6 +3,7 @@
 
 @{
     ViewData["Title"] = "Delete";
+    var source = ViewData["source"] as string;
 }
 
 <div class="row">
@@ -15,6 +16,13 @@
             </div>
 
             <div class="card-body">
+                @if (Model.statoIntervento)
+                {
+                    <div class="alert alert-danger">
+                        Gli interventi chiusi non possono essere eliminati. Riaprire l'intervento prima di cancellarlo.
+                    </div>
+                }
+
                 @if (Model.storicoIndividuoId.HasValue)
                 {
                     <div class="alert alert-warning">
@@ -80,7 +88,15 @@
             <div class="card-footer">
                 <form asp-action="Delete">
                     <input type="hidden" asp-for="id" />
-                    <input type="submit" value="@language.Getkey("Global_Delete")" class="btn btn-danger" />
+                    <input type="hidden" name="source" value="@source" />
+                    @if (Model.statoIntervento)
+                    {
+                        <input type="submit" value="@language.Getkey("Global_Delete")" class="btn btn-danger" disabled="disabled" />
+                    }
+                    else
+                    {
+                        <input type="submit" value="@language.Getkey("Global_Delete")" class="btn btn-danger" />
+                    }
                     <a asp-action="Index" class="btn btn-default">@language.Getkey("Global_Go_Back")</a>
                 </form>
             </div>
