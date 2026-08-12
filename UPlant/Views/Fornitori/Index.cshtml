@@ -40,6 +40,12 @@
                             @language.Getkey("Global_Enabled")
             </th>
             <th>
+                            Usa per accessioni
+            </th>
+            <th>
+                            Usa per interventi alberi
+            </th>
+            <th>
                             @language.Getkey("Global_Organization")
             </th>
             <th></th>
@@ -66,6 +72,12 @@
                                 {
                                     <span> @language.Getkey("Global_No") </span>
                                 }
+            </td>
+            <td>
+                                @(item.usaPerAccessioni ? language.Getkey("Global_Yes") : language.Getkey("Global_No"))
+            </td>
+            <td>
+                                @(item.usaPerInterventiAlberi ? language.Getkey("Global_Yes") : language.Getkey("Global_No"))
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.organizzazioneNavigation.descrizione)

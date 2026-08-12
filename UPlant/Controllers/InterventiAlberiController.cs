@@ -348,7 +348,7 @@ namespace UPlant.Controllers
                 ViewBag.listatipointervento = new SelectList(_context.TipoInterventiAlberi.OrderByDescending(a => a.ordinamento)
                     .Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.descrizione : a.descrizione_en }), "id", "Desc").ToList();
 
-                ViewBag.listafornitori = new SelectList(_context.Fornitori.OrderBy(a => a.descrizione)
+                ViewBag.listafornitori = new SelectList(_context.Fornitori.Where(a => a.attivo && a.usaPerInterventiAlberi).OrderBy(a => a.descrizione)
                     .Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.descrizione : a.descrizione_en }), "id", "Desc").ToList();
             }
             else
@@ -357,7 +357,7 @@ namespace UPlant.Controllers
                 ViewBag.listacollezioni = new SelectList(_context.Collezioni.OrderBy(a => a.collezione), "id", "collezione").ToList();
                 ViewBag.listapriorita = new SelectList(_context.TipoPrioritaAlberi.OrderByDescending(a => a.ordinamento), "id", "descrizione").ToList();
                 ViewBag.listatipointervento = new SelectList(_context.TipoInterventiAlberi.OrderByDescending(a => a.ordinamento), "id", "descrizione").ToList();
-                ViewBag.listafornitori = new SelectList(_context.Fornitori.OrderBy(a => a.descrizione), "id", "descrizione").ToList();
+                ViewBag.listafornitori = new SelectList(_context.Fornitori.Where(a => a.attivo && a.usaPerInterventiAlberi).OrderBy(a => a.descrizione), "id", "descrizione").ToList();
             }
 
             ViewBag.nomeScientifico ??= string.Empty;
@@ -573,7 +573,7 @@ namespace UPlant.Controllers
             ViewData["progressivo"] = individuo.progressivo;
             ViewData["utenteapertura"] = utente;
             ViewData["utenteultimamodifica"] = utente;
-            ViewData["fornitore"] = new SelectList(_context.Fornitori.OrderBy(a => a.descrizione).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.descrizione : a.descrizione_en }), "id", "Desc");
+            ViewData["fornitore"] = new SelectList(_context.Fornitori.Where(a => a.attivo && a.usaPerInterventiAlberi).OrderBy(a => a.descrizione).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.descrizione : a.descrizione_en }), "id", "Desc");
            
             ViewData["individuo"] = individuo.id;
             ViewData["nomescientifico"] = individuo.accessioneNavigation.specieNavigation.nome_scientifico;
@@ -635,7 +635,7 @@ namespace UPlant.Controllers
             
             var selectedStato = interventiAlberi.statoIndividuo;
             var selectedCondizione = interventiAlberi.condizione;
-            ViewData["fornitore"] = new SelectList(_context.Fornitori.OrderBy(a => a.descrizione).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.descrizione : a.descrizione_en }), "id", "Desc", interventiAlberi.fornitore);
+            ViewData["fornitore"] = new SelectList(_context.Fornitori.Where(a => a.attivo && a.usaPerInterventiAlberi).OrderBy(a => a.descrizione).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.descrizione : a.descrizione_en }), "id", "Desc", interventiAlberi.fornitore);
             
             ViewData["individuo"] = new SelectList(_context.Individui, "id", "progressivo", interventiAlberi.individuo);
             ViewData["utenteapertura"] = new SelectList(_context.Users, "Id", "CF", interventiAlberi.utenteapertura);
@@ -696,7 +696,7 @@ namespace UPlant.Controllers
             ViewData["progressivo"] = interventiAlberi.individuoNavigation?.progressivo;
             ViewData["nomescientifico"] = interventiAlberi.individuoNavigation?.accessioneNavigation?.specieNavigation?.nome_scientifico;
             ViewBag.source = source;
-            ViewData["fornitore"] = new SelectList(_context.Fornitori.OrderBy(a => a.descrizione).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.descrizione : a.descrizione_en }), "id", "Desc", interventiAlberi.fornitore);
+            ViewData["fornitore"] = new SelectList(_context.Fornitori.Where(a => a.attivo && a.usaPerInterventiAlberi).OrderBy(a => a.descrizione).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.descrizione : a.descrizione_en }), "id", "Desc", interventiAlberi.fornitore);
 
 
             if (linguacorrente == "en-US")
@@ -850,7 +850,7 @@ namespace UPlant.Controllers
                 return RedirectToAction(nameof(ElencoInterventi), new { id = interventiAlberi.individuo });
             }
             ViewBag.source = source;
-            ViewData["fornitore"] = new SelectList(_context.Fornitori.OrderBy(a => a.descrizione).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.descrizione : a.descrizione_en }), "id", "Desc", interventiAlberi.fornitore);
+            ViewData["fornitore"] = new SelectList(_context.Fornitori.Where(a => a.attivo && a.usaPerInterventiAlberi).OrderBy(a => a.descrizione).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.descrizione : a.descrizione_en }), "id", "Desc", interventiAlberi.fornitore);
 
 
             var individuo = await _context.Individui
