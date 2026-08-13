@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 
@@ -392,6 +392,8 @@ public partial class Entities : DbContext
                 .IsRequired()
                 .IsUnicode(false);
             entity.Property(e => e.descrizione_en).IsUnicode(false);
+            entity.Property(e => e.usaPerAccessioni).HasDefaultValue(true);
+            entity.Property(e => e.usaPerInterventiAlberi).HasDefaultValue(true);
             entity.Property(e => e.note).HasColumnType("text");
 
             entity.HasOne(d => d.organizzazioneNavigation).WithMany(p => p.Fornitori)

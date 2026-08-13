@@ -782,7 +782,7 @@ namespace UPlant.Controllers
 
 
             }
-            ViewBag.fornitore = new SelectList(_context.Fornitori.OrderBy(a => a.descrizione), "id", "descrizione", accessioni.fornitore);
+            ViewBag.fornitore = new SelectList(_context.Fornitori.Where(a => a.attivo && a.usaPerAccessioni).OrderBy(a => a.descrizione), "id", "descrizione", accessioni.fornitore);
             ViewBag.raccoglitore = new SelectList(_context.Raccoglitori.OrderBy(a => a.nominativo), "id", "nominativo", accessioni.raccoglitore);
             ViewBag.provincia = new SelectList(_context.Province.OrderBy(a => a.descrizione), "codice", "descrizione", accessioni.provincia);
            ViewBag.identificatore = new SelectList(_context.Identificatori.OrderBy(a => a.nominativo), "id", "nominativo", accessioni.identificatore);

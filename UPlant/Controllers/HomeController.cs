@@ -387,7 +387,7 @@ namespace UPlant.Controllers
         {
             var linguacorrente = _languageService.GetCurrentCulture();
             ViewBag.listafamiglie = new SelectList(_context.Famiglie.OrderBy(x => x.descrizione), "id", "descrizione").ToList();
-            ViewBag.listafornitore = new SelectList(_context.Fornitori.OrderBy(a => a.descrizione), "id", "descrizione").ToList();
+            ViewBag.listafornitore = new SelectList(_context.Fornitori.Where(a => a.attivo && a.usaPerAccessioni).OrderBy(a => a.descrizione), "id", "descrizione").ToList();
             ViewBag.listaraccoglitore = new SelectList(_context.Raccoglitori.OrderBy(a => a.nominativo), "id", "nominativo").ToList();
             if (linguacorrente == "en-US")
             {
@@ -560,7 +560,7 @@ namespace UPlant.Controllers
 
                
             
-            ViewBag.listafornitore = new SelectList(_context.Fornitori.OrderBy(x => x.descrizione), "id", "descrizione").ToList();
+            ViewBag.listafornitore = new SelectList(_context.Fornitori.Where(a => a.attivo && a.usaPerAccessioni).OrderBy(x => x.descrizione), "id", "descrizione").ToList();
            
             
             

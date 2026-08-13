@@ -15,6 +15,10 @@ public partial class Fornitori
 
     public bool attivo { get; set; }
 
+    public bool usaPerAccessioni { get; set; } = true;
+
+    public bool usaPerInterventiAlberi { get; set; } = true;
+
     public string descrizione_en { get; set; }
 
     public virtual ICollection<Accessioni> Accessioni { get; set; } = new List<Accessioni>();

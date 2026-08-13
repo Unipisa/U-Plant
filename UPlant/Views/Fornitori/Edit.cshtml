@@ -24,13 +24,29 @@
             </div>
             <div class="form-group">
                 <label asp-for="note" class="control-label">@language.Getkey("Global_Notes")</label>
-                <input asp-for="note" class="form-control" />
+                <textarea asp-for="note" class="form-control" rows="5"></textarea>
                 <span asp-validation-for="note" class="text-danger"></span>
             </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="attivo" /> @language.Getkey("Global_Enabled")
-                </label>
+            <div class="form-group">
+                <label class="control-label">Visibilità</label>
+                <div class="form-check">
+                    <label class="form-check-label">
+                        <input class="form-check-input" asp-for="usaPerAccessioni" /> Accessioni
+                    </label>
+                </div>
+                <div class="form-check">
+                    <label class="form-check-label">
+                        <input class="form-check-input" asp-for="usaPerInterventiAlberi" /> Alberi
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Stato</label>
+                <div class="form-check">
+                    <label class="form-check-label">
+                        <input class="form-check-input" asp-for="attivo" /> @language.Getkey("Global_Enabled")
+                    </label>
+                </div>
             </div>
             <div class="form-group">
                 <label asp-for="organizzazione" class="control-label">@language.Getkey("Global_Organization")</label>

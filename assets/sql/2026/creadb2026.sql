@@ -433,6 +433,8 @@ CREATE TABLE [dbo].[Fornitori](
 	[descrizione] [varchar](max) NOT NULL,
 	[note] [text] NULL,
 	[attivo] [bit] NOT NULL,
+	[usaPerAccessioni] [bit] NOT NULL,
+	[usaPerInterventiAlberi] [bit] NOT NULL,
 	[descrizione_en] [varchar](max) NULL,
  CONSTRAINT [PK_Fornitori] PRIMARY KEY CLUSTERED 
 (
@@ -2050,7 +2052,7 @@ INSERT [dbo].[Famiglie] ([id], [descrizione], [descrizione_en]) VALUES (N'822db8
 INSERT [dbo].[Famiglie] ([id], [descrizione], [descrizione_en]) VALUES (N'a1ac427e-9cef-430d-8794-fe4d350d9443', N'Asphodelaceae', NULL)
 INSERT [dbo].[Famiglie] ([id], [descrizione], [descrizione_en]) VALUES (N'5b1a0118-56e4-4a90-a85c-ffbd760299d4', N'Berberidaceae', NULL)
 GO
-INSERT [dbo].[Fornitori] ([id], [organizzazione], [descrizione], [note], [attivo]) VALUES (N'9189177a-8604-42be-a1f8-f82e4e878d1e', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', N' Non definito', NULL, 1)
+INSERT [dbo].[Fornitori] ([id], [organizzazione], [descrizione], [note], [attivo], [usaPerAccessioni], [usaPerInterventiAlberi]) VALUES (N'9189177a-8604-42be-a1f8-f82e4e878d1e', N'05c0b59a-65ab-4dc4-be25-8a4e3b734587', N' Non definito', NULL, 1, 1, 1)
 GO
 INSERT [dbo].[Generi] ([id], [descrizione], [famiglia]) VALUES (N'abd0adc8-c49f-435b-8a4e-005664c5e733', N'Aegonychon', N'98d55666-a29a-4c42-8a43-33264ac7bfba')
 INSERT [dbo].[Generi] ([id], [descrizione], [famiglia]) VALUES (N'6b015622-a644-4061-8a20-007d96f7ceb1', N'Juglans', N'636dadb6-9ee8-42ee-be7a-4f0fedef19f8')
@@ -7504,6 +7506,10 @@ GO
 ALTER TABLE [dbo].[Famiglie] ADD  CONSTRAINT [DF_Famiglie_id]  DEFAULT (newid()) FOR [id]
 GO
 ALTER TABLE [dbo].[Fornitori] ADD  DEFAULT (newid()) FOR [id]
+GO
+ALTER TABLE [dbo].[Fornitori] ADD  CONSTRAINT [DF_Fornitori_usaPerAccessioni] DEFAULT ((1)) FOR [usaPerAccessioni]
+GO
+ALTER TABLE [dbo].[Fornitori] ADD  CONSTRAINT [DF_Fornitori_usaPerInterventiAlberi] DEFAULT ((1)) FOR [usaPerInterventiAlberi]
 GO
 ALTER TABLE [dbo].[Generi] ADD  DEFAULT (newid()) FOR [id]
 GO
