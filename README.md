@@ -6,7 +6,7 @@ U-Plant è un gestionale per orti botanici nato per digitalizzare e semplificare
 Il progetto è stato ideato e sviluppato da **Pietro Picconi**, con la collaborazione di **Marco D'Antraccoli** (Coordinatore dell'Orto Botanico dell'Università di Pisa), per offrire uno strumento concreto di verticalizzazione e ottimizzazione del lavoro in orto botanico.
 Email : pietro.picconi@unipi.it
 
-Questa repository contiene la nuova versione in **.NET 8**; la versione oggi in produzione è su .NET Framework 4.7.
+Questa repository contiene la nuova versione in **.NET 8**; la vecchia versione ormai dismessa era basata sul .NET Framework 4.7.
 
 Il progetto è OpenSource ma saremmo lieti di avere da parte vostra una segnalazione di utilizzo per poter cooperare e migliorare il prodotto.
 
