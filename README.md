@@ -16,7 +16,7 @@ Il progetto è OpenSource ma saremmo lieti di avere da parte vostra una segnalaz
 - Rendere disponibile una base applicativa riusabile anche da altre realtà botaniche.
 - Favorire la standardizzazione dei processi gestionali degli orti botanici.
 - Mantenere dimensioni infrastrutturali contenute:
-  - database (37 tabelle) con occupazione ~300MB dopo anni di utilizzo;
+  - database (43 tabelle) con occupazione ~300MB dopo anni di utilizzo;
   - applicazione con occupazione ~200MB;
   - supporto ad archiviazione immagini su repository filesystem.
 
