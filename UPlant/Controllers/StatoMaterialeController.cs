@@ -47,8 +47,8 @@ namespace UPlant.Controllers
         // GET: StatoMateriale/Create
         public IActionResult Create()
         {
-            string username = User.Identities.FirstOrDefault()?.Claims?.Where(c => c.Type == "UnipiUserID").FirstOrDefault()?.Value;
-            var oggettoutente = _context.Users.Where(a => a.UnipiUserName == (username).Substring(0, username.IndexOf("@")));
+            string username = UPlant.Services.UserIdentityHelper.GetUsername(User);
+            var oggettoutente = _context.Users.Where(a => a.UnipiUserName == username);
             ViewData["organizzazione"] = new SelectList(_context.Organizzazioni.OrderBy(x => x.descrizione), "id", "descrizione", oggettoutente.Select(x => x.Organizzazione).FirstOrDefault());
             var ultimo = _context.StatoMateriale.Max(x => (int?)x.ordinamento);
             ViewData["ordinesuccessivo"] = StaticUtils.GeneraSuccessivo(ultimo);

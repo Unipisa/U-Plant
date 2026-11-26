@@ -155,8 +155,8 @@ namespace U_Plant.Controllers
             percorsi.datacreazione = DateTime.Now;
             percorsi.attivo = false;
             percorsi.ordinamento = 1;
-            string username = User.Identities.FirstOrDefault()?.Claims?.Where(c => c.Type == "UnipiUserID").FirstOrDefault()?.Value;
-            string autore = _context.Users.Where(a => a.UnipiUserName == (username).Substring(0, username.IndexOf("@"))).Select(a => a.Name + " " + a.LastName).FirstOrDefault();
+            string username = UPlant.Services.UserIdentityHelper.GetUsername(User);
+            string autore = _context.Users.Where(a => a.UnipiUserName == username).Select(a => a.Name + " " + a.LastName).FirstOrDefault();
 
 
             percorsi.autore = autore;

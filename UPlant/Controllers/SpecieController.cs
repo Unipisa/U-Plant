@@ -298,6 +298,10 @@ namespace UPlant.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("id,genere,validazione_tassonomica,nome,nome_scientifico,data_inserimento,lsid,autori,regno,areale,subspecie,autorisub,varieta,autorivar,cult,autoricult,note,nome_comune,nome_comune_en,iucn_globale,iucn_italia,cites")] Specie specie)
         {
+            if (!await HasCurrentUserOrganizationAsync())
+            {
+                ModelState.AddModelError(string.Empty, "Impossibile individuare l'organizzazione dell'utente. Esci e accedi nuovamente.");
+            }
             if (ModelState.IsValid)
             {
                 specie.id = Guid.NewGuid();
@@ -339,6 +343,10 @@ namespace UPlant.Controllers
                 return NotFound();
             }
 
+            if (!await HasCurrentUserOrganizationAsync())
+            {
+                ModelState.AddModelError(string.Empty, "Impossibile individuare l'organizzazione dell'utente. Esci e accedi nuovamente.");
+            }
             if (ModelState.IsValid)
             {
                 var existing = await _context.Specie.FirstOrDefaultAsync(x => x.id == id);
@@ -1396,6 +1404,13 @@ namespace UPlant.Controllers
             if (specie == null)
             {
                 return NotFound();
+            }
+
+            if (!await HasCurrentUserOrganizationAsync())
+            {
+                TempData["PendingWfoForm"] = JsonSerializer.Serialize(input);
+                TempData["WfoError"] = "Impossibile individuare l'organizzazione dell'utente. Esci e accedi nuovamente prima di salvare la verifica WFO.";
+                return RedirectToAction(nameof(ReviewWfo), new { id = specie.id, returnToAudit = input.ReturnToAudit });
             }
 
             specie.validazione_tassonomica = await EnsureDefaultValidazioneTassonomicaAsync(ResolveValidationStatusName(input));
@@ -3303,15 +3318,14 @@ namespace UPlant.Controllers
 
         private async Task<Guid?> GetCurrentUserOrganizationAsync()
         {
-            var username = User.Identities.FirstOrDefault()?.Claims?.FirstOrDefault(c => c.Type == "UnipiUserID")?.Value;
-            if (string.IsNullOrWhiteSpace(username) || !username.Contains("@"))
+            var username = UPlant.Services.UserIdentityHelper.GetUsername(User);
+            if (string.IsNullOrWhiteSpace(username))
             {
                 return null;
             }
 
-            var usernameKey = username[..username.IndexOf("@", StringComparison.Ordinal)];
             return await _context.Users
-                .Where(a => a.UnipiUserName == usernameKey)
+                .Where(a => a.UnipiUserName == username && a.IsEnabled)
                 .Select(a => (Guid?)a.Organizzazione)
                 .FirstOrDefaultAsync();
         }
@@ -3319,12 +3333,20 @@ namespace UPlant.Controllers
         private async Task<Guid> EnsureDefaultValidazioneTassonomicaAsync(string statusName)
         {
             var organizationId = await GetCurrentUserOrganizationAsync();
-            if (!organizationId.HasValue)
+            if (!organizationId.HasValue || organizationId.Value == Guid.Empty ||
+                !await _context.Organizzazioni.AnyAsync(x => x.id == organizationId.Value))
             {
-                return Guid.Empty;
+                throw new InvalidOperationException("Impossibile individuare l'organizzazione dell'utente per la validazione tassonomica.");
             }
 
             return await EnsureDefaultValidazioneTassonomicaAsync(_context, organizationId.Value, statusName, CancellationToken.None);
+        }
+
+        private async Task<bool> HasCurrentUserOrganizationAsync()
+        {
+            var organizationId = await GetCurrentUserOrganizationAsync();
+            return organizationId.HasValue && organizationId.Value != Guid.Empty &&
+                await _context.Organizzazioni.AnyAsync(x => x.id == organizationId.Value);
         }
 
         private static async Task<Guid> EnsureDefaultValidazioneTassonomicaAsync(

@@ -121,8 +121,8 @@ namespace UPlant.Controllers
             StoricoIndividuo storicoIndividuo = new StoricoIndividuo();
             if (ModelState.IsValid)
             {
-                string username = User.Identities.FirstOrDefault()?.Claims?.Where(c => c.Type == "UnipiUserID").FirstOrDefault()?.Value;
-                Guid utente = _context.Users.Where(a => a.UnipiUserName == (username).Substring(0, username.IndexOf("@"))).Select(a => a.Id).FirstOrDefault();
+                string username = UPlant.Services.UserIdentityHelper.GetUsername(User);
+                Guid utente = _context.Users.Where(a => a.UnipiUserName == username).Select(a => a.Id).FirstOrDefault();
 
                
                 storicoIndividuo.statoIndividuo=statoIndividuo;
@@ -198,8 +198,8 @@ namespace UPlant.Controllers
         public async Task<IActionResult> Edit(Guid id,string tipo, [Bind("id,statoIndividuo,condizione,operazioniColturali,dataInserimento,individuo,utente")] StoricoIndividuo storicoIndividuo)
         {
             var linguacorrente = _languageService.GetCurrentCulture();
-            string username = User.Identities.FirstOrDefault()?.Claims?.Where(c => c.Type == "UnipiUserID").FirstOrDefault()?.Value;
-            Guid utente = _context.Users.Where(a => a.UnipiUserName == (username).Substring(0, username.IndexOf("@"))).Select(a => a.Id).FirstOrDefault();
+            string username = UPlant.Services.UserIdentityHelper.GetUsername(User);
+            Guid utente = _context.Users.Where(a => a.UnipiUserName == username).Select(a => a.Id).FirstOrDefault();
             if (id != storicoIndividuo.id)
             {
                 return NotFound();

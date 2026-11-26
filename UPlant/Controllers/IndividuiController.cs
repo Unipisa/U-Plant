@@ -36,8 +36,8 @@ namespace UPlant.Controllers
         }
         public async Task<IActionResult> Index(string valida)
         {
-            string username = User.Identities.FirstOrDefault()?.Claims?.Where(c => c.Type == "UnipiUserID").FirstOrDefault()?.Value;
-            Guid organizzazione = _context.Users.Where(a => a.UnipiUserName == (username).Substring(0, username.IndexOf("@"))).Select(a => a.Organizzazione).FirstOrDefault();
+            string username = UPlant.Services.UserIdentityHelper.GetUsername(User);
+            Guid organizzazione = _context.Users.Where(a => a.UnipiUserName == username).Select(a => a.Organizzazione).FirstOrDefault();
             if (valida == null)
             {
                 return View(await _context.Individui.Include(i => i.accessioneNavigation).Include(i => i.cartellinoNavigation).Include(i => i.collezioneNavigation).Include(i => i.propagatoModalitaNavigation).Include(i => i.sessoNavigation).Include(i => i.settoreNavigation).Where(a => a.accessioneNavigation.organizzazione == organizzazione).ToListAsync());
@@ -134,8 +134,8 @@ namespace UPlant.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UploadDoc(IEnumerable<IFormFile> files, Guid idindividuo, string descrizione, string tipo)
         {
-            string username = User.Identities.FirstOrDefault()?.Claims?.Where(c => c.Type == "UnipiUserID").FirstOrDefault()?.Value;
-            Guid utente = _context.Users.Where(a => a.UnipiUserName == (username).Substring(0, username.IndexOf("@"))).Select(a => a.Id).FirstOrDefault();
+            string username = UPlant.Services.UserIdentityHelper.GetUsername(User);
+            Guid utente = _context.Users.Where(a => a.UnipiUserName == username).Select(a => a.Id).FirstOrDefault();
             var maxUpload = Convert.ToDecimal(string.IsNullOrWhiteSpace(_opt.Value.Pathfile.DocumentsMaxUploadBytes)
                 ? _opt.Value.Pathfile.ImagesMaxUploadBytes
                 : _opt.Value.Pathfile.DocumentsMaxUploadBytes);
@@ -287,8 +287,8 @@ namespace UPlant.Controllers
         public async Task<IActionResult> UploadImg(IEnumerable<IFormFile> files, Guid idindividuo, string descrizione, string credits, string tipo)
 
         {
-            string username = User.Identities.FirstOrDefault()?.Claims?.Where(c => c.Type == "UnipiUserID").FirstOrDefault()?.Value;
-            string autore = _context.Users.Where(a => a.UnipiUserName == (username).Substring(0, username.IndexOf("@"))).Select(a => a.Name + " " + a.LastName).FirstOrDefault();
+            string username = UPlant.Services.UserIdentityHelper.GetUsername(User);
+            string autore = _context.Users.Where(a => a.UnipiUserName == username).Select(a => a.Name + " " + a.LastName).FirstOrDefault();
 
             // var cognome = @User.Identities.FirstOrDefault()?.Claims?.Where(c => c.Type == "family_name").FirstOrDefault()?.Value;
             // var nome = @User.Identities.FirstOrDefault()?.Claims?.Where(c => c.Type == "given_name").FirstOrDefault()?.Value;
@@ -590,51 +590,59 @@ namespace UPlant.Controllers
             var accessione = _context.Accessioni
                 .Include(s => s.specieNavigation)
                 .FirstOrDefault(m => m.id == idaccessione);
+            if (accessione == null)
+            {
+                return NotFound();
+            }
 
-            //Accessioni accessione = _context.Accessioni.specieNavigation.Find(idaccessione);
-            //ViewBag.descr_acc = accessione.denominazione;
+            var storico = new StoricoIndividuo
+            {
+                individuoNavigation = new Individui
+                {
+                    accessione = idaccessione,
+                    propagatoData = DateTime.Today
+                }
+            };
+            PopulateCreateForm(accessione, storico, tipo);
+            return View(storico);
+        }
+
+        private void PopulateCreateForm(Accessioni accessione, StoricoIndividuo storico, string tipo)
+        {
+            var individuo = storico.individuoNavigation;
             ViewBag.accessione = accessione.id;
-            ViewBag.nome_scientifico = accessione.specieNavigation.nome_scientifico;
-            //ViewBag.individuo = idindividuo;
+            ViewBag.nome_scientifico = accessione.specieNavigation?.nome_scientifico;
             ViewBag.progressivo = accessione.progressivo;
-
-
+            ViewBag.accvecprog = accessione.vecchioprogressivo;
+            ViewBag.tipo = tipo;
             var linguacorrente = _languageService.GetCurrentCulture();
 
             if (linguacorrente == "en-US")
             {
-                ViewBag.sesso = new SelectList(_context.Sesso.OrderByDescending(a => a.descrizione).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.descrizione : a.descrizione_en }), "id", "Desc");
-                ViewBag.collezione = new SelectList(_context.Collezioni.OrderBy(a => a.collezione).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.collezione_en) ? a.collezione : a.collezione_en }), "id", "Desc");
-                ViewBag.settore = new SelectList(_context.Settori.OrderBy(a => a.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.settore_en) ? a.settore : a.settore_en }), "id", "Desc");
-                ViewBag.cartellino = new SelectList(_context.Cartellini.OrderBy(a => a.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.descrizione : a.descrizione_en }), "id", "Desc");
-                ViewBag.tipocartellino = new SelectList(_context.TipoCartellino.OrderBy(a => a.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.descrizione : a.descrizione_en }), "id", "Desc");
-                ViewBag.propagatoModalita = new SelectList(_context.ModalitaPropagazione.OrderBy(a => a.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.propagatoModalita : a.descrizione_en }), "id", "Desc");
-                ViewBag.statoindividuo = new SelectList(_context.StatoIndividuo.OrderBy(a => a.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.stato : a.descrizione_en }), "id", "Desc");
-                ViewBag.condizione = new SelectList(_context.Condizioni.OrderBy(p => p.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.condizione : a.descrizione_en }), "id", "Desc");
+                ViewBag.sesso = new SelectList(_context.Sesso.OrderByDescending(a => a.descrizione).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.descrizione : a.descrizione_en }), "id", "Desc", individuo.sesso);
+                ViewBag.collezione = new SelectList(_context.Collezioni.Where(x => x.settore == individuo.settore).OrderBy(a => a.collezione).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.collezione_en) ? a.collezione : a.collezione_en }), "id", "Desc", individuo.collezione);
+                ViewBag.settore = new SelectList(_context.Settori.OrderBy(a => a.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.settore_en) ? a.settore : a.settore_en }), "id", "Desc", individuo.settore);
+                ViewBag.cartellino = new SelectList(_context.Cartellini.OrderBy(a => a.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.descrizione : a.descrizione_en }), "id", "Desc", individuo.cartellino);
+                ViewBag.tipocartellino = new SelectList(_context.TipoCartellino.OrderBy(a => a.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.descrizione : a.descrizione_en }), "id", "Desc", individuo.tipocartellino);
+                ViewBag.propagatoModalita = new SelectList(_context.ModalitaPropagazione.OrderBy(a => a.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.propagatoModalita : a.descrizione_en }), "id", "Desc", individuo.propagatoModalita);
+                ViewBag.statoindividuo = new SelectList(_context.StatoIndividuo.OrderBy(a => a.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.stato : a.descrizione_en }), "id", "Desc", storico.statoIndividuo);
+                ViewBag.condizione = new SelectList(_context.Condizioni.OrderBy(p => p.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.condizione : a.descrizione_en }), "id", "Desc", storico.condizione);
 
             }
             else
             {
-                ViewBag.sesso = new SelectList(_context.Sesso.OrderByDescending(a => a.descrizione), "id", "descrizione");
-                ViewBag.collezione = new SelectList(_context.Collezioni.OrderBy(a => a.collezione), "id", "collezione");
-                ViewBag.settore = new SelectList(_context.Settori.OrderBy(a => a.ordinamento), "id", "settore");
-                ViewBag.cartellino = new SelectList(_context.Cartellini.OrderBy(a => a.ordinamento), "id", "descrizione");
-                ViewBag.tipocartellino = new SelectList(_context.TipoCartellino.OrderBy(a => a.ordinamento), "id", "descrizione");
-                ViewBag.propagatoModalita = new SelectList(_context.ModalitaPropagazione.OrderBy(a => a.ordinamento), "id", "propagatoModalita");
-                ViewBag.statoindividuo = new SelectList(_context.StatoIndividuo.OrderBy(a => a.ordinamento), "id", "stato");
-                ViewBag.condizione = new SelectList(_context.Condizioni.OrderBy(p => p.ordinamento), "id", "condizione");
+                ViewBag.sesso = new SelectList(_context.Sesso.OrderByDescending(a => a.descrizione), "id", "descrizione", individuo.sesso);
+                ViewBag.collezione = new SelectList(_context.Collezioni.Where(x => x.settore == individuo.settore).OrderBy(a => a.collezione), "id", "collezione", individuo.collezione);
+                ViewBag.settore = new SelectList(_context.Settori.OrderBy(a => a.ordinamento), "id", "settore", individuo.settore);
+                ViewBag.cartellino = new SelectList(_context.Cartellini.OrderBy(a => a.ordinamento), "id", "descrizione", individuo.cartellino);
+                ViewBag.tipocartellino = new SelectList(_context.TipoCartellino.OrderBy(a => a.ordinamento), "id", "descrizione", individuo.tipocartellino);
+                ViewBag.propagatoModalita = new SelectList(_context.ModalitaPropagazione.OrderBy(a => a.ordinamento), "id", "propagatoModalita", individuo.propagatoModalita);
+                ViewBag.statoindividuo = new SelectList(_context.StatoIndividuo.OrderBy(a => a.ordinamento), "id", "stato", storico.statoIndividuo);
+                ViewBag.condizione = new SelectList(_context.Condizioni.OrderBy(p => p.ordinamento), "id", "condizione", storico.condizione);
 
             }
-
-
-
-
-
-
-
-
-            ViewBag.accvecprog = accessione.vecchioprogressivo;
-            return View();
+            ViewBag.latitudine = individuo.latitudine;
+            ViewBag.longitudine = individuo.longitudine;
         }
 
         // POST: Individui/Create
@@ -650,131 +658,99 @@ namespace UPlant.Controllers
 
 
         {
-            string username = User.Identities.FirstOrDefault()?.Claims?.Where(c => c.Type == "UnipiUserID").FirstOrDefault()?.Value;
-            Guid utente = _context.Users.Where(a => a.UnipiUserName == (username).Substring(0, username.IndexOf("@"))).Select(a => a.Id).FirstOrDefault();
-
-
-            Individui individuo = new Individui();
-            //individuo.id = Guid.NewGuid().ToString("N");
-            individuo.progressivo = nextProg(accessione);
-            individuo.accessione = accessione;
-            individuo.individuo = null;
-            individuo.sesso = sesso;
-            individuo.cartellino = cartellino;
-            individuo.tipocartellino = tipocartellino;
-            individuo.propagatoData = DateTime.Parse(propagatoData);
-            individuo.propagatoModalita = propagatoModalita;
-            individuo.settore = settore;
-
-            if (collezione != Guid.Parse("00000000-0000-0000-0000-000000000000"))
+            var parent = await _context.Accessioni
+                .Include(x => x.specieNavigation)
+                .FirstOrDefaultAsync(x => x.id == accessione);
+            if (parent == null)
             {
-                individuo.collezione = collezione;
-            }
-            else
-            {
-                var collezionenon = await _context.Collezioni.Where(x => x.settore == settore && x.collezione.Contains("Non ")).Select(x => x.id).FirstOrDefaultAsync();
-                individuo.collezione = collezionenon;
+                return NotFound();
             }
 
-            if (!TryNormalizeCoordinates(ref latitudine, ref longitudine, out string coordinateError))
+            var username = UPlant.Services.UserIdentityHelper.GetUsername(User);
+            var utente = await _context.Users
+                .Where(x => x.UnipiUserName == username && x.IsEnabled)
+                .Select(x => x.Id).FirstOrDefaultAsync();
+            if (utente == Guid.Empty)
+            {
+                ModelState.AddModelError(string.Empty, "Utente non riconosciuto. Esci e accedi nuovamente.");
+            }
+
+            if (!DateTime.TryParse(propagatoData, out var dataPropagazione))
+            {
+                ModelState.AddModelError(nameof(propagatoData), "Inserisci una data di propagazione valida.");
+                ModelState.SetModelValue("individuoNavigation.propagatoData", propagatoData, propagatoData);
+            }
+
+            if (collezione == Guid.Empty)
+            {
+                collezione = await _context.Collezioni
+                    .Where(x => x.settore == settore && x.collezione.Contains("Non "))
+                    .Select(x => x.id).FirstOrDefaultAsync();
+            }
+            if (collezione == Guid.Empty || !await _context.Collezioni.AnyAsync(x => x.id == collezione && x.settore == settore))
+            {
+                ModelState.AddModelError(nameof(collezione), "Seleziona una collezione valida per il settore indicato.");
+            }
+
+            if (!TryNormalizeCoordinates(ref latitudine, ref longitudine, out var coordinateError))
             {
                 ModelState.AddModelError(string.Empty, coordinateError);
             }
 
-            individuo.indexSeminum = indexSeminum;
-            individuo.destinazioni = destinazioni;
-            individuo.note = note;
-            individuo.latitudine = latitudine;
-            individuo.longitudine = longitudine;
-
-            if (!String.IsNullOrEmpty(accvecprog))
+            var individuo = new Individui
             {
-                if (!String.IsNullOrEmpty(vecchioprogressivo))
-                {
-                    individuo.vecchioprogressivo = accvecprog + "/" + vecchioprogressivo;
-                }
-                else
-                {
-                    individuo.vecchioprogressivo = accvecprog;
-                }
-
+                accessione = accessione,
+                sesso = sesso,
+                cartellino = cartellino,
+                tipocartellino = tipocartellino,
+                propagatoData = dataPropagazione,
+                propagatoModalita = propagatoModalita,
+                settore = settore,
+                collezione = collezione,
+                indexSeminum = indexSeminum,
+                destinazioni = destinazioni,
+                note = note,
+                latitudine = latitudine,
+                longitudine = longitudine,
+                validazione = true
+            };
+            if (!string.IsNullOrEmpty(accvecprog))
+            {
+                individuo.vecchioprogressivo = string.IsNullOrEmpty(vecchioprogressivo)
+                    ? accvecprog : accvecprog + "/" + vecchioprogressivo;
             }
-
-            individuo.validazione = true;
-            /*  if (Session["ruolo"].ToString() == "Amministratore")
-              {
-                  individuo.validazione = true;
-              }
-              else
-              {
-                  individuo.validazione = false;
-              }*/
-            StoricoIndividuo storico = new StoricoIndividuo();
-            //storico.id = Guid.NewGuid().ToString("N");
-            storico.individuo = individuo.id;
-            storico.statoIndividuo = statoindividuo;
-            storico.condizione = condizione;
-            storico.operazioniColturali = operazioniColturali;
-            storico.dataInserimento = DateTime.Now;
-            storico.utente = utente;
+            var storico = new StoricoIndividuo
+            {
+                individuoNavigation = individuo,
+                statoIndividuo = statoindividuo,
+                condizione = condizione,
+                operazioniColturali = operazioniColturali,
+                dataInserimento = DateTime.Now,
+                utente = utente
+            };
 
             if (ModelState.IsValid)
             {
-                _context.Individui.Add(individuo);
-                await _context.SaveChangesAsync();
-
-                Individui individuotrovato = _context.Individui.Find(individuo.id);
-                if (individuotrovato != null)
+                individuo.progressivo = nextProg(accessione);
+                try
                 {
-                    storico.individuo = individuotrovato.id;
+                    // Saving the related graph uses one database transaction.
                     _context.StoricoIndividuo.Add(storico);
                     await _context.SaveChangesAsync();
-                    // return RedirectToAction(nameof(Details), nameof(Accessioni), individuo.accessione);
                     AddPageAlerts(PageAlertType.Success, _languageService.Getkey("Message_5").ToString());
                     TempData["MsgSucc"] = _languageService.Getkey("Message_5").ToString();
-                    return RedirectToAction(nameof(Details), nameof(Accessioni), new { id = individuo.accessione, tipo = tipo });
-
+                    return RedirectToAction("Details", "Accessioni", new { id = accessione, tipo });
                 }
-
-
+                catch (DbUpdateException ex)
+                {
+                    HttpContext.RequestServices.GetRequiredService<ILogger<IndividuiController>>()
+                        .LogError(ex, "Errore durante la creazione dell'individuo per l'accessione {AccessioneId}", accessione);
+                    ModelState.AddModelError(string.Empty, "Impossibile salvare l'individuo e lo storico. Verifica i dati e riprova.");
+                }
             }
 
-            var linguacorrente = _languageService.GetCurrentCulture();
-
-            if (linguacorrente == "en-US")
-            {
-                ViewBag.sesso = new SelectList(_context.Sesso.OrderByDescending(a => a.descrizione).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.descrizione : a.descrizione_en }), "id", "Desc", individuo.sesso);
-                ViewBag.collezione = new SelectList(_context.Collezioni.OrderBy(a => a.collezione).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.collezione_en) ? a.collezione : a.collezione_en }), "id", "Desc", collezione);
-                ViewBag.settore = new SelectList(_context.Settori.OrderBy(a => a.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.settore_en) ? a.settore : a.settore_en }), "id", "Desc", settore);
-                ViewBag.cartellino = new SelectList(_context.Cartellini.OrderBy(a => a.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.descrizione : a.descrizione_en }), "id", "Desc", individuo.cartellino);
-                ViewBag.tipocartellino = new SelectList(_context.TipoCartellino.OrderBy(a => a.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.descrizione : a.descrizione_en }), "id", "Desc", individuo.tipocartellino);
-                ViewBag.propagatoModalita = new SelectList(_context.ModalitaPropagazione.OrderBy(a => a.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.propagatoModalita : a.descrizione_en }), "id", "Desc", propagatoModalita);
-                ViewBag.statoindividuo = new SelectList(_context.StatoIndividuo.OrderBy(a => a.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.stato : a.descrizione_en }), "id", "Desc", statoindividuo);
-                ViewBag.condizione = new SelectList(_context.Condizioni.OrderBy(p => p.ordinamento).Select(a => new { a.id, Desc = string.IsNullOrEmpty(a.descrizione_en) ? a.condizione : a.descrizione_en }), "id", "Desc", condizione);
-
-            }
-            else
-            {
-                ViewBag.sesso = new SelectList(_context.Sesso.OrderByDescending(a => a.descrizione), "id", "descrizione", individuo.sesso);
-                ViewBag.collezione = new SelectList(_context.Collezioni.OrderBy(a => a.collezione), "id", "collezione", collezione);
-                ViewBag.settore = new SelectList(_context.Settori.OrderBy(a => a.ordinamento), "id", "settore", settore);
-                ViewBag.cartellino = new SelectList(_context.Cartellini.OrderBy(a => a.ordinamento), "id", "descrizione", individuo.cartellino);
-                ViewBag.tipocartellino = new SelectList(_context.TipoCartellino.OrderBy(a => a.ordinamento), "id", "descrizione", individuo.tipocartellino);
-                ViewBag.propagatoModalita = new SelectList(_context.ModalitaPropagazione.OrderBy(a => a.ordinamento), "id", "propagatoModalita", propagatoModalita);
-                ViewBag.statoindividuo = new SelectList(_context.StatoIndividuo.OrderBy(a => a.ordinamento), "id", "stato", statoindividuo);
-                ViewBag.condizione = new SelectList(_context.Condizioni.OrderBy(p => p.ordinamento), "id", "condizione", condizione);
-
-            }
-
-
-
-
-
-
-
-            ViewBag.latitudine = latitudine;
-            ViewBag.longitudine = longitudine;
-            return View(individuo);
+            PopulateCreateForm(parent, storico, tipo);
+            return View(storico);
         }
 
         // GET: Individui/Edit/5
@@ -880,7 +856,23 @@ namespace UPlant.Controllers
 
 
             // Storico storico = db.Storico.Where(x => x.individuo == id).Single(); 
-            StoricoIndividuo storico = _context.StoricoIndividuo.Where(x => x.individuo == individui.id).OrderByDescending(x => x.dataInserimento).First();
+            if (individui == null)
+            {
+                return NotFound();
+            }
+            ViewBag.tipo = tipo;
+            StoricoIndividuo storico = _context.StoricoIndividuo.Where(x => x.individuo == individui.id).OrderByDescending(x => x.dataInserimento).FirstOrDefault();
+            var propagationDate = individui.propagatoData;
+            if (!string.IsNullOrWhiteSpace(propagatoData) && !DateTime.TryParse(propagatoData, out propagationDate))
+            {
+                ModelState.AddModelError(nameof(propagatoData), "Inserisci una data di propagazione valida.");
+            }
+            if (!await _context.Collezioni.AnyAsync(x => x.id == collezione && x.settore == settore))
+            {
+                ModelState.AddModelError(nameof(collezione), "Seleziona una collezione valida per il settore indicato.");
+            }
+            individui.settore = settore;
+            individui.collezione = collezione;
             //var storicoesite = _context.Storico.Where(x => x.individuo == individui.id).FirstOrDefault();
             if (!TryNormalizeCoordinates(ref latitudine, ref longitudine, out string coordinateError))
             {
@@ -893,7 +885,7 @@ namespace UPlant.Controllers
                 individui.sesso = sesso;
                 if (propagatoData != "")
                 {
-                    individui.propagatoData = DateTime.Parse(propagatoData);
+                    individui.propagatoData = propagationDate;
                 }
                 individui.propagatoModalita = propagatoModalita;
                 individui.settore = settore;
@@ -916,12 +908,17 @@ namespace UPlant.Controllers
 
 
 
-                _context.SaveChanges();
-
-
-
-                // passare ultimi valori stato individuo
-                return RedirectToAction(nameof(Create), nameof(StoricoIndividuo), new { idindividuo = individui.id, tipo = tipo, damodifica = "ok" });
+                try
+                {
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction("Create", "StoricoIndividuo", new { idindividuo = individui.id, tipo, damodifica = "ok" });
+                }
+                catch (DbUpdateException ex)
+                {
+                    HttpContext.RequestServices.GetRequiredService<ILogger<IndividuiController>>()
+                        .LogError(ex, "Errore durante l'aggiornamento dell'individuo {IndividuoId}", id);
+                    ModelState.AddModelError(string.Empty, "Impossibile aggiornare l'individuo. Verifica i dati e riprova.");
+                }
                 //  return RedirectToAction("../StoricoIndivi/Create", new { idindividuo = individui.id, damodifica = "ok" });
             }
 
@@ -1107,8 +1104,8 @@ namespace UPlant.Controllers
 
         private Individui ultima(Guid accpadre)
         {
-            string username = User.Identities.FirstOrDefault()?.Claims?.Where(c => c.Type == "UnipiUserID").FirstOrDefault()?.Value;
-            Guid organizzazione = _context.Users.Where(a => a.UnipiUserName == (username).Substring(0, username.IndexOf("@"))).Select(a => a.Organizzazione).FirstOrDefault();
+            string username = UPlant.Services.UserIdentityHelper.GetUsername(User);
+            Guid organizzazione = _context.Users.Where(a => a.UnipiUserName == username).Select(a => a.Organizzazione).FirstOrDefault();
             return _context.Individui.Where(c => c.accessione == accpadre).OrderByDescending(c => c.progressivo).FirstOrDefault();
         }
 

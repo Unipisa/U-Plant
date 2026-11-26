@@ -199,7 +199,8 @@ if (typeauth == "AZURE")
       onTokenValidated?.Invoke(context);
       var db = context.HttpContext.RequestServices.GetRequiredService<Entities>();
 
-      var Utente = db.Users.Where(x => x.UnipiUserName == context.Principal.Identity.Name.Substring(0, context.Principal.Identity.Name.IndexOf("@"))); // unipiusername deve essere valorizzato solo con la parte iniziale dell'utente quindi es.a038858#unipi.it nel db è solo a038858 quindi devo fare la sub dell'identity.name
+      var usernameKey = UserIdentityHelper.GetUsername(context.Principal);
+      var Utente = db.Users.Where(x => usernameKey != "" && x.UnipiUserName == usernameKey && x.IsEnabled);
                                                                                                                                                        // Recupero tutti gli eventuali ruoli dell'utente
 
 
@@ -207,7 +208,7 @@ if (typeauth == "AZURE")
       var roles = (from ur in db.UserRole
                    join u in db.Users on ur.UserFK equals u.Id
                    join r in db.Roles on ur.RoleFK equals r.Id
-                   where context.Principal.Identity.Name.StartsWith(u.UnipiUserName) && u.IsEnabled
+                   where usernameKey != "" && u.UnipiUserName == usernameKey && u.IsEnabled
                    select r.Descr
                         ).ToList();
 
@@ -324,10 +325,11 @@ builder.Services.AddAuthentication(
 
 
                 
+                var usernameKey = UserIdentityHelper.GetUsername(context.Principal);
                 var roles = (from ur in db.UserRole
                              join u in db.Users on ur.UserFK equals u.Id
                              join r in db.Roles on ur.RoleFK equals r.Id
-                             where context.Principal.Identity.Name.StartsWith(u.UnipiUserName) && u.IsEnabled
+                             where usernameKey != "" && u.UnipiUserName == usernameKey && u.IsEnabled
                              select r.Descr
                               ).ToList();
 
@@ -376,6 +378,12 @@ if (typeauth == "SAML2")
 
             var valorecodicefiscale = identity.Claims.Where(x => x.Type == valcodfisetting).Select(x => x.Value).FirstOrDefault();
             var valoreuid = identity.Claims.Where(x => x.Type == configuration["Saml2Auth:typeclaim_udi"]).Select(x => x.Value).FirstOrDefault();
+            var usernameKey = UserIdentityHelper.Normalize(valoreuid);
+            if (string.IsNullOrWhiteSpace(usernameKey))
+            {
+                context.RejectPrincipal();
+                return Task.CompletedTask;
+            }
             identity.AddClaim(new Claim(ClaimTypes.Name, valoreuid));
 
 
@@ -393,12 +401,17 @@ if (typeauth == "SAML2")
             var roles = (from ur in db.UserRole
                          join u in db.Users on ur.UserFK equals u.Id
                          join r in db.Roles on ur.RoleFK equals r.Id
-                         where valorecodicefiscale == (u.CF) && u.IsEnabled
+                         where u.UnipiUserName == usernameKey && u.IsEnabled
                          select r.Descr
                           ).ToList();
 
 
-            var userSaml = db.Users.Where(x => x.CF == valorecodicefiscale).FirstOrDefault();
+            var userSaml = db.Users.FirstOrDefault(x => x.UnipiUserName == usernameKey && x.IsEnabled);
+            if (userSaml == null)
+            {
+                context.RejectPrincipal();
+                return Task.CompletedTask;
+            }
 
             List<Claim> claims = new List<Claim>();
             if (roles.Count > 0)
@@ -411,6 +424,7 @@ if (typeauth == "SAML2")
 
             }
             claims.Add(new Claim("principal", valoreuid));
+            claims.Add(new Claim("UnipiUserID", valoreuid));
             claims.Add(new Claim("sub", valoreuid));
             claims.Add(new Claim("given_name", userSaml.Name));
             claims.Add(new Claim("family_name", userSaml.LastName));

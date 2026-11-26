@@ -70,7 +70,7 @@ namespace UPlant.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Guid[] ruoli,[Bind("Id,Name,LastName,Email,UnipiUserName,CF,IsEnabled,CreatedAt,CreatedBy,CreatedFrom,TipologiaUtente,Organizzazione")] Users users)
         {
-            string username = User.Identities.FirstOrDefault()?.Claims?.Where(c => c.Type == "UnipiUserID").FirstOrDefault()?.Value;
+            string username = UPlant.Services.UserIdentityHelper.GetUsername(User);
             string cognomecreatore = @User.Identities.FirstOrDefault()?.Claims?.Where(c => c.Type == "family_name").FirstOrDefault()?.Value;
             string nomecreatore = @User.Identities.FirstOrDefault()?.Claims?.Where(c => c.Type == "given_name").FirstOrDefault()?.Value;
           
@@ -169,7 +169,7 @@ namespace UPlant.Controllers
             {
                 return NotFound();
             }
-            string username = User.Identities.FirstOrDefault()?.Claims?.Where(c => c.Type == "UnipiUserID").FirstOrDefault()?.Value;
+            string username = UPlant.Services.UserIdentityHelper.GetUsername(User);
             string cognomecreatore = @User.Identities.FirstOrDefault()?.Claims?.Where(c => c.Type == "family_name").FirstOrDefault()?.Value;
             string nomecreatore = @User.Identities.FirstOrDefault()?.Claims?.Where(c => c.Type == "given_name").FirstOrDefault()?.Value;
             string hostName = Dns.GetHostName();

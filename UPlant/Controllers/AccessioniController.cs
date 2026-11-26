@@ -39,8 +39,8 @@ namespace UPlant.Controllers
         // GET: Accessioni
         public async Task<IActionResult> Index(string valida)
         {
-            string username = User.Identities.FirstOrDefault()?.Claims?.Where(c => c.Type == "UnipiUserID").FirstOrDefault()?.Value;
-            Guid organizzazione = _context.Users.Where(a => a.UnipiUserName == (username).Substring(0, username.IndexOf("@"))).Select(a => a.Organizzazione).FirstOrDefault();
+            string username = UPlant.Services.UserIdentityHelper.GetUsername(User);
+            Guid organizzazione = _context.Users.Where(a => a.UnipiUserName == username).Select(a => a.Organizzazione).FirstOrDefault();
             if (valida == null)
             {
                 return View(await _context.Accessioni.Include(a => a.Individui)
@@ -176,8 +176,8 @@ namespace UPlant.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UploadDoc(IEnumerable<IFormFile> files, Guid idaccessione, string descrizione, string tipo)
         {
-            string username = User.Identities.FirstOrDefault()?.Claims?.Where(c => c.Type == "UnipiUserID").FirstOrDefault()?.Value;
-            Guid utente = _context.Users.Where(a => a.UnipiUserName == (username).Substring(0, username.IndexOf("@"))).Select(a => a.Id).FirstOrDefault();
+            string username = UPlant.Services.UserIdentityHelper.GetUsername(User);
+            Guid utente = _context.Users.Where(a => a.UnipiUserName == username).Select(a => a.Id).FirstOrDefault();
             var maxUpload = Convert.ToDecimal(string.IsNullOrWhiteSpace(_opt.Value.Pathfile.DocumentsMaxUploadBytes)
                 ? _opt.Value.Pathfile.ImagesMaxUploadBytes
                 : _opt.Value.Pathfile.DocumentsMaxUploadBytes);
@@ -382,17 +382,28 @@ namespace UPlant.Controllers
             string risultato = "si";
             Accessioni accessioni = new Accessioni();
             
-            string username = User.Identities.FirstOrDefault()?.Claims?.Where(c => c.Type == "UnipiUserID").FirstOrDefault()?.Value;
-            var oggettoutente = _context.Users.Where(a => a.UnipiUserName == (username).Substring(0, username.IndexOf("@")));
+            string username = UPlant.Services.UserIdentityHelper.GetUsername(User);
+            var oggettoutente = _context.Users.Where(a => a.UnipiUserName == username);
             
             Guid organizzazione = oggettoutente.Select(a => a.Organizzazione).FirstOrDefault();
             Guid utente = oggettoutente.Select(a => a.Id).FirstOrDefault();
             string ruolo = _context.UserRole.Where(a => a.UserFK == utente).Select(a => a.RoleFKNavigation.Descr).FirstOrDefault();
+            if (utente == Guid.Empty || organizzazione == Guid.Empty)
+            {
+                ModelState.AddModelError(string.Empty, "Utente o organizzazione non riconosciuti. Esci e accedi nuovamente.");
+            }
             accessioni.utenteAcquisizione = utente;
             accessioni.organizzazione = organizzazione;
             accessioni.utenteUltimaModifica = utente;
             accessioni.dataUltimaModifica = DateTime.Now;
-            accessioni.dataAcquisizione = DateTime.Parse(dataAcquisizione);
+            if (DateTime.TryParse(dataAcquisizione, out var acquisitionDate))
+            {
+                accessioni.dataAcquisizione = acquisitionDate;
+            }
+            else
+            {
+                ModelState.AddModelError(nameof(dataAcquisizione), "Inserisci una data di acquisizione valida.");
+            }
             accessioni.progressivo = nextProg(accessioni);
             accessioni.longitudine = longitudine;
             accessioni.latitudine = latitudine;
@@ -445,7 +456,14 @@ namespace UPlant.Controllers
 
             if (!String.IsNullOrEmpty(altitudine))
             {
-                accessioni.altitudine = Convert.ToInt32(altitudine);
+                if (int.TryParse(altitudine, out var altitude))
+                {
+                    accessioni.altitudine = altitude;
+                }
+                else
+                {
+                    ModelState.AddModelError(nameof(altitudine), "Inserisci un'altitudine numerica valida.");
+                }
             }
             else
             {
@@ -465,11 +483,22 @@ namespace UPlant.Controllers
             }
             else
             {
-                accessioni.dataraccolta = DateTime.Parse(dataraccolta);
+                if (DateTime.TryParse(dataraccolta, out var collectionDate))
+                {
+                    accessioni.dataraccolta = collectionDate;
+                }
+                else
+                {
+                    ModelState.AddModelError(nameof(dataraccolta), "Inserisci una data di raccolta valida.");
+                }
             }
             accessioni.gradoIncertezza = gradoIncertezza;
             // || String.IsNullOrEmpty(nazione) || String.IsNullOrEmpty(tipoMateriale)  || String.IsNullOrEmpty(tipoAcquisizione)  || numeroEsemplari <= 0 || String.IsNullOrEmpty(gradoIncertezza)
             accessioni.specie = specie;
+            if (!await _context.Specie.AnyAsync(x => x.id == specie))
+            {
+                ModelState.AddModelError(nameof(specie), "Seleziona una specie presente in archivio.");
+            }
 
 
             //if singoli
@@ -496,7 +525,10 @@ namespace UPlant.Controllers
                         TempData["MsgSucc"] = _languageService.Getkey("Message_7").ToString();
                         risultato = "si";
 
-                    } catch (Exception ) {
+                    } catch (DbUpdateException ex) {
+                        HttpContext.RequestServices.GetRequiredService<ILogger<AccessioniController>>()
+                            .LogError(ex, "Errore durante la creazione dell'accessione");
+                        ModelState.AddModelError(string.Empty, "Impossibile salvare l'accessione. Verifica i dati e riprova.");
                         AddPageAlerts(PageAlertType.Error, _languageService.Getkey("Message_14").ToString());
                         TempData["MsgErr"] = _languageService.Getkey("Message_14").ToString();
                         risultato = "no";
@@ -508,6 +540,10 @@ namespace UPlant.Controllers
                 AddPageAlerts(PageAlertType.Warning, _languageService.Getkey("Message_16").ToString());
                 TempData["MsgAle"] = _languageService.Getkey("Message_16").ToString();
                 risultato = "no";
+            }
+
+            if (risultato != "si")
+            {
                 var linguacorrente = _languageService.GetCurrentCulture();
                 if (linguacorrente == "en-US")
                 {
@@ -642,20 +678,37 @@ namespace UPlant.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         
-        public ActionResult Edit(Guid id, string ipen, Guid identificatore, Guid tipoAcquisizione,
+        public async Task<IActionResult> Edit(Guid id, string ipen, Guid identificatore, Guid tipoAcquisizione,
                                    Guid fornitore, Guid raccoglitore, Guid provenienza, // non mi serve la famiglia e il genere
                                    Guid specie, string nazione, string regione, string provincia,
                                    string localita, string altitudine, string habitat, Guid tipoMateriale,
                                    int numeroEsemplari, Guid statoMateriale, Guid gradoIncertezza, bool associatoErbario, string vouchercode, string note, string vecchioprogressivo, string longitudine, string latitudine, string dataraccolta)//,string ipendiprovenienza
         {
             Accessioni accessioni = _context.Accessioni.Find(id);
+            if (accessioni == null)
+            {
+                return NotFound();
+            }
+            if (!await _context.Specie.AnyAsync(x => x.id == specie))
+            {
+                ModelState.AddModelError(nameof(specie), "Seleziona una specie presente in archivio.");
+            }
+            if (!ModelState.IsValid)
+            {
+                return await Edit((Guid?)id);
+            }
             string msgerr = "";
             if (ModelState.IsValid)
             {
-                string username = User.Identities.FirstOrDefault()?.Claims?.Where(c => c.Type == "UnipiUserID").FirstOrDefault()?.Value;
-                var oggettoutente = _context.Users.Where(a => a.UnipiUserName == (username).Substring(0, username.IndexOf("@")));
+                string username = UPlant.Services.UserIdentityHelper.GetUsername(User);
+                var oggettoutente = _context.Users.Where(a => a.UnipiUserName == username);
                 Guid organizzazione = oggettoutente.Select(a => a.Organizzazione).FirstOrDefault();
                 Guid utente = oggettoutente.Select(a => a.Id).FirstOrDefault();
+                if (utente == Guid.Empty || organizzazione == Guid.Empty)
+                {
+                    ModelState.AddModelError(string.Empty, "Utente o organizzazione non riconosciuti. Esci e accedi nuovamente.");
+                    return await Edit((Guid?)id);
+                }
                 try
                 {
                     accessioni.identificatore = identificatore;
@@ -879,8 +932,8 @@ namespace UPlant.Controllers
         }
         public string nextIpen(Accessioni a)
         {
-            string username = User.Identities.FirstOrDefault()?.Claims?.Where(c => c.Type == "UnipiUserID").FirstOrDefault()?.Value;
-            Guid organizzazione = _context.Users.Where(a => a.UnipiUserName == (username).Substring(0, username.IndexOf("@"))).Select(a => a.Organizzazione).FirstOrDefault();
+            string username = UPlant.Services.UserIdentityHelper.GetUsername(User);
+            Guid organizzazione = _context.Users.Where(a => a.UnipiUserName == username).Select(a => a.Organizzazione).FirstOrDefault();
             string prefissoipen = _context.Organizzazioni.Where(a => a.id == organizzazione).Select(a => a.prefissoIpen).FirstOrDefault();
             Accessioni accessultima = ultima(a);
             string retnextipen;
@@ -916,8 +969,8 @@ namespace UPlant.Controllers
         public Accessioni ultima(Accessioni a)
         {
             int anno = a.dataAcquisizione.Year;
-            string username = User.Identities.FirstOrDefault()?.Claims?.Where(c => c.Type == "UnipiUserID").FirstOrDefault()?.Value;
-            Guid organizzazione = _context.Users.Where(a => a.UnipiUserName == (username).Substring(0, username.IndexOf("@"))).Select(a => a.Organizzazione).FirstOrDefault();
+            string username = UPlant.Services.UserIdentityHelper.GetUsername(User);
+            Guid organizzazione = _context.Users.Where(a => a.UnipiUserName == username).Select(a => a.Organizzazione).FirstOrDefault();
             return _context.Accessioni.Where(c => c.dataAcquisizione.Year == anno && c.organizzazione == organizzazione).OrderByDescending(c => c.progressivo).FirstOrDefault();
         }
 

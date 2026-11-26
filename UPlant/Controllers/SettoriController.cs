@@ -45,14 +45,20 @@ namespace UPlant.Controllers
         }
 
         // GET: Settori/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            string username = User.Identities.FirstOrDefault()?.Claims?.Where(c => c.Type == "UnipiUserID").FirstOrDefault()?.Value;
-            var oggettoutente = _context.Users.Where(a => a.UnipiUserName == (username).Substring(0, username.IndexOf("@")));
-            ViewData["organizzazione"] = new SelectList(_context.Organizzazioni.OrderBy(x => x.descrizione), "id", "descrizione", oggettoutente.Select(x => x.Organizzazione).FirstOrDefault());
-            var ultimo = _context.Settori.Max(x => (int?)x.ordinamento);
-            ViewData["ordinesuccessivo"] = StaticUtils.GeneraSuccessivo(ultimo);
-            return View();
+            var organizationId = await GetCreateOrganizationAsync();
+            if (!organizationId.HasValue)
+            {
+                ModelState.AddModelError(string.Empty, "Impossibile individuare l'organizzazione dell'utente. Verifica la configurazione dell'account.");
+            }
+            var ultimo = await _context.Settori.MaxAsync(x => (int?)x.ordinamento);
+            return View(new Settori
+            {
+                organizzazione = organizationId ?? Guid.Empty,
+                ordinamento = StaticUtils.GeneraSuccessivo(ultimo),
+                colore = "#6c757d"
+            });
         }
 
         // POST: Settori/Create
@@ -60,17 +66,57 @@ namespace UPlant.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("id,settore,organizzazione,visualizzazioneweb,ordinamento,settore_en,colore")] Settori settori)
+        public async Task<IActionResult> Create([Bind("settore,visualizzazioneweb,ordinamento,settore_en,colore")] Settori settori)
         {
+            var organizationId = await GetCreateOrganizationAsync();
+            if (!organizationId.HasValue)
+            {
+                ModelState.AddModelError(string.Empty, "Impossibile individuare l'organizzazione dell'utente. Verifica la configurazione dell'account.");
+            }
+            else
+            {
+                settori.organizzazione = organizationId.Value;
+            }
+            if (string.IsNullOrWhiteSpace(settori.settore))
+            {
+                ModelState.AddModelError(nameof(settori.settore), "Inserisci il nome del settore.");
+            }
             if (ModelState.IsValid)
             {
                 settori.id = Guid.NewGuid();
                 _context.Add(settori);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                try
+                {
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (DbUpdateException ex)
+                {
+                    var logger = HttpContext.RequestServices.GetRequiredService<ILogger<SettoriController>>();
+                    logger.LogError(ex, "Errore durante la creazione del settore {SectorId}", settori.id);
+                    ModelState.AddModelError(string.Empty, "Impossibile salvare il settore. Verifica i dati inseriti e riprova.");
+                }
             }
-            ViewData["organizzazione"] = new SelectList(_context.Organizzazioni.OrderBy(x => x.descrizione), "id", "descrizione", settori.organizzazione);
             return View(settori);
+        }
+
+        private async Task<Guid?> GetCreateOrganizationAsync()
+        {
+            var username = UPlant.Services.UserIdentityHelper.GetUsername(User);
+            if (string.IsNullOrWhiteSpace(username))
+            {
+                return null;
+            }
+            var organizations = await _context.Users.AsNoTracking()
+                .Where(x => x.IsEnabled && x.UnipiUserName == username)
+                .Select(x => x.Organizzazione).Distinct().Take(2).ToListAsync();
+            if (organizations.Count != 1 || organizations[0] == Guid.Empty)
+            {
+                return null;
+            }
+            var organizationId = organizations[0];
+            return await _context.Organizzazioni.AnyAsync(x => x.id == organizationId)
+                ? organizationId : (Guid?)null;
         }
 
         // GET: Settori/Edit/5
@@ -104,12 +150,17 @@ namespace UPlant.Controllers
                 return NotFound();
             }
 
+            if (!await _context.Organizzazioni.AnyAsync(x => x.id == settori.organizzazione))
+            {
+                ModelState.AddModelError(nameof(settori.organizzazione), "Seleziona un'organizzazione valida.");
+            }
             if (ModelState.IsValid)
             {
                 try
                 {
                     _context.Update(settori);
                     await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -117,12 +168,14 @@ namespace UPlant.Controllers
                     {
                         return NotFound();
                     }
-                    else
-                    {
-                        throw;
-                    }
+                    ModelState.AddModelError(string.Empty, "I dati sono stati modificati da un altro utente. Ricarica la pagina e riprova.");
                 }
-                return RedirectToAction(nameof(Index));
+                catch (DbUpdateException ex)
+                {
+                    HttpContext.RequestServices.GetRequiredService<ILogger<SettoriController>>()
+                        .LogError(ex, "Errore durante l'aggiornamento di Settori {Id}", id);
+                    ModelState.AddModelError(string.Empty, "Impossibile aggiornare i dati. Verifica i riferimenti selezionati e riprova.");
+                }
             }
             ViewData["organizzazione"] = new SelectList(_context.Organizzazioni.OrderBy(x => x.descrizione), "id", "descrizione", settori.organizzazione);
             return View(settori);

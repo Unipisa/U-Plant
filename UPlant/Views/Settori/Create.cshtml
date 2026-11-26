@@ -10,7 +10,7 @@
     </div>
     <div class="card-body">
         <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div asp-validation-summary="All" class="text-danger" role="alert"></div>
             <div class="form-group">
                 <label asp-for="settore" class="control-label">@language.Getkey("Global_Sector")</label>
                 <input asp-for="settore" class="form-control" />
@@ -29,16 +29,13 @@
             </div>
             <div class="form-group">
                 <label asp-for="colore" class="control-label">Colore settore</label>
-                <input asp-for="colore" type="color" class="form-control" value="#6c757d" />
+                <input asp-for="colore" type="color" class="form-control" />
                 <span asp-validation-for="colore" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="ordinamento" class="control-label">@language.Getkey("Global_Sorting")</label>
-                <input asp-for="ordinamento" class="form-control" value="@ViewData["ordinesuccessivo"]" />
+                <input asp-for="ordinamento" class="form-control" />
                 <span asp-validation-for="ordinamento" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input asp-for="organizzazione" type="hidden" value="@ViewData["organizzazione"]" />
             </div>
             <div class="form-group">
                 <input type="submit" value="Crea" class="btn btn-primary" />

@@ -561,8 +561,8 @@ namespace UPlant.Controllers
                .FirstOrDefault(x => x.id == idindividuo);
 
 
-            string username = User.Identities.FirstOrDefault()?.Claims?.Where(c => c.Type == "UnipiUserID").FirstOrDefault()?.Value;
-            var oggettoutente = _context.Users.Where(a => a.UnipiUserName == (username).Substring(0, username.IndexOf("@")));
+            string username = UPlant.Services.UserIdentityHelper.GetUsername(User);
+            var oggettoutente = _context.Users.Where(a => a.UnipiUserName == username);
 
 
             Guid organizzazione = oggettoutente.Select(a => a.Organizzazione).FirstOrDefault();
@@ -881,14 +881,13 @@ namespace UPlant.Controllers
 
         private Guid GetCurrentUserId()
         {
-            var username = User.Identities.FirstOrDefault()?.Claims?.FirstOrDefault(c => c.Type == "UnipiUserID")?.Value;
-            if (string.IsNullOrWhiteSpace(username) || !username.Contains("@"))
+            var username = UPlant.Services.UserIdentityHelper.GetUsername(User);
+            if (string.IsNullOrWhiteSpace(username))
             {
                 return Guid.Empty;
             }
 
-            var userNameOnly = username.Substring(0, username.IndexOf("@"));
-            return _context.Users.Where(u => u.UnipiUserName == userNameOnly).Select(u => u.Id).FirstOrDefault();
+            return _context.Users.Where(u => u.UnipiUserName == username && u.IsEnabled).Select(u => u.Id).FirstOrDefault();
         }
         [Authorize(Roles = "Administrator")]
         // GET: Alberi/Delete/5

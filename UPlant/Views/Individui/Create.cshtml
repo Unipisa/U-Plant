@@ -34,7 +34,7 @@
             {
                 @Html.AntiForgeryToken()
                 <div class="card-body">
-                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    @Html.ValidationSummary(false, "", new { @class = "text-danger", role = "alert" })
                     <div class="form-group">
 
                         @Html.Hidden("accessione", null, new { @id = "accessione" })
@@ -325,7 +325,7 @@
     </script>
    
     <script>
-        $('#collezione').prop('disabled', true);// aggiunta altrimenti si poteva selezionare una collezione senza aver selezionato prima un settore
+        $('#collezione').prop('disabled', !$('#collezione').val());
         var baseUrlSettori = '@Url.Action("GetSettori", "Common")';
         var baseUrlCollezioni = '@Url.Action("GetCollezioni", "Common")';
         var settoriColorMap = {};

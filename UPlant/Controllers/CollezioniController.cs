@@ -60,15 +60,32 @@ namespace UPlant.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("id,collezione,organizzazione,settore,collezione_en")] Collezioni collezioni)
         {
+            if (!await _context.Organizzazioni.AnyAsync(x => x.id == collezioni.organizzazione))
+            {
+                ModelState.AddModelError(nameof(collezioni.organizzazione), "Seleziona un'organizzazione valida.");
+            }
+            if (!await _context.Settori.AnyAsync(x => x.id == collezioni.settore && x.organizzazione == collezioni.organizzazione))
+            {
+                ModelState.AddModelError(nameof(collezioni.settore), "Seleziona un settore valido per l'organizzazione indicata.");
+            }
             if (ModelState.IsValid)
             {
                 collezioni.id = Guid.NewGuid();
                 _context.Add(collezioni);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                try
+                {
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (DbUpdateException ex)
+                {
+                    HttpContext.RequestServices.GetRequiredService<ILogger<CollezioniController>>()
+                        .LogError(ex, "Errore durante la creazione della collezione");
+                    ModelState.AddModelError(string.Empty, "Impossibile salvare la collezione. Verifica i dati e riprova.");
+                }
             }
-            string username = User.Identities.FirstOrDefault()?.Claims?.Where(c => c.Type == "UnipiUserID").FirstOrDefault()?.Value;
-            var oggettoutente = _context.Users.Where(a => a.UnipiUserName == (username).Substring(0, username.IndexOf("@")));
+            string username = UPlant.Services.UserIdentityHelper.GetUsername(User);
+            var oggettoutente = _context.Users.Where(a => a.UnipiUserName == username);
             ViewData["organizzazione"] = new SelectList(_context.Organizzazioni.OrderBy(x => x.descrizione), "id", "descrizione", oggettoutente.Select(x => x.Organizzazione).FirstOrDefault());
             ViewData["settore"] = new SelectList(_context.Settori, "id", "settore", collezioni.settore);
             return View(collezioni);
@@ -104,12 +121,21 @@ namespace UPlant.Controllers
                 return NotFound();
             }
 
+            if (!await _context.Organizzazioni.AnyAsync(x => x.id == collezioni.organizzazione))
+            {
+                ModelState.AddModelError(nameof(collezioni.organizzazione), "Seleziona un'organizzazione valida.");
+            }
+            if (!await _context.Settori.AnyAsync(x => x.id == collezioni.settore && x.organizzazione == collezioni.organizzazione))
+            {
+                ModelState.AddModelError(nameof(collezioni.settore), "Seleziona un settore valido per l'organizzazione indicata.");
+            }
             if (ModelState.IsValid)
             {
                 try
                 {
                     _context.Update(collezioni);
                     await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -117,12 +143,14 @@ namespace UPlant.Controllers
                     {
                         return NotFound();
                     }
-                    else
-                    {
-                        throw;
-                    }
+                    ModelState.AddModelError(string.Empty, "I dati sono stati modificati da un altro utente. Ricarica la pagina e riprova.");
                 }
-                return RedirectToAction(nameof(Index));
+                catch (DbUpdateException ex)
+                {
+                    HttpContext.RequestServices.GetRequiredService<ILogger<CollezioniController>>()
+                        .LogError(ex, "Errore durante l'aggiornamento di Collezioni {Id}", id);
+                    ModelState.AddModelError(string.Empty, "Impossibile aggiornare i dati. Verifica i riferimenti selezionati e riprova.");
+                }
             }
             ViewData["organizzazione"] = new SelectList(_context.Organizzazioni.OrderBy(x => x.descrizione), "id", "descrizione", collezioni.organizzazione);
             ViewData["settore"] = new SelectList(_context.Settori, "id", "settore", collezioni.settore);
