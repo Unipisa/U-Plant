@@ -813,4 +813,13 @@
   <data name="Global_Taxonomic_Validation" xml:space="preserve">
     <value>Validazione Tassonomica</value>
   </data>
+  <data name="Global_Reader" xml:space="preserve">
+    <value>Lettore</value>
+  </data>
+  <data name="Global_Administrator" xml:space="preserve">
+    <value>Amministratore</value>
+  </data>
+  <data name="Global_Operator" xml:space="preserve">
+    <value>Operatore</value>
+  </data>
 </root>

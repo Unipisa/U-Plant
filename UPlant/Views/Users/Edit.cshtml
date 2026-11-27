@@ -84,21 +84,21 @@
                     {
                         <div class="form-check">
                             <input class="form-check-input js-primary-role" type="radio" name="ruoli" id="role-administrator" value="@administratorRole.Value" @(selectedPrimaryRole?.Value == administratorRole.Value ? "checked" : "") />
-                            <label class="form-check-label" for="role-administrator">Administrator</label>
+                            <label class="form-check-label" for="role-administrator">@language.Getkey("Global_Administrator")</label>
                         </div>
                     }
                     @if (operatorRole != null)
                     {
                         <div class="form-check">
                             <input class="form-check-input js-primary-role" type="radio" name="ruoli" id="role-operator" value="@operatorRole.Value" @(selectedPrimaryRole?.Value == operatorRole.Value ? "checked" : "") />
-                            <label class="form-check-label" for="role-operator">Operator</label>
+                            <label class="form-check-label" for="role-operator">@language.Getkey("Global_Operator")</label>
                         </div>
                     }
                     @if (readerRole != null)
                     {
                         <div class="form-check">
                             <input class="form-check-input js-primary-role" type="radio" name="ruoli" id="role-reader" value="@readerRole.Value" @(selectedPrimaryRole?.Value == readerRole.Value ? "checked" : "") />
-                            <label class="form-check-label" for="role-reader">Reader</label>
+                            <label class="form-check-label" for="role-reader">@language.Getkey("Global_Reader")</label>
                         </div>
                     }
                 </div>
@@ -107,14 +107,14 @@
                     {
                         <div class="form-check">
                             <input class="form-check-input js-support-tool" type="checkbox" name="ruoli" id="role-discover" value="@discoverRole.Value" @(selectedRoleIds.Contains(Guid.Parse(discoverRole.Value)) ? "checked" : "") @(!canSelectSupportTools ? "disabled" : "") />
-                            <label class="form-check-label" for="role-discover">Discover</label>
+                            <label class="form-check-label" for="role-discover">@language.Getkey("Shared_Comp_Sb_UPlant_Discover")</label>
                         </div>
                     }
                     @if (treeManagerRole != null)
                     {
                         <div class="form-check">
                             <input class="form-check-input js-support-tool" type="checkbox" name="ruoli" id="role-treemanager" value="@treeManagerRole.Value" @(selectedRoleIds.Contains(Guid.Parse(treeManagerRole.Value)) ? "checked" : "") @(!canSelectSupportTools ? "disabled" : "") />
-                            <label class="form-check-label" for="role-treemanager">TreeManager</label>
+                            <label class="form-check-label" for="role-treemanager">@language.Getkey("Shared_Comp_Sb_Tree")</label>
                         </div>
                     }
                 </div>
