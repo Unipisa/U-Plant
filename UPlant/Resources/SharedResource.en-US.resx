@@ -822,4 +822,7 @@
   <data name="Global_Operator" xml:space="preserve">
     <value>Operator</value>
   </data>
+  <data name="Users_RoleSelection_Help" xml:space="preserve">
+    <value>{0}, {1} and {2} are mutually exclusive. {3} and {4} can be enabled for {1} or {2}; {2} users have read-only access.</value>
+  </data>
 </root>

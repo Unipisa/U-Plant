@@ -84,6 +84,8 @@ namespace UPlant.Controllers
 
             var normalizedRoleIds = await NormalizeRoleSelectionAsync(ruoli);
 
+            ViewData["SelectedRoleIds"] = normalizedRoleIds;
+
             var utenteesistente = _context.UserRole.Include(u => u.UserFKNavigation).Include(u => u.RoleFKNavigation).Where(u => u.UserFKNavigation.UnipiUserName == users.UnipiUserName && normalizedRoleIds.Contains(u.RoleFK));
 
                // var utenteesistente = _context.Users.Where(a => a.UnipiUserName == users.UnipiUserName );

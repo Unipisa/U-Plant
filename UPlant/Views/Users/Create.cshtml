@@ -38,11 +38,7 @@
                 <input asp-for="CF" class="form-control" />
                 <span asp-validation-for="CF" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label class="control-label">@language.Getkey("Global_Role")</label>
-               @Html.ListBox("ruoli", (SelectList)ViewData["Ruolo"], new { @class = "form-control" })
-                <small class="form-text text-muted">Ruoli fondamentali: Administrator (esclusivo), Operator e Reader (alternativi). Operator e Reader possono includere Discover e TreeManager; per Reader consentono solo la consultazione.</small>
-            </div>
+            <partial name="_RoleSelection" />
             <div class="form-group">
                 <label asp-for="TipologiaUtente" class="control-label">@language.Getkey("Global_User_Type")</label>
                 <select asp-for="TipologiaUtente" class="form-control" asp-items="ViewBag.TipologiaUtente"></select>
@@ -95,6 +91,7 @@
         <script src="~/js/select2.min.js"></script>
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+    <script src="~/js/user-role-selection.js" asp-append-version="true"></script>
     
   
   }

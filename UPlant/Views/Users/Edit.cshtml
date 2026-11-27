@@ -2,26 +2,6 @@
 @inject LanguageService language
 @{
     ViewData["Title"] = "Edit";
-    var ruoloItems = ((SelectList)ViewData["Ruolo"]).ToList();
-    string NormalizeRoleName(string roleName) => roleName?.Trim() ?? string.Empty;
-
-    var administratorRole = ruoloItems.FirstOrDefault(r => string.Equals(NormalizeRoleName(r.Text), "Administrator", StringComparison.OrdinalIgnoreCase));
-    var operatorRole = ruoloItems.FirstOrDefault(r => string.Equals(NormalizeRoleName(r.Text), "Operator", StringComparison.OrdinalIgnoreCase));
-    var readerRole = ruoloItems.FirstOrDefault(r => string.Equals(NormalizeRoleName(r.Text), "Reader", StringComparison.OrdinalIgnoreCase));
-    var discoverRole = ruoloItems.FirstOrDefault(r => string.Equals(NormalizeRoleName(r.Text), "Discover", StringComparison.OrdinalIgnoreCase));
-    var treeManagerRole = ruoloItems.FirstOrDefault(r => string.Equals(NormalizeRoleName(r.Text), "TreeManager", StringComparison.OrdinalIgnoreCase));
-    var selectedRoleIds = (ViewData["SelectedRoleIds"] as IEnumerable<Guid>)?.ToHashSet() ?? new HashSet<Guid>();
-
-    bool IsRoleSelected(SelectListItem roleItem)
-    {
-        return roleItem != null && Guid.TryParse(roleItem.Value, out var roleId) && selectedRoleIds.Contains(roleId);
-    }
-
-    var isAdministratorSelected = IsRoleSelected(administratorRole);
-    var isOperatorSelected = IsRoleSelected(operatorRole);
-    var isReaderSelected = IsRoleSelected(readerRole);
-    var canSelectSupportTools = !isAdministratorSelected && (isOperatorSelected || isReaderSelected);
-    var selectedPrimaryRole = isAdministratorSelected ? administratorRole : isOperatorSelected ? operatorRole : isReaderSelected ? readerRole : readerRole;
 }
 
 <div class="card card-outline card-primary">
@@ -77,49 +57,7 @@
                 <input asp-for="CreatedFrom" class="form-control" />
                 <span asp-validation-for="CreatedFrom" class="text-danger"></span>
             </div>*@
-            <div class="form-group">
-                <label class="control-label">@language.Getkey("Global_Role")</label>
-                <div class="mt-2">
-                    @if (administratorRole != null)
-                    {
-                        <div class="form-check">
-                            <input class="form-check-input js-primary-role" type="radio" name="ruoli" id="role-administrator" value="@administratorRole.Value" @(selectedPrimaryRole?.Value == administratorRole.Value ? "checked" : "") />
-                            <label class="form-check-label" for="role-administrator">@language.Getkey("Global_Administrator")</label>
-                        </div>
-                    }
-                    @if (operatorRole != null)
-                    {
-                        <div class="form-check">
-                            <input class="form-check-input js-primary-role" type="radio" name="ruoli" id="role-operator" value="@operatorRole.Value" @(selectedPrimaryRole?.Value == operatorRole.Value ? "checked" : "") />
-                            <label class="form-check-label" for="role-operator">@language.Getkey("Global_Operator")</label>
-                        </div>
-                    }
-                    @if (readerRole != null)
-                    {
-                        <div class="form-check">
-                            <input class="form-check-input js-primary-role" type="radio" name="ruoli" id="role-reader" value="@readerRole.Value" @(selectedPrimaryRole?.Value == readerRole.Value ? "checked" : "") />
-                            <label class="form-check-label" for="role-reader">@language.Getkey("Global_Reader")</label>
-                        </div>
-                    }
-                </div>
-                <div class="mt-2 ms-3">
-                    @if (discoverRole != null)
-                    {
-                        <div class="form-check">
-                            <input class="form-check-input js-support-tool" type="checkbox" name="ruoli" id="role-discover" value="@discoverRole.Value" @(selectedRoleIds.Contains(Guid.Parse(discoverRole.Value)) ? "checked" : "") @(!canSelectSupportTools ? "disabled" : "") />
-                            <label class="form-check-label" for="role-discover">@language.Getkey("Shared_Comp_Sb_UPlant_Discover")</label>
-                        </div>
-                    }
-                    @if (treeManagerRole != null)
-                    {
-                        <div class="form-check">
-                            <input class="form-check-input js-support-tool" type="checkbox" name="ruoli" id="role-treemanager" value="@treeManagerRole.Value" @(selectedRoleIds.Contains(Guid.Parse(treeManagerRole.Value)) ? "checked" : "") @(!canSelectSupportTools ? "disabled" : "") />
-                            <label class="form-check-label" for="role-treemanager">@language.Getkey("Shared_Comp_Sb_Tree")</label>
-                        </div>
-                    }
-                </div>
-                <small class="form-text text-muted">Administrator, Operator e Reader sono alternativi. Discover e TreeManager sono selezionabili con Operator o Reader; per Reader consentono solo la consultazione.</small>
-            </div>
+            <partial name="_RoleSelection" />
             <div class="form-group">
                 <label asp-for="TipologiaUtente" class="control-label">@language.Getkey("Global_User_Type")</label>
                 <select asp-for="TipologiaUtente" class="form-control" asp-items="ViewBag.TipologiaUtente"></select>
@@ -143,29 +81,5 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-    <script>
-        (function () {
-            const operatorRadio = document.getElementById('role-operator');
-            const readerRadio = document.getElementById('role-reader');
-            const primaryRoleRadios = document.querySelectorAll('.js-primary-role');
-            const operatorExtras = document.querySelectorAll('.js-support-tool');
-
-            const toggleOperatorExtras = () => {
-                const enableExtras = (operatorRadio && operatorRadio.checked) || (readerRadio && readerRadio.checked);
-
-                operatorExtras.forEach(extra => {
-                    extra.disabled = !enableExtras;
-                    if (!enableExtras) {
-                        extra.checked = false;
-                    }
-                });
-            };
-
-            primaryRoleRadios.forEach(radio => {
-                radio.addEventListener('change', toggleOperatorExtras);
-            });
-
-            toggleOperatorExtras();
-        })();
-    </script>
+    <script src="~/js/user-role-selection.js" asp-append-version="true"></script>
 }

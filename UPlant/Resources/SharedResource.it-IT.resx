@@ -822,4 +822,7 @@
   <data name="Global_Operator" xml:space="preserve">
     <value>Operatore</value>
   </data>
+  <data name="Users_RoleSelection_Help" xml:space="preserve">
+    <value>{0}, {1} e {2} sono alternativi. {3} e {4} sono selezionabili con {1} o {2}; per {2} consentono solo la consultazione.</value>
+  </data>
 </root>
