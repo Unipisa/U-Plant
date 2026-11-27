@@ -16,7 +16,8 @@ using UPlant.Models.DB;
 
 namespace UPlant.Controllers
 {
-    [Authorize(Roles = "Administrator,Operator")]
+    [Authorize(Roles = "Administrator,Operator,Reader")]
+    [UPlant.Filters.SupportToolAccess("TreeManager", true, "Index", "Details", "RicercaTabella", "ExportRicercaTabella", "ExportTotaleInterventi", "AutoComplete", "Ricerca", "ElencoInterventi")]
     public class InterventiAlberiController : BaseController
     {
         private readonly Entities _context;
@@ -29,7 +30,7 @@ namespace UPlant.Controllers
 
         private bool CanManageTreeInterventions()
         {
-            return User.IsInRole("Administrator") || User.IsInRole("TreeManager");
+            return User.IsInRole("Administrator") || (User.IsInRole("Operator") && User.IsInRole("TreeManager"));
         }
 
         private bool CanManageClosedTreeInterventions()

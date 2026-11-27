@@ -412,7 +412,7 @@
     <value>Torna all'individuo</value>
   </data>
   <data name="Global_Return_To_Parent_Accession" xml:space="preserve">
-    <value>Torna all'accessione padre</value>
+    <value>Torna all'accessione genitore</value>
   </data>
   <data name="Accession_Details_1" xml:space="preserve">
     <value>Elenco degli individui</value>

@@ -9,6 +9,7 @@ using UPlant.Models.DB;
 
 namespace UPlant.Controllers
 {
+    [UPlant.Filters.SupportToolAccess("Discover", false, "Index", "Details")]
     public class IndividuiPercorsoController : BaseController
     {
         private readonly Entities _context;

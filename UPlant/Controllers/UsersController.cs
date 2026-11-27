@@ -290,19 +290,15 @@ namespace UPlant.Controllers
             }
 
             var readerRole = roleMap.FirstOrDefault(r => string.Equals(r.Value, "Reader", StringComparison.OrdinalIgnoreCase));
-            if (readerRole.Key != Guid.Empty)
-            {
-                return new List<Guid> { readerRole.Key };
-            }
-
             var hasOperator = roleMap.Any(r => string.Equals(r.Value, "Operator", StringComparison.OrdinalIgnoreCase));
-            if (!hasOperator)
+            if (!hasOperator && readerRole.Key == Guid.Empty)
             {
                 return new List<Guid>();
             }
 
+            var primaryRole = readerRole.Key != Guid.Empty ? "Reader" : "Operator";
             return roleMap
-                .Where(r => string.Equals(r.Value, "Operator", StringComparison.OrdinalIgnoreCase) ||
+                .Where(r => string.Equals(r.Value, primaryRole, StringComparison.OrdinalIgnoreCase) ||
                             string.Equals(r.Value, "Discover", StringComparison.OrdinalIgnoreCase) ||
                             string.Equals(r.Value, "TreeManager", StringComparison.OrdinalIgnoreCase))
                 .Select(r => r.Key)
