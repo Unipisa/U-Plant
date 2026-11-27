@@ -9,6 +9,7 @@ using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using UPlant.Controllers;
+using UPlant.Extensions;
 using UPlant.Models;
 using UPlant.Models.DB;
 using UPlant.Models.ViewModels;
@@ -22,6 +23,20 @@ void Check(bool condition, string name)
     Console.WriteLine("PASS " + name);
     passed++;
 }
+
+foreach (var culture in new[] { "it-IT", "en-US" })
+{
+    CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo(culture);
+    var row = new RisultatoRicercaInd { datainserimento = new DateTime(2026, 4, 3, 14, 30, 0) };
+    var expectedDate = culture == "it-IT" ? "03/04/2026" : "4/3/2026";
+    Check(DateLocalizationExtensions.LocalizedDate((Microsoft.AspNetCore.Mvc.Rendering.IHtmlHelper)null, row.datainserimento) == expectedDate,
+        "Individual search preserves day and month when formatting last modification (" + culture + ")");
+    Check(row.datainserimento?.ToString("yyyyMMdd", CultureInfo.InvariantCulture) == "20260403",
+        "Individual search date sorting is culture independent (" + culture + ")");
+    Check(DateLocalizationExtensions.LocalizedDate((Microsoft.AspNetCore.Mvc.Rendering.IHtmlHelper)null, (DateTime?)null) == string.Empty,
+        "Missing individual search date remains empty (" + culture + ")");
+}
+CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo("it-IT");
 
 foreach (var culture in new[] { "it-IT", "en-US" })
 {

@@ -362,7 +362,7 @@ namespace UPlant.Controllers
                 stato = r.statoindividuo,
                 stato_en = r.statoindividuo_en,
                 nomecognome = r.nomecognome,
-                datainserimento = string.Format(Convert.ToDateTime(r.datainserimento).ToString(), "{0:yyyy-MM-dd HH:mm:ss}", "yyyy"),
+                datainserimento = r.datainserimento,
                 countimg = r.numero_immagini.ToString(), //_context.ImmaginiIndividuo.Where(a => a.individuo == r.id).Count().ToString(),
                 //nomeetichetta = StaticUtils.CleanInput(r.nome_scientifico).Replace("  "," ")
                 nomeetichetta = StaticUtils.CleanInput(r.genere).Replace("  ", " ") + " " + StaticUtils.CleanInput(r.nome).Replace("  ", " "),

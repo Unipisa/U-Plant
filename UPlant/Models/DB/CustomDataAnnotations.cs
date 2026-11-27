@@ -36,7 +36,7 @@ namespace UPlant.Models.DB
         public string stato { get; set; }
         public string stato_en { get; set; }
         public string nomecognome { get; set; }
-        public string datainserimento { get; set; }
+        public DateTime? datainserimento { get; set; }
         public string countimg { get; set; }
 
         public string nomeetichetta { get; set; }

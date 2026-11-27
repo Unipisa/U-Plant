@@ -174,7 +174,7 @@
                                 }
                                 <td>@Html.DisplayFor(modelItem => item.nomecognome)</td>
                                 <td>@Html.LocalizedDate(item.datainserimento)</td>
-                                <td>@Convert.ToDateTime(item.datainserimento).ToString("yyyyMMdd")</td>
+                                <td>@(item.datainserimento?.ToString("yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture))</td>
                                 <td>@Html.DisplayFor(modelItem => item.countimg)</td>
                                 <td>
                                     @if (User.IsInRole("Administrator") || User.IsInRole("Operator") || User.IsInRole("TreeKeeper") || User.IsInRole("Discover") || User.IsInRole("Seminum") || User.IsInRole("Utility"))
