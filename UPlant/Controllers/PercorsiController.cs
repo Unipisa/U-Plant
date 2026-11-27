@@ -17,7 +17,8 @@ using UPlant.Models.DB;
 
 namespace U_Plant.Controllers
 {
-    [Authorize(Roles = "Administrator,Operator")]
+    [Authorize(Roles = "Administrator,Operator,Reader")]
+    [UPlant.Filters.SupportToolAccess("Discover", false, "Index", "Details", "ViewImg", "ViewBigImg", "AutoComplete", "Ricerca")]
     public class PercorsiController : BaseController
     {
         private readonly Entities _context;
@@ -35,12 +36,12 @@ namespace U_Plant.Controllers
         }
         private bool CanManagePercorsi()
         {
-            return User.IsInRole("Administrator") || User.IsInRole("Discover");
+            return User.IsInRole("Administrator") || (User.IsInRole("Operator") && User.IsInRole("Discover"));
         }
 
         public ActionResult Index()
         {
-            if (!CanManagePercorsi())
+            if (!(CanManagePercorsi() || (User.IsInRole("Reader") && User.IsInRole("Discover"))))
             {
                 return Forbid();
             }
@@ -69,7 +70,7 @@ namespace U_Plant.Controllers
         }
         public async Task<IActionResult> Details(Guid? id)
         {
-            if (!CanManagePercorsi())
+            if (!(CanManagePercorsi() || (User.IsInRole("Reader") && User.IsInRole("Discover"))))
             {
                 return Forbid();
             }

@@ -36,8 +36,8 @@
             var isSuperUser = !string.IsNullOrWhiteSpace(cognome)
                 && string.Equals(cognome, "PICCONI", StringComparison.OrdinalIgnoreCase);
 
-            var canAccessDiscoverTools = User.IsInRole("Administrator") || (User.IsInRole("Operator") && User.IsInRole("Discover"));
-            var canAccessTreeModule = User.IsInRole("Administrator") || User.IsInRole("Operator");
+            var canAccessDiscoverTools = User.IsInRole("Administrator") || ((User.IsInRole("Operator") || User.IsInRole("Reader")) && User.IsInRole("Discover"));
+            var canAccessTreeModule = User.IsInRole("Administrator") || User.IsInRole("Operator") || (User.IsInRole("Reader") && User.IsInRole("TreeManager"));
             <div class="user-panel pull-left image">
                 <a href="/" class="brand-link logo-switch ">
                     <img src="~/@logos" alt="logosmall" class="brand-image-xl logo-xs">

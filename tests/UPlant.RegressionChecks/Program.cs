@@ -13,6 +13,11 @@ using UPlant.Extensions;
 using UPlant.Models;
 using UPlant.Models.DB;
 using UPlant.Models.ViewModels;
+using UPlant.Filters;
+using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Mvc.Abstractions;
+using Microsoft.AspNetCore.Routing;
+using System.Reflection;
 
 CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo("it-IT");
 CultureInfo.CurrentUICulture = CultureInfo.CurrentCulture;
@@ -22,6 +27,46 @@ void Check(bool condition, string name)
     if (!condition) throw new InvalidOperationException(name);
     Console.WriteLine("PASS " + name);
     passed++;
+}
+
+using (var db = new CheckContext())
+{
+    var roles = new[] { "Administrator", "Operator", "Reader", "Discover", "TreeManager" }
+        .ToDictionary(name => name, name => new Roles { Id = Guid.NewGuid(), Descr = name });
+    ((QuerySet<Roles>)db.Roles).Rows.AddRange(roles.Values);
+    var controller = new UsersController(db, null);
+    var normalize = typeof(UsersController).GetMethod("NormalizeRoleSelectionAsync", BindingFlags.NonPublic | BindingFlags.Instance);
+    foreach (var selected in new[] { new[] { "Reader" }, new[] { "Reader", "Discover" }, new[] { "Reader", "TreeManager" }, new[] { "Reader", "Discover", "TreeManager" }, new[] { "Operator", "Discover", "TreeManager" }, new[] { "Administrator", "Reader", "Discover" }, new[] { "Discover" } })
+    {
+        var ids = selected.Select(name => roles[name].Id).ToArray();
+        var actual = await (Task<List<Guid>>)normalize.Invoke(controller, new object[] { ids });
+        var expected = selected.Contains("Administrator") ? new[] { roles["Administrator"].Id } :
+            selected.Any(name => name == "Reader" || name == "Operator") ? ids : Array.Empty<Guid>();
+        Check(actual.ToHashSet().SetEquals(expected), "User role selection preserves explicit support tools: " + string.Join("+", selected));
+    }
+}
+
+foreach (var module in new[]
+{
+    (Controller: typeof(U_Plant.Controllers.PercorsiController), Role: "Discover", OperatorRead: false),
+    (Controller: typeof(InterventiAlberiController), Role: "TreeManager", OperatorRead: true),
+    (Controller: typeof(IndividuiPercorsoController), Role: "Discover", OperatorRead: false)
+})
+{
+    var filter = module.Controller.GetCustomAttribute<SupportToolAccessAttribute>();
+    foreach (var roles in new[] { new[] { "Reader" }, new[] { "Reader", module.Role }, new[] { "Operator" }, new[] { "Operator", module.Role }, new[] { module.Role }, new[] { "Administrator" } })
+    foreach (var action in new[] { "Index", "Details", "Create", "Edit", "Delete", "ShowHidden", "Inserisciindividuopercorso", "UploadImg", "DeleteImgConfirmed" })
+    {
+        var http = new DefaultHttpContext { User = new ClaimsPrincipal(new ClaimsIdentity(roles.Select(r => new Claim(ClaimTypes.Role, r)), "test")) };
+        var descriptor = new ActionDescriptor { RouteValues = new Dictionary<string, string> { ["action"] = action } };
+        var context = new ActionExecutingContext(new ActionContext(http, new RouteData(), descriptor), new List<IFilterMetadata>(), new Dictionary<string, object>(), new object());
+        filter.OnActionExecuting(context);
+        var read = action == "Index" || action == "Details";
+        var expected = roles.Contains("Administrator") ||
+            (roles.Contains("Operator") && (roles.Contains(module.Role) || (read && module.OperatorRead))) ||
+            (roles.Contains("Reader") && roles.Contains(module.Role) && read);
+        Check((context.Result == null) == expected, module.Controller.Name + " " + string.Join("+", roles) + " " + action);
+    }
 }
 
 foreach (var culture in new[] { "it-IT", "en-US" })
